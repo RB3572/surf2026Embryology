@@ -416,6 +416,39 @@ body {
 .rdrawer-head { padding: 12px 14px 8px; border-bottom: 1px solid var(--line-2); }
 .rdrawer-title { font-size: 14px; font-weight: 700; }
 .rdrawer-desc { font-size: 11px; color: var(--ink-soft); margin-top: 3px; line-height: 1.4; }
+/* Predicted sperm-location panel */
+.predict-panel {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line-2);
+  background: color-mix(in srgb, #f59e0b 5%, var(--surface));
+}
+.predict-enable {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+}
+.predict-enable input { accent-color: #f59e0b; width: 15px; height: 15px; }
+.predict-config { margin-top: 9px; display: flex; flex-direction: column; gap: 8px; }
+.predict-ctl { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.predict-label { font-size: 11.5px; color: var(--ink-2); }
+#predict-topn {
+  font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--ink);
+  padding: 3px 20px 3px 8px; border: 1px solid var(--line); border-radius: 7px;
+  background: var(--surface); cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a91a2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 6px center;
+}
+.predict-loo-row { font-size: 12px; color: var(--ink-2); cursor: pointer; }
+.predict-loo-row input { accent-color: #f59e0b; }
+.predict-readout {
+  font-size: 12px; color: var(--ink-2); line-height: 1.5;
+  padding: 7px 9px; border-radius: 8px;
+  background: color-mix(in srgb, #f59e0b 12%, var(--surface));
+  border: 1px solid color-mix(in srgb, #f59e0b 35%, var(--line));
+}
+.predict-readout b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.predict-readout:empty { display: none; }
+.predict-warn { color: #b45309; }
+
 .rank-filter { display: flex; align-items: center; gap: 8px; margin-top: 9px; }
 .rank-filter-label {
   font-family: var(--mono); font-size: 10px; text-transform: uppercase;

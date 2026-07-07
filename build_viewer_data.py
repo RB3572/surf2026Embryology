@@ -123,6 +123,56 @@ def find_atlas_scene(embryo_id):
     return None
 
 
+def _kabsch(B):
+    """Rotation R (∈ SO(3)) minimizing Σ‖R gᵢ − sᵢ‖² given B = Σ gᵢ sᵢᵀ.
+
+    maximize tr(R B); with SVD B = U S Vᵀ the optimum is R = V Uᵀ, with a
+    reflection fix so det(R) = +1.  Then R gᵢ ≈ sᵢ.
+    """
+    U, S, Vt = np.linalg.svd(B)
+    V = Vt.T
+    d = np.sign(np.linalg.det(V @ U.T))
+    if d == 0:
+        d = 1.0
+    return V @ np.diag([1.0, 1.0, d]) @ U.T
+
+
+def build_mappings(index, min_embryos=3):
+    """Per (gene, axis) mapping from the gene's axis to the sperm axis.
+
+    For every embryo that has the gene, pair the gene axis gᵢ (PCA or gene→COM,
+    physical-µm unit vectors) with the sperm axis sᵢ = COM→sperm (= −sperm_to_emb).
+    Accumulate the cross-covariance B = Σ gᵢ sᵢᵀ and fit the average rotation
+    R = Kabsch(B) (maps gene axis → sperm axis).  B is kept so the front-end can
+    do a leave-one-out fit for the current embryo: B_loo = B − g_E s_Eᵀ.
+
+    Only genes appearing in ≥ min_embryos embryos (for that axis) are emitted,
+    matching the ranking's RANK_MIN_N.
+    """
+    acc = {}  # (gene, axis) -> {"B": 3x3, "ne": int}
+    for e in index:
+        s_com2sperm = -np.asarray(e["sperm_to_emb"], float)   # COM -> sperm
+        for g, gv in e["genes"].items():
+            for axis in ("pca", "g2e"):
+                v = gv.get(axis)
+                if v is None:
+                    continue
+                a = acc.setdefault((g, axis), {"B": np.zeros((3, 3)), "ne": 0})
+                a["B"] += np.outer(np.asarray(v, float), s_com2sperm)
+                a["ne"] += 1
+    mappings = {}
+    for (g, axis), a in acc.items():
+        if a["ne"] < min_embryos:
+            continue
+        R = _kabsch(a["B"])
+        mappings.setdefault(g, {})[axis] = {
+            "B": [round(float(x), 6) for x in a["B"].flatten()],   # row-major
+            "R": [round(float(x), 6) for x in R.flatten()],        # row-major
+            "ne": a["ne"],
+        }
+    return mappings
+
+
 def main():
     os.makedirs(OUT_SCENES, exist_ok=True)
     rows = list(csv.DictReader(open(EMB_CSV, newline="")))
@@ -234,10 +284,12 @@ def main():
     with open(OUT_MANIFEST, "w") as fh:
         json.dump({"embryos": manifest, "stage_order": STAGE_ORDER}, fh, indent=1)
 
+    mappings = build_mappings(index)
     idx_path = os.path.join(HERE, "public", "data", "analysis_index.json.gz")
     with gzip.open(idx_path, "wt") as fh:
-        json.dump({"embryos": index}, fh, separators=(",", ":"))
-    print(f"wrote analysis_index.json.gz  ({os.path.getsize(idx_path)/1024:.0f} KB)")
+        json.dump({"embryos": index, "mappings": mappings}, fh, separators=(",", ":"))
+    print(f"wrote analysis_index.json.gz  ({os.path.getsize(idx_path)/1024:.0f} KB)  "
+          f"mappings for {len(mappings)} genes")
 
     total_kb = sum(m["size_kb"] for m in manifest)
     print(f"wrote {len(manifest)} scenes  ({total_kb/1024:.1f} MB total)")

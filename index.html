@@ -112,6 +112,30 @@
           </select>
         </label>
       </div>
+      <div class="predict-panel">
+        <label class="predict-enable">
+          <input type="checkbox" id="predict-enable" />
+          <span>Predict sperm location</span>
+        </label>
+        <div class="predict-config" id="predict-config" hidden>
+          <div class="predict-ctl">
+            <span class="predict-label">Use top</span>
+            <select id="predict-topn" aria-label="Number of ranked genes">
+              <option value="3">3</option>
+              <option value="5">5</option>
+              <option value="10" selected>10</option>
+              <option value="20">20</option>
+              <option value="all">all</option>
+            </select>
+            <span class="predict-label">ranked genes (active tab's axis)</span>
+          </div>
+          <label class="predict-ctl predict-loo-row">
+            <input type="checkbox" id="predict-loo" checked />
+            <span>Leave-one-out (exclude this embryo from the fit)</span>
+          </label>
+          <div class="predict-readout" id="predict-readout"></div>
+        </div>
+      </div>
       <div class="rtabs" id="rtabs">
         <button class="rtab active" data-rtab="pca">| PC1 · Sperm→COM |</button>
         <button class="rtab" data-rtab="g2e">| Gene→COM · Sperm→COM |</button>

@@ -40,11 +40,27 @@
   const rtabsEl    = $("#rtabs");
   const rankListEl = $("#rank-list");
   const rankFilterEl = $("#rank-filter");
+  const predictEnable = $("#predict-enable");
+  const predictConfig = $("#predict-config");
+  const predictTopN   = $("#predict-topn");
+  const predictLoo    = $("#predict-loo");
+  const predictReadout = $("#predict-readout");
 
   const VIOLIN_W_KEY = "sperm_viewer_violin_w";
   const DRAWER_H_KEY = "sperm_viewer_drawer_h";
   const RDRAWER_W_KEY = "sperm_viewer_rdrawer_w";
+  const PREDICT_KEY = "sperm_viewer_predict";
   const RANK_MIN_N = 3;   // min embryos for a gene to be ranked (meaningful σ)
+
+  function loadPredictCfg() {
+    try {
+      const v = JSON.parse(localStorage.getItem(PREDICT_KEY) || "{}");
+      return { enabled: !!v.enabled, topN: v.topN || "10", loo: v.loo !== false };
+    } catch (_) { return { enabled: false, topN: "10", loo: true }; }
+  }
+  function savePredictCfg() {
+    try { localStorage.setItem(PREDICT_KEY, JSON.stringify(state.predict)); } catch (_) {}
+  }
 
   // Stage accent colors (match the nav bar), used to color violin points.
   const STAGE_COLOR = {
@@ -101,6 +117,8 @@
     rankFilter: 0,        // "> N transcripts in every embryo" (0 = all)
     rankings: null,       // { pca: [...], g2e: [...] }  (computed once)
     geneToEmbryos: null,  // Map<gene, embryoId[]>  for jump-to-gene
+    predict: loadPredictCfg(),   // { enabled, topN, loo } — persisted
+    prediction: null,     // computed result for the current embryo
   };
 
   // ---------- fetch + gunzip a scene (mirrors the atlas loader) ----------
@@ -178,8 +196,10 @@
       controlsEl.hidden = false;
       placeholder.hidden = true;
       drawer.hidden = false;
+      computePrediction();          // depends on the new embryo; render() draws it
       render();
       updateAnalysisPlots();
+      updatePredictReadout();
     } catch (err) {
       showError(err.message || String(err));
     } finally {
@@ -344,6 +364,28 @@
         traces.push(...arrowTraces(gv.com, gv.g2e, A.arrow_len, zs, byKey.gene2emb.color, byKey.gene2emb.label));
       if (state.vectors.sperm2emb)
         traces.push(...arrowTraces(A.sperm_plot, A.sperm_to_emb, A.arrow_len, zs, byKey.sperm2emb.color, byKey.sperm2emb.label));
+    }
+
+    // 5) Predicted sperm location (from the ranked-gene axis→sperm mapping).
+    const pr = state.prediction;
+    if (state.predict.enabled && pr && pr.point) {
+      const P = pr.point, C = pr.com;
+      traces.push({
+        type: "scatter3d", mode: "lines", name: "Predicted axis",
+        x: [C[0], P[0]], y: [C[1], P[1]], z: [C[2], P[2]],
+        line: { color: "#f59e0b", width: 5, dash: "dot" },
+        hoverinfo: "skip", showlegend: false, legendrank: 50000,
+      });
+      traces.push({
+        type: "scatter3d", mode: "markers", name: "Predicted sperm",
+        x: [P[0]], y: [P[1]], z: [P[2]],
+        marker: { size: 15, color: "#f59e0b", symbol: "circle-open",
+                  line: { width: 3, color: "#f59e0b" }, opacity: 1 },
+        hovertemplate: "<b>Predicted sperm</b>" +
+          (pr.errDeg != null ? `<br>error ${pr.errDeg.toFixed(0)}° · ${pr.used} genes` : "") +
+          "<extra></extra>",
+        legendrank: 50001,
+      });
     }
 
     Plotly.react(plotHost, traces, sceneLayout(s), {
@@ -696,11 +738,18 @@
   }
 
   const RANK_COLOR = { pca: "#7c3aed", g2e: "#2563eb" };
-  function renderRankings() {
-    if (!state.rankings) return;
-    let rows = state.rankings[state.rankTab] || [];
+  // The ranked rows currently shown (active tab + transcript filter). Shared by
+  // the ranking list and the sperm-location prediction.
+  function currentRankedRows() {
+    let rows = (state.rankings && state.rankings[state.rankTab]) || [];
     const thr = state.rankFilter || 0;
     if (thr > 0) rows = rows.filter((r) => r.minN > thr);   // > N in EVERY embryo
+    return rows;
+  }
+
+  function renderRankings() {
+    if (!state.rankings) return;
+    const rows = currentRankedRows();
     const cur = geneSelect.value;
     if (!rows.length) {
       rankListEl.innerHTML = thr > 0
@@ -745,6 +794,209 @@
     updateRankingHighlight();
   }
 
+  // =====================================================================
+  // Predicted sperm location
+  // =====================================================================
+  // Assume the sperm lies on the embryo cortex, so predicting it reduces to a
+  // direction from the embryo centre of mass. For each ranked gene we map its
+  // (PCA or gene→COM) axis to a sperm-direction estimate via the pre-computed
+  // average rotation (Kabsch); the estimates are combined as an inverse-variance
+  // weighted sum (lower σ → higher weight), normalized, and intersected with the
+  // blastomere shell.
+  //
+  // --- small 3-D vector / 3×3 matrix helpers (matrices are row-major [9]) ---
+  const vsub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+  const vdot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const vcross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const vnorm = (a) => Math.hypot(a[0], a[1], a[2]);
+  const vunit = (a) => { const n = vnorm(a); return n > 0 ? [a[0] / n, a[1] / n, a[2] / n] : [0, 0, 0]; };
+  const mvec = (M, v) => [M[0] * v[0] + M[1] * v[1] + M[2] * v[2],
+                          M[3] * v[0] + M[4] * v[1] + M[5] * v[2],
+                          M[6] * v[0] + M[7] * v[1] + M[8] * v[2]];
+  function mmul(A, B) {
+    const C = new Array(9);
+    for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
+      let s = 0; for (let k = 0; k < 3; k++) s += A[i * 3 + k] * B[k * 3 + j];
+      C[i * 3 + j] = s;
+    }
+    return C;
+  }
+  const mT = (A) => [A[0], A[3], A[6], A[1], A[4], A[7], A[2], A[5], A[8]];
+  const mdet = (A) => A[0] * (A[4] * A[8] - A[5] * A[7]) - A[1] * (A[3] * A[8] - A[5] * A[6]) +
+                      A[2] * (A[3] * A[7] - A[4] * A[6]);
+
+  // Symmetric 3×3 eigendecomposition (Jacobi). Returns eigenvalues (descending)
+  // and eigenvectors as columns.
+  function eigSym3(Ain) {
+    let A = [[Ain[0], Ain[1], Ain[2]], [Ain[3], Ain[4], Ain[5]], [Ain[6], Ain[7], Ain[8]]];
+    let V = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+    const mm = (P, Q) => { const C = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+      for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) { let s = 0;
+        for (let k = 0; k < 3; k++) s += P[i][k] * Q[k][j]; C[i][j] = s; } return C; };
+    const tr = (P) => [[P[0][0], P[1][0], P[2][0]], [P[0][1], P[1][1], P[2][1]], [P[0][2], P[1][2], P[2][2]]];
+    for (let it = 0; it < 100; it++) {
+      let p = 0, q = 1, mx = Math.abs(A[0][1]);
+      if (Math.abs(A[0][2]) > mx) { mx = Math.abs(A[0][2]); p = 0; q = 2; }
+      if (Math.abs(A[1][2]) > mx) { mx = Math.abs(A[1][2]); p = 1; q = 2; }
+      if (mx < 1e-14) break;
+      const phi = 0.5 * Math.atan2(2 * A[p][q], A[q][q] - A[p][p]);
+      const c = Math.cos(phi), s = Math.sin(phi);
+      const J = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+      J[p][p] = c; J[q][q] = c; J[p][q] = s; J[q][p] = -s;
+      A = mm(mm(tr(J), A), J);
+      V = mm(V, J);
+    }
+    const vals = [A[0][0], A[1][1], A[2][2]];
+    const cols = [[V[0][0], V[1][0], V[2][0]], [V[0][1], V[1][1], V[2][1]], [V[0][2], V[1][2], V[2][2]]];
+    const idx = [0, 1, 2].sort((i, j) => vals[j] - vals[i]);
+    return { values: idx.map((i) => vals[i]), vecs: idx.map((i) => cols[i]) };
+  }
+
+  // Kabsch rotation from B = Σ gᵢ sᵢᵀ (row-major [9]): R minimizing Σ‖R g − s‖².
+  // SVD B = U Σ Vᵀ (V from eig of BᵀB, U = B V Σ⁻¹); R = V diag(1,1,d) Uᵀ.
+  function kabschFromB(B) {
+    const M = mmul(mT(B), B);                 // BᵀB (symmetric PSD)
+    const { values, vecs } = eigSym3(M);
+    const sig = values.map((x) => Math.sqrt(Math.max(x, 0)));
+    const Vc = vecs;                          // right singular vectors (columns)
+    const Uc = [null, null, null];
+    for (let k = 0; k < 3; k++) if (sig[k] > 1e-9) {
+      const bv = mvec(B, Vc[k]); Uc[k] = [bv[0] / sig[k], bv[1] / sig[k], bv[2] / sig[k]];
+    }
+    for (let k = 0; k < 3; k++) if (!Uc[k]) {   // orthonormal completion for σ≈0
+      const known = Uc.filter(Boolean);
+      if (known.length === 2) Uc[k] = vunit(vcross(known[0], known[1]));
+      else if (known.length === 1) {
+        const a = known[0], t = Math.abs(a[0]) < 0.9 ? [1, 0, 0] : [0, 1, 0];
+        Uc[k] = vunit(vcross(a, t));
+      } else Uc[k] = [k === 0 ? 1 : 0, k === 1 ? 1 : 0, k === 2 ? 1 : 0];
+    }
+    const U = [Uc[0][0], Uc[1][0], Uc[2][0], Uc[0][1], Uc[1][1], Uc[2][1], Uc[0][2], Uc[1][2], Uc[2][2]];
+    const V = [Vc[0][0], Vc[1][0], Vc[2][0], Vc[0][1], Vc[1][1], Vc[2][1], Vc[0][2], Vc[1][2], Vc[2][2]];
+    const d = mdet(mmul(V, mT(U))) >= 0 ? 1 : -1;
+    const Vd = [V[0], V[1], V[2] * d, V[3], V[4], V[5] * d, V[6], V[7], V[8] * d];  // V·diag(1,1,d)
+    return mmul(Vd, mT(U));
+  }
+
+  // Möller–Trumbore ray/triangle; returns forward t (>ε) or null.
+  function rayTri(o, dir, a, b, c) {
+    const e1 = vsub(b, a), e2 = vsub(c, a), pv = vcross(dir, e2), det = vdot(e1, pv);
+    if (Math.abs(det) < 1e-9) return null;
+    const inv = 1 / det, tv = vsub(o, a);
+    const u = vdot(tv, pv) * inv; if (u < -1e-6 || u > 1 + 1e-6) return null;
+    const qv = vcross(tv, e1), v = vdot(dir, qv) * inv; if (v < -1e-6 || u + v > 1 + 1e-6) return null;
+    const t = vdot(e2, qv) * inv; return t > 1e-4 ? t : null;
+  }
+
+  // Intersect the ray (origin=COM, dir) with the blastomere shell (segments 1 & 2);
+  // return the FARTHEST forward hit (the outer cortex). Falls back to the extent
+  // of seg-1/2 vertices projected on the ray if no triangle is hit.
+  function rayShellHit(o, dir, meshes) {
+    let maxT = -Infinity;
+    for (const lbl of ["1", "2"]) {
+      const m = meshes && meshes[lbl]; if (!m) continue;
+      const v = m.verts, f = m.faces;
+      for (let fi = 0; fi < f.length; fi += 3) {
+        const i0 = f[fi] * 3, i1 = f[fi + 1] * 3, i2 = f[fi + 2] * 3;
+        const t = rayTri(o, dir, [v[i0], v[i0 + 1], v[i0 + 2]],
+          [v[i1], v[i1 + 1], v[i1 + 2]], [v[i2], v[i2 + 1], v[i2 + 2]]);
+        if (t != null && t > maxT) maxT = t;
+      }
+    }
+    if (!isFinite(maxT) || maxT <= 0) {          // fallback: max projection on ray
+      maxT = -Infinity;
+      for (const lbl of ["1", "2"]) {
+        const m = meshes && meshes[lbl]; if (!m) continue;
+        const v = m.verts;
+        for (let i = 0; i < v.length; i += 3) {
+          const proj = (v[i] - o[0]) * dir[0] + (v[i + 1] - o[1]) * dir[1] + (v[i + 2] - o[2]) * dir[2];
+          if (proj > maxT) maxT = proj;
+        }
+      }
+      if (!isFinite(maxT) || maxT <= 0) return null;
+    }
+    return [o[0] + dir[0] * maxT, o[1] + dir[1] * maxT, o[2] + dir[2] * maxT];
+  }
+
+  const PRED_EPS = 0.05;   // inverse-variance floor: w = 1/(σ² + ε²)
+
+  function computePrediction() {
+    state.prediction = null;
+    const s = state.scene, idx = state.index;
+    if (!s || !s.analysis || !idx || !idx.mappings) return;
+    const axis = state.rankTab;                 // "pca" | "g2e" (from active tab)
+    const rows = currentRankedRows();
+    const wantAll = state.predict.topN === "all";
+    const N = wantAll ? Infinity : parseInt(state.predict.topN, 10);
+    const ste = s.analysis.sperm_to_emb;
+    const sE = ste ? [-ste[0], -ste[1], -ste[2]] : null;   // current COM→sperm (µm)
+
+    // Walk the ranking (most consistent first) and take the top-N genes that are
+    // actually PRESENT in this embryo (gene panels differ across runs, so the
+    // globally top-ranked gene often isn't in a given embryo).
+    let acc = [0, 0, 0], totW = 0, used = 0;
+    for (const r of rows) {
+      if (used >= N) break;
+      const gv = s.analysis.genes[r.gene];
+      const gE = gv && gv[axis];                // current embryo's gene axis (µm)
+      const m = idx.mappings[r.gene] && idx.mappings[r.gene][axis];
+      if (!gE || !m) continue;
+      let R;
+      if (state.predict.loo && sE) {
+        const B = m.B, Bloo = [
+          B[0] - gE[0] * sE[0], B[1] - gE[0] * sE[1], B[2] - gE[0] * sE[2],
+          B[3] - gE[1] * sE[0], B[4] - gE[1] * sE[1], B[5] - gE[1] * sE[2],
+          B[6] - gE[2] * sE[0], B[7] - gE[2] * sE[1], B[8] - gE[2] * sE[2],
+        ];
+        R = kabschFromB(Bloo);
+      } else {
+        R = m.R;
+      }
+      const sHat = vunit(mvec(R, gE));          // predicted COM→sperm from this gene
+      if (vnorm(sHat) === 0) continue;
+      const w = 1 / (r.std * r.std + PRED_EPS * PRED_EPS);
+      acc = [acc[0] + w * sHat[0], acc[1] + w * sHat[1], acc[2] + w * sHat[2]];
+      totW += w; used++;
+    }
+    if (used === 0 || totW === 0) { state.prediction = { used: 0 }; return; }
+    const resLen = vnorm(acc);
+    if (resLen < 1e-9) { state.prediction = { used, weak: true }; return; }
+    const dirUm = [acc[0] / resLen, acc[1] / resLen, acc[2] / resLen];    // µm unit
+    const zs = s.z_scale || 7.0;
+    const dirPlot = vunit([dirUm[0] / 0.15, dirUm[1] / 0.15, dirUm[2] * zs]);
+    const com = s.analysis.embryo_com;
+    const point = rayShellHit(com, dirPlot, s.region_meshes);
+    let errDeg = null;
+    if (sE) { const c = Math.max(-1, Math.min(1, vdot(dirUm, vunit(sE)))); errDeg = Math.acos(c) * 180 / Math.PI; }
+    state.prediction = { used, point, com, confidence: resLen / totW, errDeg, axis };
+  }
+
+  function updatePrediction() {
+    computePrediction();
+    updatePredictReadout();
+    if (state.scene) render();
+  }
+
+  const AXIS_LABEL = { pca: "PC1", g2e: "Gene→COM" };
+  function updatePredictReadout() {
+    if (!predictReadout) return;
+    if (!state.predict.enabled) { predictReadout.innerHTML = ""; return; }
+    const pr = state.prediction;
+    const axisTxt = AXIS_LABEL[state.rankTab] || state.rankTab;
+    if (!pr || !pr.used) {
+      predictReadout.innerHTML =
+        `<span class="predict-warn">No ranked genes for this axis are present in this ` +
+        `embryo — can't predict.</span>`;
+      return;
+    }
+    const conf = Math.round((pr.confidence || 0) * 100);
+    const err = pr.errDeg != null ? `${pr.errDeg.toFixed(0)}°` : "—";
+    predictReadout.innerHTML =
+      `<div><b>${pr.used}</b> genes · axis <b>${axisTxt}</b>` +
+      (state.predict.loo ? " · LOO" : "") + `</div>` +
+      `<div>angular error <b>${err}</b> · agreement <b>${conf}%</b></div>`;
+  }
+
   // ---------- ui helpers ----------
   function showLoading(txt) { loadingTxt.textContent = txt; loadingEl.hidden = false; }
   function hideLoading() { loadingEl.hidden = true; }
@@ -768,6 +1020,7 @@
       state.rankTab = b.dataset.rtab;
       rtabsEl.querySelectorAll(".rtab").forEach((x) => x.classList.toggle("active", x === b));
       renderRankings();
+      updatePrediction();          // prediction axis follows the active tab
     }));
   rankListEl.addEventListener("click", (e) => {
     const row = e.target.closest(".rank-row");
@@ -776,6 +1029,27 @@
   rankFilterEl.addEventListener("change", () => {
     state.rankFilter = parseInt(rankFilterEl.value, 10) || 0;
     renderRankings();
+    updatePrediction();            // the ranked set changed
+  });
+
+  // ---------- prediction controls ----------
+  function syncPredictControls() {
+    predictEnable.checked = state.predict.enabled;
+    predictTopN.value = state.predict.topN;
+    predictLoo.checked = state.predict.loo;
+    predictConfig.hidden = !state.predict.enabled;
+  }
+  predictEnable.addEventListener("change", () => {
+    state.predict.enabled = predictEnable.checked;
+    predictConfig.hidden = !state.predict.enabled;
+    savePredictCfg();
+    updatePrediction();
+  });
+  predictTopN.addEventListener("change", () => {
+    state.predict.topN = predictTopN.value; savePredictCfg(); updatePrediction();
+  });
+  predictLoo.addEventListener("change", () => {
+    state.predict.loo = predictLoo.checked; savePredictCfg(); updatePrediction();
   });
   window.addEventListener("resize", () => { if (state.drawerOpen) resizeViolinPlots(); });
 
@@ -797,6 +1071,7 @@
         renderRankings();
         rdrawer.hidden = false;
       }
+      syncPredictControls();
     } catch (err) {
       showError("Failed to load manifest: " + (err.message || err));
     }

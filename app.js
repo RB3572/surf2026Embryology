@@ -13,6 +13,7 @@
   const $ = (s) => document.querySelector(s);
   const tabsEl     = $("#tabs");
   const controlsEl = $("#controls");
+  const controlsHeader = $("#controls-header");
   const geneSelect = $("#gene-select");
   const vecTogglesEl = $("#vec-toggles");
   const readoutEl  = $("#readout");
@@ -45,12 +46,21 @@
   const predictTopN   = $("#predict-topn");
   const predictLoo    = $("#predict-loo");
   const predictReadout = $("#predict-readout");
+  const nullShowEl = $("#null-show");
+  const nullRegenEl = $("#null-regen");
 
   const VIOLIN_W_KEY = "sperm_viewer_violin_w";
   const DRAWER_H_KEY = "sperm_viewer_drawer_h";
   const RDRAWER_W_KEY = "sperm_viewer_rdrawer_w";
   const PREDICT_KEY = "sperm_viewer_predict";
+  const NULL_DIRS_KEY = "sperm_viewer_null_dirs";
+  const NULL_SHOW_KEY = "sperm_viewer_null_show";
   const RANK_MIN_N = 3;   // min embryos for a gene to be ranked (meaningful σ)
+
+  function loadNullDirs() {
+    try { return JSON.parse(localStorage.getItem(NULL_DIRS_KEY) || "{}") || {}; }
+    catch (_) { return {}; }
+  }
 
   function loadPredictCfg() {
     try {
@@ -80,6 +90,10 @@
   // Gene point-cloud styling (single selected gene).
   const GENE_COLOR = "#ff7f00";
   const GENE_SIZE  = 2.6;
+
+  // Sperm-condition colors: green = real, red = randomized null.
+  const REAL_COLOR = "#16a34a";   // real sperm (diamond) + predicted (circle)
+  const NULL_COLOR = "#dc2626";   // null sperm (diamond)
 
   // The three pre-computed analysis vectors (see build_viewer_data.py).
   const VECTORS = [
@@ -113,12 +127,16 @@
     userGene: null,
     index: null,          // cross-embryo analysis vectors (for the violins)
     drawerOpen: false,
-    rankTab: "pca",       // which ranking tab is active
+    rankAxis: "pca",      // "pca" | "g2e"  (active tab's axis)
+    rankCond: "real",     // "real" | "null"  (active tab's condition)
     rankFilter: 0,        // "> N transcripts in every embryo" (0 = all)
-    rankings: null,       // { pca: [...], g2e: [...] }  (computed once)
+    rankings: null,       // { real:{pca,g2e}, null:{pca,g2e} }
     geneToEmbryos: null,  // Map<gene, embryoId[]>  for jump-to-gene
     predict: loadPredictCfg(),   // { enabled, topN, loo } — persisted
     prediction: null,     // computed result for the current embryo
+    nullDirs: loadNullDirs(),    // embryoId -> random µm unit direction
+    nullPoint: null,      // null-sperm shell hit for the current embryo (plot)
+    showNull: localStorage.getItem(NULL_SHOW_KEY) !== "0",   // marker visibility
   };
 
   // ---------- fetch + gunzip a scene (mirrors the atlas loader) ----------
@@ -197,6 +215,7 @@
       placeholder.hidden = true;
       drawer.hidden = false;
       computePrediction();          // depends on the new embryo; render() draws it
+      computeNullPoint();           // null-sperm shell hit for this embryo
       render();
       updateAnalysisPlots();
       updatePredictReadout();
@@ -327,20 +346,33 @@
       });
     }
 
-    // 3) Sperm location.
+    // 3) Sperm location — real (green diamond).
     const sp = s.sperm;
     traces.push({
-      type: "scatter3d", mode: "markers", name: "Sperm",
+      type: "scatter3d", mode: "markers", name: "Sperm (real)",
       x: [sp.x], y: [sp.y], z: [sp.z * zs],
       marker: {
-        size: s.sperm_size || 11, color: s.sperm_color || "#ff2d95",
+        size: s.sperm_size || 11, color: REAL_COLOR,
         symbol: "diamond", opacity: 1,
         line: { width: 1.5, color: "#ffffff" },
       },
-      hovertemplate: `<b>Sperm</b><br>x=%{x:.0f}, y=%{y:.0f}, ` +
+      hovertemplate: `<b>Sperm (real)</b><br>x=%{x:.0f}, y=%{y:.0f}, ` +
         `z=${sp.z} frame<extra></extra>`,
       legendrank: 30000,
     });
+
+    // 3b) Null sperm — random COM direction ∩ shell (red diamond, toggleable).
+    if (state.showNull && state.nullPoint) {
+      const P = state.nullPoint;
+      traces.push({
+        type: "scatter3d", mode: "markers", name: "Sperm (null)",
+        x: [P[0]], y: [P[1]], z: [P[2]],
+        marker: { size: s.sperm_size || 11, color: NULL_COLOR, symbol: "diamond",
+                  opacity: 1, line: { width: 1.5, color: "#ffffff" } },
+        hovertemplate: "<b>Null sperm</b> (random direction)<extra></extra>",
+        legendrank: 30500,
+      });
+    }
 
     // 4) Analysis vectors (pre-computed) — drawn as 3-D arrows if toggled on.
     const A = s.analysis;
@@ -373,14 +405,14 @@
       traces.push({
         type: "scatter3d", mode: "lines", name: "Predicted axis",
         x: [C[0], P[0]], y: [C[1], P[1]], z: [C[2], P[2]],
-        line: { color: "#f59e0b", width: 5, dash: "dot" },
+        line: { color: REAL_COLOR, width: 5, dash: "dot" },
         hoverinfo: "skip", showlegend: false, legendrank: 50000,
       });
       traces.push({
         type: "scatter3d", mode: "markers", name: "Predicted sperm",
         x: [P[0]], y: [P[1]], z: [P[2]],
-        marker: { size: 15, color: "#f59e0b", symbol: "circle-open",
-                  line: { width: 3, color: "#f59e0b" }, opacity: 1 },
+        marker: { size: 15, color: REAL_COLOR, symbol: "circle-open",
+                  line: { width: 3, color: REAL_COLOR }, opacity: 1 },
         hovertemplate: "<b>Predicted sperm</b>" +
           (pr.errDeg != null ? `<br>error ${pr.errDeg.toFixed(0)}° · ${pr.used} genes` : "") +
           "<extra></extra>",
@@ -496,8 +528,12 @@
   }
 
   // ---- cross-embryo |cos θ| series for the selected gene ----
+  // dirOf(embryo) returns the sperm-axis unit vector for that embryo (real =
+  // sperm_to_emb, null = the embryo's random null direction).
   function dotAbs(a, b) { return Math.abs(a[0] * b[0] + a[1] * b[1] + a[2] * b[2]); }
-  function violinSeries(gene, key) {
+  const realDirOf = (e) => e.sperm_to_emb;
+  const nullDirOf = (e) => state.nullDirs[e.id];
+  function violinSeries(gene, key, dirOf) {
     const out = { vals: [], labels: [], colors: [], cur: null, curLabel: null };
     if (!state.index) return out;
     for (const e of state.index.embryos) {
@@ -505,7 +541,9 @@
       if (!gv) continue;
       const v = gv[key];
       if (!v) continue;                          // PC1 may be null (n<2)
-      const d = dotAbs(v, e.sperm_to_emb);
+      const dir = dirOf(e);
+      if (!dir) continue;
+      const d = dotAbs(v, dir);
       out.vals.push(+d.toFixed(4));
       out.labels.push(`${e.label} · ${e.stage}`);
       out.colors.push(STAGE_COLOR[e.stage] || "#888");
@@ -514,52 +552,58 @@
     return out;
   }
 
-  function renderOneViolin(div, data, color) {
-    if (!data.vals.length) {
+  // Two violins per plot: real (green) vs randomized null (red).
+  function renderOneViolin(div, real, nul) {
+    if (!real.vals.length && !nul.vals.length) {
       plotEmpty(div, "This gene is not present in any embryo panel.");
       return;
     }
-    const violin = {
-      type: "violin", y: data.vals, name: "", orientation: "v",
+    const mk = (data, color, name) => ({
+      type: "violin", y: data.vals, x: data.vals.map(() => name), name,
       points: "all", pointpos: 0, jitter: 0.35, scalemode: "width", width: 0.7,
       box: { visible: true, width: 0.12 }, meanline: { visible: true },
       span: [0, 1], spanmode: "manual",
       line: { color, width: 1.5 }, fillcolor: hexA(color, 0.14),
       marker: { size: 6, color: data.colors, line: { width: 0.5, color: "#fff" }, opacity: 0.9 },
       customdata: data.labels,
-      hovertemplate: "%{customdata}<br>|cos θ| = %{y:.3f}<extra></extra>",
-    };
+      hovertemplate: `<b>${name}</b><br>%{customdata}<br>|cos θ| = %{y:.3f}<extra></extra>`,
+    });
+    const traces = [];
+    if (real.vals.length) traces.push(mk(real, REAL_COLOR, "Real"));
+    if (nul.vals.length) traces.push(mk(nul, NULL_COLOR, "Null"));
     const shapes = [], anns = [];
-    if (data.cur != null) {
-      shapes.push({ type: "line", xref: "paper", x0: 0, x1: 1,
-                    y0: data.cur, y1: data.cur,
-                    line: { color: "#0b0d13", width: 1.5, dash: "dot" } });
+    const addCur = (data, color, name) => {
+      if (data.cur == null) return;
+      shapes.push({ type: "line", xref: "paper", x0: 0, x1: 1, y0: data.cur, y1: data.cur,
+                    line: { color, width: 1.5, dash: "dot" } });
       anns.push({ xref: "paper", x: 0.99, xanchor: "right", y: data.cur, yanchor: "bottom",
-                  text: `this embryo (${data.curLabel}) = ${data.cur.toFixed(2)}`,
-                  showarrow: false, font: { size: 10, color: "#0b0d13" } });
-    }
+                  text: `${name} ${data.cur.toFixed(2)}`, showarrow: false,
+                  font: { size: 9.5, color } });
+    };
+    addCur(real, REAL_COLOR, "this embryo · real");
+    addCur(nul, NULL_COLOR, "null");
     const layout = {
-      margin: { l: 40, r: 12, t: 6, b: 14 }, height: 200,
+      margin: { l: 40, r: 12, t: 6, b: 18 }, height: 200, violinmode: "group",
       yaxis: { range: [-0.02, 1.04], tickfont: { size: 9 }, gridcolor: "#eef1f5",
                fixedrange: true, dtick: 0.25, zeroline: false,
                title: { text: "|cos θ|", font: { size: 10 } } },
-      xaxis: { visible: false, fixedrange: true },
+      xaxis: { type: "category", fixedrange: true, tickfont: { size: 11 } },
       shapes, annotations: anns,
       paper_bgcolor: "transparent", plot_bgcolor: "transparent",
       font: { color: "#1a2233" }, showlegend: false,
     };
-    plotInto(div, [violin], layout);
+    plotInto(div, traces, layout);
   }
 
   function renderViolins() {
     const gene = geneSelect.value;
     if (!gene) return;
-    const a = violinSeries(gene, "pca");
-    const b = violinSeries(gene, "g2e");
-    violinPcaSub.textContent = `${gene} · n = ${a.vals.length} embryos`;
-    violinG2eSub.textContent = `${gene} · n = ${b.vals.length} embryos`;
-    renderOneViolin(violinPca, a, "#7c3aed");    // matches the PC1 arrow color
-    renderOneViolin(violinG2e, b, "#2563eb");    // matches the Gene→COM arrow color
+    const aR = violinSeries(gene, "pca", realDirOf), aN = violinSeries(gene, "pca", nullDirOf);
+    const bR = violinSeries(gene, "g2e", realDirOf), bN = violinSeries(gene, "g2e", nullDirOf);
+    violinPcaSub.textContent = `${gene} · n = ${aR.vals.length} · real vs null`;
+    violinG2eSub.textContent = `${gene} · n = ${bR.vals.length} · real vs null`;
+    renderOneViolin(violinPca, aR, aN);
+    renderOneViolin(violinG2e, bR, bN);
   }
 
   function setDrawerOpen(open) {
@@ -705,22 +749,26 @@
   // For every gene, gather |cos θ| across all embryos (per dot product), then
   // rank ascending by σ (lowest variation = most consistent = top). Genes must
   // appear in ≥ RANK_MIN_N embryos to be ranked. Computed once (index is static).
-  function computeRankings() {
+  // dirOf(embryo) supplies the sperm axis (real or null), so the same ranking
+  // logic serves both conditions.
+  function computeRankings(dirOf) {
     const acc = new Map();          // gene -> { pca:[], g2e:[], pcaN:[], g2eN:[] }
     const g2emb = new Map();        // gene -> [embryoId,...]
     for (const e of state.index.embryos) {
+      const dir = dirOf(e);
+      if (!dir) continue;
       for (const g in e.genes) {
         const gv = e.genes[g];
         if (!acc.has(g)) acc.set(g, { pca: [], g2e: [], pcaN: [], g2eN: [] });
         const a = acc.get(g);
         const cnt = gv.n || 0;      // transcripts of this gene in this embryo
-        if (gv.pca) { a.pca.push(dotAbs(gv.pca, e.sperm_to_emb)); a.pcaN.push(cnt); }
-        if (gv.g2e) { a.g2e.push(dotAbs(gv.g2e, e.sperm_to_emb)); a.g2eN.push(cnt); }
+        if (gv.pca) { a.pca.push(dotAbs(gv.pca, dir)); a.pcaN.push(cnt); }
+        if (gv.g2e) { a.g2e.push(dotAbs(gv.g2e, dir)); a.g2eN.push(cnt); }
         if (!g2emb.has(g)) g2emb.set(g, []);
         g2emb.get(g).push(e.id);
       }
     }
-    state.geneToEmbryos = g2emb;
+    state.geneToEmbryos = g2emb;    // gene presence — same for real / null
     const build = (key) => {
       const out = [];
       for (const [g, a] of acc) {
@@ -736,21 +784,26 @@
     };
     return { pca: build("pca"), g2e: build("g2e") };
   }
+  function computeAllRankings() {
+    state.rankings = { real: computeRankings(realDirOf), null: computeRankings(nullDirOf) };
+  }
 
-  const RANK_COLOR = { pca: "#7c3aed", g2e: "#2563eb" };
-  // The ranked rows currently shown (active tab + transcript filter). Shared by
-  // the ranking list and the sperm-location prediction.
-  function currentRankedRows() {
-    let rows = (state.rankings && state.rankings[state.rankTab]) || [];
+  const RANK_COLOR = { real: REAL_COLOR, null: NULL_COLOR };
+  // Ranked rows for a condition/axis (with the transcript filter applied).
+  function rankedRows(cond, axis) {
+    let rows = (state.rankings && state.rankings[cond] && state.rankings[cond][axis]) || [];
     const thr = state.rankFilter || 0;
     if (thr > 0) rows = rows.filter((r) => r.minN > thr);   // > N in EVERY embryo
     return rows;
   }
+  // The ranked rows currently shown (active tab). Prediction always uses REAL.
+  function currentRankedRows() { return rankedRows(state.rankCond, state.rankAxis); }
 
   function renderRankings() {
     if (!state.rankings) return;
     const rows = currentRankedRows();
     const cur = geneSelect.value;
+    const thr = state.rankFilter || 0;
     if (!rows.length) {
       rankListEl.innerHTML = thr > 0
         ? `<div class="rank-empty">No genes have &gt; ${thr} transcripts in every embryo.</div>`
@@ -758,7 +811,7 @@
       return;
     }
     const maxStd = Math.max(...rows.map((r) => r.std)) || 1;
-    const color = RANK_COLOR[state.rankTab];
+    const color = RANK_COLOR[state.rankCond];
     rankListEl.innerHTML = rows.map((r, i) => {
       const pct = Math.round((r.std / maxStd) * 100);
       return `<div class="rank-row${r.gene === cur ? " current" : ""}" data-gene="${r.gene}"` +
@@ -924,8 +977,8 @@
     state.prediction = null;
     const s = state.scene, idx = state.index;
     if (!s || !s.analysis || !idx || !idx.mappings) return;
-    const axis = state.rankTab;                 // "pca" | "g2e" (from active tab)
-    const rows = currentRankedRows();
+    const axis = state.rankAxis;                // "pca" | "g2e" (from active tab)
+    const rows = rankedRows("real", axis);      // prediction is always vs REAL sperm
     const wantAll = state.predict.topN === "all";
     const N = wantAll ? Infinity : parseInt(state.predict.topN, 10);
     const ste = s.analysis.sperm_to_emb;
@@ -982,7 +1035,7 @@
     if (!predictReadout) return;
     if (!state.predict.enabled) { predictReadout.innerHTML = ""; return; }
     const pr = state.prediction;
-    const axisTxt = AXIS_LABEL[state.rankTab] || state.rankTab;
+    const axisTxt = AXIS_LABEL[state.rankAxis] || state.rankAxis;
     if (!pr || !pr.used) {
       predictReadout.innerHTML =
         `<span class="predict-warn">No ranked genes for this axis are present in this ` +
@@ -995,6 +1048,44 @@
       `<div><b>${pr.used}</b> genes · axis <b>${axisTxt}</b>` +
       (state.predict.loo ? " · LOO" : "") + `</div>` +
       `<div>angular error <b>${err}</b> · agreement <b>${conf}%</b></div>`;
+  }
+
+  // =====================================================================
+  // Null sperm condition (per-embryo random direction from the COM)
+  // =====================================================================
+  // A uniform random unit direction on the sphere (µm space).
+  function randUnitDir() {
+    const z = 2 * Math.random() - 1;
+    const th = 2 * Math.PI * Math.random();
+    const r = Math.sqrt(Math.max(0, 1 - z * z));
+    return [r * Math.cos(th), r * Math.sin(th), z];
+  }
+  // Draw a fresh, independent null direction for every embryo.
+  function generateNullDirs() {
+    const d = {};
+    for (const e of (state.index ? state.index.embryos : [])) d[e.id] = randUnitDir();
+    state.nullDirs = d;
+    try { localStorage.setItem(NULL_DIRS_KEY, JSON.stringify(d)); } catch (_) {}
+  }
+  // Shell intersection of the current embryo's null direction (plot space).
+  function computeNullPoint() {
+    state.nullPoint = null;
+    const s = state.scene;
+    if (!s || !s.analysis) return;
+    const nd = state.nullDirs[s.id];
+    if (!nd) return;
+    const zs = s.z_scale || 7.0;
+    const dirPlot = vunit([nd[0] / 0.15, nd[1] / 0.15, nd[2] * zs]);
+    state.nullPoint = rayShellHit(s.analysis.embryo_com, dirPlot, s.region_meshes);
+  }
+  // Re-draw all null directions and refresh everything that depends on them.
+  function regenerateNull() {
+    generateNullDirs();
+    if (state.rankings) state.rankings.null = computeRankings(nullDirOf);
+    computeNullPoint();
+    if (state.rankCond === "null") renderRankings();
+    if (state.drawerOpen) renderViolins();
+    if (state.scene) render();
   }
 
   // ---------- ui helpers ----------
@@ -1017,10 +1108,11 @@
   });
   rtabsEl.querySelectorAll(".rtab").forEach((b) =>
     b.addEventListener("click", () => {
-      state.rankTab = b.dataset.rtab;
+      state.rankAxis = b.dataset.axis;
+      state.rankCond = b.dataset.cond;
       rtabsEl.querySelectorAll(".rtab").forEach((x) => x.classList.toggle("active", x === b));
       renderRankings();
-      updatePrediction();          // prediction axis follows the active tab
+      updatePrediction();          // prediction axis follows the active tab (always real)
     }));
   rankListEl.addEventListener("click", (e) => {
     const row = e.target.closest(".rank-row");
@@ -1051,6 +1143,86 @@
   predictLoo.addEventListener("change", () => {
     state.predict.loo = predictLoo.checked; savePredictCfg(); updatePrediction();
   });
+
+  // ---------- null-sperm controls (in the floating window) ----------
+  function syncNullControls() { if (nullShowEl) nullShowEl.checked = state.showNull; }
+  if (nullShowEl) nullShowEl.addEventListener("change", () => {
+    state.showNull = nullShowEl.checked;
+    try { localStorage.setItem(NULL_SHOW_KEY, state.showNull ? "1" : "0"); } catch (_) {}
+    if (state.scene) render();
+  });
+  if (nullRegenEl) nullRegenEl.addEventListener("click", () => regenerateNull());
+
+  // ---------- floating control window: drag (header) + resize (corners) ----------
+  const CONTROLS_BOX_KEY = "sperm_viewer_controls_box";
+  const resizePcaPlot = () => { try { Plotly.Plots.resize(pcaPlot); } catch (_) {} };
+  function stageBox() { return controlsEl.parentElement.getBoundingClientRect(); }
+  function saveControlsBox() {
+    try {
+      localStorage.setItem(CONTROLS_BOX_KEY, JSON.stringify({
+        left: parseFloat(controlsEl.style.left), top: parseFloat(controlsEl.style.top),
+        width: parseFloat(controlsEl.style.width), height: parseFloat(controlsEl.style.height),
+      }));
+    } catch (_) {}
+  }
+  function loadControlsBox() {
+    let b; try { b = JSON.parse(localStorage.getItem(CONTROLS_BOX_KEY) || "null"); } catch (_) {}
+    if (!b) return;
+    if (isFinite(b.width)) controlsEl.style.width = b.width + "px";
+    if (isFinite(b.height)) controlsEl.style.height = b.height + "px";
+    if (isFinite(b.left)) { controlsEl.style.left = b.left + "px"; controlsEl.style.right = "auto"; }
+    if (isFinite(b.top)) controlsEl.style.top = b.top + "px";
+  }
+  // Drag by the header.
+  (function () {
+    let start = null;
+    controlsHeader.addEventListener("pointerdown", (e) => {
+      const r = controlsEl.getBoundingClientRect(), st = stageBox();
+      start = { x: e.clientX, y: e.clientY, left: r.left - st.left, top: r.top - st.top };
+      controlsHeader.setPointerCapture(e.pointerId); e.preventDefault();
+    });
+    controlsHeader.addEventListener("pointermove", (e) => {
+      if (!start) return;
+      const st = stageBox();
+      let left = start.left + (e.clientX - start.x), top = start.top + (e.clientY - start.y);
+      left = Math.max(0, Math.min(left, st.width - controlsEl.offsetWidth));
+      top = Math.max(0, Math.min(top, st.height - 30));      // keep header reachable
+      controlsEl.style.left = left + "px"; controlsEl.style.top = top + "px"; controlsEl.style.right = "auto";
+    });
+    const end = (e) => { if (start) { start = null; try { controlsHeader.releasePointerCapture(e.pointerId); } catch (_) {} saveControlsBox(); } };
+    controlsHeader.addEventListener("pointerup", end);
+    controlsHeader.addEventListener("pointercancel", end);
+  })();
+  // Resize by any of the four corners (opposite edges stay pinned).
+  const MINW = 240, MINH = 130;
+  controlsEl.querySelectorAll(".rz").forEach((h) => {
+    const cfg = { nw: [1, 1], ne: [0, 1], sw: [1, 0], se: [0, 0] }[h.dataset.corner];
+    const [leftEdge, topEdge] = cfg;
+    let start = null;
+    h.addEventListener("pointerdown", (e) => {
+      const r = controlsEl.getBoundingClientRect(), st = stageBox();
+      const left = r.left - st.left, top = r.top - st.top;
+      start = { x: e.clientX, y: e.clientY, w: r.width, h: r.height, left, top,
+                right: left + r.width, bottom: top + r.height };
+      h.setPointerCapture(e.pointerId); e.preventDefault(); e.stopPropagation();
+    });
+    h.addEventListener("pointermove", (e) => {
+      if (!start) return;
+      const dx = e.clientX - start.x, dy = e.clientY - start.y;
+      let w, hgt, left = start.left, top = start.top;
+      if (leftEdge) { w = Math.max(MINW, start.w - dx); left = start.right - w; }
+      else { w = Math.max(MINW, start.w + dx); }
+      if (topEdge) { hgt = Math.max(MINH, start.h - dy); top = start.bottom - hgt; }
+      else { hgt = Math.max(MINH, start.h + dy); }
+      controlsEl.style.width = w + "px"; controlsEl.style.height = hgt + "px";
+      controlsEl.style.left = left + "px"; controlsEl.style.top = top + "px"; controlsEl.style.right = "auto";
+      resizePcaPlot();
+    });
+    const end = (e) => { if (start) { start = null; try { h.releasePointerCapture(e.pointerId); } catch (_) {} saveControlsBox(); resizePcaPlot(); } };
+    h.addEventListener("pointerup", end);
+    h.addEventListener("pointercancel", end);
+  });
+
   window.addEventListener("resize", () => { if (state.drawerOpen) resizeViolinPlots(); });
 
   // ---------- boot ----------
@@ -1064,14 +1236,18 @@
       buildTabs(m.embryos, m.stage_order || ["Zygote", "2-cell (early)", "2-cell (late)"]);
       loadViolinWidth();
       loadDrawerSizes();
+      loadControlsBox();
       // Cross-embryo vectors for the violin plots + gene ranking (load once).
       state.index = await loadScene("data/analysis_index.json.gz").catch(() => null);
       if (state.index) {
-        state.rankings = computeRankings();
+        // ensure every embryo has a persisted null direction
+        if (state.index.embryos.some((e) => !state.nullDirs[e.id])) generateNullDirs();
+        computeAllRankings();       // real + null
         renderRankings();
         rdrawer.hidden = false;
       }
       syncPredictControls();
+      syncNullControls();
     } catch (err) {
       showError("Failed to load manifest: " + (err.message || err));
     }

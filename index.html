@@ -20,21 +20,39 @@
 
   <!-- ===================== Viewer ===================== -->
   <main class="stage">
-    <!-- floating control panel: gene selector, vector toggles, PCA plot -->
+    <!-- floating control panel: draggable header + resizable body -->
     <div class="controls" id="controls" hidden>
-      <div class="controls-row">
-        <label class="ctl">
-          <span class="ctl-label">Gene</span>
-          <select id="gene-select" aria-label="Gene"></select>
-        </label>
-        <div class="vec-toggles" id="vec-toggles" aria-label="Analysis vectors"></div>
-        <div class="readout" id="readout"></div>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">Controls</span>
       </div>
-      <div class="pca-panel">
-        <div class="mini-title">PCA variance explained
-          <span class="mini-sub" id="pca-gene"></span></div>
-        <div id="pca-plot" class="pca-plot"></div>
+      <div class="controls-body" id="controls-body">
+        <div class="controls-row">
+          <label class="ctl">
+            <span class="ctl-label">Gene</span>
+            <select id="gene-select" aria-label="Gene"></select>
+          </label>
+          <div class="vec-toggles" id="vec-toggles" aria-label="Analysis vectors"></div>
+          <div class="null-controls">
+            <label class="null-toggle" title="Show/hide the red null-sperm markers">
+              <input type="checkbox" id="null-show" />
+              <span>Null sperm</span>
+            </label>
+            <button type="button" id="null-regen" class="null-regen"
+                    title="Draw new random null directions for every embryo">↻ New null</button>
+          </div>
+          <div class="readout" id="readout"></div>
+        </div>
+        <div class="pca-panel">
+          <div class="mini-title">PCA variance explained
+            <span class="mini-sub" id="pca-gene"></span></div>
+          <div id="pca-plot" class="pca-plot"></div>
+        </div>
       </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
     </div>
 
     <div class="plot-host" id="plot-host"></div>
@@ -137,8 +155,10 @@
         </div>
       </div>
       <div class="rtabs" id="rtabs">
-        <button class="rtab active" data-rtab="pca">| PC1 · Sperm→COM |</button>
-        <button class="rtab" data-rtab="g2e">| Gene→COM · Sperm→COM |</button>
+        <button class="rtab rtab-real active" data-axis="pca" data-cond="real">PC1 · Sperm</button>
+        <button class="rtab rtab-real" data-axis="g2e" data-cond="real">COM · Sperm</button>
+        <button class="rtab rtab-null" data-axis="pca" data-cond="null">PC1 · Null</button>
+        <button class="rtab rtab-null" data-axis="g2e" data-cond="null">COM · Null</button>
       </div>
       <div class="rank-list" id="rank-list"></div>
     </div>

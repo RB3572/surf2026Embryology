@@ -1,0 +1,606 @@
+{
+ "embryos": [
+  {
+   "id": "20251226_sample1_zygote5",
+   "label": "? \u00b7 20251226_sample1_zygote5",
+   "date_short": "Dec 26",
+   "n_genes": 110,
+   "n_transcripts": 182784,
+   "size_kb": 813,
+   "best_p": 13,
+   "best_diff": 1
+  },
+  {
+   "id": "20251226_sample1_zygote6",
+   "label": "? \u00b7 20251226_sample1_zygote6",
+   "date_short": "Dec 26",
+   "n_genes": 110,
+   "n_transcripts": 183691,
+   "size_kb": 823,
+   "best_p": 12,
+   "best_diff": 10
+  },
+  {
+   "id": "20251226_zygote_p1_0",
+   "label": "P1 \u00b7 0",
+   "date_short": "Dec 26",
+   "n_genes": 102,
+   "n_transcripts": 120146,
+   "size_kb": 634,
+   "best_p": 11,
+   "best_diff": 9
+  },
+  {
+   "id": "20251226_zygote_p1_1",
+   "label": "P1 \u00b7 1",
+   "date_short": "Dec 26",
+   "n_genes": 109,
+   "n_transcripts": 158525,
+   "size_kb": 777,
+   "best_p": 14,
+   "best_diff": 13
+  },
+  {
+   "id": "20251226_zygote_p1_10",
+   "label": "P1 \u00b7 10",
+   "date_short": "Dec 26",
+   "n_genes": 107,
+   "n_transcripts": 127694,
+   "size_kb": 689,
+   "best_p": 10,
+   "best_diff": 11
+  },
+  {
+   "id": "20251226_zygote_p1_11",
+   "label": "P1 \u00b7 11",
+   "date_short": "Dec 26",
+   "n_genes": 110,
+   "n_transcripts": 136193,
+   "size_kb": 728,
+   "best_p": 9,
+   "best_diff": 10
+  },
+  {
+   "id": "20251226_zygote_p1_2_1",
+   "label": "P1 \u00b7 2_1",
+   "date_short": "Dec 26",
+   "n_genes": 101,
+   "n_transcripts": 89779,
+   "size_kb": 563,
+   "best_p": 12,
+   "best_diff": 13
+  },
+  {
+   "id": "20251226_zygote_p1_2_2",
+   "label": "P1 \u00b7 2_2",
+   "date_short": "Dec 26",
+   "n_genes": 105,
+   "n_transcripts": 162294,
+   "size_kb": 816,
+   "best_p": 12,
+   "best_diff": 10
+  },
+  {
+   "id": "20251226_zygote_p1_3",
+   "label": "P1 \u00b7 3",
+   "date_short": "Dec 26",
+   "n_genes": 96,
+   "n_transcripts": 112947,
+   "size_kb": 607,
+   "best_p": 7,
+   "best_diff": 8
+  },
+  {
+   "id": "20251226_zygote_p1_4",
+   "label": "P1 \u00b7 4",
+   "date_short": "Dec 26",
+   "n_genes": 95,
+   "n_transcripts": 42297,
+   "size_kb": 381,
+   "best_p": 4,
+   "best_diff": 12
+  },
+  {
+   "id": "20251226_zygote_p1_7",
+   "label": "P1 \u00b7 7",
+   "date_short": "Dec 26",
+   "n_genes": 109,
+   "n_transcripts": 181338,
+   "size_kb": 874,
+   "best_p": 5,
+   "best_diff": 8
+  },
+  {
+   "id": "20251226_zygote_p1_8",
+   "label": "P1 \u00b7 8",
+   "date_short": "Dec 26",
+   "n_genes": 107,
+   "n_transcripts": 140000,
+   "size_kb": 738,
+   "best_p": 9,
+   "best_diff": 9
+  },
+  {
+   "id": "20251226_zygote_p1_9",
+   "label": "P1 \u00b7 9",
+   "date_short": "Dec 26",
+   "n_genes": 105,
+   "n_transcripts": 109302,
+   "size_kb": 607,
+   "best_p": 8,
+   "best_diff": 9
+  },
+  {
+   "id": "20260407_zygote_p1_0_1",
+   "label": "P1 \u00b7 0_1",
+   "date_short": "Apr 7",
+   "n_genes": 99,
+   "n_transcripts": 13780,
+   "size_kb": 314,
+   "best_p": 14,
+   "best_diff": 14
+  },
+  {
+   "id": "20260407_zygote_p1_0_2",
+   "label": "P1 \u00b7 0_2",
+   "date_short": "Apr 7",
+   "n_genes": 100,
+   "n_transcripts": 12683,
+   "size_kb": 290,
+   "best_p": 8,
+   "best_diff": 8
+  },
+  {
+   "id": "20260407_zygote_p1_1",
+   "label": "P1 \u00b7 1",
+   "date_short": "Apr 7",
+   "n_genes": 93,
+   "n_transcripts": 7271,
+   "size_kb": 274,
+   "best_p": 2,
+   "best_diff": 2
+  },
+  {
+   "id": "20260407_zygote_p1_10",
+   "label": "P1 \u00b7 10",
+   "date_short": "Apr 7",
+   "n_genes": 99,
+   "n_transcripts": 21238,
+   "size_kb": 365,
+   "best_p": 14,
+   "best_diff": 15
+  },
+  {
+   "id": "20260407_zygote_p1_11",
+   "label": "P1 \u00b7 11",
+   "date_short": "Apr 7",
+   "n_genes": 88,
+   "n_transcripts": 11653,
+   "size_kb": 278,
+   "best_p": 16,
+   "best_diff": 5
+  },
+  {
+   "id": "20260407_zygote_p1_12",
+   "label": "P1 \u00b7 12",
+   "date_short": "Apr 7",
+   "n_genes": 103,
+   "n_transcripts": 6775,
+   "size_kb": 315,
+   "best_p": 2,
+   "best_diff": 0
+  },
+  {
+   "id": "20260407_zygote_p1_2",
+   "label": "P1 \u00b7 2",
+   "date_short": "Apr 7",
+   "n_genes": 99,
+   "n_transcripts": 53563,
+   "size_kb": 437,
+   "best_p": 3,
+   "best_diff": 7
+  },
+  {
+   "id": "20260407_zygote_p1_3",
+   "label": "P1 \u00b7 3",
+   "date_short": "Apr 7",
+   "n_genes": 102,
+   "n_transcripts": 4586,
+   "size_kb": 247,
+   "best_p": 8,
+   "best_diff": 8
+  },
+  {
+   "id": "20260407_zygote_p1_4",
+   "label": "P1 \u00b7 4",
+   "date_short": "Apr 7",
+   "n_genes": 104,
+   "n_transcripts": 5526,
+   "size_kb": 319,
+   "best_p": 9,
+   "best_diff": 9
+  },
+  {
+   "id": "20260407_zygote_p1_5",
+   "label": "P1 \u00b7 5",
+   "date_short": "Apr 7",
+   "n_genes": 87,
+   "n_transcripts": 4188,
+   "size_kb": 247,
+   "best_p": 9,
+   "best_diff": 14
+  },
+  {
+   "id": "20260407_zygote_p1_6_0",
+   "label": "P1 \u00b7 6_0",
+   "date_short": "Apr 7",
+   "n_genes": 100,
+   "n_transcripts": 11073,
+   "size_kb": 327,
+   "best_p": 0,
+   "best_diff": 0
+  },
+  {
+   "id": "20260407_zygote_p1_6_1",
+   "label": "P1 \u00b7 6_1",
+   "date_short": "Apr 7",
+   "n_genes": 94,
+   "n_transcripts": 8727,
+   "size_kb": 300,
+   "best_p": 3,
+   "best_diff": 3
+  },
+  {
+   "id": "20260407_zygote_p1_7_0",
+   "label": "P1 \u00b7 7_0",
+   "date_short": "Apr 7",
+   "n_genes": 101,
+   "n_transcripts": 11359,
+   "size_kb": 319,
+   "best_p": 10,
+   "best_diff": 3
+  },
+  {
+   "id": "20260407_zygote_p1_7_1",
+   "label": "P1 \u00b7 7_1",
+   "date_short": "Apr 7",
+   "n_genes": 94,
+   "n_transcripts": 9942,
+   "size_kb": 269,
+   "best_p": 4,
+   "best_diff": 4
+  },
+  {
+   "id": "20260407_zygote_p1_8_0",
+   "label": "P1 \u00b7 8_0",
+   "date_short": "Apr 7",
+   "n_genes": 103,
+   "n_transcripts": 5984,
+   "size_kb": 304,
+   "best_p": 3,
+   "best_diff": 5
+  },
+  {
+   "id": "20260407_zygote_p1_8_1",
+   "label": "P1 \u00b7 8_1",
+   "date_short": "Apr 7",
+   "n_genes": 102,
+   "n_transcripts": 4192,
+   "size_kb": 248,
+   "best_p": 6,
+   "best_diff": 6
+  },
+  {
+   "id": "20260409_zygote_p2_9",
+   "label": "P2 \u00b7 9",
+   "date_short": "Apr 9",
+   "n_genes": 124,
+   "n_transcripts": 2661,
+   "size_kb": 193,
+   "best_p": 9,
+   "best_diff": 9
+  },
+  {
+   "id": "20260425_zygote_p2_0",
+   "label": "P2 \u00b7 0",
+   "date_short": "Apr 25",
+   "n_genes": 90,
+   "n_transcripts": 32782,
+   "size_kb": 292,
+   "best_p": 10,
+   "best_diff": 9
+  },
+  {
+   "id": "20260425_zygote_p2_1",
+   "label": "P2 \u00b7 1",
+   "date_short": "Apr 25",
+   "n_genes": 122,
+   "n_transcripts": 147176,
+   "size_kb": 738,
+   "best_p": 14,
+   "best_diff": 15
+  },
+  {
+   "id": "20260425_zygote_p2_10",
+   "label": "P2 \u00b7 10",
+   "date_short": "Apr 25",
+   "n_genes": 118,
+   "n_transcripts": 274612,
+   "size_kb": 961,
+   "best_p": 10,
+   "best_diff": 12
+  },
+  {
+   "id": "20260425_zygote_p2_12",
+   "label": "P2 \u00b7 12",
+   "date_short": "Apr 25",
+   "n_genes": 82,
+   "n_transcripts": 315532,
+   "size_kb": 980,
+   "best_p": 9,
+   "best_diff": 2
+  },
+  {
+   "id": "20260425_zygote_p2_13",
+   "label": "P2 \u00b7 13",
+   "date_short": "Apr 25",
+   "n_genes": 87,
+   "n_transcripts": 358432,
+   "size_kb": 1056,
+   "best_p": 0,
+   "best_diff": 16
+  },
+  {
+   "id": "20260425_zygote_p2_14",
+   "label": "P2 \u00b7 14",
+   "date_short": "Apr 25",
+   "n_genes": 125,
+   "n_transcripts": 338834,
+   "size_kb": 1096,
+   "best_p": 6,
+   "best_diff": 8
+  },
+  {
+   "id": "20260425_zygote_p2_15",
+   "label": "P2 \u00b7 15",
+   "date_short": "Apr 25",
+   "n_genes": 90,
+   "n_transcripts": 421584,
+   "size_kb": 1177,
+   "best_p": 3,
+   "best_diff": 5
+  },
+  {
+   "id": "20260425_zygote_p2_16",
+   "label": "P2 \u00b7 16",
+   "date_short": "Apr 25",
+   "n_genes": 76,
+   "n_transcripts": 268890,
+   "size_kb": 841,
+   "best_p": 11,
+   "best_diff": 1
+  },
+  {
+   "id": "20260425_zygote_p2_17",
+   "label": "P2 \u00b7 17",
+   "date_short": "Apr 25",
+   "n_genes": 123,
+   "n_transcripts": 446332,
+   "size_kb": 1408,
+   "best_p": 12,
+   "best_diff": 5
+  },
+  {
+   "id": "20260425_zygote_p2_18_0",
+   "label": "P2 \u00b7 18_0",
+   "date_short": "Apr 25",
+   "n_genes": 82,
+   "n_transcripts": 66506,
+   "size_kb": 382,
+   "best_p": 10,
+   "best_diff": 9
+  },
+  {
+   "id": "20260425_zygote_p2_18_1",
+   "label": "P2 \u00b7 18_1",
+   "date_short": "Apr 25",
+   "n_genes": 123,
+   "n_transcripts": 61296,
+   "size_kb": 442,
+   "best_p": 10,
+   "best_diff": 10
+  },
+  {
+   "id": "20260425_zygote_p2_19_1",
+   "label": "P2 \u00b7 19_1",
+   "date_short": "Apr 25",
+   "n_genes": 109,
+   "n_transcripts": 154458,
+   "size_kb": 639,
+   "best_p": 8,
+   "best_diff": 12
+  },
+  {
+   "id": "20260425_zygote_p2_2",
+   "label": "P2 \u00b7 2",
+   "date_short": "Apr 25",
+   "n_genes": 123,
+   "n_transcripts": 250646,
+   "size_kb": 852,
+   "best_p": 13,
+   "best_diff": 12
+  },
+  {
+   "id": "20260425_zygote_p2_20",
+   "label": "P2 \u00b7 20",
+   "date_short": "Apr 25",
+   "n_genes": 104,
+   "n_transcripts": 95404,
+   "size_kb": 492,
+   "best_p": 5,
+   "best_diff": 4
+  },
+  {
+   "id": "20260425_zygote_p2_21",
+   "label": "P2 \u00b7 21",
+   "date_short": "Apr 25",
+   "n_genes": 114,
+   "n_transcripts": 186592,
+   "size_kb": 710,
+   "best_p": 7,
+   "best_diff": 2
+  },
+  {
+   "id": "20260425_zygote_p2_22_0",
+   "label": "P2 \u00b7 22_0",
+   "date_short": "Apr 25",
+   "n_genes": 86,
+   "n_transcripts": 215774,
+   "size_kb": 763,
+   "best_p": 9,
+   "best_diff": 7
+  },
+  {
+   "id": "20260425_zygote_p2_22_1",
+   "label": "P2 \u00b7 22_1",
+   "date_short": "Apr 25",
+   "n_genes": 75,
+   "n_transcripts": 135479,
+   "size_kb": 532,
+   "best_p": 10,
+   "best_diff": 4
+  },
+  {
+   "id": "20260425_zygote_p2_23",
+   "label": "P2 \u00b7 23",
+   "date_short": "Apr 25",
+   "n_genes": 118,
+   "n_transcripts": 286014,
+   "size_kb": 1006,
+   "best_p": 10,
+   "best_diff": 9
+  },
+  {
+   "id": "20260425_zygote_p2_25_0",
+   "label": "P2 \u00b7 25_0",
+   "date_short": "Apr 25",
+   "n_genes": 116,
+   "n_transcripts": 158882,
+   "size_kb": 702,
+   "best_p": 12,
+   "best_diff": 15
+  },
+  {
+   "id": "20260425_zygote_p2_26",
+   "label": "P2 \u00b7 26",
+   "date_short": "Apr 25",
+   "n_genes": 83,
+   "n_transcripts": 331138,
+   "size_kb": 1004,
+   "best_p": 12,
+   "best_diff": 8
+  },
+  {
+   "id": "20260425_zygote_p2_3",
+   "label": "P2 \u00b7 3",
+   "date_short": "Apr 25",
+   "n_genes": 121,
+   "n_transcripts": 220450,
+   "size_kb": 787,
+   "best_p": 8,
+   "best_diff": 7
+  },
+  {
+   "id": "20260425_zygote_p2_4",
+   "label": "P2 \u00b7 4",
+   "date_short": "Apr 25",
+   "n_genes": 120,
+   "n_transcripts": 209628,
+   "size_kb": 789,
+   "best_p": 8,
+   "best_diff": 12
+  },
+  {
+   "id": "20260425_zygote_p2_5",
+   "label": "P2 \u00b7 5",
+   "date_short": "Apr 25",
+   "n_genes": 125,
+   "n_transcripts": 392530,
+   "size_kb": 1279,
+   "best_p": 8,
+   "best_diff": 0
+  },
+  {
+   "id": "20260425_zygote_p2_6",
+   "label": "P2 \u00b7 6",
+   "date_short": "Apr 25",
+   "n_genes": 124,
+   "n_transcripts": 258438,
+   "size_kb": 886,
+   "best_p": 7,
+   "best_diff": 7
+  },
+  {
+   "id": "20260425_zygote_p2_7_0",
+   "label": "P2 \u00b7 7_0",
+   "date_short": "Apr 25",
+   "n_genes": 128,
+   "n_transcripts": 400188,
+   "size_kb": 1246,
+   "best_p": 16,
+   "best_diff": 10
+  },
+  {
+   "id": "20260425_zygote_p2_7_1",
+   "label": "P2 \u00b7 7_1",
+   "date_short": "Apr 25",
+   "n_genes": 133,
+   "n_transcripts": 489412,
+   "size_kb": 1494,
+   "best_p": 8,
+   "best_diff": 8
+  },
+  {
+   "id": "20260425_zygote_p2_8_0",
+   "label": "P2 \u00b7 8_0",
+   "date_short": "Apr 25",
+   "n_genes": 80,
+   "n_transcripts": 171743,
+   "size_kb": 643,
+   "best_p": 14,
+   "best_diff": 16
+  },
+  {
+   "id": "20260425_zygote_p2_8_1",
+   "label": "P2 \u00b7 8_1",
+   "date_short": "Apr 25",
+   "n_genes": 122,
+   "n_transcripts": 161046,
+   "size_kb": 748,
+   "best_p": 1,
+   "best_diff": 0
+  },
+  {
+   "id": "20260425_zygote_p2_9_0",
+   "label": "P2 \u00b7 9_0",
+   "date_short": "Apr 25",
+   "n_genes": 65,
+   "n_transcripts": 18570,
+   "size_kb": 252,
+   "best_p": 2,
+   "best_diff": 1
+  },
+  {
+   "id": "20260425_zygote_p2_9_1",
+   "label": "P2 \u00b7 9_1",
+   "date_short": "Apr 25",
+   "n_genes": 87,
+   "n_transcripts": 66852,
+   "size_kb": 433,
+   "best_p": 11,
+   "best_diff": 10
+  }
+ ],
+ "n_planes": 17,
+ "step_deg": 10.0
+}

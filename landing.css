@@ -1,0 +1,64 @@
+:root {
+  --bg: #fafbfc; --surface: #ffffff; --ink: #0b0d13; --ink-2: #3c4453;
+  --ink-soft: #8a91a2; --line: #e7e9ef; --line-2: #eef0f4;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: var(--sans); color: var(--ink);
+  background:
+    radial-gradient(1200px 500px at 85% -10%, color-mix(in srgb, #16a34a 7%, transparent), transparent),
+    radial-gradient(1000px 500px at -5% 110%, color-mix(in srgb, #f97316 7%, transparent), transparent),
+    var(--bg);
+  min-height: 100vh;
+}
+.lp-top {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 26px; border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  backdrop-filter: blur(8px);
+}
+.lp-dot { width: 11px; height: 11px; border-radius: 50%; background: #16a34a;
+  box-shadow: 0 0 0 4px color-mix(in srgb, #16a34a 18%, transparent); }
+.lp-brand { font-weight: 700; font-size: 15px; }
+.lp-brand-sub { font-family: var(--mono); font-size: 11px; color: var(--ink-soft); }
+
+.lp-main { max-width: 920px; margin: 0 auto; padding: 48px 26px 80px; }
+.lp-hero h1 { font-size: 34px; margin: 0 0 8px; letter-spacing: -0.5px; }
+.lp-hero p { font-size: 15.5px; line-height: 1.6; color: var(--ink-2); max-width: 620px; margin: 0; }
+
+.lp-grid {
+  margin-top: 34px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px;
+}
+.lp-card {
+  --accent: #3b82f6;
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 22px 22px 20px; border-radius: 18px;
+  background: var(--surface); border: 1px solid var(--line);
+  text-decoration: none; color: inherit; position: relative; overflow: hidden;
+  box-shadow: 0 1px 2px rgba(16,24,40,.04);
+  transition: transform .16s var(--ease, ease), box-shadow .16s, border-color .16s;
+}
+.lp-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--accent);
+}
+.lp-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 34px rgba(16,24,40,.10);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+}
+.lp-card-tag {
+  align-self: flex-start;
+  font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .5px;
+  color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--line));
+  padding: 3px 9px; border-radius: 999px;
+}
+.lp-card h2 { font-size: 19px; margin: 6px 0 0; line-height: 1.25; }
+.lp-card p { font-size: 13.5px; line-height: 1.55; color: var(--ink-2); margin: 0; flex: 1 1 auto; }
+.lp-card-go {
+  margin-top: 6px; font-size: 13px; font-weight: 700; color: var(--accent);
+}

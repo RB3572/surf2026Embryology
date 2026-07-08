@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sperm · Embryo 3D Viewer</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+</head>
+<body>
+  <!-- ===================== Top bar: brand + embryo tabs ===================== -->
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" aria-hidden="true"></span>
+      <span class="brand-name">Sperm&nbsp;·&nbsp;Embryo&nbsp;3D</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Embryos"></nav>
+  </header>
+
+  <!-- ===================== Viewer ===================== -->
+  <main class="stage">
+    <!-- floating control panel: draggable header + resizable body -->
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">Controls</span>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="controls-row">
+          <label class="ctl">
+            <span class="ctl-label">Gene</span>
+            <select id="gene-select" aria-label="Gene"></select>
+          </label>
+          <div class="vec-toggles" id="vec-toggles" aria-label="Analysis vectors"></div>
+          <div class="null-controls">
+            <label class="null-toggle" title="Show/hide the red null-sperm markers">
+              <input type="checkbox" id="null-show" />
+              <span>Null sperm</span>
+            </label>
+            <button type="button" id="null-regen" class="null-regen"
+                    title="Draw new random null directions for every embryo">↻ New null</button>
+          </div>
+          <div class="readout" id="readout"></div>
+        </div>
+        <div class="pca-panel">
+          <div class="mini-title">PCA variance explained
+            <span class="mini-sub" id="pca-gene"></span></div>
+          <div id="pca-plot" class="pca-plot"></div>
+        </div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Select an embryo</div>
+        <div class="ph-sub">Choose one of the 45 embryos above to view its
+          body, transcript point cloud, and sperm location in 3-D.</div>
+      </div>
+    </div>
+
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div>
+      <span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- ===================== Bottom drawer: cross-embryo violins ===================== -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator"
+         aria-orientation="horizontal" title="Drag to resize height"
+         aria-label="Resize drawer height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false"
+            aria-controls="drawer-body">
+      <span class="drawer-title">Cross-embryo alignment
+        <span class="drawer-gene" id="drawer-gene"></span></span>
+      <span class="drawer-hint">| cos θ | of pre-computed unit vectors, per embryo</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="violin-wrap" id="violin-wrap">
+        <div class="violin-card">
+          <div class="mini-title">| PC1 · Sperm→COM |
+            <span class="mini-sub" id="violin-pca-sub"></span></div>
+          <div id="violin-pca" class="violin-plot"></div>
+        </div>
+        <div class="violin-card">
+          <div class="mini-title">| Gene→COM · Sperm→COM |
+            <span class="mini-sub" id="violin-g2e-sub"></span></div>
+          <div id="violin-g2e" class="violin-plot"></div>
+        </div>
+        <div class="resize-handle" id="violin-resize" role="separator"
+             aria-orientation="vertical" title="Drag to resize plot width"
+             aria-label="Resize plot width"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Right drawer: gene ranking ===================== -->
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator"
+         aria-orientation="vertical" title="Drag to resize width"
+         aria-label="Resize panel width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false"
+            aria-controls="rdrawer-body">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Gene ranking</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Gene ranking</div>
+        <div class="rdrawer-desc">Most consistent first — lowest variation (σ)
+          in the dot product across embryos.</div>
+        <label class="rank-filter">
+          <span class="rank-filter-label">Filter</span>
+          <select id="rank-filter"
+                  title="Keep only genes with more than N transcripts in every embryo they appear in">
+            <option value="0">All genes</option>
+            <option value="10">&gt; 10 in every embryo</option>
+            <option value="20">&gt; 20 in every embryo</option>
+            <option value="30">&gt; 30 in every embryo</option>
+            <option value="40">&gt; 40 in every embryo</option>
+            <option value="50">&gt; 50 in every embryo</option>
+          </select>
+        </label>
+      </div>
+      <div class="predict-panel">
+        <label class="predict-enable">
+          <input type="checkbox" id="predict-enable" />
+          <span>Predict sperm location</span>
+        </label>
+        <div class="predict-config" id="predict-config" hidden>
+          <div class="predict-ctl">
+            <span class="predict-label">Use top</span>
+            <select id="predict-topn" aria-label="Number of ranked genes">
+              <option value="3">3</option>
+              <option value="5">5</option>
+              <option value="10" selected>10</option>
+              <option value="20">20</option>
+              <option value="all">all</option>
+            </select>
+            <span class="predict-label">ranked genes (active tab's axis)</span>
+          </div>
+          <label class="predict-ctl predict-loo-row">
+            <input type="checkbox" id="predict-loo" checked />
+            <span>Leave-one-out (exclude this embryo from the fit)</span>
+          </label>
+          <div class="predict-readout" id="predict-readout"></div>
+        </div>
+      </div>
+      <div class="rtabs" id="rtabs">
+        <button class="rtab rtab-real active" data-axis="pca" data-cond="real">PC1 · Sperm</button>
+        <button class="rtab rtab-real" data-axis="g2e" data-cond="real">COM · Sperm</button>
+        <button class="rtab rtab-null" data-axis="pca" data-cond="null">PC1 · Null</button>
+        <button class="rtab rtab-null" data-axis="g2e" data-cond="null">COM · Null</button>
+      </div>
+      <div class="rank-list" id="rank-list"></div>
+    </div>
+  </aside>
+
+  <script src="app.js"></script>
+</body>
+</html>

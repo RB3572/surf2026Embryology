@@ -10,7 +10,7 @@ Geometry (physical µm space; xy = px·0.15, z = frame·1.0):
   * embryo COM     = centroid of ALL segmented voxels (labels 1–5)
   * polar body COM = centroid of segment 2 (small peripheral body)
   * axis           = unit(COM → polar-body COM)
-  * 17 planes, each CONTAINS the axis, rotated 10° about it (0°,10°,…,160°).
+  * 18 planes, each CONTAINS the axis, rotated 10° about it (0°,10°,…,170°).
     Plane k normal nₖ = cosθ·u + sinθ·v (u,v ⊥ axis). Side of point p =
     sign((p−COM)·nₖ).
 
@@ -21,8 +21,10 @@ normalized by volume and by total, their side-differences, a coin-flip NULL
 permutation p-values (volume- and count-normalized):
     T = |normalized side-difference|;   p = (1 + #{T_null ≥ T_obs}) / (1 + N_null)
 
-Best planes:  per gene → min-p (volume p) and max |a−b|;  per embryo → the plane
-minimizing the transcript-weighted mean p and the plane maximizing Σ|a−b|/ΣN.
+Best planes (per embryo): FOUR planes = {min transcript-weighted-mean p} and
+{max Σ side-difference / ΣN}, each computed under BOTH normalizations (volume /
+count) → best_planes = {pVol, pCnt, diffVol, diffCnt}. Per gene we also store the
+min-p and max-|diff| plane under each normalization.
 
 Outputs (per embryo, gzipped): data/zygote/<id>.json.gz  (slim render scene +
 the plane analysis), and data/zygote_manifest.json.
@@ -45,7 +47,7 @@ XY_UM = 0.15          # µm per pixel
 Z_UM = 1.0            # µm per frame
 DS_XY = 6             # mask downsample (xy) for volume/COM
 DS_Z = 2              # mask downsample (z)
-N_PLANES = 17
+N_PLANES = 18          # 0°–170° in 10° steps (tiles the half-circle)
 STEP_DEG = 10.0
 N_NULL = 10000        # coin-flip trials for the permutation p-value
 SLAB_UM = 6.0         # cross-section slab half-thickness (µm)
@@ -152,7 +154,9 @@ def process(eid):
     # side of every transcript for every plane, per gene
     K = N_PLANES
     weighted_p_vol = np.zeros(K); weighted_p_cnt = np.zeros(K)
-    diff_sum = np.zeros(K); total_n = 0
+    diff_cnt_sum = np.zeros(K)          # Σ|a−b|                (count difference)
+    diff_vol_sum = np.zeros(K)          # Σ n·|a/V_A − b/V_B|   (volume difference)
+    total_n = 0
     gene_rows = []
     for gi, g in enumerate(genes):
         t = tx[g]
@@ -190,23 +194,30 @@ def process(eid):
             row["pVol"] = p_vol; row["pCnt"] = p_cnt
             pv[k] = p_vol; pc[k] = p_cnt
             planes_g.append(row)
-        # per-gene best planes
-        bestP = int(np.argmin(pv))                           # min volume-normalized p
-        bestD = int(np.argmax(np.abs(aK - bK)))              # max raw |a−b|
+        # per-gene best planes (min p / max |diff|, each by both normalizations)
+        dVolK = aK / volA - bK / volB
         gene_rows.append({"gene": g, "idx": gi, "total": n, "planes": planes_g,
-                          "bestP": bestP, "bestDiff": bestD})
+                          "bestP_vol": int(np.argmin(pv)), "bestP_cnt": int(np.argmin(pc)),
+                          "bestDiff_vol": int(np.argmax(np.abs(dVolK))),
+                          "bestDiff_cnt": int(np.argmax(np.abs(aK - bK)))})
         # per-embryo aggregates
         weighted_p_vol += n * pv; weighted_p_cnt += n * pc
-        diff_sum += np.abs(aK - bK)
+        diff_cnt_sum += np.abs(aK - bK)
+        diff_vol_sum += n * np.abs(dVolK)
         total_n += n
 
     if total_n == 0:
         return None
     weighted_p_vol /= total_n; weighted_p_cnt /= total_n
-    diff_sum_norm = diff_sum / total_n
-    best_p_plane = int(np.argmin(weighted_p_cnt))            # min weighted mean p (count)
-    best_p_plane_vol = int(np.argmin(weighted_p_vol))
-    best_diff_plane = int(np.argmax(diff_sum_norm))
+    diff_cnt_norm = diff_cnt_sum / total_n      # count-normalized difference metric
+    diff_vol_norm = diff_vol_sum / total_n      # volume-normalized difference metric
+    # 4 per-embryo best planes: {min weighted-p, max Σ|diff|} × {volume, count}
+    best_planes = {
+        "pVol": int(np.argmin(weighted_p_vol)),
+        "pCnt": int(np.argmin(weighted_p_cnt)),
+        "diffVol": int(np.argmax(diff_vol_norm)),
+        "diffCnt": int(np.argmax(diff_cnt_norm)),
+    }
 
     # ---- render geometry (plot space: x_px, y_px, frame·z_scale) ----
     com_plot = [com[0] / XY_UM, com[1] / XY_UM, com[2] * zs]
@@ -229,7 +240,8 @@ def process(eid):
             "volA": round(float(volA[k]), 1), "volB": round(float(volB[k]), 1),
             "wpVol": round(float(weighted_p_vol[k]), 5),
             "wpCnt": round(float(weighted_p_cnt[k]), 5),
-            "diffSum": round(float(diff_sum_norm[k]), 5),
+            "dmVol": round(float(diff_vol_norm[k]), 7),
+            "dmCnt": round(float(diff_cnt_norm[k]), 5),
         })
     outline = cross_section_outline(pos, com, a, u, v)
 
@@ -245,8 +257,7 @@ def process(eid):
             "pb_plot": [round(c, 2) for c in pb_plot],
             "axis_plot": [round(x, 5) for x in [a[0] / XY_UM, a[1] / XY_UM, a[2] * zs]],
             "planes": planes_geo,
-            "best_p_plane": best_p_plane, "best_p_plane_vol": best_p_plane_vol,
-            "best_diff_plane": best_diff_plane,
+            "best_planes": best_planes,
             "n_null": N_NULL,
             "cross_section": {
                 "u_plot": [u[0] / XY_UM, u[1] / XY_UM, u[2] * zs],
@@ -293,16 +304,16 @@ def main():
         m2 = re.search(r"_p(\d+)_(.+)$", eid)
         plate = f"p{m2.group(1)}" if m2 else "?"
         fovsub = m2.group(2) if m2 else eid
+        bp = scene["analysis"]["best_planes"]
         manifest.append({
             "id": eid, "label": f"{plate.upper()} · {fovsub}", "date_short": ds,
             "n_genes": len(scene["genes"]),
             "n_transcripts": sum(len(t["x"]) for t in scene["transcripts"].values()),
             "size_kb": round(os.path.getsize(out) / 1024),
-            "best_p": scene["analysis"]["best_p_plane"],
-            "best_diff": scene["analysis"]["best_diff_plane"],
+            "best_planes": bp,
         })
-        print(f"  [{i+1}/{len(ids)}] {eid}  bestP={scene['analysis']['best_p_plane']*10}° "
-              f"bestDiff={scene['analysis']['best_diff_plane']*10}°  {manifest[-1]['size_kb']}KB")
+        print(f"  [{i+1}/{len(ids)}] {eid}  pVol={bp['pVol']*10}° pCnt={bp['pCnt']*10}° "
+              f"diffVol={bp['diffVol']*10}° diffCnt={bp['diffCnt']*10}°  {manifest[-1]['size_kb']}KB")
     manifest.sort(key=lambda m: m["id"])
     with open(OUT_MANIFEST, "w") as fh:
         json.dump({"embryos": manifest, "n_planes": N_PLANES, "step_deg": STEP_DEG}, fh, indent=1)

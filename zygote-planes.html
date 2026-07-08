@@ -59,7 +59,7 @@
       <div class="ph-inner">
         <div class="ph-title">Select a zygote</div>
         <div class="ph-sub">Choose one of the 60 zygotes above to view its body, the
-          polar-body axis, the 17 candidate division planes, and a gene's
+          polar-body axis, the 18 candidate division planes, and a gene's
           transcripts split across the selected plane.</div>
       </div>
     </div>
@@ -102,8 +102,10 @@
           null, with permutation p-value.</div>
       </div>
       <div class="rtabs" id="rtabs">
-        <button class="rtab active" data-best="p">Min weighted&nbsp;p</button>
-        <button class="rtab" data-best="diff">Max Σ|diff|</button>
+        <button class="rtab active" data-best="pVol">Min p · vol</button>
+        <button class="rtab" data-best="pCnt">Min p · count</button>
+        <button class="rtab" data-best="diffVol">Max Δ · vol</button>
+        <button class="rtab" data-best="diffCnt">Max Δ · count</button>
       </div>
       <div class="best-list" id="best-list"></div>
     </div>

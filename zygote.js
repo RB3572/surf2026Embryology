@@ -24,7 +24,7 @@
 
   const state = {
     manifest: [], currentId: null, scene: null, userGene: null, planeIdx: 0,
-    drawerOpen: false, bestTab: "p", crossMode: "vol",
+    drawerOpen: false, bestTab: "pVol", crossMode: "vol",
   };
 
   // ---------- boot ----------
@@ -91,9 +91,10 @@
     return { bx, by, bz, rx, ry, rz };
   }
   // plane k as an orange quad (physical square in µm → plot space)
+  const PLANE_SCALE = 2;                              // rendered plane size (×) vs precomputed L
   function planeQuad(k, color, op, name, rank) {
     const A = state.scene.analysis, p = planeGeo(k), zs = state.scene.z_scale;
-    const com = A.com_um, L = p.L;
+    const com = A.com_um, L = p.L * PLANE_SCALE;
     const aUm = [p.a_plot[0] * XY, p.a_plot[1] * XY, p.a_plot[2] / zs];
     const mUm = [p.m_plot[0] * XY, p.m_plot[1] * XY, p.m_plot[2] / zs];
     const cor = [[-1, -1], [-1, 1], [1, 1], [1, -1]].map(([sa, sm]) => {
@@ -141,9 +142,16 @@
     if (planeShow.checked)
       traces.push(planeQuad(k, PLANE_C, 0.28, `Plane ${k * state.step}°`, 41000));
     if (bestShow.checked) {
-      const bp = A.best_p_plane, bd = A.best_diff_plane;
-      traces.push(planeQuad(bp, BEST_C, 0.25, `Best (min p) ${bp * state.step}°`, 42000));
-      if (bd !== bp) traces.push(planeQuad(bd, BEST_C, 0.18, `Best (max diff) ${bd * state.step}°`, 42001));
+      const bp = A.best_planes;
+      const items = [["pVol", "min p·vol"], ["pCnt", "min p·cnt"], ["diffVol", "max Δ·vol"], ["diffCnt", "max Δ·cnt"]];
+      const seen = new Set(); let rank = 42000;
+      for (const [key] of items) {
+        const kk = bp[key];
+        if (seen.has(kk)) continue;                 // dedup coincident best planes
+        seen.add(kk);
+        const which = items.filter(([k2]) => bp[k2] === kk).map(([, l]) => l).join(", ");
+        traces.push(planeQuad(kk, BEST_C, 0.22, `Best ${kk * state.step}° (${which})`, rank++));
+      }
     }
     Plotly.react(plotHost, traces, V.sceneLayout(s.extents, s.id), V.plotConfig);
   }
@@ -184,33 +192,50 @@
   const fmtP = (p) => p < 0.001 ? p.toExponential(1) : p.toFixed(3);
 
   // ---------- best-plane list (right drawer) ----------
+  // Four best planes: {min weighted p, max Σ|diff|} × {volume, count}.
+  const BEST_META = {
+    pVol:    { plane: "pVol",    isVol: true,  which: "minimizes the transcript-weighted mean p (volume)" },
+    pCnt:    { plane: "pCnt",    isVol: false, which: "minimizes the transcript-weighted mean p (count)" },
+    diffVol: { plane: "diffVol", isVol: true,  which: "maximizes Σ|side density-difference| / total (volume)" },
+    diffCnt: { plane: "diffCnt", isVol: false, which: "maximizes Σ|side count-difference| / total (count)" },
+  };
   function renderBestList() {
     const s = state.scene; if (!s) return;
-    const A = s.analysis;
-    const k = state.bestTab === "p" ? A.best_p_plane : A.best_diff_plane;
-    const which = state.bestTab === "p"
-      ? `minimizes the transcript-weighted mean p` : `maximizes Σ|side difference| / total`;
+    const A = s.analysis, meta = BEST_META[state.bestTab];
+    const k = A.best_planes[meta.plane];
+    const isVol = meta.isVol;
+    // real vs null side-difference under the tab's normalization; p under the same
+    const real = (r) => isVol ? r.dVol : r.dNorm;
+    const nul = (r) => isVol ? r.ndVol : r.ndNorm;
+    const pv = (r) => isVol ? r.pVol : r.pCnt;
     const rows = A.genes.map((r) => ({ gene: r.gene, ...r.planes[k], total: r.total }))
-      .sort((a, b) => a.pVol - b.pVol || (Math.abs(b.dNorm) - Math.abs(a.dNorm)));
+      .sort((a, b) => pv(a) - pv(b) || Math.abs(real(b)) - Math.abs(real(a)));
     const cur = gene();
-    let html = `<div class="best-plane-note">Plane <b>${k * state.step}°</b> — ${which}.</div>`;
-    html += `<div class="best-head"><span></span><span>gene</span><span>Δ/n real</span><span>Δ/n null</span><span>p(vol)</span></div>`;
+    const fmtD = (x) => isVol ? x.toExponential(1) : x.toFixed(3);
+    let html = `<div class="best-plane-note">Plane <b>${k * state.step}°</b> — ${meta.which}.</div>`;
+    html += `<div class="best-head"><span></span><span>gene</span><span>Δ real</span><span>Δ null</span>` +
+            `<span>p(${isVol ? "vol" : "cnt"})</span></div>`;
     html += rows.map((r, i) =>
       `<div class="best-row${r.gene === cur ? " current" : ""}" data-gene="${r.gene}"` +
-      ` title="n=${r.total} · Δcount ${r.dCount} · p(count) ${fmtP(r.pCnt)}">` +
+      ` title="n=${r.total} · Δcount ${r.dCount} · p(vol) ${fmtP(r.pVol)} · p(count) ${fmtP(r.pCnt)}">` +
       `<span class="best-num">${i + 1}</span>` +
       `<span class="best-gene">${r.gene}</span>` +
-      `<span class="best-real">${r.dNorm.toFixed(3)}</span>` +
-      `<span class="best-null">${r.ndNorm.toFixed(3)}</span>` +
-      `<span class="best-p${r.pVol <= 0.05 ? " sig" : ""}">${fmtP(r.pVol)}</span></div>`).join("");
+      `<span class="best-real">${fmtD(real(r))}</span>` +
+      `<span class="best-null">${fmtD(nul(r))}</span>` +
+      `<span class="best-p${pv(r) <= 0.05 ? " sig" : ""}">${fmtP(pv(r))}</span></div>`).join("");
     bestListEl.innerHTML = html;
   }
 
   // ---------- cross-section plot (bottom drawer) ----------
-  function pColor(p) {                              // low p = intense red, high p = light gray
-    const t = Math.max(0, Math.min(1, 1 - p));     // intensity
-    const lerp = (a, b) => Math.round(a + (b - a) * t);
-    return `rgb(${lerp(229, 153)},${lerp(231, 27)},${lerp(235, 27)})`;   // #e5e7eb → #99191b
+  // Viridis colormap (low p → bright/yellow end = more intense).
+  const VIRIDIS = [[68, 1, 84], [71, 44, 122], [59, 81, 139], [44, 113, 142], [33, 144, 141],
+                   [39, 173, 129], [92, 200, 99], [170, 220, 50], [253, 231, 37]];
+  function viridis(t) {
+    t = Math.max(0, Math.min(1, t));
+    const x = t * (VIRIDIS.length - 1), i = Math.min(VIRIDIS.length - 2, Math.floor(x)), f = x - i;
+    const a = VIRIDIS[i], b = VIRIDIS[i + 1];
+    return `rgb(${Math.round(a[0] + (b[0] - a[0]) * f)},${Math.round(a[1] + (b[1] - a[1]) * f)},` +
+           `${Math.round(a[2] + (b[2] - a[2]) * f)})`;
   }
   function renderCross() {
     const s = state.scene; if (!s) return;
@@ -219,16 +244,19 @@
     if (!outline.length) { Plotly.purge(crossPlot); crossPlot.innerHTML = '<div class="chart-readout" style="padding:20px;text-align:center">No cross-section.</div>'; return; }
     crossPlot.innerHTML = "";
     let R = 0; for (const p of outline) R = Math.max(R, Math.hypot(p[0], p[1]));
+    // normalize p across the planes so the colormap spans the full range (low p = intense)
+    const pOf = (k) => state.crossMode === "vol" ? planes[k].wpVol : planes[k].wpCnt;
+    const ps = planes.map((_, k) => pOf(k));
+    const pmin = Math.min(...ps), pmax = Math.max(...ps), span = pmax - pmin || 1;
     const traces = [];
-    // plane lines through the center, colored by p-value
     for (let k = 0; k < planes.length; k++) {
       const th = k * state.step * Math.PI / 180;
       const dir = [-Math.sin(th), Math.cos(th)];   // plane ∩ cross-section direction (u,v)
-      const p = state.crossMode === "vol" ? planes[k].wpVol : planes[k].wpCnt;
+      const p = pOf(k), t = (pmax - p) / span;     // 1 = lowest p = most intense
       const sel = k === state.planeIdx;
       traces.push({ type: "scatter", mode: "lines", showlegend: false,
         x: [-R * 1.05 * dir[0], R * 1.05 * dir[0]], y: [-R * 1.05 * dir[1], R * 1.05 * dir[1]],
-        line: { color: sel ? PLANE_C : pColor(p), width: sel ? 4 : (2 + 2.5 * (1 - p)) },
+        line: { color: sel ? PLANE_C : viridis(t), width: sel ? 4 : (2 + 2.8 * t) },
         hovertemplate: `plane ${k * state.step}°<br>weighted p = ${fmtP(p)}<extra></extra>` });
     }
     // outline (bold black, closed)

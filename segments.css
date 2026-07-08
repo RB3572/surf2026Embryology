@@ -1,6 +1,11 @@
 /* Segment Gene Enrichment — additions on top of style.css */
 
 #gene-select { min-width: 150px; }
+#min-count {
+  width: 68px; font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--ink);
+  padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+}
+#min-count:focus { outline: none; border-color: var(--accent, #7c3aed); }
 
 /* segment colour legend (floating window) */
 .seg-legend { display: flex; flex-wrap: wrap; gap: 6px 12px; padding: 8px 0 2px; border-top: 1px solid var(--line-2); }

@@ -31,6 +31,10 @@
             <span class="ctl-label">Gene</span>
             <select id="gene-select" aria-label="Gene"></select>
           </label>
+          <label class="ctl" title="Only genes with more than this many transcripts in the current embryo appear in the ranked list">
+            <span class="ctl-label">Min&nbsp;count</span>
+            <input id="min-count" type="number" min="0" step="10" value="0" placeholder="0" aria-label="Minimum transcripts" />
+          </label>
         </div>
         <div class="seg-legend" id="seg-legend"></div>
         <div class="zchart-panel">

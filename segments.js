@@ -12,14 +12,6 @@
     if (!div.classList.contains("js-plotly-plot")) div.innerHTML = "";
     Plotly.react(div, traces, layout, cfg || { responsive: true, displayModeBar: false });
   }
-  // Viridis colormap for enrichment (low = dark/blue, high = yellow).
-  const VIRIDIS = [[68, 1, 84], [59, 81, 139], [33, 144, 141], [92, 200, 99], [253, 231, 37]];
-  function viridis(t) {
-    t = Math.max(0, Math.min(1, t));
-    const x = t * (VIRIDIS.length - 1), i = Math.min(VIRIDIS.length - 2, Math.floor(x)), f = x - i;
-    const a = VIRIDIS[i], b = VIRIDIS[i + 1];
-    return `rgb(${Math.round(a[0] + (b[0] - a[0]) * f)},${Math.round(a[1] + (b[1] - a[1]) * f)},${Math.round(a[2] + (b[2] - a[2]) * f)})`;
-  }
 
   const tabsEl = $("#tabs"), countEl = $("#embryo-count");
   const controlsEl = $("#controls"), plotHost = $("#plot-host");
@@ -28,9 +20,10 @@
   const chartReadout = $("#chart-readout"), segLegend = $("#seg-legend");
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
   const rtabsEl = $("#rtabs"), segListEl = $("#seg-list");
+  const minCountEl = $("#min-count");
 
   const state = { manifest: [], currentId: null, scene: null, userGene: null,
-                  segTab: null, geneMap: null };
+                  segTab: null, geneMap: null, cutoff: 0 };
 
   const segColor = (lbl) => {
     const d = (state.scene.region_defaults || {})[String(lbl)];
@@ -52,6 +45,10 @@
         .setResizeCb(() => { try { Plotly.Plots.resize(chartEl); } catch (_) {} });
       wireRdrawer();
       geneSelect.addEventListener("change", () => { state.userGene = geneSelect.value; render(); renderChart(); highlightGene(); });
+      minCountEl.addEventListener("input", () => {
+        state.cutoff = Math.max(0, parseInt(minCountEl.value, 10) || 0);
+        if (state.scene) renderSegList();
+      });
     } catch (err) { showError("Failed to load manifest: " + (err.message || err)); }
   })();
 
@@ -107,25 +104,22 @@
   }
   function render() {
     const s = state.scene; if (!s) return;
-    const g = gene(), gm = state.geneMap[g] || {};
-    const enrichVals = s.mask_labels.map((l) => (gm[l] ? gm[l].enrich : null)).filter((x) => x != null);
-    const emax = enrichVals.length ? Math.max(...enrichVals) : 1;
-    const emin = enrichVals.length ? Math.min(...enrichVals) : 0;
-    const span = (emax - emin) || 1;
+    const g = gene();
     const traces = [];
+    // faint segmentation meshes for spatial context
     for (const lbl of s.mask_labels) {
-      const info = gm[lbl];
-      let color, opacity;
-      if (g && info) {                       // colour by this gene's enrichment
-        color = viridis((info.enrich - emin) / span);
-        opacity = 0.35 + 0.5 * ((info.enrich - emin) / span);
-      } else if (g) {                        // gene not in this segment (< min count)
-        color = "#c7ccd6"; opacity = 0.12;
-      } else {
-        color = segColor(lbl); opacity = 0.28;
-      }
-      const t = segMesh(s, lbl, color, opacity);
-      if (t) { t.name = `${segName(lbl)}${info ? ` · ${info.enrich}×` : ""}`; traces.push(t); }
+      const t = segMesh(s, lbl, segColor(lbl), 0.1);
+      if (t) traces.push(t);
+    }
+    // the selected gene's transcript dots, coloured by the segment they fall in
+    const tx = s.transcripts ? s.transcripts[g] : null;
+    if (tx && tx.x.length) {
+      const zs = s.z_scale;
+      const colors = tx.s.map((seg) => (seg >= 1 ? segColor(seg) : "#b6bdc9"));
+      traces.push({ type: "scatter3d", mode: "markers", name: `${g} · ${tx.x.length} dots`,
+        x: tx.x, y: tx.y, z: tx.gz.map((z) => z * zs),
+        marker: { size: 2.4, color: colors, opacity: 0.85, line: { width: 0 } },
+        hovertemplate: `${g}<extra></extra>`, legendrank: 20000 });
     }
     Plotly.react(plotHost, traces, V.sceneLayout(s.extents, s.id), V.plotConfig);
   }
@@ -179,11 +173,14 @@
   }
   function renderSegList() {
     const s = state.scene; if (!s) return;
-    const rows = s.ranked[String(state.segTab)] || [];
+    const cut = state.cutoff || 0;
+    // cutoff = minimum total transcripts of the gene in this embryo (ntot)
+    const rows = (s.ranked[String(state.segTab)] || []).filter((r) => r.ntot > cut);
     const cur = gene();
     const vol = (s.segments.find((q) => q.label === state.segTab) || {}).volume || 0;
+    const note = cut > 0 ? `> ${cut} transcripts in embryo` : "≥3 transcripts in segment";
     let html = `<div class="best-plane-note">${segName(state.segTab)} · volume ` +
-      `<b>${Math.round(vol).toLocaleString()}</b> µm³ · ${rows.length} genes (≥3 transcripts)</div>`;
+      `<b>${Math.round(vol).toLocaleString()}</b> µm³ · ${rows.length} genes (${note})</div>`;
     html += `<div class="best-head"><span></span><span>gene</span><span>fold</span><span>count</span></div>`;
     html += rows.map((r, i) =>
       `<div class="best-row seg-row${r.gene === cur ? " current" : ""}" data-gene="${r.gene}" ` +

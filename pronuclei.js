@@ -7,7 +7,6 @@
 (() => {
   const $ = (s) => document.querySelector(s);
   const V = window.VCore;
-  const PRON_C = { 3: "#2563eb", 4: "#dc2626" };
   const LINE_C = "#111827", CUR_C = "#0891b2";
 
   function plotInto(div, traces, layout, cfg) {
@@ -28,7 +27,7 @@
     try {
       const m = await (await fetch("data/pronuclei_manifest.json")).json();
       state.points = m.embryos;
-      countEl.textContent = `${m.embryos.length} zygotes · pronuclei = seg ${m.pron_labels.join(" & ")}`;
+      countEl.textContent = `${m.embryos.length} zygotes · pronuclei auto-detected inside the cytoplasm`;
       state.fit = linreg(state.points.map((p) => p.total), state.points.map((p) => p.distance));
       V.buildTabs(tabsEl, m.embryos, selectEmbryo, (e) => ({
         label: e.label, sub: e.date_short,
@@ -57,25 +56,26 @@
   }
 
   // ---------- 3-D ----------
-  function segMesh(scene, lbl, color, opacity) {
+  function segMesh(scene, lbl, color, opacity, name) {
     const mesh = scene.region_meshes[String(lbl)]; if (!mesh) return null;
     const v = mesh.verts, f = mesh.faces, nV = v.length / 3, nF = f.length / 3;
     const x = new Array(nV), y = new Array(nV), z = new Array(nV);
     for (let i = 0; i < nV; i++) { x[i] = v[i * 3]; y[i] = v[i * 3 + 1]; z[i] = v[i * 3 + 2]; }
     const ii = new Array(nF), jj = new Array(nF), kk = new Array(nF);
     for (let i = 0; i < nF; i++) { ii[i] = f[i * 3]; jj[i] = f[i * 3 + 1]; kk[i] = f[i * 3 + 2]; }
-    const isPron = lbl === 3 || lbl === 4;
     return { type: "mesh3d", x, y, z, i: ii, j: jj, k: kk, color, opacity,
-      name: isPron ? `Pronucleus ${lbl}` : `Segment ${lbl}`, showlegend: true,
-      flatshading: false, hoverinfo: "name",
+      name, showlegend: true, flatshading: false, hoverinfo: "name",
       lighting: { ambient: 0.7, diffuse: 0.55, specular: 0.12, roughness: 0.9 }, legendrank: lbl };
   }
   function render() {
     const s = state.scene; if (!s) return;
+    const [la, lb] = s.pron_labels;                    // auto-detected pronuclei labels
+    const pcolor = { [la]: "#2563eb", [lb]: "#dc2626" };
     const traces = [];
     for (const lbl of s.mask_labels) {
-      const pron = lbl === 3 || lbl === 4;
-      const t = segMesh(s, lbl, pron ? PRON_C[lbl] : "#9aa3b2", pron ? 0.5 : 0.08);
+      const pron = lbl === la || lbl === lb;
+      const name = pron ? `Pronucleus (seg ${lbl})` : `Segment ${lbl}`;
+      const t = segMesh(s, lbl, pron ? pcolor[lbl] : "#9aa3b2", pron ? 0.5 : 0.08, name);
       if (t) traces.push(t);
     }
     const [a, b] = s.line_plot;
@@ -90,6 +90,7 @@
     pnReadout.innerHTML =
       `<div class="pn-big"><span>${s.distance_um}</span> µm <span class="pn-lbl">pronuclei distance</span></div>` +
       `<div class="pn-big"><span>${s.total_transcripts.toLocaleString()}</span> <span class="pn-lbl">total transcripts</span></div>` +
+      `<div class="pn-resid">pronuclei auto-detected as segments <b>${s.pron_labels[0]}</b> &amp; <b>${s.pron_labels[1]}</b></div>` +
       `<div class="pn-resid">fit predicts ${pred.toFixed(1)} µm here (residual ${(s.distance_um - pred >= 0 ? "+" : "") + (s.distance_um - pred).toFixed(1)} µm)</div>`;
   }
 

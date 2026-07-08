@@ -129,6 +129,10 @@ def process(stage, eid):
         "region_meshes": {str(s): round_mesh(rm[str(s)]) for s in seg_ids if str(s) in rm},
         "segments": [{"label": s, "volume": round(vol[s], 1)} for s in seg_ids],
         "ranked": ranked,
+        # per-gene transcript locations for the 3-D dots; s = segment label per
+        # transcript (0 = background / outside every segment)
+        "transcripts": {g: {"x": tx[g]["x"], "y": tx[g]["y"], "gz": tx[g]["gz"],
+                            "s": seg_of[g].astype(np.int16).tolist()} for g in genes},
     }
     return scene
 

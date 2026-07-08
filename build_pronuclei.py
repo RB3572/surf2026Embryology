@@ -2,11 +2,16 @@
 """
 Build the "Pronuclei Distance vs Transcripts" project data — ZYGOTES only.
 
-A fertilised zygote has two pronuclei (male + female), segmented as labels 3 and 4
-(label 1 = cytoplasm, 2 = polar body). For every zygote that has BOTH pronuclei we
-compute:
-  * the minimum distance between the two pronuclei (the shortest line that can be
-    drawn between the seg-3 and seg-4 voxel clouds), in µm, via a KD-tree; and
+A fertilised zygote has two pronuclei (male + female). Their segmentation LABEL
+NUMBERS are NOT consistent (sometimes 3 & 4, sometimes 2 & 3, sometimes 4 & 5, …),
+so we auto-detect them: segment 1 is always the cytoplasm, and the pronuclei are the
+segments that sit INSIDE it. A segment is "inside seg 1" when more of its dilation
+shell borders seg 1 than borders background (label 0) — this cleanly excludes the
+polar body / perivitelline debris, which border the outside. Among the inside
+segments we take the two largest by volume as the pronuclei. For every zygote with
+>= 2 such inside segments we compute:
+  * the minimum distance between the two pronuclei (the shortest line between their
+    voxel clouds), in µm, via a KD-tree; and
   * the total number of detected transcripts in the zygote.
 
 The bottom-drawer scatter plots distance vs total transcripts (with a regression).
@@ -23,6 +28,7 @@ import os
 import numpy as np
 import tifffile
 from scipy.spatial import cKDTree
+from scipy.ndimage import binary_dilation
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ATLAS = "/Users/rishib/Desktop/MERFISH/Website2/MerfishAtlasWebsite/public/data/Zygote"
@@ -34,18 +40,47 @@ XY_UM = 0.15
 Z_UM = 1.0
 DS_XY = 4          # finer than the other builds — the pronuclei are small
 DS_Z = 2
-PRON = (3, 4)      # the two pronuclei labels
+CYTO = 1           # segment 1 is always the cytoplasm
 
 
-def mask_coords(label_path):
-    """Downsampled nonzero voxel positions (µm) + their segment labels."""
+def load_sub(label_path):
+    """Downsampled label volume (Z, Y, X)."""
     with tifffile.TiffFile(label_path) as t:
         mm = t.series[0].asarray(out="memmap")
         sub = np.asarray(mm[::DS_Z, ::DS_XY, ::DS_XY]); del mm
-    iz, iy, ix = np.nonzero(sub)
-    labels = sub[iz, iy, ix].astype(np.int16)
-    pos = np.stack([ix * DS_XY * XY_UM, iy * DS_XY * XY_UM, iz * DS_Z * Z_UM], axis=1)
-    return pos.astype(np.float32), labels
+    return sub
+
+
+def detect_pronuclei(sub):
+    """The two pronuclei = the two largest segments (by volume) that sit INSIDE the
+    cytoplasm (seg 1). A segment is inside when its dilation shell borders seg 1 more
+    than it borders background (label 0). Returns (labelA, labelB) largest-first, or
+    None if fewer than two inside segments exist."""
+    labs = [int(v) for v in np.unique(sub) if v >= 1]
+    if CYTO not in labs:
+        return None
+    seg1 = (sub == CYTO)
+    bg = (sub == 0)
+    inside = []
+    for s in labs:
+        if s == CYTO:
+            continue
+        m = (sub == s)
+        shell = binary_dilation(m, iterations=2) & ~m
+        n1 = int((shell & seg1).sum())
+        n0 = int((shell & bg).sum())
+        if n1 > n0:                                   # more cytoplasm than background around it
+            inside.append((int(m.sum()), s))
+    inside.sort(reverse=True)                          # largest volume first
+    if len(inside) < 2:
+        return None
+    return inside[0][1], inside[1][1]
+
+
+def coords_of(sub, label):
+    """Voxel positions (µm) for one segment label."""
+    iz, iy, ix = np.nonzero(sub == label)
+    return np.stack([ix * DS_XY * XY_UM, iy * DS_XY * XY_UM, iz * DS_Z * Z_UM], axis=1).astype(np.float32)
 
 
 def round_mesh(m):
@@ -61,11 +96,13 @@ def process(eid):
     lab = glob.glob(os.path.join(SRC, eid, "*_label.tif"))
     if not (os.path.isfile(scene_p) and lab):
         return None
-    pos, labels = mask_coords(lab[0])
-    if not (PRON[0] in labels and PRON[1] in labels):
-        return None                                    # need BOTH pronuclei
-    A = pos[labels == PRON[0]]
-    B = pos[labels == PRON[1]]
+    sub = load_sub(lab[0])
+    pron = detect_pronuclei(sub)
+    if not pron:
+        return None                                    # fewer than two pronuclei inside seg 1
+    la, lb = pron
+    A = coords_of(sub, la)
+    B = coords_of(sub, lb)
     tree = cKDTree(B)
     dist, idx = tree.query(A)                           # nearest B for each A
     j = int(np.argmin(dist))
@@ -76,12 +113,12 @@ def process(eid):
     total = int(d.get("n_transcripts") or sum(len(t["x"]) for t in d.get("transcripts", {}).values()))
     zs = d.get("z_scale", 7.0)
     rm = d.get("region_meshes", {})
-    seg_ids = sorted(int(s) for s in np.unique(labels) if s >= 1)
+    seg_ids = sorted(int(s) for s in np.unique(sub) if s >= 1)
     scene = {
         "id": eid, "z_scale": zs, "extents": d["extents"],
         "mask_labels": seg_ids, "region_defaults": d.get("region_defaults", {}),
         "region_meshes": {str(s): round_mesh(rm[str(s)]) for s in seg_ids if str(s) in rm},
-        "pron_labels": list(PRON),
+        "pron_labels": [la, lb],                        # [larger, smaller] by volume; auto-detected
         "line_plot": [um_to_plot(pa, zs), um_to_plot(pb, zs)],
         "distance_um": round(d_min, 2), "total_transcripts": total,
     }
@@ -127,12 +164,12 @@ def main():
         with gzip.open(out, "wt") as fh:
             json.dump(scene, fh, separators=(",", ":"), default=_json_default)
         points.append({"id": eid, "label": short_label(eid), "date_short": date_short(eid),
-                       "distance": round(dist, 2), "total": total,
+                       "distance": round(dist, 2), "total": total, "pron_labels": scene["pron_labels"],
                        "size_kb": round(os.path.getsize(out) / 1024)})
-        print(f"  [{i+1}/{len(ids)}] {eid}  dist={dist:.1f}um  total={total}")
+        print(f"  [{i+1}/{len(ids)}] {eid}  pronuclei=seg{scene['pron_labels']}  dist={dist:.1f}um  total={total}")
     points.sort(key=lambda p: p["id"])
     with open(OUT_MANIFEST, "w") as fh:
-        json.dump({"embryos": points, "pron_labels": list(PRON)}, fh, indent=1)
+        json.dump({"embryos": points}, fh, indent=1)
     tot = sum(p["size_kb"] for p in points)
     print(f"\nwrote {len(points)} zygotes with 2 pronuclei  ({tot/1024:.1f} MB)")
 

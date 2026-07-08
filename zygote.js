@@ -259,9 +259,10 @@
       const dir = [-Math.sin(th), Math.cos(th)];   // plane ∩ cross-section direction (u,v)
       const p = pOf(k), t = (pmax - p) / span;     // 1 = lowest p = most intense
       const sel = k === state.planeIdx;
+      // low p → dark/blue end of viridis (intense); high p → yellow (faint)
       traces.push({ type: "scatter", mode: "lines", showlegend: false,
         x: [-R * 1.05 * dir[0], R * 1.05 * dir[0]], y: [-R * 1.05 * dir[1], R * 1.05 * dir[1]],
-        line: { color: sel ? PLANE_C : viridis(t), width: sel ? 4 : (2 + 2.8 * t) },
+        line: { color: sel ? PLANE_C : viridis(1 - t), width: sel ? 4 : (2 + 2.8 * t) },
         hovertemplate: `plane ${k * state.step}°<br>weighted p = ${fmtP(p)}<extra></extra>` });
     }
     // outline (bold black, closed)

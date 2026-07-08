@@ -34,6 +34,18 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a91a2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat; background-position: right 7px center;
 }
+.cross-legend { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+.cl-scale { display: flex; align-items: center; gap: 7px; }
+.cl-bar {
+  width: 120px; height: 11px; border-radius: 3px; border: 1px solid var(--line);
+  background: linear-gradient(to right, #440154, #3b528b, #21918c, #5ec962, #fde725);
+}
+.cl-cap { font-family: var(--sans); font-size: 10px; line-height: 1.15; color: var(--muted); white-space: nowrap; }
+.cl-cap:last-child { text-align: left; }
+.cl-notes { display: flex; align-items: center; gap: 12px; }
+.cl-note { display: inline-flex; align-items: center; gap: 5px; font-family: var(--sans); font-size: 11px; color: var(--muted); white-space: nowrap; }
+.cl-swatch { width: 13px; height: 4px; border-radius: 2px; display: inline-block; }
+@media (max-width: 720px) { .cross-legend { display: none; } }
 .cross-plot { width: 100%; max-width: 560px; margin: 0 auto; height: calc(100% - 34px); min-height: 240px; }
 
 /* best-plane per-gene list (right drawer) */

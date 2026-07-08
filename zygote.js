@@ -1,5 +1,5 @@
 /* Zygote Division Planes — analysis model.
- * Built on viewer-core.js (VCore): 60 zygotes, the polar-body axis, 17 candidate
+ * Built on viewer-core.js (VCore): 60 zygotes, the polar-body axis, 18 candidate
  * division planes, per-gene transcript split (blue/red) across the selected plane,
  * a counts+null chart, best-plane tables, and a cross-section plot. All statistics
  * are pre-computed (build_zygote.py); the UI only reads them.
@@ -10,6 +10,13 @@
   const XY = 0.15;
   const AXIS_C = "#111827", PLANE_C = "#f97316", BEST_C = "#16a34a";
   const BLUE = "#2563eb", RED = "#dc2626";
+
+  // Plotly.react corrupts if the div was cleared with innerHTML="" while it was
+  // a live plot. Only clear non-Plotly content (e.g. an empty-state message).
+  function plotInto(div, traces, layout, cfg) {
+    if (!div.classList.contains("js-plotly-plot")) div.innerHTML = "";
+    Plotly.react(div, traces, layout, cfg || { responsive: true, displayModeBar: false });
+  }
 
   const tabsEl = $("#tabs"), countEl = $("#embryo-count");
   const controlsEl = $("#controls"), plotHost = $("#plot-host");
@@ -167,20 +174,19 @@
     const g = gene(), k = state.planeIdx, row = geneRow(g, k);
     chartSub.textContent = `· ${g} · plane ${k * state.step}°`;
     if (!row) { Plotly.purge(chartEl); chartEl.innerHTML = '<div class="chart-readout">Gene not in this embryo.</div>'; chartReadout.innerHTML = ""; return; }
-    chartEl.innerHTML = "";
     const traces = [
       { type: "bar", name: "Real", x: ["Side A", "Side B"], y: [row.a, row.b],
         marker: { color: [BLUE, RED] }, hovertemplate: "%{x}: %{y}<extra>real</extra>" },
       { type: "bar", name: "Null", x: ["Side A", "Side B"], y: [row.na, row.nb],
         marker: { color: "#9ca3af" }, opacity: 0.7, hovertemplate: "%{x}: %{y}<extra>null</extra>" },
     ];
-    Plotly.react(chartEl, traces, {
+    plotInto(chartEl, traces, {
       barmode: "group", margin: { l: 34, r: 6, t: 6, b: 20 }, height: 150,
       yaxis: { tickfont: { size: 9 }, gridcolor: "#eef1f5", fixedrange: true, title: { text: "count", font: { size: 9 } } },
       xaxis: { tickfont: { size: 11 }, fixedrange: true }, bargap: 0.3, bargroupgap: 0.08,
       paper_bgcolor: "transparent", plot_bgcolor: "transparent", font: { color: "#1a2233" },
       legend: { orientation: "h", font: { size: 10 }, y: 1.15, x: 1, xanchor: "right" },
-    }, { responsive: true, displayModeBar: false });
+    });
     const sigV = row.pVol <= 0.05, sigC = row.pCnt <= 0.05;
     chartReadout.innerHTML =
       `<div>n = <b>${row.a + row.b}</b> · Δcount = <b>${row.dCount}</b> ` +
@@ -242,7 +248,6 @@
     const A = s.analysis, cs = A.cross_section, planes = A.planes;
     const outline = cs.outline;
     if (!outline.length) { Plotly.purge(crossPlot); crossPlot.innerHTML = '<div class="chart-readout" style="padding:20px;text-align:center">No cross-section.</div>'; return; }
-    crossPlot.innerHTML = "";
     let R = 0; for (const p of outline) R = Math.max(R, Math.hypot(p[0], p[1]));
     // normalize p across the planes so the colormap spans the full range (low p = intense)
     const pOf = (k) => state.crossMode === "vol" ? planes[k].wpVol : planes[k].wpCnt;
@@ -265,12 +270,12 @@
       y: outline.map((p) => p[1]).concat([outline[0][1]]),
       line: { color: "#0b0d13", width: 3 }, hoverinfo: "skip" });
     const lim = R * 1.12;
-    Plotly.react(crossPlot, traces, {
+    plotInto(crossPlot, traces, {
       margin: { l: 10, r: 10, t: 8, b: 10 }, height: crossPlot.clientHeight || 280,
       xaxis: { range: [-lim, lim], visible: false, fixedrange: true, scaleanchor: "y", scaleratio: 1 },
       yaxis: { range: [-lim, lim], visible: false, fixedrange: true },
       paper_bgcolor: "transparent", plot_bgcolor: "transparent",
-    }, { responsive: true, displayModeBar: false });
+    });
   }
 
   // ---------- wiring ----------

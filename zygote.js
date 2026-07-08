@@ -75,7 +75,12 @@
       controlsEl.hidden = false; placeholder.hidden = true;
       drawer.hidden = false; rdrawer.hidden = false;
       render(); renderChart(); renderBestList();
-      if (state.drawerOpen && state.agg) renderBars();   // bottom drawer shows all embryos; only the display gene may change
+      if (state.drawerOpen && state.agg) {
+        // keep the alignment gene in the current embryo's panel so its zygotes can
+        // contain the display gene (disjoint panels ⇒ otherwise the bars go empty)
+        if (!scene.genes.includes(state.alignGene)) { state.alignGene = pickDefaultAlign(); xsAlign.value = state.alignGene; }
+        renderCrossAgg();
+      }
 
     } catch (err) { showError(err.message || String(err)); }
     finally { hideLoading(); }
@@ -193,7 +198,7 @@
     const s = state.scene; if (!s) return;
     const g = gene(), k = state.planeIdx, row = geneRow(g, k);
     chartSub.textContent = `· ${g} · plane ${k * state.step}°`;
-    if (!row) { Plotly.purge(chartEl); chartEl.innerHTML = '<div class="chart-readout">Gene not in this embryo.</div>'; chartReadout.innerHTML = ""; return; }
+    if (!row) { Plotly.purge(chartEl); chartEl.classList.remove("js-plotly-plot"); chartEl.innerHTML = '<div class="chart-readout">Gene not in this embryo.</div>'; chartReadout.innerHTML = ""; return; }
     const traces = [
       { type: "bar", name: "Real", x: ["Side A", "Side B"], y: [row.a, row.b],
         marker: { color: [BLUE, RED] }, hovertemplate: "%{x}: %{y}<extra>real</extra>" },
@@ -281,14 +286,16 @@
     });
     return state._aggP;
   }
-  // Default alignment gene = the current embryo's most-widely-covered gene, so the
-  // aligned set overlaps whatever display gene is selected (panels are disjoint, so
-  // the global widest gene can share no embryo with the current display gene).
+  // Default alignment gene = the current embryo's most-widely-covered gene OTHER than
+  // the display gene, so the aligned set overlaps whatever display gene is selected
+  // (panels are disjoint, so the global widest gene can share no embryo with the
+  // current display gene) and the orientation stays independent of the display gene.
   function pickDefaultAlign() {
-    const agg = state.agg, sc = state.scene;
+    const agg = state.agg, sc = state.scene, skip = gene();
     if (sc && sc.genes) {
       let best = null, bestCov = -1;
       for (const g of sc.genes) {
+        if (g === skip) continue;
         const c = agg.gene_cov[g] || 0;
         if (c > bestCov) { bestCov = c; best = g; }
       }
@@ -360,8 +367,15 @@
       leftCum += left; rightCum += right;
       connX.push(0.25, 0.75, null); connY.push(leftCum, rightCum, null);
     });
-    xsBarSub.textContent = nEmb ? `· ${g} · ${nEmb} zygotes`
-      : `· ${g} — not present in any of the aligned (${state.alignGene}) zygotes`;
+    if (!nEmb) {                     // display gene shares no zygote with the align gene
+      Plotly.purge(xsBars); xsBars.classList.remove("js-plotly-plot");   // so plotInto re-inits cleanly next time
+      xsBars.innerHTML = `<div class="xs-empty"><div><b>${g}</b> is not detected in any of the ` +
+        `${agg.gene_cov[state.alignGene] || 0} zygotes aligned by <b>${state.alignGene}</b> ` +
+        `(different MERFISH panels).<br>Pick a gene shared with those zygotes, or change the alignment gene above.</div></div>`;
+      xsBarSub.textContent = `· ${g}`;
+      return;
+    }
+    xsBarSub.textContent = `· ${g} · ${nEmb} zygotes`;
     bars.push({ type: "scatter", mode: "lines", x: connX, y: connY,
       line: { color: "rgba(100,116,139,0.35)", width: 1 }, hoverinfo: "skip", showlegend: false });
     plotInto(xsBars, bars, {

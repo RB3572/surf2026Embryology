@@ -8,8 +8,8 @@
   const $ = (s) => document.querySelector(s);
   const V = window.VCore;
   const XY = 0.15;
-  const AXIS_C = "#111827", PLANE_C = "#f97316", BEST_C = "#16a34a";
-  const BLUE = "#2563eb", RED = "#dc2626";
+  const AXIS_C = "#111827", PLANE_C = "#f97316";
+  const BLUE = "#2563eb", RED = "#dc2626", GREEN = "#16a34a";
 
   // Plotly.react corrupts if the div was cleared with innerHTML="" while it was
   // a live plot. Only clear non-Plotly content (e.g. an empty-state message).
@@ -22,17 +22,23 @@
   const controlsEl = $("#controls"), plotHost = $("#plot-host");
   const placeholder = $("#placeholder"), loadingEl = $("#loading"), loadingTxt = $("#loading-text");
   const geneSelect = $("#gene-select"), planeSelect = $("#plane-select");
-  const axisShow = $("#axis-show"), planeShow = $("#plane-show"), bestShow = $("#best-show");
+  const axisShow = $("#axis-show"), planeShow = $("#plane-show"), allShow = $("#all-show");
   const chartEl = $("#chart"), chartSub = $("#chart-sub"), chartReadout = $("#chart-readout");
   const drawer = $("#drawer"), drawerHandle = $("#drawer-handle"), drawerBody = $("#drawer-body");
-  const drawerEmb = $("#drawer-emb"), crossPlot = $("#cross-plot"), crossPmode = $("#cross-pmode");
+  const drawerEmb = $("#drawer-emb");
+  const pcolorMode = $("#pcolor-mode");
+  const xsPlane = $("#xs-plane"), xsAlign = $("#xs-align"), xsNote = $("#xs-note");
+  const xsCaption = $("#xs-caption"), xsBarSub = $("#xs-bar-sub");
+  const xsOutlines = $("#xs-outlines"), xsBars = $("#xs-bars");
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
   const rtabsEl = $("#rtabs"), bestListEl = $("#best-list");
 
   const state = {
     manifest: [], currentId: null, scene: null, userGene: null, planeIdx: 0,
     drawerOpen: false, bestTab: "pVol", crossMode: "vol",
+    crossKey: "pVol", alignGene: null, agg: null,
   };
+  const BESTKEY_LABEL = { pVol: "min p · vol", pCnt: "min p · count", diffVol: "max Δ · vol", diffCnt: "max Δ · count" };
 
   // ---------- boot ----------
   (async function init() {
@@ -68,8 +74,9 @@
       populateGenes(scene);
       controlsEl.hidden = false; placeholder.hidden = true;
       drawer.hidden = false; rdrawer.hidden = false;
-      drawerEmb.textContent = "· " + state.byLabel(id);
-      render(); renderChart(); renderBestList(); if (state.drawerOpen) renderCross();
+      render(); renderChart(); renderBestList();
+      if (state.drawerOpen && state.agg) renderBars();   // bottom drawer shows all embryos; only the display gene may change
+
     } catch (err) { showError(err.message || String(err)); }
     finally { hideLoading(); }
   }
@@ -77,7 +84,9 @@
 
   function populateGenes(scene) {
     const tot = scene.gene_totals || {};
-    geneSelect.innerHTML = scene.genes
+    const sorted = [...scene.genes].sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: "base", numeric: true }));
+    geneSelect.innerHTML = sorted
       .map((g) => `<option value="${g}">${g}  (${(tot[g] || 0).toLocaleString()})</option>`).join("");
     geneSelect.value = (state.userGene && scene.genes.includes(state.userGene)) ? state.userGene : scene.genes[0];
   }
@@ -85,21 +94,26 @@
   // ---------- geometry helpers ----------
   const gene = () => geneSelect.value;
   function planeGeo(k) { return state.scene.analysis.planes[k]; }
-  // side of a transcript for plane k: (pos_um − com_um)·normal_um  (matches precompute)
+  // Split a gene's transcripts into three clouds. Only segment-1 transcripts
+  // (t.s1[i]) are counted; those get side A (blue) / side B (red) by plane side:
+  // (pos_um − com_um)·normal_um  (matches precompute). Non-segment-1 transcripts
+  // are not counted and render green.
   function splitCloud(scene, g, k) {
     const t = scene.transcripts[g]; const A = scene.analysis;
     const com = A.com_um, nrm = planeGeo(k).normal_um, zs = scene.z_scale;
-    const bx = [], by = [], bz = [], rx = [], ry = [], rz = [];
+    const s1 = t && t.s1;
+    const bx = [], by = [], bz = [], rx = [], ry = [], rz = [], gx = [], gy = [], gz = [];
     if (t) for (let i = 0; i < t.x.length; i++) {
+      if (s1 && !s1[i]) { gx.push(t.x[i]); gy.push(t.y[i]); gz.push(t.gz[i] * zs); continue; }
       const s = (t.x[i] * XY - com[0]) * nrm[0] + (t.y[i] * XY - com[1]) * nrm[1] + (t.gz[i] - com[2]) * nrm[2];
       if (s > 0) { bx.push(t.x[i]); by.push(t.y[i]); bz.push(t.gz[i] * zs); }
       else { rx.push(t.x[i]); ry.push(t.y[i]); rz.push(t.gz[i] * zs); }
     }
-    return { bx, by, bz, rx, ry, rz };
+    return { bx, by, bz, rx, ry, rz, gx, gy, gz };
   }
   // plane k as an orange quad (physical square in µm → plot space)
   const PLANE_SCALE = 2;                              // rendered plane size (×) vs precomputed L
-  function planeQuad(k, color, op, name, rank) {
+  function planeQuad(k, color, op, name, rank, showLegend = true) {
     const A = state.scene.analysis, p = planeGeo(k), zs = state.scene.z_scale;
     const com = A.com_um, L = p.L * PLANE_SCALE;
     const aUm = [p.a_plot[0] * XY, p.a_plot[1] * XY, p.a_plot[2] / zs];
@@ -112,7 +126,7 @@
     });
     return {
       type: "mesh3d", x: cor.map((c) => c[0]), y: cor.map((c) => c[1]), z: cor.map((c) => c[2]),
-      i: [0, 0], j: [1, 2], k: [2, 3], color, opacity: op, name, showlegend: true,
+      i: [0, 0], j: [1, 2], k: [2, 3], color, opacity: op, name, showlegend: showLegend,
       hoverinfo: "name", flatshading: true, legendrank: rank,
     };
   }
@@ -126,10 +140,13 @@
     const sp = splitCloud(s, g, k);
     traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side A`,
       x: sp.bx, y: sp.by, z: sp.bz, marker: { size: 2.6, color: BLUE, opacity: 0.85, line: { width: 0 } },
-      hovertemplate: `${g} · side A<extra></extra>`, legendrank: 20000 });
+      hovertemplate: `${g} · side A (counted)<extra></extra>`, legendrank: 20000 });
     traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side B`,
       x: sp.rx, y: sp.ry, z: sp.rz, marker: { size: 2.6, color: RED, opacity: 0.85, line: { width: 0 } },
-      hovertemplate: `${g} · side B<extra></extra>`, legendrank: 20001 });
+      hovertemplate: `${g} · side B (counted)<extra></extra>`, legendrank: 20001 });
+    traces.push({ type: "scatter3d", mode: "markers", name: `${g} · not counted`,
+      x: sp.gx, y: sp.gy, z: sp.gz, marker: { size: 2.6, color: GREEN, opacity: 0.7, line: { width: 0 } },
+      hovertemplate: `${g} · not counted (not segment 1)<extra></extra>`, legendrank: 20002 });
 
     if (axisShow.checked) {
       const c = A.com_plot, ax = A.axis_plot;
@@ -148,16 +165,19 @@
     }
     if (planeShow.checked)
       traces.push(planeQuad(k, PLANE_C, 0.28, `Plane ${k * state.step}°`, 41000));
-    if (bestShow.checked) {
-      const bp = A.best_planes;
-      const items = [["pVol", "min p·vol"], ["pCnt", "min p·cnt"], ["diffVol", "max Δ·vol"], ["diffCnt", "max Δ·cnt"]];
-      const seen = new Set(); let rank = 42000;
-      for (const [key] of items) {
-        const kk = bp[key];
-        if (seen.has(kk)) continue;                 // dedup coincident best planes
-        seen.add(kk);
-        const which = items.filter(([k2]) => bp[k2] === kk).map(([, l]) => l).join(", ");
-        traces.push(planeQuad(kk, BEST_C, 0.22, `Best ${kk * state.step}° (${which})`, rank++));
+    if (allShow.checked) {
+      // all planes, colored by weighted p (same viridis code as the bottom drawer:
+      // low p → dark/blue, high p → yellow). Uses the cross-section's vol/count mode.
+      const planes = A.planes;
+      const pOf = (kk) => state.crossMode === "vol" ? planes[kk].wpVol : planes[kk].wpCnt;
+      const ps = planes.map((_, kk) => pOf(kk));
+      const pmin = Math.min(...ps), pmax = Math.max(...ps), span = pmax - pmin || 1;
+      let rank = 42000;
+      for (let kk = 0; kk < planes.length; kk++) {
+        if (planeShow.checked && kk === k) continue;   // selected plane already drawn in orange
+        const t = (pmax - pOf(kk)) / span;             // 1 = lowest p = most intense
+        traces.push(planeQuad(kk, viridis(1 - t), 0.16,
+          `Plane ${kk * state.step}° · p=${fmtP(pOf(kk))}`, rank++, false));
       }
     }
     Plotly.react(plotHost, traces, V.sceneLayout(s.extents, s.id), V.plotConfig);
@@ -243,58 +263,189 @@
     return `rgb(${Math.round(a[0] + (b[0] - a[0]) * f)},${Math.round(a[1] + (b[1] - a[1]) * f)},` +
            `${Math.round(a[2] + (b[2] - a[2]) * f)})`;
   }
-  function renderCross() {
-    const s = state.scene; if (!s) return;
-    const A = s.analysis, cs = A.cross_section, planes = A.planes;
-    const outline = cs.outline;
-    if (!outline.length) { Plotly.purge(crossPlot); crossPlot.innerHTML = '<div class="chart-readout" style="padding:20px;text-align:center">No cross-section.</div>'; return; }
-    let R = 0; for (const p of outline) R = Math.max(R, Math.hypot(p[0], p[1]));
-    // normalize p across the planes so the colormap spans the full range (low p = intense)
-    const pOf = (k) => state.crossMode === "vol" ? planes[k].wpVol : planes[k].wpCnt;
-    const ps = planes.map((_, k) => pOf(k));
-    const pmin = Math.min(...ps), pmax = Math.max(...ps), span = pmax - pmin || 1;
-    const traces = [];
-    for (let k = 0; k < planes.length; k++) {
-      const th = k * state.step * Math.PI / 180;
-      const dir = [-Math.sin(th), Math.cos(th)];   // plane ∩ cross-section direction (u,v)
-      const p = pOf(k), t = (pmax - p) / span;     // 1 = lowest p = most intense
-      const sel = k === state.planeIdx;
-      // low p → dark/blue end of viridis (intense); high p → yellow (faint)
-      traces.push({ type: "scatter", mode: "lines", showlegend: false,
-        x: [-R * 1.05 * dir[0], R * 1.05 * dir[0]], y: [-R * 1.05 * dir[1], R * 1.05 * dir[1]],
-        line: { color: sel ? PLANE_C : viridis(1 - t), width: sel ? 4 : (2 + 2.8 * t) },
-        hovertemplate: `plane ${k * state.step}°<br>weighted p = ${fmtP(p)}<extra></extra>` });
+  // ---------- cross-embryo bottom drawer (all zygotes) ----------
+  // Loads the aggregate (every embryo's aligned cross-section outline + per-gene
+  // side counts at the 4 best planes) once, lazily.
+  function ensureAgg() {
+    if (state.agg) return Promise.resolve(state.agg);
+    if (state._aggP) return state._aggP;
+    state._aggP = V.loadGz("data/zygote_cross.json.gz").then((agg) => {
+      state.agg = agg;
+      // No gene spans all embryos (multiple panels), so the dropdown is the union
+      // of genes, alphabetical, each labeled with how many zygotes contain it.
+      xsAlign.innerHTML = agg.genes_all
+        .map((g) => `<option value="${g}">${g} (${agg.gene_cov[g]}/${agg.n_embryos})</option>`).join("");
+      state.alignGene = pickDefaultAlign();
+      xsAlign.value = state.alignGene;
+      return agg;
+    });
+    return state._aggP;
+  }
+  // Default alignment gene = the current embryo's most-widely-covered gene, so the
+  // aligned set overlaps whatever display gene is selected (panels are disjoint, so
+  // the global widest gene can share no embryo with the current display gene).
+  function pickDefaultAlign() {
+    const agg = state.agg, sc = state.scene;
+    if (sc && sc.genes) {
+      let best = null, bestCov = -1;
+      for (const g of sc.genes) {
+        const c = agg.gene_cov[g] || 0;
+        if (c > bestCov) { bestCov = c; best = g; }
+      }
+      if (best) return best;
     }
-    // outline (bold black, closed)
-    traces.push({ type: "scatter", mode: "lines", showlegend: false,
-      x: outline.map((p) => p[0]).concat([outline[0][0]]),
-      y: outline.map((p) => p[1]).concat([outline[0][1]]),
-      line: { color: "#0b0d13", width: 3 }, hoverinfo: "skip" });
-    const lim = R * 1.12;
-    plotInto(crossPlot, traces, {
-      margin: { l: 10, r: 10, t: 8, b: 10 }, height: crossPlot.clientHeight || 280,
+    return agg.default_align_gene;
+  }
+  const bestKeyIndex = () => state.agg.best_keys.indexOf(state.crossKey);
+  // 60 distinct-ish colors via golden-angle hue spread (same index → same embryo
+  // in the outline plot and the bar plot).
+  const embColor = (i) => `hsl(${((i * 137.508) % 360).toFixed(1)}, 62%, 52%)`;
+  // Orientation for one embryo at the chosen best plane: rotate by −θ so the plane
+  // is vertical (then +x = plane's side A); flip 180° when the alignment gene's
+  // higher-count side is on the left, so it always ends up on the right (+x).
+  function embOrient(emb, ki) {
+    const theta = emb.best[ki] * state.agg.step_deg * Math.PI / 180;
+    const ga = emb.g[state.alignGene];
+    let flip = false;
+    if (ga) { const a = ga[1 + ki]; flip = (ga[0] - a) > a; }   // sideB (=n−a) > sideA
+    return { c: Math.cos(theta), s: Math.sin(theta), flip };
+  }
+  function renderOutlines() {
+    const agg = state.agg; if (!agg) return;
+    const ki = bestKeyIndex();
+    const traces = []; let R = 0;
+    agg.embryos.forEach((emb, i) => {
+      if (!emb.outline.length || !emb.g[state.alignGene]) return;   // only embryos with the align gene
+      const { c, s, flip } = embOrient(emb, ki);
+      const xs = [], ys = [];
+      for (const p of emb.outline) {
+        let x = p[0] * c + p[1] * s, y = -p[0] * s + p[1] * c;   // rotate by −θ
+        if (flip) { x = -x; y = -y; }
+        xs.push(x); ys.push(y);
+        const r = Math.hypot(x, y); if (r > R) R = r;
+      }
+      xs.push(xs[0]); ys.push(ys[0]);                            // close the loop
+      traces.push({ type: "scatter", mode: "lines", x: xs, y: ys, opacity: 0.5,
+        line: { color: embColor(i), width: 1 }, showlegend: false,
+        hovertemplate: `${emb.label}<extra></extra>` });
+    });
+    const lim = (R * 1.06) || 1;
+    traces.push({ type: "scatter", mode: "lines", x: [0, 0], y: [-lim, lim],
+      line: { color: "#94a3b8", width: 1.5, dash: "dash" }, hoverinfo: "skip", showlegend: false });
+    plotInto(xsOutlines, traces, {
+      margin: { l: 6, r: 6, t: 4, b: 4 }, height: xsOutlines.clientHeight || 240,
       xaxis: { range: [-lim, lim], visible: false, fixedrange: true, scaleanchor: "y", scaleratio: 1 },
       yaxis: { range: [-lim, lim], visible: false, fixedrange: true },
       paper_bgcolor: "transparent", plot_bgcolor: "transparent",
+      annotations: [{ x: lim, y: 0, xanchor: "right", yanchor: "bottom", showarrow: false,
+        text: `higher ${state.alignGene} →`, font: { size: 10, color: "#64748b" } }],
+    });
+  }
+  function renderBars() {
+    const agg = state.agg; if (!agg) return;
+    const ki = bestKeyIndex(), g = gene();
+    const bars = [], connX = [], connY = [];
+    let leftCum = 0, rightCum = 0, nEmb = 0;
+    agg.embryos.forEach((emb, i) => {
+      if (!emb.g[state.alignGene]) return;                      // not orientable (no align gene)
+      const row = emb.g[g]; if (!row) return;                   // display gene absent here
+      const a = row[1 + ki], b = row[0] - a;
+      const { flip } = embOrient(emb, ki);
+      const right = flip ? b : a, left = flip ? a : b;
+      if (left + right === 0) return;
+      nEmb++;
+      bars.push({ type: "bar", x: [0, 1], y: [left, right], width: 0.5,
+        marker: { color: embColor(i), line: { width: 0 } }, showlegend: false,
+        hovertemplate: `${emb.label}<br>left ${left} · right ${right}<extra></extra>` });
+      leftCum += left; rightCum += right;
+      connX.push(0.25, 0.75, null); connY.push(leftCum, rightCum, null);
+    });
+    xsBarSub.textContent = nEmb ? `· ${g} · ${nEmb} zygotes`
+      : `· ${g} — not present in any of the aligned (${state.alignGene}) zygotes`;
+    bars.push({ type: "scatter", mode: "lines", x: connX, y: connY,
+      line: { color: "rgba(100,116,139,0.35)", width: 1 }, hoverinfo: "skip", showlegend: false });
+    plotInto(xsBars, bars, {
+      barmode: "stack", margin: { l: 46, r: 8, t: 6, b: 24 }, height: xsBars.clientHeight || 190,
+      xaxis: { tickvals: [0, 1], ticktext: [`left (lower ${state.alignGene})`, `right (higher ${state.alignGene})`],
+               range: [-0.5, 1.5], fixedrange: true, tickfont: { size: 10 } },
+      yaxis: { title: { text: `${g} count`, font: { size: 10 } }, tickfont: { size: 9 },
+               gridcolor: "#eef1f5", fixedrange: true, rangemode: "tozero" },
+      paper_bgcolor: "transparent", plot_bgcolor: "transparent",
+    });
+  }
+  function renderCrossAgg() {
+    return ensureAgg().then(() => {
+      const cov = state.agg.gene_cov[state.alignGene] || 0, tot = state.agg.n_embryos;
+      xsCaption.textContent = `· best plane ${BESTKEY_LABEL[state.crossKey]}`;
+      xsNote.innerHTML = `No gene spans all zygotes (multiple panels). Showing the <b>${cov}/${tot}</b> ` +
+        `zygotes that contain <b>${state.alignGene}</b>, each flipped so its higher-${state.alignGene} side is on the right.`;
+      renderOutlines(); renderBars();
+      requestAnimationFrame(() => { try { Plotly.Plots.resize(xsOutlines); Plotly.Plots.resize(xsBars); } catch (_) {} });
     });
   }
 
   // ---------- wiring ----------
   function wireControls() {
-    geneSelect.addEventListener("change", () => { state.userGene = geneSelect.value; render(); renderChart(); highlightBest(); });
-    planeSelect.addEventListener("change", () => { state.planeIdx = parseInt(planeSelect.value, 10) || 0; render(); renderChart(); if (state.drawerOpen) renderCross(); });
-    [axisShow, planeShow, bestShow].forEach((c) => c.addEventListener("change", () => render()));
+    geneSelect.addEventListener("change", () => {
+      state.userGene = geneSelect.value; render(); renderChart(); highlightBest();
+      if (state.drawerOpen && state.agg) renderBars();          // bottom bar plot = selected gene
+    });
+    planeSelect.addEventListener("change", () => { state.planeIdx = parseInt(planeSelect.value, 10) || 0; render(); renderChart(); });
+    [axisShow, planeShow, allShow].forEach((c) => c.addEventListener("change", () => render()));
+    // p-value colormap normalization (drives the "All planes" 3-D coloring)
+    pcolorMode.addEventListener("change", () => { state.crossMode = pcolorMode.value; if (allShow.checked) render(); });
   }
   function highlightBest() {
     const cur = gene();
     bestListEl.querySelectorAll(".best-row").forEach((r) => r.classList.toggle("current", r.dataset.gene === cur));
   }
+  // Make a drawer's main handle pull it open and resize it by dragging, while a
+  // plain tap still toggles it. cfg.computeSize/clampSize/applySize map the pointer
+  // to the drawer's size CSS var; cfg.setOpen(open) shows/hides it.
+  function wireHandleDrag(drawerEl, handleEl, cfg) {
+    let start = null, moved = false;
+    handleEl.addEventListener("pointerdown", (e) => {
+      if (e.button && e.button !== 0) return;
+      start = { x: e.clientX, y: e.clientY }; moved = false;
+      try { handleEl.setPointerCapture(e.pointerId); } catch (_) {}
+    });
+    handleEl.addEventListener("pointermove", (e) => {
+      if (!start) return;
+      if (!moved && Math.hypot(e.clientX - start.x, e.clientY - start.y) < 5) return;
+      if (!moved) { moved = true; drawerEl.classList.add("dragging"); if (drawerEl.dataset.open !== "true") cfg.setOpen(true); }
+      cfg.applySize(cfg.clampSize(cfg.computeSize(e)));
+      e.preventDefault();
+    });
+    const up = (e) => {
+      if (!start) return;
+      try { handleEl.releasePointerCapture(e.pointerId); } catch (_) {}
+      if (moved) { drawerEl.classList.remove("dragging"); cfg.afterDrag && cfg.afterDrag(); }
+      else { cfg.setOpen(drawerEl.dataset.open !== "true"); }   // tap = toggle
+      start = null; moved = false;
+    };
+    handleEl.addEventListener("pointerup", up);
+    handleEl.addEventListener("pointercancel", up);
+  }
   function wireRdrawer() {
-    rdrawerHandle.addEventListener("click", () => {
-      const open = rdrawer.dataset.open !== "true";
+    const setOpen = (open) => {
       rdrawer.dataset.open = open ? "true" : "false";
       rdrawerHandle.setAttribute("aria-expanded", String(open));
+    };
+    wireHandleDrag(rdrawer, rdrawerHandle, {
+      computeSize: (e) => window.innerWidth - e.clientX,
+      clampSize: (px) => Math.max(240, Math.min(window.innerWidth - 80, px)),
+      applySize: (px) => rdrawer.style.setProperty("--rdrawer-w", px + "px"),
+      setOpen,
     });
+    // left-edge grabber: fine width adjustment while open
+    let sw = 0;
+    const rrz = $("#rdrawer-resize");
+    rrz.addEventListener("pointerdown", (e) => { sw = rdrawer.getBoundingClientRect().width; rrz._d = { x: e.clientX }; rrz.setPointerCapture(e.pointerId); e.preventDefault(); });
+    rrz.addEventListener("pointermove", (e) => { if (!rrz._d) return;
+      const w = Math.max(240, Math.min(window.innerWidth - 80, sw - (e.clientX - rrz._d.x)));
+      rdrawer.style.setProperty("--rdrawer-w", w + "px"); });
+    const rend = (e) => { if (rrz._d) { rrz._d = null; try { rrz.releasePointerCapture(e.pointerId); } catch (_) {} } };
+    rrz.addEventListener("pointerup", rend); rrz.addEventListener("pointercancel", rend);
     rtabsEl.querySelectorAll(".rtab").forEach((b) => b.addEventListener("click", () => {
       state.bestTab = b.dataset.best;
       rtabsEl.querySelectorAll(".rtab").forEach((x) => x.classList.toggle("active", x === b));
@@ -306,23 +457,33 @@
       if (state.scene.genes.includes(g)) { state.userGene = g; geneSelect.value = g; render(); renderChart(); highlightBest(); }
     });
   }
+  const resizeXs = () => { try { Plotly.Plots.resize(xsOutlines); Plotly.Plots.resize(xsBars); } catch (_) {} };
   function wireDrawer() {
-    drawerHandle.addEventListener("click", () => {
-      state.drawerOpen = drawer.dataset.open !== "true";
-      drawer.dataset.open = state.drawerOpen ? "true" : "false";
-      drawerHandle.setAttribute("aria-expanded", String(state.drawerOpen));
-      if (state.drawerOpen) { renderCross(); requestAnimationFrame(() => { try { Plotly.Plots.resize(crossPlot); } catch (_) {} }); }
+    const setOpen = (open) => {
+      state.drawerOpen = open;
+      drawer.dataset.open = open ? "true" : "false";
+      drawerHandle.setAttribute("aria-expanded", String(open));
+      if (open) renderCrossAgg();
+    };
+    wireHandleDrag(drawer, drawerHandle, {
+      computeSize: (e) => window.innerHeight - e.clientY - 40,   // body height (handle = 40px)
+      clampSize: (px) => Math.max(160, Math.min(window.innerHeight - 100, px)),
+      applySize: (px) => drawer.style.setProperty("--drawer-h", px + "px"),
+      setOpen,
+      afterDrag: resizeXs,
     });
-    // height resize (reuse the shell's drawer-resize)
+    // top-edge grabber: fine height adjustment while open
     let sh = 0;
     const rz = $("#drawer-resize");
     rz.addEventListener("pointerdown", (e) => { sh = drawerBody.getBoundingClientRect().height; rz._d = { x: e.clientX, y: e.clientY }; rz.setPointerCapture(e.pointerId); e.preventDefault(); });
     rz.addEventListener("pointermove", (e) => { if (!rz._d) return;
       const h = Math.max(160, Math.min(window.innerHeight - 100, sh - (e.clientY - rz._d.y)));
       drawer.style.setProperty("--drawer-h", h + "px"); });
-    const end = (e) => { if (rz._d) { rz._d = null; try { rz.releasePointerCapture(e.pointerId); } catch (_) {} try { Plotly.Plots.resize(crossPlot); } catch (_) {} } };
+    const end = (e) => { if (rz._d) { rz._d = null; try { rz.releasePointerCapture(e.pointerId); } catch (_) {} resizeXs(); } };
     rz.addEventListener("pointerup", end); rz.addEventListener("pointercancel", end);
-    crossPmode.addEventListener("change", () => { state.crossMode = crossPmode.value; renderCross(); });
+    // cross-embryo controls: best-plane alignment + orientation gene
+    xsPlane.addEventListener("change", () => { state.crossKey = xsPlane.value; if (state.agg) renderCrossAgg(); });
+    xsAlign.addEventListener("change", () => { state.alignGene = xsAlign.value; if (state.agg) renderCrossAgg(); });
   }
 
   function showLoading(t) { loadingTxt.textContent = t; loadingEl.hidden = false; }

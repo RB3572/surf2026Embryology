@@ -1,0 +1,2430 @@
+{
+ "embryos": [
+  {
+   "id": "Oocyte__20260425_oocyte_p2_11",
+   "stage": "Oocyte",
+   "stage_label": "Oocyte",
+   "eid": "20260425_oocyte_p2_11",
+   "label": "p2 11",
+   "n_segments": 2,
+   "segments": [
+    1,
+    2
+   ],
+   "size_kb": 129
+  },
+  {
+   "id": "Oocyte__20260425_oocyte_p2_19_0",
+   "stage": "Oocyte",
+   "stage_label": "Oocyte",
+   "eid": "20260425_oocyte_p2_19_0",
+   "label": "p2 19 0",
+   "n_segments": 2,
+   "segments": [
+    1,
+    2
+   ],
+   "size_kb": 130
+  },
+  {
+   "id": "Oocyte__20260425_oocyte_p2_24",
+   "stage": "Oocyte",
+   "stage_label": "Oocyte",
+   "eid": "20260425_oocyte_p2_24",
+   "label": "p2 24",
+   "n_segments": 2,
+   "segments": [
+    1,
+    2
+   ],
+   "size_kb": 131
+  },
+  {
+   "id": "Oocyte__20260425_oocyte_p2_25_1",
+   "stage": "Oocyte",
+   "stage_label": "Oocyte",
+   "eid": "20260425_oocyte_p2_25_1",
+   "label": "p2 25 1",
+   "n_segments": 2,
+   "segments": [
+    1,
+    2
+   ],
+   "size_kb": 129
+  },
+  {
+   "id": "Zygote__20251226_sample1_zygote5",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20251226_sample1_zygote5",
+   "label": "s1 zygote5",
+   "n_segments": 2,
+   "segments": [
+    1,
+    2
+   ],
+   "size_kb": 149
+  },
+  {
+   "id": "Zygote__20251226_sample1_zygote6",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20251226_sample1_zygote6",
+   "label": "s1 zygote6",
+   "n_segments": 2,
+   "segments": [
+    1,
+    2
+   ],
+   "size_kb": 145
+  },
+  {
+   "id": "Zygote__20251226_zygote_p1_0",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20251226_zygote_p1_0",
+   "label": "p1 0",
+   "n_segments": 2,
+   "segments": [
+    1,
+    2
+   ],
+   "size_kb": 154
+  },
+  {
+   "id": "Zygote__20251226_zygote_p1_1",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20251226_zygote_p1_1",
+   "label": "p1 1",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 185
+  },
+  {
+   "id": "Zygote__20251226_zygote_p1_10",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20251226_zygote_p1_10",
+   "label": "p1 10",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 181
+  },
+  {
+   "id": "Zygote__20251226_zygote_p1_11",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20251226_zygote_p1_11",
+   "label": "p1 11",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 165
+  },
+  {
+   "id": "Zygote__20251226_zygote_p1_2_1",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20251226_zygote_p1_2_1",
+   "label": "p1 2 1",
+   "n_segments": 2,
+   "segments": [
+    1,
+    2
+   ],
+   "size_kb": 160
+  },
+  {
+   "id": "Zygote__20251226_zygote_p1_2_2",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20251226_zygote_p1_2_2",
+   "label": "p1 2 2",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 206
+  },
+  {
+   "id": "Zygote__20251226_zygote_p1_3",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20251226_zygote_p1_3",
+   "label": "p1 3",
+   "n_segments": 2,
+   "segments": [
+    1,
+    2
+   ],
+   "size_kb": 170
+  },
+  {
+   "id": "Zygote__20251226_zygote_p1_4",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20251226_zygote_p1_4",
+   "label": "p1 4",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 135
+  },
+  {
+   "id": "Zygote__20251226_zygote_p1_7",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20251226_zygote_p1_7",
+   "label": "p1 7",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 180
+  },
+  {
+   "id": "Zygote__20251226_zygote_p1_8",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20251226_zygote_p1_8",
+   "label": "p1 8",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 165
+  },
+  {
+   "id": "Zygote__20251226_zygote_p1_9",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20251226_zygote_p1_9",
+   "label": "p1 9",
+   "n_segments": 2,
+   "segments": [
+    1,
+    2
+   ],
+   "size_kb": 141
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_0_1",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_0_1",
+   "label": "p1 0 1",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 188
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_0_2",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_0_2",
+   "label": "p1 0 2",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 169
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_1",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_1",
+   "label": "p1 1",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 172
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_10",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_10",
+   "label": "p1 10",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 191
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_11",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_11",
+   "label": "p1 11",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 162
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_12",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_12",
+   "label": "p1 12",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 196
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_2",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_2",
+   "label": "p1 2",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 171
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_3",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_3",
+   "label": "p1 3",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 142
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_4",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_4",
+   "label": "p1 4",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 209
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_5",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_5",
+   "label": "p1 5",
+   "n_segments": 3,
+   "segments": [
+    1,
+    2,
+    3
+   ],
+   "size_kb": 165
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_6_0",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_6_0",
+   "label": "p1 6 0",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 193
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_6_1",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_6_1",
+   "label": "p1 6 1",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 182
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_7_0",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_7_0",
+   "label": "p1 7 0",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 185
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_7_1",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_7_1",
+   "label": "p1 7 1",
+   "n_segments": 3,
+   "segments": [
+    1,
+    2,
+    3
+   ],
+   "size_kb": 159
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_8_0",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_8_0",
+   "label": "p1 8 0",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 185
+  },
+  {
+   "id": "Zygote__20260407_zygote_p1_8_1",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260407_zygote_p1_8_1",
+   "label": "p1 8 1",
+   "n_segments": 3,
+   "segments": [
+    1,
+    2,
+    3
+   ],
+   "size_kb": 144
+  },
+  {
+   "id": "Zygote__20260409_zygote_p2_9",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260409_zygote_p2_9",
+   "label": "p2 9",
+   "n_segments": 3,
+   "segments": [
+    1,
+    2,
+    3
+   ],
+   "size_kb": 105
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_0",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_0",
+   "label": "p2 0",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 150
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_1",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_1",
+   "label": "p2 1",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 164
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_10",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_10",
+   "label": "p2 10",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 176
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_12",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_12",
+   "label": "p2 12",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 162
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_13",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_13",
+   "label": "p2 13",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 145
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_14",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_14",
+   "label": "p2 14",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 165
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_15",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_15",
+   "label": "p2 15",
+   "n_segments": 3,
+   "segments": [
+    1,
+    2,
+    3
+   ],
+   "size_kb": 134
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_16",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_16",
+   "label": "p2 16",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 146
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_17",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_17",
+   "label": "p2 17",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 161
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_18_0",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_18_0",
+   "label": "p2 18 0",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 142
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_18_1",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_18_1",
+   "label": "p2 18 1",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 157
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_19_1",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_19_1",
+   "label": "p2 19 1",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 144
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_2",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_2",
+   "label": "p2 2",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 154
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_20",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_20",
+   "label": "p2 20",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 167
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_21",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_21",
+   "label": "p2 21",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 155
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_22_0",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_22_0",
+   "label": "p2 22 0",
+   "n_segments": 3,
+   "segments": [
+    1,
+    2,
+    3
+   ],
+   "size_kb": 156
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_22_1",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_22_1",
+   "label": "p2 22 1",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 133
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_23",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_23",
+   "label": "p2 23",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 175
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_25_0",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_25_0",
+   "label": "p2 25 0",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 165
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_26",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_26",
+   "label": "p2 26",
+   "n_segments": 3,
+   "segments": [
+    1,
+    2,
+    3
+   ],
+   "size_kb": 158
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_3",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_3",
+   "label": "p2 3",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 143
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_4",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_4",
+   "label": "p2 4",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 174
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_5",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_5",
+   "label": "p2 5",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 165
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_6",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_6",
+   "label": "p2 6",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 151
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_7_0",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_7_0",
+   "label": "p2 7 0",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 139
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_7_1",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_7_1",
+   "label": "p2 7 1",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 155
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_8_0",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_8_0",
+   "label": "p2 8 0",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 149
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_8_1",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_8_1",
+   "label": "p2 8 1",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 142
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_9_0",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_9_0",
+   "label": "p2 9 0",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 159
+  },
+  {
+   "id": "Zygote__20260425_zygote_p2_9_1",
+   "stage": "Zygote",
+   "stage_label": "Zygote",
+   "eid": "20260425_zygote_p2_9_1",
+   "label": "p2 9 1",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 160
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_0",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_0",
+   "label": "p2 0",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 190
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_1",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_1",
+   "label": "p2 1",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 201
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_10",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_10",
+   "label": "p2 10",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 274
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_11",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_11",
+   "label": "p2 11",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 195
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_12",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_12",
+   "label": "p2 12",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 210
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_13",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_13",
+   "label": "p2 13",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 221
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_14",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_14",
+   "label": "p2 14",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 188
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_15_0",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_15_0",
+   "label": "p2 15 0",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 210
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_15_1",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_15_1",
+   "label": "p2 15 1",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 202
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_16",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_16",
+   "label": "p2 16",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 222
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_17",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_17",
+   "label": "p2 17",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 218
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_18",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_18",
+   "label": "p2 18",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 251
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_19",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_19",
+   "label": "p2 19",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 205
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_2",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_2",
+   "label": "p2 2",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 209
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_20",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_20",
+   "label": "p2 20",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 211
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_21",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_21",
+   "label": "p2 21",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 204
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_23",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_23",
+   "label": "p2 23",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 210
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_25",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_25",
+   "label": "p2 25",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 210
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_3_0",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_3_0",
+   "label": "p2 3 0",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 219
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_3_1",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_3_1",
+   "label": "p2 3 1",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 203
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_4",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_4",
+   "label": "p2 4",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 189
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_5",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_5",
+   "label": "p2 5",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 214
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_6",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_6",
+   "label": "p2 6",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 282
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_7",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_7",
+   "label": "p2 7",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 263
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_8",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_8",
+   "label": "p2 8",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 216
+  },
+  {
+   "id": "Early2Cell__20260408_e2c_p2_9",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260408_e2c_p2_9",
+   "label": "p2 9",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 225
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_0",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_0",
+   "label": "p1 0",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 185
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_1",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_1",
+   "label": "p1 1",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 190
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_10",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_10",
+   "label": "p1 10",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 185
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_11",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_11",
+   "label": "p1 11",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 193
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_12_0",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_12_0",
+   "label": "p1 12 0",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 177
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_12_1",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_12_1",
+   "label": "p1 12 1",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 192
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_13_0",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_13_0",
+   "label": "p1 13 0",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 170
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_13_1",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_13_1",
+   "label": "p1 13 1",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 179
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_13_2",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_13_2",
+   "label": "p1 13 2",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 192
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_13_3",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_13_3",
+   "label": "p1 13 3",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 201
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_14",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_14",
+   "label": "p1 14",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 199
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_15_0",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_15_0",
+   "label": "p1 15 0",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 181
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_15_1",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_15_1",
+   "label": "p1 15 1",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 174
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_16_0",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_16_0",
+   "label": "p1 16 0",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 178
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_16_1",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_16_1",
+   "label": "p1 16 1",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 155
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_17_0",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_17_0",
+   "label": "p1 17 0",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 190
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_17_1",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_17_1",
+   "label": "p1 17 1",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 181
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_18",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_18",
+   "label": "p1 18",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 201
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_19_0",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_19_0",
+   "label": "p1 19 0",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 179
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_19_1",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_19_1",
+   "label": "p1 19 1",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 179
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_19_2",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_19_2",
+   "label": "p1 19 2",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 181
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_2",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_2",
+   "label": "p1 2",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 169
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_3_0",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_3_0",
+   "label": "p1 3 0",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 168
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_3_1",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_3_1",
+   "label": "p1 3 1",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 168
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_4",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_4",
+   "label": "p1 4",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 196
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_5",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_5",
+   "label": "p1 5",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 200
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_6",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_6",
+   "label": "p1 6",
+   "n_segments": 6,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "size_kb": 193
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_9_0",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_9_0",
+   "label": "p1 9 0",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 181
+  },
+  {
+   "id": "Early2Cell__20260424_e2c_p1_9_1",
+   "stage": "Early2Cell",
+   "stage_label": "Early 2-cell",
+   "eid": "20260424_e2c_p1_9_1",
+   "label": "p1 9 1",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 182
+  },
+  {
+   "id": "Late2Cell__20260212_l2c_p2_0_0",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260212_l2c_p2_0_0",
+   "label": "p2 0 0",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 186
+  },
+  {
+   "id": "Late2Cell__20260212_l2c_p2_0_1",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260212_l2c_p2_0_1",
+   "label": "p2 0 1",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 163
+  },
+  {
+   "id": "Late2Cell__20260212_l2c_p2_1",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260212_l2c_p2_1",
+   "label": "p2 1",
+   "n_segments": 6,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "size_kb": 196
+  },
+  {
+   "id": "Late2Cell__20260212_l2c_p2_10",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260212_l2c_p2_10",
+   "label": "p2 10",
+   "n_segments": 6,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "size_kb": 190
+  },
+  {
+   "id": "Late2Cell__20260212_l2c_p2_11",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260212_l2c_p2_11",
+   "label": "p2 11",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 185
+  },
+  {
+   "id": "Late2Cell__20260212_l2c_p2_2",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260212_l2c_p2_2",
+   "label": "p2 2",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 199
+  },
+  {
+   "id": "Late2Cell__20260212_l2c_p2_3",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260212_l2c_p2_3",
+   "label": "p2 3",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 205
+  },
+  {
+   "id": "Late2Cell__20260212_l2c_p2_4",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260212_l2c_p2_4",
+   "label": "p2 4",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 192
+  },
+  {
+   "id": "Late2Cell__20260212_l2c_p2_5",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260212_l2c_p2_5",
+   "label": "p2 5",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 180
+  },
+  {
+   "id": "Late2Cell__20260212_l2c_p2_6",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260212_l2c_p2_6",
+   "label": "p2 6",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 172
+  },
+  {
+   "id": "Late2Cell__20260212_l2c_p2_7",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260212_l2c_p2_7",
+   "label": "p2 7",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 208
+  },
+  {
+   "id": "Late2Cell__20260212_l2c_p2_8",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260212_l2c_p2_8",
+   "label": "p2 8",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 183
+  },
+  {
+   "id": "Late2Cell__20260212_l2c_p2_9",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260212_l2c_p2_9",
+   "label": "p2 9",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 193
+  },
+  {
+   "id": "Late2Cell__20260409_l2c_blastomere_p2_3",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260409_l2c_blastomere_p2_3",
+   "label": "blastomere p2 3",
+   "n_segments": 2,
+   "segments": [
+    1,
+    3
+   ],
+   "size_kb": 109
+  },
+  {
+   "id": "Late2Cell__20260409_l2c_blastomere_p2_4",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260409_l2c_blastomere_p2_4",
+   "label": "blastomere p2 4",
+   "n_segments": 2,
+   "segments": [
+    1,
+    3
+   ],
+   "size_kb": 115
+  },
+  {
+   "id": "Late2Cell__20260409_l2c_p2_0",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260409_l2c_p2_0",
+   "label": "p2 0",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 196
+  },
+  {
+   "id": "Late2Cell__20260409_l2c_p2_1",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260409_l2c_p2_1",
+   "label": "p2 1",
+   "n_segments": 6,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "size_kb": 217
+  },
+  {
+   "id": "Late2Cell__20260409_l2c_p2_2",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260409_l2c_p2_2",
+   "label": "p2 2",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 207
+  },
+  {
+   "id": "Late2Cell__20260409_l2c_p2_5",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260409_l2c_p2_5",
+   "label": "p2 5",
+   "n_segments": 6,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "size_kb": 266
+  },
+  {
+   "id": "Late2Cell__20260409_l2c_p2_6",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260409_l2c_p2_6",
+   "label": "p2 6",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 242
+  },
+  {
+   "id": "Late2Cell__20260409_l2c_p2_7",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260409_l2c_p2_7",
+   "label": "p2 7",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 207
+  },
+  {
+   "id": "Late2Cell__20260409_l2c_p2_8",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260409_l2c_p2_8",
+   "label": "p2 8",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 209
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_0",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_0",
+   "label": "p1 0",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 210
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_10",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_10",
+   "label": "p1 10",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 219
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_11",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_11",
+   "label": "p1 11",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 207
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_12",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_12",
+   "label": "p1 12",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 220
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_13",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_13",
+   "label": "p1 13",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 210
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_15",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_15",
+   "label": "p1 15",
+   "n_segments": 6,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "size_kb": 171
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_16",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_16",
+   "label": "p1 16",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 168
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_2",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_2",
+   "label": "p1 2",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 205
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_3_1",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_3_1",
+   "label": "p1 3 1",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 193
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_3_2",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_3_2",
+   "label": "p1 3 2",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 199
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_4",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_4",
+   "label": "p1 4",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 204
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_5",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_5",
+   "label": "p1 5",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 176
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_6",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_6",
+   "label": "p1 6",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 207
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_7",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_7",
+   "label": "p1 7",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 221
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_8",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_8",
+   "label": "p1 8",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 200
+  },
+  {
+   "id": "Late2Cell__20260420_l2c_p1_9",
+   "stage": "Late2Cell",
+   "stage_label": "Late 2-cell",
+   "eid": "20260420_l2c_p1_9",
+   "label": "p1 9",
+   "n_segments": 5,
+   "segments": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "size_kb": 200
+  }
+ ],
+ "stages": [
+  "Oocyte",
+  "Zygote",
+  "Early2Cell",
+  "Late2Cell"
+ ],
+ "stage_labels": {
+  "Oocyte": "Oocyte",
+  "Zygote": "Zygote",
+  "Early2Cell": "Early 2-cell",
+  "Late2Cell": "Late 2-cell"
+ },
+ "min_count": 3
+}

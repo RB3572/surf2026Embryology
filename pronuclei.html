@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pronuclei Distance vs Transcripts</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="pronuclei.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#0891b2;box-shadow:0 0 0 4px color-mix(in srgb,#0891b2 18%,transparent)"></span>
+      <span class="brand-name">Pronuclei&nbsp;Distance&nbsp;vs&nbsp;Transcripts</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Zygotes"></nav>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">This zygote</span>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="pn-readout" id="pn-readout"></div>
+        <div class="pn-note">The two pronuclei are segments 3 &amp; 4 (segment 1 =
+          cytoplasm, 2 = polar body). Distance is the shortest line between the two
+          pronuclei; total transcripts counts every detected molecule.</div>
+        <div class="pn-legend">
+          <span class="seg-chip"><span class="seg-dot" style="background:#2563eb"></span>Pronucleus 3</span>
+          <span class="seg-chip"><span class="seg-dot" style="background:#dc2626"></span>Pronucleus 4</span>
+          <span class="seg-chip"><span class="seg-dot" style="background:#111827"></span>min-distance line</span>
+        </div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Select a zygote</div>
+        <div class="ph-sub">Choose a zygote above to view its two pronuclei and the
+          shortest line between them. The bottom drawer plots pronuclei distance
+          against total transcript count across all zygotes.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- Bottom drawer: scatter distance vs total transcripts -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Distance vs transcripts</span>
+      <span class="drawer-hint">min pronuclei distance vs total transcripts · one point per zygote</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="pn-fit" id="pn-fit"></div>
+      <div id="scatter-plot" class="scatter-plot"></div>
+    </div>
+  </section>
+
+  <script src="viewer-core.js"></script>
+  <script src="pronuclei.js"></script>
+</body>
+</html>

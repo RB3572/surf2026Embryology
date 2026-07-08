@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Segment Gene Enrichment</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="segments.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#7c3aed;box-shadow:0 0 0 4px color-mix(in srgb,#7c3aed 18%,transparent)"></span>
+      <span class="brand-name">Segment&nbsp;Gene&nbsp;Enrichment</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Embryos"></nav>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">Controls</span>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="controls-row">
+          <label class="ctl">
+            <span class="ctl-label">Gene</span>
+            <select id="gene-select" aria-label="Gene"></select>
+          </label>
+        </div>
+        <div class="seg-legend" id="seg-legend"></div>
+        <div class="zchart-panel">
+          <div class="mini-title">Enrichment across segments <span class="mini-sub" id="chart-sub"></span></div>
+          <div id="chart" class="zchart"></div>
+          <div class="chart-readout" id="chart-readout"></div>
+        </div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Select an embryo</div>
+        <div class="ph-sub">Choose an embryo above to view its segmentation and the
+          genes most enriched in each segment. Segment meaning varies by stage, so
+          segments are labelled generically (Segment&nbsp;1…N).</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- Right drawer: per-segment ranked genes -->
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Enriched genes</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Genes enriched per segment</div>
+        <div class="rdrawer-desc">Density fold-change vs the embryo-wide average
+          (a gene entirely in one segment tops out at V<sub>total</sub>/V<sub>segment</sub>).</div>
+      </div>
+      <div class="rtabs" id="rtabs"></div>
+      <div class="best-list" id="seg-list"></div>
+    </div>
+  </aside>
+
+  <script src="viewer-core.js"></script>
+  <script src="segments.js"></script>
+</body>
+</html>

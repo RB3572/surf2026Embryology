@@ -1,0 +1,44 @@
+/* Segment Gene Enrichment — additions on top of style.css */
+
+#gene-select { min-width: 150px; }
+
+/* segment colour legend (floating window) */
+.seg-legend { display: flex; flex-wrap: wrap; gap: 6px 12px; padding: 8px 0 2px; border-top: 1px solid var(--line-2); }
+.seg-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--ink-2); white-space: nowrap; }
+.seg-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; border: 1px solid rgba(0,0,0,.08); }
+
+/* floating-window enrichment chart */
+.zchart-panel { border-top: 1px solid var(--line); padding-top: 8px; margin-top: 6px; }
+.zchart { width: 100%; min-width: 240px; height: 150px; }
+.chart-readout { font-size: 11.5px; color: var(--ink-2); line-height: 1.5; margin-top: 4px; }
+.chart-readout b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* right-drawer ranked-gene list (4 columns: #, gene, fold, count) */
+.best-list { flex: 1 1 auto; overflow-y: auto; padding: 6px 8px 16px; border-top: 1px solid var(--line); }
+.best-head, .best-row {
+  display: grid; grid-template-columns: 26px 1fr 66px 54px; gap: 6px; align-items: center;
+}
+.best-head {
+  padding: 4px 8px; font-family: var(--mono); font-size: 9.5px; text-transform: uppercase;
+  letter-spacing: .4px; color: var(--ink-soft); position: sticky; top: 0;
+  background: var(--surface); border-bottom: 1px solid var(--line-2);
+}
+.best-row {
+  padding: 6px 8px; border-radius: 7px; cursor: pointer; border: 1px solid transparent; font-size: 12px;
+}
+.best-row:hover { background: var(--line-2); }
+.best-row.current { border-color: var(--accent, #7c3aed); background: color-mix(in srgb, var(--accent, #7c3aed) 9%, var(--surface)); }
+.best-num { font-family: var(--mono); font-size: 10.5px; color: var(--ink-soft); text-align: right; }
+.best-gene { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.best-real { color: #7c3aed; font-variant-numeric: tabular-nums; text-align: right; font-family: var(--mono); font-size: 11.5px; font-weight: 600; }
+.best-p { font-variant-numeric: tabular-nums; text-align: right; font-family: var(--mono); font-size: 11px; color: var(--ink-2); }
+.best-plane-note {
+  padding: 8px 12px; font-size: 12px; color: var(--ink-2);
+  background: color-mix(in srgb, #7c3aed 7%, var(--surface)); border-bottom: 1px solid var(--line-2);
+}
+.best-plane-note b { color: var(--ink); }
+
+/* right-drawer handle draggable */
+.rdrawer-handle { touch-action: none; user-select: none; cursor: grab; }
+.rdrawer.dragging .rdrawer-handle { cursor: grabbing; }
+.rdrawer.dragging { transition: none; }

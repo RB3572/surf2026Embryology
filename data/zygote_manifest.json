@@ -6,7 +6,7 @@
    "date_short": "Dec 26",
    "n_genes": 110,
    "n_transcripts": 182784,
-   "size_kb": 822,
+   "size_kb": 831,
    "best_planes": {
     "pVol": 13,
     "pCnt": 13,
@@ -20,7 +20,7 @@
    "date_short": "Dec 26",
    "n_genes": 110,
    "n_transcripts": 183691,
-   "size_kb": 832,
+   "size_kb": 839,
    "best_planes": {
     "pVol": 11,
     "pCnt": 12,
@@ -34,7 +34,7 @@
    "date_short": "Dec 26",
    "n_genes": 102,
    "n_transcripts": 120146,
-   "size_kb": 642,
+   "size_kb": 645,
    "best_planes": {
     "pVol": 13,
     "pCnt": 11,
@@ -48,11 +48,11 @@
    "date_short": "Dec 26",
    "n_genes": 109,
    "n_transcripts": 158525,
-   "size_kb": 785,
+   "size_kb": 792,
    "best_planes": {
     "pVol": 9,
     "pCnt": 14,
-    "diffVol": 12,
+    "diffVol": 11,
     "diffCnt": 13
    }
   },
@@ -62,11 +62,11 @@
    "date_short": "Dec 26",
    "n_genes": 107,
    "n_transcripts": 127694,
-   "size_kb": 698,
+   "size_kb": 707,
    "best_planes": {
-    "pVol": 9,
+    "pVol": 8,
     "pCnt": 10,
-    "diffVol": 11,
+    "diffVol": 9,
     "diffCnt": 11
    }
   },
@@ -76,10 +76,10 @@
    "date_short": "Dec 26",
    "n_genes": 110,
    "n_transcripts": 136193,
-   "size_kb": 737,
+   "size_kb": 745,
    "best_planes": {
     "pVol": 10,
-    "pCnt": 9,
+    "pCnt": 10,
     "diffVol": 10,
     "diffCnt": 10
    }
@@ -90,12 +90,12 @@
    "date_short": "Dec 26",
    "n_genes": 101,
    "n_transcripts": 89779,
-   "size_kb": 571,
+   "size_kb": 578,
    "best_planes": {
     "pVol": 12,
     "pCnt": 12,
     "diffVol": 14,
-    "diffCnt": 13
+    "diffCnt": 12
    }
   },
   {
@@ -104,7 +104,7 @@
    "date_short": "Dec 26",
    "n_genes": 105,
    "n_transcripts": 162294,
-   "size_kb": 824,
+   "size_kb": 832,
    "best_planes": {
     "pVol": 12,
     "pCnt": 12,
@@ -118,7 +118,7 @@
    "date_short": "Dec 26",
    "n_genes": 96,
    "n_transcripts": 112947,
-   "size_kb": 613,
+   "size_kb": 618,
    "best_planes": {
     "pVol": 7,
     "pCnt": 7,
@@ -132,12 +132,12 @@
    "date_short": "Dec 26",
    "n_genes": 95,
    "n_transcripts": 42297,
-   "size_kb": 388,
+   "size_kb": 394,
    "best_planes": {
-    "pVol": 10,
+    "pVol": 16,
     "pCnt": 4,
     "diffVol": 10,
-    "diffCnt": 12
+    "diffCnt": 10
    }
   },
   {
@@ -146,11 +146,11 @@
    "date_short": "Dec 26",
    "n_genes": 109,
    "n_transcripts": 181338,
-   "size_kb": 883,
+   "size_kb": 897,
    "best_planes": {
-    "pVol": 5,
+    "pVol": 10,
     "pCnt": 5,
-    "diffVol": 7,
+    "diffVol": 9,
     "diffCnt": 8
    }
   },
@@ -160,11 +160,11 @@
    "date_short": "Dec 26",
    "n_genes": 107,
    "n_transcripts": 140000,
-   "size_kb": 748,
+   "size_kb": 758,
    "best_planes": {
     "pVol": 9,
     "pCnt": 9,
-    "diffVol": 8,
+    "diffVol": 9,
     "diffCnt": 9
    }
   },
@@ -174,9 +174,9 @@
    "date_short": "Dec 26",
    "n_genes": 105,
    "n_transcripts": 109302,
-   "size_kb": 615,
+   "size_kb": 617,
    "best_planes": {
-    "pVol": 7,
+    "pVol": 8,
     "pCnt": 8,
     "diffVol": 10,
     "diffCnt": 9
@@ -188,7 +188,7 @@
    "date_short": "Apr 7",
    "n_genes": 99,
    "n_transcripts": 13780,
-   "size_kb": 320,
+   "size_kb": 323,
    "best_planes": {
     "pVol": 14,
     "pCnt": 14,
@@ -202,11 +202,11 @@
    "date_short": "Apr 7",
    "n_genes": 100,
    "n_transcripts": 12683,
-   "size_kb": 295,
+   "size_kb": 296,
    "best_planes": {
-    "pVol": 8,
+    "pVol": 10,
     "pCnt": 8,
-    "diffVol": 8,
+    "diffVol": 9,
     "diffCnt": 8
    }
   },
@@ -216,11 +216,11 @@
    "date_short": "Apr 7",
    "n_genes": 93,
    "n_transcripts": 7271,
-   "size_kb": 278,
+   "size_kb": 280,
    "best_planes": {
     "pVol": 2,
     "pCnt": 2,
-    "diffVol": 3,
+    "diffVol": 2,
     "diffCnt": 2
    }
   },
@@ -230,11 +230,11 @@
    "date_short": "Apr 7",
    "n_genes": 99,
    "n_transcripts": 21238,
-   "size_kb": 372,
+   "size_kb": 377,
    "best_planes": {
-    "pVol": 14,
-    "pCnt": 14,
-    "diffVol": 16,
+    "pVol": 6,
+    "pCnt": 10,
+    "diffVol": 0,
     "diffCnt": 15
    }
   },
@@ -244,10 +244,10 @@
    "date_short": "Apr 7",
    "n_genes": 88,
    "n_transcripts": 11653,
-   "size_kb": 283,
+   "size_kb": 285,
    "best_planes": {
-    "pVol": 16,
-    "pCnt": 16,
+    "pVol": 17,
+    "pCnt": 17,
     "diffVol": 4,
     "diffCnt": 5
    }
@@ -258,10 +258,10 @@
    "date_short": "Apr 7",
    "n_genes": 103,
    "n_transcripts": 6775,
-   "size_kb": 321,
+   "size_kb": 326,
    "best_planes": {
     "pVol": 4,
-    "pCnt": 2,
+    "pCnt": 4,
     "diffVol": 16,
     "diffCnt": 0
    }
@@ -272,12 +272,12 @@
    "date_short": "Apr 7",
    "n_genes": 99,
    "n_transcripts": 53563,
-   "size_kb": 444,
+   "size_kb": 447,
    "best_planes": {
-    "pVol": 3,
-    "pCnt": 3,
-    "diffVol": 5,
-    "diffCnt": 7
+    "pVol": 7,
+    "pCnt": 7,
+    "diffVol": 3,
+    "diffCnt": 10
    }
   },
   {
@@ -286,7 +286,7 @@
    "date_short": "Apr 7",
    "n_genes": 102,
    "n_transcripts": 4586,
-   "size_kb": 253,
+   "size_kb": 256,
    "best_planes": {
     "pVol": 6,
     "pCnt": 8,
@@ -300,9 +300,9 @@
    "date_short": "Apr 7",
    "n_genes": 104,
    "n_transcripts": 5526,
-   "size_kb": 326,
+   "size_kb": 333,
    "best_planes": {
-    "pVol": 9,
+    "pVol": 8,
     "pCnt": 9,
     "diffVol": 8,
     "diffCnt": 9
@@ -314,11 +314,11 @@
    "date_short": "Apr 7",
    "n_genes": 87,
    "n_transcripts": 4188,
-   "size_kb": 251,
+   "size_kb": 250,
    "best_planes": {
     "pVol": 9,
     "pCnt": 9,
-    "diffVol": 13,
+    "diffVol": 14,
     "diffCnt": 14
    }
   },
@@ -328,11 +328,11 @@
    "date_short": "Apr 7",
    "n_genes": 100,
    "n_transcripts": 11073,
-   "size_kb": 333,
+   "size_kb": 335,
    "best_planes": {
-    "pVol": 4,
-    "pCnt": 0,
-    "diffVol": 3,
+    "pVol": 0,
+    "pCnt": 4,
+    "diffVol": 0,
     "diffCnt": 0
    }
   },
@@ -342,11 +342,11 @@
    "date_short": "Apr 7",
    "n_genes": 94,
    "n_transcripts": 8727,
-   "size_kb": 306,
+   "size_kb": 307,
    "best_planes": {
-    "pVol": 6,
+    "pVol": 16,
     "pCnt": 3,
-    "diffVol": 12,
+    "diffVol": 17,
     "diffCnt": 3
    }
   },
@@ -356,10 +356,10 @@
    "date_short": "Apr 7",
    "n_genes": 101,
    "n_transcripts": 11359,
-   "size_kb": 325,
+   "size_kb": 329,
    "best_planes": {
     "pVol": 3,
-    "pCnt": 17,
+    "pCnt": 16,
     "diffVol": 3,
     "diffCnt": 3
    }
@@ -370,12 +370,12 @@
    "date_short": "Apr 7",
    "n_genes": 94,
    "n_transcripts": 9942,
-   "size_kb": 275,
+   "size_kb": 280,
    "best_planes": {
     "pVol": 4,
     "pCnt": 4,
-    "diffVol": 1,
-    "diffCnt": 4
+    "diffVol": 3,
+    "diffCnt": 3
    }
   },
   {
@@ -384,12 +384,12 @@
    "date_short": "Apr 7",
    "n_genes": 103,
    "n_transcripts": 5984,
-   "size_kb": 311,
+   "size_kb": 314,
    "best_planes": {
-    "pVol": 3,
+    "pVol": 9,
     "pCnt": 3,
     "diffVol": 5,
-    "diffCnt": 5
+    "diffCnt": 4
    }
   },
   {
@@ -398,7 +398,7 @@
    "date_short": "Apr 7",
    "n_genes": 102,
    "n_transcripts": 4192,
-   "size_kb": 254,
+   "size_kb": 255,
    "best_planes": {
     "pVol": 6,
     "pCnt": 6,
@@ -412,10 +412,10 @@
    "date_short": "Apr 9",
    "n_genes": 124,
    "n_transcripts": 2661,
-   "size_kb": 199,
+   "size_kb": 200,
    "best_planes": {
-    "pVol": 10,
-    "pCnt": 9,
+    "pVol": 8,
+    "pCnt": 8,
     "diffVol": 10,
     "diffCnt": 9
    }
@@ -426,7 +426,7 @@
    "date_short": "Apr 25",
    "n_genes": 90,
    "n_transcripts": 32782,
-   "size_kb": 297,
+   "size_kb": 301,
    "best_planes": {
     "pVol": 10,
     "pCnt": 10,
@@ -440,11 +440,11 @@
    "date_short": "Apr 25",
    "n_genes": 122,
    "n_transcripts": 147176,
-   "size_kb": 747,
+   "size_kb": 754,
    "best_planes": {
     "pVol": 14,
     "pCnt": 14,
-    "diffVol": 15,
+    "diffVol": 14,
     "diffCnt": 15
    }
   },
@@ -454,9 +454,9 @@
    "date_short": "Apr 25",
    "n_genes": 118,
    "n_transcripts": 274612,
-   "size_kb": 970,
+   "size_kb": 985,
    "best_planes": {
-    "pVol": 10,
+    "pVol": 9,
     "pCnt": 10,
     "diffVol": 12,
     "diffCnt": 12
@@ -468,10 +468,10 @@
    "date_short": "Apr 25",
    "n_genes": 82,
    "n_transcripts": 315532,
-   "size_kb": 986,
+   "size_kb": 997,
    "best_planes": {
-    "pVol": 2,
-    "pCnt": 9,
+    "pVol": 10,
+    "pCnt": 15,
     "diffVol": 16,
     "diffCnt": 2
    }
@@ -482,12 +482,12 @@
    "date_short": "Apr 25",
    "n_genes": 87,
    "n_transcripts": 358432,
-   "size_kb": 1062,
+   "size_kb": 1079,
    "best_planes": {
-    "pVol": 16,
-    "pCnt": 0,
-    "diffVol": 15,
-    "diffCnt": 16
+    "pVol": 2,
+    "pCnt": 15,
+    "diffVol": 16,
+    "diffCnt": 15
    }
   },
   {
@@ -496,12 +496,12 @@
    "date_short": "Apr 25",
    "n_genes": 125,
    "n_transcripts": 338834,
-   "size_kb": 1105,
+   "size_kb": 1123,
    "best_planes": {
-    "pVol": 6,
+    "pVol": 5,
     "pCnt": 6,
-    "diffVol": 3,
-    "diffCnt": 8
+    "diffVol": 9,
+    "diffCnt": 3
    }
   },
   {
@@ -510,11 +510,11 @@
    "date_short": "Apr 25",
    "n_genes": 90,
    "n_transcripts": 421584,
-   "size_kb": 1184,
+   "size_kb": 1192,
    "best_planes": {
     "pVol": 3,
     "pCnt": 3,
-    "diffVol": 4,
+    "diffVol": 10,
     "diffCnt": 5
    }
   },
@@ -524,11 +524,11 @@
    "date_short": "Apr 25",
    "n_genes": 76,
    "n_transcripts": 268890,
-   "size_kb": 846,
+   "size_kb": 853,
    "best_planes": {
     "pVol": 11,
     "pCnt": 11,
-    "diffVol": 1,
+    "diffVol": 17,
     "diffCnt": 1
    }
   },
@@ -538,12 +538,12 @@
    "date_short": "Apr 25",
    "n_genes": 123,
    "n_transcripts": 446332,
-   "size_kb": 1418,
+   "size_kb": 1442,
    "best_planes": {
-    "pVol": 16,
-    "pCnt": 12,
-    "diffVol": 5,
-    "diffCnt": 5
+    "pVol": 17,
+    "pCnt": 4,
+    "diffVol": 11,
+    "diffCnt": 4
    }
   },
   {
@@ -552,10 +552,10 @@
    "date_short": "Apr 25",
    "n_genes": 82,
    "n_transcripts": 66506,
-   "size_kb": 387,
+   "size_kb": 391,
    "best_planes": {
-    "pVol": 11,
-    "pCnt": 10,
+    "pVol": 10,
+    "pCnt": 11,
     "diffVol": 9,
     "diffCnt": 9
    }
@@ -566,9 +566,9 @@
    "date_short": "Apr 25",
    "n_genes": 123,
    "n_transcripts": 61296,
-   "size_kb": 451,
+   "size_kb": 456,
    "best_planes": {
-    "pVol": 10,
+    "pVol": 9,
     "pCnt": 10,
     "diffVol": 9,
     "diffCnt": 10
@@ -580,9 +580,9 @@
    "date_short": "Apr 25",
    "n_genes": 109,
    "n_transcripts": 154458,
-   "size_kb": 647,
+   "size_kb": 652,
    "best_planes": {
-    "pVol": 12,
+    "pVol": 10,
     "pCnt": 8,
     "diffVol": 14,
     "diffCnt": 12
@@ -594,12 +594,12 @@
    "date_short": "Apr 25",
    "n_genes": 123,
    "n_transcripts": 250646,
-   "size_kb": 861,
+   "size_kb": 868,
    "best_planes": {
-    "pVol": 15,
+    "pVol": 14,
     "pCnt": 13,
     "diffVol": 12,
-    "diffCnt": 12
+    "diffCnt": 13
    }
   },
   {
@@ -608,10 +608,10 @@
    "date_short": "Apr 25",
    "n_genes": 104,
    "n_transcripts": 95404,
-   "size_kb": 500,
+   "size_kb": 503,
    "best_planes": {
-    "pVol": 5,
-    "pCnt": 5,
+    "pVol": 1,
+    "pCnt": 4,
     "diffVol": 4,
     "diffCnt": 4
    }
@@ -622,11 +622,11 @@
    "date_short": "Apr 25",
    "n_genes": 114,
    "n_transcripts": 186592,
-   "size_kb": 720,
+   "size_kb": 730,
    "best_planes": {
     "pVol": 7,
     "pCnt": 7,
-    "diffVol": 1,
+    "diffVol": 5,
     "diffCnt": 2
    }
   },
@@ -636,7 +636,7 @@
    "date_short": "Apr 25",
    "n_genes": 86,
    "n_transcripts": 215774,
-   "size_kb": 769,
+   "size_kb": 777,
    "best_planes": {
     "pVol": 9,
     "pCnt": 9,
@@ -650,12 +650,12 @@
    "date_short": "Apr 25",
    "n_genes": 75,
    "n_transcripts": 135479,
-   "size_kb": 537,
+   "size_kb": 541,
    "best_planes": {
     "pVol": 5,
     "pCnt": 10,
     "diffVol": 5,
-    "diffCnt": 4
+    "diffCnt": 11
    }
   },
   {
@@ -664,12 +664,12 @@
    "date_short": "Apr 25",
    "n_genes": 118,
    "n_transcripts": 286014,
-   "size_kb": 1015,
+   "size_kb": 1031,
    "best_planes": {
     "pVol": 10,
-    "pCnt": 10,
-    "diffVol": 8,
-    "diffCnt": 9
+    "pCnt": 9,
+    "diffVol": 10,
+    "diffCnt": 8
    }
   },
   {
@@ -678,12 +678,12 @@
    "date_short": "Apr 25",
    "n_genes": 116,
    "n_transcripts": 158882,
-   "size_kb": 710,
+   "size_kb": 720,
    "best_planes": {
-    "pVol": 12,
-    "pCnt": 12,
-    "diffVol": 15,
-    "diffCnt": 15
+    "pVol": 0,
+    "pCnt": 11,
+    "diffVol": 17,
+    "diffCnt": 11
    }
   },
   {
@@ -692,11 +692,11 @@
    "date_short": "Apr 25",
    "n_genes": 83,
    "n_transcripts": 331138,
-   "size_kb": 1010,
+   "size_kb": 1023,
    "best_planes": {
-    "pVol": 11,
+    "pVol": 12,
     "pCnt": 12,
-    "diffVol": 8,
+    "diffVol": 9,
     "diffCnt": 8
    }
   },
@@ -706,12 +706,12 @@
    "date_short": "Apr 25",
    "n_genes": 121,
    "n_transcripts": 220450,
-   "size_kb": 797,
+   "size_kb": 808,
    "best_planes": {
-    "pVol": 8,
-    "pCnt": 8,
+    "pVol": 9,
+    "pCnt": 9,
     "diffVol": 8,
-    "diffCnt": 7
+    "diffCnt": 11
    }
   },
   {
@@ -720,7 +720,7 @@
    "date_short": "Apr 25",
    "n_genes": 120,
    "n_transcripts": 209628,
-   "size_kb": 798,
+   "size_kb": 806,
    "best_planes": {
     "pVol": 12,
     "pCnt": 8,
@@ -734,12 +734,12 @@
    "date_short": "Apr 25",
    "n_genes": 125,
    "n_transcripts": 392530,
-   "size_kb": 1290,
+   "size_kb": 1307,
    "best_planes": {
-    "pVol": 8,
-    "pCnt": 8,
+    "pVol": 14,
+    "pCnt": 2,
     "diffVol": 12,
-    "diffCnt": 0
+    "diffCnt": 12
    }
   },
   {
@@ -748,7 +748,7 @@
    "date_short": "Apr 25",
    "n_genes": 124,
    "n_transcripts": 258438,
-   "size_kb": 896,
+   "size_kb": 905,
    "best_planes": {
     "pVol": 7,
     "pCnt": 7,
@@ -762,12 +762,12 @@
    "date_short": "Apr 25",
    "n_genes": 128,
    "n_transcripts": 400188,
-   "size_kb": 1256,
+   "size_kb": 1265,
    "best_planes": {
-    "pVol": 6,
-    "pCnt": 17,
-    "diffVol": 17,
-    "diffCnt": 10
+    "pVol": 10,
+    "pCnt": 7,
+    "diffVol": 9,
+    "diffCnt": 8
    }
   },
   {
@@ -776,11 +776,11 @@
    "date_short": "Apr 25",
    "n_genes": 133,
    "n_transcripts": 489412,
-   "size_kb": 1501,
+   "size_kb": 1521,
    "best_planes": {
-    "pVol": 9,
-    "pCnt": 8,
-    "diffVol": 8,
+    "pVol": 12,
+    "pCnt": 9,
+    "diffVol": 7,
     "diffCnt": 8
    }
   },
@@ -790,7 +790,7 @@
    "date_short": "Apr 25",
    "n_genes": 80,
    "n_transcripts": 171743,
-   "size_kb": 647,
+   "size_kb": 651,
    "best_planes": {
     "pVol": 14,
     "pCnt": 14,
@@ -804,10 +804,10 @@
    "date_short": "Apr 25",
    "n_genes": 122,
    "n_transcripts": 161046,
-   "size_kb": 757,
+   "size_kb": 764,
    "best_planes": {
-    "pVol": 1,
-    "pCnt": 17,
+    "pVol": 17,
+    "pCnt": 1,
     "diffVol": 1,
     "diffCnt": 0
    }
@@ -820,9 +820,9 @@
    "n_transcripts": 18570,
    "size_kb": 256,
    "best_planes": {
-    "pVol": 4,
+    "pVol": 2,
     "pCnt": 2,
-    "diffVol": 2,
+    "diffVol": 1,
     "diffCnt": 1
    }
   },
@@ -832,10 +832,10 @@
    "date_short": "Apr 25",
    "n_genes": 87,
    "n_transcripts": 66852,
-   "size_kb": 439,
+   "size_kb": 444,
    "best_planes": {
-    "pVol": 8,
-    "pCnt": 11,
+    "pVol": 10,
+    "pCnt": 10,
     "diffVol": 10,
     "diffCnt": 10
    }

@@ -14,12 +14,16 @@ Geometry (physical µm space; xy = px·0.15, z = frame·1.0):
     Plane k normal nₖ = cosθ·u + sinθ·v (u,v ⊥ axis). Side of point p =
     sign((p−COM)·nₖ).
 
-Per plane we get, per side, the embryo VOLUME (mask voxels on that side) and, per
-gene, the transcript COUNT. For each gene×plane we record counts, counts
-normalized by volume and by total, their side-differences, a coin-flip NULL
+Only SEGMENT 1 (the cell body) counts: transcripts inside the polar body (label 2)
+or the pronuclei (labels 3–5) are excluded from every count, and the per-side
+VOLUME used for normalization is the volume of segment 1 on that side only.
+
+Per plane we get, per side, the segment-1 VOLUME (label-1 voxels on that side) and,
+per gene, the segment-1 transcript COUNT. For each gene×plane we record counts,
+counts normalized by volume and by total, their side-differences, a coin-flip NULL
 (n fair flips → one representative realization) and — from N_NULL flips — two
 permutation p-values (volume- and count-normalized):
-    T = |normalized side-difference|;   p = (1 + #{T_null ≥ T_obs}) / (1 + N_null)
+    T = |normalized side-difference|;   p = 2·(1 + #{T_null ≥ T_obs}) / (1 + N_null)
 
 Best planes (per embryo): FOUR planes = {min transcript-weighted-mean p} and
 {max Σ side-difference / ΣN}, each computed under BOTH normalizations (volume /
@@ -33,6 +37,7 @@ import glob
 import gzip
 import json
 import os
+from collections import Counter
 
 import numpy as np
 import tifffile
@@ -60,19 +65,38 @@ def unit(v):
     return v / n if n > 0 else v
 
 
-def label_mask_coords(label_path):
-    """Downsampled nonzero voxel positions (µm) + labels, from the label TIFF."""
+def mask_and_transcripts(label_path, tx, genes):
+    """From the label TIFF, return (a) downsampled nonzero voxel positions (µm),
+    their segment labels, and the per-voxel volume, and (b) `seg_of`: the segment
+    label under every transcript (full-res nearest-voxel lookup), per gene.
+    Segment 1 = cell body; 2 = polar body; 3–5 = pronuclei."""
     with tifffile.TiffFile(label_path) as t:
-        arr = t.series[0]                     # (Z, Y, X)
-        mm = arr.asarray(out="memmap")
-        sub = np.asarray(mm[::DS_Z, ::DS_XY, ::DS_XY])   # (z,y,x) downsampled
+        mm = t.series[0].asarray(out="memmap")            # (Z, Y, X)
+        Zn, Yn, Xn = mm.shape
+        sub = np.asarray(mm[::DS_Z, ::DS_XY, ::DS_XY])     # (z,y,x) downsampled
+        # segment label under each transcript (one full-res fancy-index for all)
+        lens = [len(tx[g]["x"]) for g in genes]
+        seg_of = {}
+        if sum(lens):
+            gx = np.concatenate([np.asarray(tx[g]["x"], float) for g in genes])
+            gy = np.concatenate([np.asarray(tx[g]["y"], float) for g in genes])
+            gzf = np.concatenate([np.asarray(tx[g]["gz"], float) for g in genes])
+            ix = np.clip(np.round(gx).astype(np.int64), 0, Xn - 1)
+            iy = np.clip(np.round(gy).astype(np.int64), 0, Yn - 1)
+            iz = np.clip(np.round(gzf).astype(np.int64), 0, Zn - 1)
+            labs = np.asarray(mm[iz, iy, ix]).astype(np.int16)
+        else:
+            labs = np.empty(0, np.int16)
+        off = 0
+        for g, L in zip(genes, lens):
+            seg_of[g] = labs[off:off + L]; off += L
         del mm
     iz, iy, ix = np.nonzero(sub)
     labels = sub[iz, iy, ix].astype(np.int16)
     # full-res index → µm position
     pos = np.stack([ix * DS_XY * XY_UM, iy * DS_XY * XY_UM, iz * DS_Z * Z_UM], axis=1)
     voxel_vol = (DS_XY * XY_UM) ** 2 * (DS_Z * Z_UM)      # µm³ per downsampled voxel
-    return pos.astype(np.float32), labels, voxel_vol
+    return pos.astype(np.float32), labels, voxel_vol, seg_of
 
 
 def plane_normals(u, v):
@@ -119,8 +143,9 @@ def perm_pvals(a_obs, n, V_A, V_B, null_a):
     nb = n - null_a
     T_vol_null = np.abs(null_a / V_A - nb / V_B)
     T_cnt_null = np.abs((null_a - nb) / n) if n else np.zeros_like(null_a, dtype=float)
-    p_vol = (1 + int(np.count_nonzero(T_vol_null >= T_vol_obs - 1e-12))) / (1 + len(null_a))
-    p_cnt = (1 + int(np.count_nonzero(T_cnt_null >= T_cnt_obs - 1e-12))) / (1 + len(null_a))
+    # two-sided: p = 2 * (1 + #{T_null >= T_obs}) / (1 + N_null)
+    p_vol = 2 * (1 + int(np.count_nonzero(T_vol_null >= T_vol_obs - 1e-12))) / (1 + len(null_a))
+    p_cnt = 2 * (1 + int(np.count_nonzero(T_cnt_null >= T_cnt_obs - 1e-12))) / (1 + len(null_a))
     return p_vol, p_cnt
 
 
@@ -132,8 +157,12 @@ def process(eid):
     d = json.load(gzip.open(scene_p, "rt"))
     zs = d.get("z_scale", 7.0)
 
-    pos, labels, voxvol = label_mask_coords(lab[0])          # µm
-    if 2 not in labels:
+    # transcripts (µm) per gene, from the atlas scene
+    tx = d.get("transcripts", {})
+    genes = sorted(tx.keys(), key=lambda g: -d.get("gene_totals", {}).get(g, 0))
+
+    pos, labels, voxvol, seg_of = mask_and_transcripts(lab[0], tx, genes)   # µm
+    if 2 not in labels or 1 not in labels:
         return None
     com = pos.mean(axis=0)                                    # all voxels (µm)
     pb_com = pos[labels == 2].mean(axis=0)                    # segment 2 (µm)
@@ -142,16 +171,15 @@ def process(eid):
     u = unit(np.cross(a, ref)); v = unit(np.cross(a, u))
     th, normals, m = plane_normals(u, v)
 
-    # per-plane volumes (mask voxels per side)
-    proj = (pos - com) @ normals.T                           # (Nvox, K)
+    # per-plane volumes: SEGMENT 1 (cell body) voxels per side only — the polar
+    # body and pronuclei are excluded from the volume normalization.
+    pos1 = pos[labels == 1]
+    proj = (pos1 - com) @ normals.T                          # (Nvox1, K)
     volA = (proj > 0).sum(axis=0).astype(float) * voxvol
     volB = (proj <= 0).sum(axis=0).astype(float) * voxvol
     volA = np.maximum(volA, voxvol); volB = np.maximum(volB, voxvol)
 
-    # transcripts (µm) per gene, from the atlas scene
-    tx = d.get("transcripts", {})
-    genes = sorted(tx.keys(), key=lambda g: -d.get("gene_totals", {}).get(g, 0))
-    # side of every transcript for every plane, per gene
+    # side of every segment-1 transcript for every plane, per gene
     K = N_PLANES
     weighted_p_vol = np.zeros(K); weighted_p_cnt = np.zeros(K)
     diff_cnt_sum = np.zeros(K)          # Σ|a−b|                (count difference)
@@ -160,9 +188,10 @@ def process(eid):
     gene_rows = []
     for gi, g in enumerate(genes):
         t = tx[g]
-        P = np.stack([np.asarray(t["x"], float) * XY_UM,
-                      np.asarray(t["y"], float) * XY_UM,
-                      np.asarray(t["gz"], float) * Z_UM], axis=1)
+        in1 = seg_of[g] == 1                                 # count only segment-1 transcripts
+        P = np.stack([np.asarray(t["x"], float)[in1] * XY_UM,
+                      np.asarray(t["y"], float)[in1] * XY_UM,
+                      np.asarray(t["gz"], float)[in1] * Z_UM], axis=1)
         n = len(P)
         if n == 0:
             continue
@@ -250,7 +279,9 @@ def process(eid):
         "region_meshes": d["region_meshes"], "region_defaults": d["region_defaults"],
         "mask_labels": d["mask_labels"],
         "genes": genes, "gene_totals": d.get("gene_totals", {}),
-        "transcripts": {g: {"x": tx[g]["x"], "y": tx[g]["y"], "gz": tx[g]["gz"]} for g in tx},
+        # s1[i] = 1 if transcript i is in segment 1 (counted), else 0 (rendered green)
+        "transcripts": {g: {"x": tx[g]["x"], "y": tx[g]["y"], "gz": tx[g]["gz"],
+                            "s1": (seg_of[g] == 1).astype(np.uint8).tolist()} for g in tx},
         "analysis": {
             "com_plot": [round(c, 2) for c in com_plot],
             "com_um": [round(float(c), 4) for c in com],
@@ -281,10 +312,57 @@ def _json_default(o):
     raise TypeError(f"not serializable: {type(o)}")
 
 
+BEST_KEYS = ["pVol", "pCnt", "diffVol", "diffCnt"]
+
+
+def agg_entry(eid, label, scene):
+    """Slim per-embryo record for the cross-embryo bottom-drawer visuals: the
+    cross-section outline, the 4 best-plane indices, and — per gene — its total n
+    and side-A count `a` at each of the 4 best planes (b = n − a)."""
+    A = scene["analysis"]
+    bp = A["best_planes"]
+    best = [bp[k] for k in BEST_KEYS]
+    g = {}
+    for row in A["genes"]:
+        planes = row["planes"]
+        g[row["gene"]] = [row["total"]] + [planes[bi]["a"] for bi in best]
+    return {"id": eid, "label": label, "outline": A["cross_section"]["outline"],
+            "best": best, "g": g}
+
+
+def write_cross_aggregate(entries, path):
+    """One file for the bottom drawer. The dataset spans multiple gene panels, so
+    NO gene is in all embryos; the alignment-gene dropdown is therefore the UNION
+    of all genes (alphabetical) with each gene's embryo coverage. Selecting a gene
+    shows only the embryos that contain it. Default = widest-coverage gene (ties
+    broken by summed count)."""
+    if not entries:
+        return
+    cov = Counter()
+    sums = Counter()
+    for e in entries:
+        for gn, arr in e["g"].items():
+            cov[gn] += 1
+            sums[gn] += arr[0]
+    genes_all = sorted(cov.keys(), key=str.lower)
+    gene_cov = {gn: cov[gn] for gn in genes_all}
+    default_align = max(genes_all, key=lambda gn: (cov[gn], sums[gn])) if genes_all else None
+    agg = {"step_deg": STEP_DEG, "best_keys": BEST_KEYS, "n_embryos": len(entries),
+           "genes_all": genes_all, "gene_cov": gene_cov,
+           "default_align_gene": default_align, "embryos": entries}
+    with gzip.open(path, "wt") as fh:
+        json.dump(agg, fh, separators=(",", ":"), default=_json_default)
+    dcov = cov[default_align] if default_align else 0
+    print(f"  cross-aggregate: {len(entries)} embryos, {len(genes_all)} union genes, "
+          f"default align gene = {default_align} (cov {dcov}/{len(entries)})  "
+          f"({os.path.getsize(path)/1024:.0f} KB)")
+
+
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
     ids = sorted(os.listdir(ATLAS))
     manifest = []
+    agg_entries = []
     for i, eid in enumerate(ids):
         try:
             scene = process(eid)
@@ -304,19 +382,23 @@ def main():
         m2 = re.search(r"_p(\d+)_(.+)$", eid)
         plate = f"p{m2.group(1)}" if m2 else "?"
         fovsub = m2.group(2) if m2 else eid
+        label = f"{plate.upper()} · {fovsub}"
         bp = scene["analysis"]["best_planes"]
         manifest.append({
-            "id": eid, "label": f"{plate.upper()} · {fovsub}", "date_short": ds,
+            "id": eid, "label": label, "date_short": ds,
             "n_genes": len(scene["genes"]),
             "n_transcripts": sum(len(t["x"]) for t in scene["transcripts"].values()),
             "size_kb": round(os.path.getsize(out) / 1024),
             "best_planes": bp,
         })
+        agg_entries.append(agg_entry(eid, label, scene))
         print(f"  [{i+1}/{len(ids)}] {eid}  pVol={bp['pVol']*10}° pCnt={bp['pCnt']*10}° "
               f"diffVol={bp['diffVol']*10}° diffCnt={bp['diffCnt']*10}°  {manifest[-1]['size_kb']}KB")
     manifest.sort(key=lambda m: m["id"])
+    agg_entries.sort(key=lambda e: e["id"])
     with open(OUT_MANIFEST, "w") as fh:
         json.dump({"embryos": manifest, "n_planes": N_PLANES, "step_deg": STEP_DEG}, fh, indent=1)
+    write_cross_aggregate(agg_entries, os.path.join(HERE, "public", "data", "zygote_cross.json.gz"))
     tot = sum(m["size_kb"] for m in manifest)
     print(f"\nwrote {len(manifest)} zygotes  ({tot/1024:.1f} MB)")
 

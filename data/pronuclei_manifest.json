@@ -1,0 +1,384 @@
+{
+ "embryos": [
+  {
+   "id": "20251226_zygote_p1_1",
+   "label": "p1 1",
+   "date_short": "Dec 26",
+   "distance": 27.5,
+   "total": 158525,
+   "size_kb": 182
+  },
+  {
+   "id": "20251226_zygote_p1_10",
+   "label": "p1 10",
+   "date_short": "Dec 26",
+   "distance": 13.7,
+   "total": 127694,
+   "size_kb": 178
+  },
+  {
+   "id": "20251226_zygote_p1_11",
+   "label": "p1 11",
+   "date_short": "Dec 26",
+   "distance": 36.45,
+   "total": 136193,
+   "size_kb": 162
+  },
+  {
+   "id": "20251226_zygote_p1_2_2",
+   "label": "p1 2 2",
+   "date_short": "Dec 26",
+   "distance": 3.0,
+   "total": 162294,
+   "size_kb": 203
+  },
+  {
+   "id": "20251226_zygote_p1_4",
+   "label": "p1 4",
+   "date_short": "Dec 26",
+   "distance": 0.6,
+   "total": 42297,
+   "size_kb": 133
+  },
+  {
+   "id": "20251226_zygote_p1_7",
+   "label": "p1 7",
+   "date_short": "Dec 26",
+   "distance": 17.93,
+   "total": 181338,
+   "size_kb": 178
+  },
+  {
+   "id": "20251226_zygote_p1_8",
+   "label": "p1 8",
+   "date_short": "Dec 26",
+   "distance": 29.06,
+   "total": 140000,
+   "size_kb": 163
+  },
+  {
+   "id": "20260407_zygote_p1_0_1",
+   "label": "p1 0 1",
+   "date_short": "Apr 7",
+   "distance": 27.13,
+   "total": 13780,
+   "size_kb": 187
+  },
+  {
+   "id": "20260407_zygote_p1_0_2",
+   "label": "p1 0 2",
+   "date_short": "Apr 7",
+   "distance": 31.25,
+   "total": 12683,
+   "size_kb": 168
+  },
+  {
+   "id": "20260407_zygote_p1_1",
+   "label": "p1 1",
+   "date_short": "Apr 7",
+   "distance": 26.18,
+   "total": 7271,
+   "size_kb": 171
+  },
+  {
+   "id": "20260407_zygote_p1_10",
+   "label": "p1 10",
+   "date_short": "Apr 7",
+   "distance": 19.88,
+   "total": 21238,
+   "size_kb": 190
+  },
+  {
+   "id": "20260407_zygote_p1_11",
+   "label": "p1 11",
+   "date_short": "Apr 7",
+   "distance": 13.57,
+   "total": 11653,
+   "size_kb": 161
+  },
+  {
+   "id": "20260407_zygote_p1_12",
+   "label": "p1 12",
+   "date_short": "Apr 7",
+   "distance": 34.24,
+   "total": 6775,
+   "size_kb": 194
+  },
+  {
+   "id": "20260407_zygote_p1_2",
+   "label": "p1 2",
+   "date_short": "Apr 7",
+   "distance": 45.21,
+   "total": 53563,
+   "size_kb": 169
+  },
+  {
+   "id": "20260407_zygote_p1_3",
+   "label": "p1 3",
+   "date_short": "Apr 7",
+   "distance": 45.48,
+   "total": 4586,
+   "size_kb": 141
+  },
+  {
+   "id": "20260407_zygote_p1_4",
+   "label": "p1 4",
+   "date_short": "Apr 7",
+   "distance": 15.95,
+   "total": 5526,
+   "size_kb": 208
+  },
+  {
+   "id": "20260407_zygote_p1_6_0",
+   "label": "p1 6 0",
+   "date_short": "Apr 7",
+   "distance": 21.99,
+   "total": 11073,
+   "size_kb": 192
+  },
+  {
+   "id": "20260407_zygote_p1_6_1",
+   "label": "p1 6 1",
+   "date_short": "Apr 7",
+   "distance": 25.39,
+   "total": 8727,
+   "size_kb": 181
+  },
+  {
+   "id": "20260407_zygote_p1_7_0",
+   "label": "p1 7 0",
+   "date_short": "Apr 7",
+   "distance": 35.88,
+   "total": 11359,
+   "size_kb": 184
+  },
+  {
+   "id": "20260407_zygote_p1_8_0",
+   "label": "p1 8 0",
+   "date_short": "Apr 7",
+   "distance": 35.72,
+   "total": 5984,
+   "size_kb": 183
+  },
+  {
+   "id": "20260425_zygote_p2_0",
+   "label": "p2 0",
+   "date_short": "Apr 25",
+   "distance": 55.2,
+   "total": 32782,
+   "size_kb": 149
+  },
+  {
+   "id": "20260425_zygote_p2_1",
+   "label": "p2 1",
+   "date_short": "Apr 25",
+   "distance": 27.97,
+   "total": 147176,
+   "size_kb": 161
+  },
+  {
+   "id": "20260425_zygote_p2_10",
+   "label": "p2 10",
+   "date_short": "Apr 25",
+   "distance": 25.93,
+   "total": 274612,
+   "size_kb": 174
+  },
+  {
+   "id": "20260425_zygote_p2_12",
+   "label": "p2 12",
+   "date_short": "Apr 25",
+   "distance": 25.88,
+   "total": 315532,
+   "size_kb": 161
+  },
+  {
+   "id": "20260425_zygote_p2_13",
+   "label": "p2 13",
+   "date_short": "Apr 25",
+   "distance": 28.76,
+   "total": 358432,
+   "size_kb": 144
+  },
+  {
+   "id": "20260425_zygote_p2_14",
+   "label": "p2 14",
+   "date_short": "Apr 25",
+   "distance": 22.54,
+   "total": 338834,
+   "size_kb": 162
+  },
+  {
+   "id": "20260425_zygote_p2_16",
+   "label": "p2 16",
+   "date_short": "Apr 25",
+   "distance": 58.22,
+   "total": 268890,
+   "size_kb": 145
+  },
+  {
+   "id": "20260425_zygote_p2_17",
+   "label": "p2 17",
+   "date_short": "Apr 25",
+   "distance": 44.93,
+   "total": 446332,
+   "size_kb": 158
+  },
+  {
+   "id": "20260425_zygote_p2_18_0",
+   "label": "p2 18 0",
+   "date_short": "Apr 25",
+   "distance": 64.16,
+   "total": 66506,
+   "size_kb": 141
+  },
+  {
+   "id": "20260425_zygote_p2_18_1",
+   "label": "p2 18 1",
+   "date_short": "Apr 25",
+   "distance": 54.96,
+   "total": 61296,
+   "size_kb": 155
+  },
+  {
+   "id": "20260425_zygote_p2_19_1",
+   "label": "p2 19 1",
+   "date_short": "Apr 25",
+   "distance": 57.27,
+   "total": 154458,
+   "size_kb": 142
+  },
+  {
+   "id": "20260425_zygote_p2_2",
+   "label": "p2 2",
+   "date_short": "Apr 25",
+   "distance": 58.66,
+   "total": 250646,
+   "size_kb": 152
+  },
+  {
+   "id": "20260425_zygote_p2_20",
+   "label": "p2 20",
+   "date_short": "Apr 25",
+   "distance": 24.63,
+   "total": 95404,
+   "size_kb": 166
+  },
+  {
+   "id": "20260425_zygote_p2_21",
+   "label": "p2 21",
+   "date_short": "Apr 25",
+   "distance": 28.9,
+   "total": 186592,
+   "size_kb": 153
+  },
+  {
+   "id": "20260425_zygote_p2_22_1",
+   "label": "p2 22 1",
+   "date_short": "Apr 25",
+   "distance": 31.98,
+   "total": 135479,
+   "size_kb": 132
+  },
+  {
+   "id": "20260425_zygote_p2_23",
+   "label": "p2 23",
+   "date_short": "Apr 25",
+   "distance": 17.81,
+   "total": 286014,
+   "size_kb": 172
+  },
+  {
+   "id": "20260425_zygote_p2_25_0",
+   "label": "p2 25 0",
+   "date_short": "Apr 25",
+   "distance": 26.6,
+   "total": 158882,
+   "size_kb": 162
+  },
+  {
+   "id": "20260425_zygote_p2_3",
+   "label": "p2 3",
+   "date_short": "Apr 25",
+   "distance": 1.7,
+   "total": 220450,
+   "size_kb": 140
+  },
+  {
+   "id": "20260425_zygote_p2_4",
+   "label": "p2 4",
+   "date_short": "Apr 25",
+   "distance": 24.16,
+   "total": 209628,
+   "size_kb": 172
+  },
+  {
+   "id": "20260425_zygote_p2_5",
+   "label": "p2 5",
+   "date_short": "Apr 25",
+   "distance": 21.95,
+   "total": 392530,
+   "size_kb": 162
+  },
+  {
+   "id": "20260425_zygote_p2_6",
+   "label": "p2 6",
+   "date_short": "Apr 25",
+   "distance": 40.29,
+   "total": 258438,
+   "size_kb": 150
+  },
+  {
+   "id": "20260425_zygote_p2_7_0",
+   "label": "p2 7 0",
+   "date_short": "Apr 25",
+   "distance": 23.73,
+   "total": 400188,
+   "size_kb": 136
+  },
+  {
+   "id": "20260425_zygote_p2_7_1",
+   "label": "p2 7 1",
+   "date_short": "Apr 25",
+   "distance": 37.86,
+   "total": 489412,
+   "size_kb": 152
+  },
+  {
+   "id": "20260425_zygote_p2_8_0",
+   "label": "p2 8 0",
+   "date_short": "Apr 25",
+   "distance": 14.47,
+   "total": 171743,
+   "size_kb": 148
+  },
+  {
+   "id": "20260425_zygote_p2_8_1",
+   "label": "p2 8 1",
+   "date_short": "Apr 25",
+   "distance": 51.98,
+   "total": 161046,
+   "size_kb": 140
+  },
+  {
+   "id": "20260425_zygote_p2_9_0",
+   "label": "p2 9 0",
+   "date_short": "Apr 25",
+   "distance": 57.18,
+   "total": 18570,
+   "size_kb": 158
+  },
+  {
+   "id": "20260425_zygote_p2_9_1",
+   "label": "p2 9 1",
+   "date_short": "Apr 25",
+   "distance": 56.54,
+   "total": 66852,
+   "size_kb": 159
+  }
+ ],
+ "pron_labels": [
+  3,
+  4
+ ]
+}

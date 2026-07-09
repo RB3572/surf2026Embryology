@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fertilization Geometry &amp; the First Embryonic Axis</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="axes.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#e11d48;box-shadow:0 0 0 4px color-mix(in srgb,#e11d48 18%,transparent)"></span>
+      <span class="brand-name">Fertilization&nbsp;Geometry</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Embryos"></nav>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">Controls</span>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="ax-show" id="ax-toggles"></div>
+        <div class="controls-row" style="margin-top:8px">
+          <label class="ctl"><span class="ctl-label">Gene</span>
+            <select id="gene-select" aria-label="Gene"></select></label>
+        </div>
+        <div class="ax-readout" id="ax-readout"></div>
+        <details class="ax-assump">
+          <summary>Assumptions &amp; caveats</summary>
+          <ul>
+            <li><b>Polar body = animal pole.</b> The extruded polar body is the accepted
+              landmark of the animal pole; the opposite side is vegetal. (We do not
+              distinguish 1st vs 2nd polar body — both sit at the same animal-pole site.)</li>
+            <li><b>Sperm = GFP midpiece.</b> The manually-labelled midpiece is a proxy for
+              the sperm entry position: it stays near the fusion site while the sperm head
+              decondenses into the pronucleus and migrates centrally.</li>
+            <li><b>First cleavage plane</b> is read directly in two-cell embryos as the
+              interface between the two blastomeres; in zygotes we use the pronuclear axis
+              as the <i>predicted</i> normal (Hiiragi's proposed determinant).</li>
+            <li><b>Shape control.</b> Because the cleavage plane can simply follow embryo
+              elongation, we also report every angle against the embryo's own long axis; if
+              the signal tracks shape, it is not independent pre-patterning.</li>
+            <li><b>Modest n and pre-specified test.</b> 26 zygotes, 19 two-cell (fewer with a
+              segmented polar body); the hypotheses are fixed in advance and compared to an
+              exact random-orientation null.</li>
+          </ul>
+        </details>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Select an embryo</div>
+        <div class="ph-sub">Does the geometry of fertilization — the sperm entry position
+          and the polar body (animal pole) — predict the first cleavage plane? Pick a
+          zygote or two-cell embryo above. The bottom drawer pools the test across all
+          embryos.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- Right drawer: gene asymmetry across the cohort -->
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Gene asymmetry</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Molecular asymmetry across the axis</div>
+        <div class="rdrawer-desc" id="rdrawer-desc"></div>
+      </div>
+      <div class="best-list" id="gene-list"></div>
+    </div>
+  </aside>
+
+  <!-- Bottom drawer: the aggregate test (money figure) -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Does fertilization geometry set the cleavage plane?</span>
+      <span class="drawer-hint">pooled across the cohort · |cos θ| ~ Uniform(0,1) under a random-orientation null</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="ax-verdict" id="ax-verdict"></div>
+      <div class="ax-hists" id="ax-hists"></div>
+    </div>
+  </section>
+
+  <script src="viewer-core.js"></script>
+  <script src="axes.js"></script>
+</body>
+</html>

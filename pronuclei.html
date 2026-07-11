@@ -26,6 +26,10 @@
         <span class="controls-title">This zygote</span>
       </div>
       <div class="controls-body" id="controls-body">
+        <div class="controls-row" style="margin-bottom:8px">
+          <label class="ctl"><span class="ctl-label">Gene</span>
+            <select id="gene-select" aria-label="Gene"></select></label>
+        </div>
         <div class="pn-readout" id="pn-readout"></div>
         <div class="pn-note">The two pronuclei are auto-detected as the two largest
           segments that sit <em>inside</em> the cytoplasm (segment 1) — their label
@@ -57,17 +61,56 @@
     </div>
   </main>
 
-  <!-- Bottom drawer: scatter distance vs total transcripts -->
+  <!-- Right drawer: genes ranked by correlation with pronuclei distance -->
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Gene ⟷ distance</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Genes correlated with pronuclei distance</div>
+        <div class="rdrawer-desc">Pearson correlation between a gene's transcript count and the
+          minimum pronuclei distance, across the zygotes that contain the gene (panels are
+          disjoint, so n varies per gene). Click a gene to plot it.</div>
+        <div class="pn-rank-ctl">
+          <label class="ctl"><span class="ctl-label">Top</span>
+            <select id="rank-n"><option value="10">10</option><option value="20">20</option>
+              <option value="30">30</option><option value="50">50</option></select></label>
+          <span class="pn-rank-min">genes in ≥ <b>5</b> zygotes</span>
+        </div>
+      </div>
+      <div class="pn-ranks">
+        <div class="pn-rank-sec">
+          <div class="pn-rank-title pos">Most positive — distance rises with the gene's count</div>
+          <div id="rank-pos" class="best-list"></div>
+        </div>
+        <div class="pn-rank-sec">
+          <div class="pn-rank-title neg">Most negative — distance falls as the gene's count rises</div>
+          <div id="rank-neg" class="best-list"></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Bottom drawer: per-gene scatter (top) + overall distance-vs-transcripts (below) -->
   <section class="drawer" id="drawer" data-open="false" hidden>
     <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
     <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
       <span class="drawer-title">Distance vs transcripts</span>
-      <span class="drawer-hint">min pronuclei distance vs total transcripts · one point per zygote</span>
+      <span class="drawer-hint">selected gene (top) &amp; all transcripts (below) vs pronuclei distance · one point per zygote</span>
       <span class="drawer-chevron" aria-hidden="true"></span>
     </button>
     <div class="drawer-body" id="drawer-body">
-      <div class="pn-fit" id="pn-fit"></div>
-      <div id="scatter-plot" class="scatter-plot"></div>
+      <div class="pn-block">
+        <div class="mini-title">Selected gene <span class="mini-sub" id="gene-fit"></span></div>
+        <div id="gene-scatter" class="scatter-plot"></div>
+      </div>
+      <div class="pn-block">
+        <div class="mini-title">All transcripts <span class="mini-sub" id="pn-fit"></span></div>
+        <div id="scatter-plot" class="scatter-plot"></div>
+      </div>
     </div>
   </section>
 

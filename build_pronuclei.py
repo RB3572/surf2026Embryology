@@ -35,6 +35,7 @@ ATLAS = "/Users/rishib/Desktop/MERFISH/Website2/MerfishAtlasWebsite/public/data/
 SRC = os.path.join(HERE, "..", "TranscriptomicsData", "JustTifAndCSVData", "Zygote")
 OUT_DIR = os.path.join(HERE, "public", "data", "pronuclei")
 OUT_MANIFEST = os.path.join(HERE, "public", "data", "pronuclei_manifest.json")
+OUT_GENES = os.path.join(HERE, "public", "data", "pronuclei_genes.json.gz")
 
 XY_UM = 0.15
 Z_UM = 1.0
@@ -110,7 +111,12 @@ def process(eid):
     pa = A[j]; pb = B[int(idx[j])]
 
     d = json.load(gzip.open(scene_p, "rt"))
-    total = int(d.get("n_transcripts") or sum(len(t["x"]) for t in d.get("transcripts", {}).values()))
+    tx = d.get("transcripts", {})
+    total = int(d.get("n_transcripts") or sum(len(t["x"]) for t in tx.values()))
+    # per-gene transcript count in this zygote (for the gene↔distance correlation)
+    gene_counts = {g: int(v) for g, v in d.get("gene_totals", {}).items() if v}
+    if not gene_counts:
+        gene_counts = {g: len(t["x"]) for g, t in tx.items() if len(t["x"])}
     zs = d.get("z_scale", 7.0)
     rm = d.get("region_meshes", {})
     seg_ids = sorted(int(s) for s in np.unique(sub) if s >= 1)
@@ -122,7 +128,7 @@ def process(eid):
         "line_plot": [um_to_plot(pa, zs), um_to_plot(pb, zs)],
         "distance_um": round(d_min, 2), "total_transcripts": total,
     }
-    return scene, d_min, total
+    return scene, d_min, total, gene_counts
 
 
 def _json_default(o):
@@ -151,7 +157,7 @@ def date_short(eid):
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
     ids = sorted(e for e in os.listdir(ATLAS) if not e.startswith("."))
-    points = []
+    points, gene_agg = [], []
     for i, eid in enumerate(ids):
         try:
             res = process(eid)
@@ -159,19 +165,24 @@ def main():
             print(f"  !! {eid}: {e}"); continue
         if not res:
             print(f"  -- skipped {eid} (needs both pronuclei)"); continue
-        scene, dist, total = res
+        scene, dist, total, gene_counts = res
         out = os.path.join(OUT_DIR, eid + ".json.gz")
         with gzip.open(out, "wt") as fh:
             json.dump(scene, fh, separators=(",", ":"), default=_json_default)
         points.append({"id": eid, "label": short_label(eid), "date_short": date_short(eid),
                        "distance": round(dist, 2), "total": total, "pron_labels": scene["pron_labels"],
                        "size_kb": round(os.path.getsize(out) / 1024)})
+        gene_agg.append({"id": eid, "distance": round(dist, 2), "total": total, "genes": gene_counts})
         print(f"  [{i+1}/{len(ids)}] {eid}  pronuclei=seg{scene['pron_labels']}  dist={dist:.1f}um  total={total}")
-    points.sort(key=lambda p: p["id"])
+    points.sort(key=lambda p: p["id"]); gene_agg.sort(key=lambda p: p["id"])
     with open(OUT_MANIFEST, "w") as fh:
         json.dump({"embryos": points}, fh, indent=1)
+    # per-gene per-zygote counts for the gene↔distance correlation (loaded once by the UI)
+    with gzip.open(OUT_GENES, "wt") as fh:
+        json.dump({"embryos": gene_agg}, fh, separators=(",", ":"), default=_json_default)
     tot = sum(p["size_kb"] for p in points)
-    print(f"\nwrote {len(points)} zygotes with 2 pronuclei  ({tot/1024:.1f} MB)")
+    print(f"\nwrote {len(points)} zygotes with 2 pronuclei  ({tot/1024:.1f} MB)  + gene aggregate "
+          f"({os.path.getsize(OUT_GENES)/1024:.0f} KB)")
 
 
 if __name__ == "__main__":

@@ -31,10 +31,6 @@
             <span class="ctl-label">Gene</span>
             <select id="gene-select" aria-label="Gene"></select>
           </label>
-          <label class="ctl" title="Only genes with more than this many transcripts in the current embryo appear in the ranked list">
-            <span class="ctl-label">Min&nbsp;count</span>
-            <input id="min-count" type="number" min="0" step="10" value="0" placeholder="0" aria-label="Minimum transcripts" />
-          </label>
         </div>
         <div class="seg-legend" id="seg-legend"></div>
         <div class="zchart-panel">
@@ -73,8 +69,20 @@
     <div class="rdrawer-body" id="rdrawer-body">
       <div class="rdrawer-head">
         <div class="rdrawer-title">Genes enriched per segment</div>
-        <div class="rdrawer-desc">Density fold-change vs the embryo-wide average
-          (a gene entirely in one segment tops out at V<sub>total</sub>/V<sub>segment</sub>).</div>
+        <div class="rdrawer-desc" id="rdrawer-desc"></div>
+        <div class="seg-rank-ctl">
+          <label class="ctl" title="How to score a gene's enrichment in a segment">
+            <span class="ctl-label">Metric</span>
+            <select id="metric-mode">
+              <option value="density">Density — ÷ segment volume (fold-change)</option>
+              <option value="fraction">Fraction — ÷ the gene's total count</option>
+            </select>
+          </label>
+          <label class="ctl" title="Only genes with more than this many transcripts in the current embryo appear in the list">
+            <span class="ctl-label">Min&nbsp;count</span>
+            <input id="min-count" type="number" min="0" step="10" value="0" placeholder="0" aria-label="Minimum transcripts" />
+          </label>
+        </div>
       </div>
       <div class="rtabs" id="rtabs"></div>
       <div class="best-list" id="seg-list"></div>

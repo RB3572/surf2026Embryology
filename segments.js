@@ -19,11 +19,11 @@
   const geneSelect = $("#gene-select"), chartEl = $("#chart"), chartSub = $("#chart-sub");
   const chartReadout = $("#chart-readout"), segLegend = $("#seg-legend");
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
-  const rtabsEl = $("#rtabs"), segListEl = $("#seg-list");
-  const minCountEl = $("#min-count");
+  const rtabsEl = $("#rtabs"), segListEl = $("#seg-list"), rdrawerDesc = $("#rdrawer-desc");
+  const minCountEl = $("#min-count"), metricModeEl = $("#metric-mode");
 
   const state = { manifest: [], currentId: null, scene: null, userGene: null,
-                  segTab: null, geneMap: null, cutoff: 0 };
+                  segTab: null, geneMap: null, cutoff: 0, metric: "density" };
 
   const segColor = (lbl) => {
     const d = (state.scene.region_defaults || {})[String(lbl)];
@@ -48,6 +48,10 @@
       minCountEl.addEventListener("input", () => {
         state.cutoff = Math.max(0, parseInt(minCountEl.value, 10) || 0);
         if (state.scene) renderSegList();
+      });
+      metricModeEl.addEventListener("change", () => {
+        state.metric = metricModeEl.value;
+        if (state.scene) { renderSegList(); renderChart(); }
       });
     } catch (err) { showError("Failed to load manifest: " + (err.message || err)); }
   })();
@@ -129,25 +133,29 @@
     const s = state.scene; if (!s) return;
     const g = gene(); chartSub.textContent = g ? `· ${g}` : "";
     const gm = state.geneMap[g] || {};
-    const labels = s.mask_labels;
-    const y = labels.map((l) => (gm[l] ? gm[l].enrich : 0));
+    const frac = isFrac(), labels = s.mask_labels;
+    const y = labels.map((l) => (gm[l] ? metricVal(gm[l]) : 0));
     const colors = labels.map((l) => (gm[l] ? segColor(l) : "#d5d9e2"));
-    plotInto(chartEl, [
+    const traces = [
       { type: "bar", x: labels.map(segName), y, marker: { color: colors },
-        hovertemplate: "%{x}: %{y}× enrichment<extra></extra>" },
-      { type: "scatter", mode: "lines", x: [segName(labels[0]), segName(labels[labels.length - 1])],
-        y: [1, 1], line: { color: "#94a3b8", width: 1, dash: "dot" }, hoverinfo: "skip" },
-    ], {
-      margin: { l: 34, r: 6, t: 6, b: 34 }, height: 150,
-      yaxis: { tickfont: { size: 9 }, gridcolor: "#eef1f5", fixedrange: true, title: { text: "fold", font: { size: 9 } }, rangemode: "tozero" },
+        hovertemplate: frac ? "%{x}: %{y:.0%} of the gene<extra></extra>" : "%{x}: %{y}× enrichment<extra></extra>" },
+    ];
+    if (!frac) traces.push({ type: "scatter", mode: "lines", x: [segName(labels[0]), segName(labels[labels.length - 1])],
+      y: [1, 1], line: { color: "#94a3b8", width: 1, dash: "dot" }, hoverinfo: "skip" });
+    plotInto(chartEl, traces, {
+      margin: { l: 38, r: 6, t: 6, b: 34 }, height: 150,
+      yaxis: { tickfont: { size: 9 }, gridcolor: "#eef1f5", fixedrange: true,
+        title: { text: frac ? "fraction" : "fold", font: { size: 9 } }, rangemode: "tozero",
+        tickformat: frac ? ".0%" : undefined },
       xaxis: { tickfont: { size: 9 }, fixedrange: true, tickangle: -30 }, bargap: 0.45,
       paper_bgcolor: "transparent", plot_bgcolor: "transparent", showlegend: false,
     });
-    const segs = Object.entries(gm).sort((a, b) => b[1].enrich - a[1].enrich);
+    const segs = Object.entries(gm).sort((a, b) => metricVal(b[1]) - metricVal(a[1]));
     if (segs.length) {
       const [top, ti] = segs[0];
       chartReadout.innerHTML = `<div><b>${g}</b> — ${ti.ntot} transcripts in segments</div>` +
-        `<div>most enriched in <b>${segName(top)}</b>: <b>${ti.enrich}×</b> (${ti.count} here)</div>`;
+        `<div>${frac ? "most concentrated" : "most enriched"} in <b>${segName(top)}</b>: ` +
+        `<b>${metricStr(ti)}</b> (${ti.count} here)</div>`;
     } else chartReadout.innerHTML = `<div><b>${g}</b> — below the count threshold in every segment.</div>`;
   }
 
@@ -171,23 +179,33 @@
       renderSegList();
     }));
   }
+  const isFrac = () => state.metric === "fraction";
+  const metricVal = (r) => isFrac() ? r.count / r.ntot : r.enrich;               // fraction of gene in seg, or density fold
+  const metricStr = (r) => isFrac() ? `${(100 * r.count / r.ntot).toFixed(0)}%` : `${r.enrich}×`;
+  function updateDesc() {
+    rdrawerDesc.innerHTML = isFrac()
+      ? "Fraction of the gene's transcripts that fall in this segment (segment count ÷ the gene's total across segments) — no volume correction."
+      : "Density fold-change vs the embryo-wide average (a gene entirely in one segment tops out at V<sub>total</sub>/V<sub>segment</sub>).";
+  }
   function renderSegList() {
     const s = state.scene; if (!s) return;
-    const cut = state.cutoff || 0;
-    // cutoff = minimum total transcripts of the gene in this embryo (ntot)
-    const rows = (s.ranked[String(state.segTab)] || []).filter((r) => r.ntot > cut);
+    updateDesc();
+    const cut = state.cutoff || 0, frac = isFrac();
+    // cutoff = minimum total transcripts of the gene in this embryo (ntot); re-sort by the chosen metric
+    const rows = (s.ranked[String(state.segTab)] || []).filter((r) => r.ntot > cut)
+      .sort((a, b) => metricVal(b) - metricVal(a));
     const cur = gene();
     const vol = (s.segments.find((q) => q.label === state.segTab) || {}).volume || 0;
     const note = cut > 0 ? `> ${cut} transcripts in embryo` : "≥3 transcripts in segment";
     let html = `<div class="best-plane-note">${segName(state.segTab)} · volume ` +
       `<b>${Math.round(vol).toLocaleString()}</b> µm³ · ${rows.length} genes (${note})</div>`;
-    html += `<div class="best-head"><span></span><span>gene</span><span>fold</span><span>count</span></div>`;
+    html += `<div class="best-head"><span></span><span>gene</span><span>${frac ? "% here" : "fold"}</span><span>count</span></div>`;
     html += rows.map((r, i) =>
       `<div class="best-row seg-row${r.gene === cur ? " current" : ""}" data-gene="${r.gene}" ` +
-      `title="${r.gene}: ${r.count} of ${r.ntot} transcripts here">` +
+      `title="${r.gene}: ${r.count} of ${r.ntot} transcripts here${frac ? ` · ${r.enrich}× density` : ` · ${(100 * r.count / r.ntot).toFixed(0)}% of the gene`}">` +
       `<span class="best-num">${i + 1}</span>` +
       `<span class="best-gene">${r.gene}</span>` +
-      `<span class="best-real">${r.enrich}×</span>` +
+      `<span class="best-real">${metricStr(r)}</span>` +
       `<span class="best-p">${r.count}</span></div>`).join("");
     segListEl.innerHTML = html || `<div class="best-plane-note">No genes above the threshold.</div>`;
   }

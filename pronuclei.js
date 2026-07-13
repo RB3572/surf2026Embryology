@@ -9,7 +9,7 @@
 (() => {
   const $ = (s) => document.querySelector(s);
   const V = window.VCore;
-  const LINE_C = "#111827", CUR_C = "#0891b2";
+  const LINE_C = "#111827", CUR_C = "#0891b2", DOT_C = "#f59e0b";
   const MIN_ZYG = 5;                    // min zygotes containing a gene to rank/correlate it
 
   function plotInto(div, traces, layout, cfg) {
@@ -22,13 +22,14 @@
   const placeholder = $("#placeholder"), loadingEl = $("#loading"), loadingTxt = $("#loading-text");
   const pnReadout = $("#pn-readout"), pnFit = $("#pn-fit");
   const geneSelect = $("#gene-select"), geneScatter = $("#gene-scatter"), geneFit = $("#gene-fit");
+  const dotsShow = $("#dots-show");
   const drawer = $("#drawer"), drawerHandle = $("#drawer-handle"), drawerBody = $("#drawer-body");
   const scatterPlot = $("#scatter-plot");
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
   const rankNEl = $("#rank-n"), rankPosEl = $("#rank-pos"), rankNegEl = $("#rank-neg");
 
   const state = { points: [], byId: {}, genesAgg: null, geneCorr: [], userGene: null, rankN: 10,
-                  currentId: null, scene: null, fit: null, drawerOpen: false };
+                  currentId: null, scene: null, fit: null, drawerOpen: false, showDots: false };
 
   (async function init() {
     try {
@@ -49,6 +50,7 @@
       wireDrawer(); wireRdrawer(); renderRanks();
       geneSelect.addEventListener("change", () => selectGene(geneSelect.value));
       rankNEl.addEventListener("change", () => { state.rankN = parseInt(rankNEl.value, 10) || 10; renderRanks(); });
+      dotsShow.addEventListener("change", () => { state.showDots = dotsShow.checked; if (state.scene) render(); });
     } catch (err) { showError("Failed to load: " + (err.message || err)); }
   })();
 
@@ -84,7 +86,7 @@
   function selectGene(g) {
     state.userGene = g; geneSelect.value = g;
     renderGeneScatter(); highlightRank();
-    if (state.scene) renderReadout(state.byId[state.currentId] || {});
+    if (state.scene) { renderReadout(state.byId[state.currentId] || {}); if (state.showDots) render(); }
   }
 
   async function selectEmbryo(id) {
@@ -133,6 +135,16 @@
       x: [a[0], b[0]], y: [a[1], b[1]], z: [a[2], b[2]],
       line: { color: LINE_C, width: 7 }, marker: { size: 4, color: LINE_C },
       hovertemplate: `min distance ${s.distance_um} µm<extra></extra>`, legendrank: 100 });
+    if (state.showDots) {
+      const g = gene(), tx = s.transcripts && s.transcripts[g];
+      if (tx && tx.x.length) {
+        const zs = s.z_scale;
+        traces.push({ type: "scatter3d", mode: "markers", name: `${g} · ${tx.x.length} dots`,
+          x: tx.x, y: tx.y, z: tx.gz.map((z) => z * zs),
+          marker: { size: 2.4, color: DOT_C, opacity: 0.8, line: { width: 0 } },
+          hovertemplate: `${g}<extra></extra>`, legendrank: 200 });
+      }
+    }
     Plotly.react(plotHost, traces, V.sceneLayout(s.extents, s.id), V.plotConfig);
   }
   function renderReadout(meta) {

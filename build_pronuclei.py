@@ -42,6 +42,7 @@ Z_UM = 1.0
 DS_XY = 4          # finer than the other builds — the pronuclei are small
 DS_Z = 2
 CYTO = 1           # segment 1 is always the cytoplasm
+MAX_DOTS = 1000    # cap stored transcript dots per gene (subsampled) for file size
 
 
 def load_sub(label_path):
@@ -117,6 +118,17 @@ def process(eid):
     gene_counts = {g: int(v) for g, v in d.get("gene_totals", {}).items() if v}
     if not gene_counts:
         gene_counts = {g: len(t["x"]) for g, t in tx.items() if len(t["x"])}
+    # per-gene transcript locations for the 3-D dots (subsampled to MAX_DOTS)
+    tx_dots = {}
+    for g, t in tx.items():
+        n = len(t["x"])
+        if n == 0:
+            continue
+        if n > MAX_DOTS:
+            idx = np.linspace(0, n - 1, MAX_DOTS).astype(int)
+            tx_dots[g] = {"x": [t["x"][k] for k in idx], "y": [t["y"][k] for k in idx], "gz": [t["gz"][k] for k in idx]}
+        else:
+            tx_dots[g] = {"x": t["x"], "y": t["y"], "gz": t["gz"]}
     zs = d.get("z_scale", 7.0)
     rm = d.get("region_meshes", {})
     seg_ids = sorted(int(s) for s in np.unique(sub) if s >= 1)
@@ -127,6 +139,7 @@ def process(eid):
         "pron_labels": [la, lb],                        # [larger, smaller] by volume; auto-detected
         "line_plot": [um_to_plot(pa, zs), um_to_plot(pb, zs)],
         "distance_um": round(d_min, 2), "total_transcripts": total,
+        "transcripts": tx_dots,                         # per-gene dot locations (x px, y px, gz frame)
     }
     return scene, d_min, total, gene_counts
 

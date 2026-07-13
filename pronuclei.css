@@ -12,6 +12,14 @@
 
 #gene-select { min-width: 150px; }
 
+/* "show gene dots" toggle */
+.pn-toggle { display: grid; grid-template-columns: 16px 1fr; column-gap: 8px; row-gap: 1px; align-items: start;
+  cursor: pointer; padding: 4px 0 8px; border-bottom: 1px solid var(--line-2); margin-bottom: 8px; }
+.pn-toggle input { grid-row: 1 / span 2; margin-top: 2px; width: 14px; height: 14px; }
+.pn-t-main { font-size: 12px; font-weight: 600; color: var(--ink); display: inline-flex; align-items: center; gap: 6px; }
+.pn-t-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; background: #f59e0b; }
+.pn-t-desc { grid-column: 2; font-size: 10.5px; line-height: 1.35; color: var(--ink-soft); }
+
 /* bottom drawer: two stacked scatters (selected gene on top, all transcripts below) */
 .drawer-body { display: flex; flex-direction: column; gap: 6px; }
 .pn-block { flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; }

@@ -26,10 +26,13 @@
         <span class="controls-title">This zygote</span>
       </div>
       <div class="controls-body" id="controls-body">
-        <div class="controls-row" style="margin-bottom:8px">
+        <div class="controls-row" style="margin-bottom:6px">
           <label class="ctl"><span class="ctl-label">Gene</span>
             <select id="gene-select" aria-label="Gene"></select></label>
         </div>
+        <label class="pn-toggle"><input type="checkbox" id="dots-show" />
+          <span class="pn-t-main"><span class="pn-t-dot"></span>Show the selected gene's transcripts as dots</span>
+          <span class="pn-t-desc">plots that gene's molecules inside the embryo (relative to the two pronuclei)</span></label>
         <div class="pn-readout" id="pn-readout"></div>
         <div class="pn-note">The two pronuclei are auto-detected as the two largest
           segments that sit <em>inside</em> the cytoplasm (segment 1) — their label

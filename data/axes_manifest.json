@@ -1212,25 +1212,6 @@
    "size_kb": 224
   },
   {
-   "id": "20260425_zygote_p2_3",
-   "stage": "zygote",
-   "stage_label": "Zygote",
-   "label": "p2 3",
-   "angles": {
-    "aspect_ratio": 1.241,
-    "pb_vs_shape": {
-     "deg": 45.41002555142653,
-     "cos": 0.702
-    },
-    "av_vs_sperm": {
-     "deg": 36.814171461253586,
-     "cos": 0.8006
-    }
-   },
-   "has_pb": true,
-   "size_kb": 261
-  },
-  {
    "id": "20260425_zygote_p2_4",
    "stage": "zygote",
    "stage_label": "Zygote",
@@ -1355,6 +1336,6 @@
    "size_kb": 278
   }
  ],
- "n_zygote": 27,
+ "n_zygote": 26,
  "n_twocell": 19
 }

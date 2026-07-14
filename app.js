@@ -1,6 +1,6 @@
 /* Sperm · Embryo 3D Viewer
  *
- * Minimal front-end: a top nav-bar of the 45 sperm-positive embryos; selecting
+ * Minimal front-end: a top nav-bar of the 46 sperm-positive embryos; selecting
  * one renders its 3-D scene — the embryo body (segmentation meshes), the point
  * cloud for the selected gene, and the sperm location. Nothing else.
  *

@@ -226,6 +226,21 @@
    "size_kb": 593
   },
   {
+   "id": "20260425_zygote_p2_3",
+   "stage": "Zygote",
+   "plate": "p2",
+   "fov": "fov3_oocyte",
+   "label": "P2 \u00b7 3",
+   "date_short": "Apr 25",
+   "title": "Zygote \u00b7 P2 \u00b7 FOV 3",
+   "merfish_index": 114,
+   "n_transcripts": 220450,
+   "n_genes": 121,
+   "default_gene": "Padi6",
+   "scene": "data/scenes/20260425_zygote_p2_3.json.gz",
+   "size_kb": 647
+  },
+  {
    "id": "20260425_zygote_p2_4",
    "stage": "Zygote",
    "plate": "p2",

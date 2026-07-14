@@ -317,11 +317,47 @@
     if (ga) { const a = ga[1 + ki]; flip = (ga[0] - a) > a; }   // sideB (=n−a) > sideA
     return { c: Math.cos(theta), s: Math.sin(theta), flip };
   }
+  // interactive config for the cross-section: scroll to zoom, drag to pan, double-click resets.
+  // Minimal modebar (only on hover) keeps the interface clean and professional.
+  const XS_CFG = {
+    responsive: true, scrollZoom: true, displaylogo: false, displayModeBar: "hover",
+    modeBarButtonsToRemove: ["select2d", "lasso2d", "autoScale2d", "toggleSpikelines",
+      "hoverClosestCartesian", "hoverCompareCartesian", "zoom2d"],
+  };
+  // Mean aligned outline: average each embryo's max-radius-per-angle, lightly smoothed —
+  // the canonical cross-section the crowd is scattered around.
+  function meanOutline(oriented) {
+    if (oriented.length < 4) return null;
+    const M = 120, sum = new Array(M).fill(0), cnt = new Array(M).fill(0);
+    for (const o of oriented) {
+      const rb = new Array(M).fill(0);
+      for (let k = 0; k < o.xs.length; k++) {
+        const r = Math.hypot(o.xs[k], o.ys[k]);
+        let bi = Math.floor((Math.atan2(o.ys[k], o.xs[k]) + Math.PI) / (2 * Math.PI) * M) % M;
+        if (bi < 0) bi += M;
+        if (r > rb[bi]) rb[bi] = r;
+      }
+      for (let b = 0; b < M; b++) if (rb[b] > 0) { sum[b] += rb[b]; cnt[b]++; }
+    }
+    const need = oriented.length * 0.4, raw = [];
+    for (let b = 0; b < M; b++) raw.push(cnt[b] >= need ? sum[b] / cnt[b] : null);
+    const xs = [], ys = [];
+    for (let b = 0; b < M; b++) {                      // 3-bin circular smoothing over present bins
+      let s = 0, n = 0;
+      for (let d = -1; d <= 1; d++) { const v = raw[(b + d + M) % M]; if (v != null) { s += v; n++; } }
+      if (!n) continue;
+      const r = s / n, th = (b + 0.5) / M * 2 * Math.PI - Math.PI;
+      xs.push(r * Math.cos(th)); ys.push(r * Math.sin(th));
+    }
+    if (xs.length < 12) return null;
+    xs.push(xs[0]); ys.push(ys[0]);
+    return { xs, ys };
+  }
   function renderOutlines() {
     const agg = state.agg; if (!agg) return;
     const ki = bestKeyIndex();
-    const traces = []; let R = 0;
-    agg.embryos.forEach((emb, i) => {
+    const oriented = []; let R = 0;
+    agg.embryos.forEach((emb) => {
       if (!emb.outline.length || !emb.g[state.alignGene]) return;   // only embryos with the align gene
       const { c, s, flip } = embOrient(emb, ki);
       const xs = [], ys = [];
@@ -332,21 +368,46 @@
         const r = Math.hypot(x, y); if (r > R) R = r;
       }
       xs.push(xs[0]); ys.push(ys[0]);                            // close the loop
-      traces.push({ type: "scatter", mode: "lines", x: xs, y: ys, opacity: 0.5,
-        line: { color: embColor(i), width: 1 }, showlegend: false,
-        hovertemplate: `${emb.label}<extra></extra>` });
+      oriented.push({ id: emb.id, label: emb.label, xs, ys, isCurrent: emb.id === state.currentId });
     });
-    const lim = (R * 1.06) || 1;
+    const lim = (R * 1.08) || 1, traces = [];
+    // crowd: uniform slate, low opacity — overlaps read as a clean density envelope
+    for (const o of oriented) {
+      if (o.isCurrent) continue;
+      traces.push({ type: "scatter", mode: "lines", x: o.xs, y: o.ys,
+        line: { color: "rgba(71,85,105,0.26)", width: 1, shape: "spline", smoothing: 1.0 }, showlegend: false,
+        hovertemplate: `${o.label}<extra></extra>` });
+    }
+    // mean outline (bold, dark) — the typical aligned cross-section
+    const mean = meanOutline(oriented);
+    if (mean) traces.push({ type: "scatter", mode: "lines", x: mean.xs, y: mean.ys,
+      line: { color: "#0f172a", width: 2.4, shape: "spline", smoothing: 1.0 }, showlegend: false,
+      hovertemplate: `mean outline · ${oriented.length} zygotes<extra></extra>` });
+    // the currently-viewed embryo, highlighted on top
+    for (const o of oriented) if (o.isCurrent) traces.push({ type: "scatter", mode: "lines", x: o.xs, y: o.ys,
+      line: { color: PLANE_C, width: 2.6, shape: "spline", smoothing: 1.0 }, showlegend: false,
+      hovertemplate: `${o.label} · current<extra></extra>` });
+    // division-plane guide (vertical) + centre dot
     traces.push({ type: "scatter", mode: "lines", x: [0, 0], y: [-lim, lim],
-      line: { color: "#94a3b8", width: 1.5, dash: "dash" }, hoverinfo: "skip", showlegend: false });
+      line: { color: "#94a3b8", width: 1.3, dash: "dash" }, hoverinfo: "skip", showlegend: false });
+    traces.push({ type: "scatter", mode: "markers", x: [0], y: [0],
+      marker: { color: "#94a3b8", size: 4 }, hoverinfo: "skip", showlegend: false });
+    // 20 µm scale bar, lower-left
+    const sb = 20, bx = -lim * 0.9, by = -lim * 0.9;
+    traces.push({ type: "scatter", mode: "lines", x: [bx, bx + sb], y: [by, by],
+      line: { color: "#475569", width: 3 }, hoverinfo: "skip", showlegend: false });
     plotInto(xsOutlines, traces, {
-      margin: { l: 6, r: 6, t: 4, b: 4 }, height: xsOutlines.clientHeight || 240,
-      xaxis: { range: [-lim, lim], visible: false, fixedrange: true, scaleanchor: "y", scaleratio: 1 },
-      yaxis: { range: [-lim, lim], visible: false, fixedrange: true },
+      dragmode: "pan", margin: { l: 8, r: 8, t: 8, b: 8 }, height: xsOutlines.clientHeight || 340,
+      xaxis: { range: [-lim, lim], visible: false, scaleanchor: "y", scaleratio: 1, constrain: "domain" },
+      yaxis: { range: [-lim, lim], visible: false, constrain: "domain" },
       paper_bgcolor: "transparent", plot_bgcolor: "transparent",
-      annotations: [{ x: lim, y: 0, xanchor: "right", yanchor: "bottom", showarrow: false,
-        text: `higher ${state.alignGene} →`, font: { size: 10, color: "#64748b" } }],
-    });
+      annotations: [
+        { x: lim, y: 0, xanchor: "right", yanchor: "bottom", showarrow: false,
+          text: `higher ${state.alignGene} →`, font: { size: 11, color: "#64748b" } },
+        { x: bx + sb / 2, y: by, xanchor: "center", yanchor: "top", yshift: -4, showarrow: false,
+          text: "20 µm", font: { size: 10, color: "#475569" } },
+      ],
+    }, XS_CFG);
   }
   function renderBars() {
     const agg = state.agg; if (!agg) return;

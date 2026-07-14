@@ -55,17 +55,36 @@
 #pcolor-mode:focus, #xs-plane:focus, #xs-align:focus { outline: none; border-color: var(--accent); }
 
 /* Bottom drawer: cross-embryo aligned outlines + per-side bars */
+.drawer { --drawer-h: 54vh; }                 /* taller default so the outline reads large */
 .xs-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; padding: 0 16px 8px; }
 .xs-note { font-size: 11.5px; color: var(--ink-2); }
 .xs-note b { color: var(--ink); }
-.xs-visuals { display: flex; flex-direction: column; gap: 10px; height: calc(100% - 44px); min-height: 320px; padding: 0 12px; }
-.xs-block { flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; }
-.xs-block:first-child { flex: 1.35 1 0; }
-.xs-plot { flex: 1 1 auto; width: 100%; min-height: 150px; }
+/* outline is the primary panel (left, large); per-side bars sit beside it (right) */
+.xs-visuals { display: flex; flex-direction: row; gap: 14px; height: calc(100% - 44px);
+  min-height: 380px; padding: 0 14px 8px; }
+.xs-block { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+.xs-block-main { flex: 1.7 1 0; }
+.xs-block-side { flex: 1 1 0; }
+.xs-plot { flex: 1 1 auto; width: 100%; min-height: 160px; }
+/* clean bordered stage for the aligned outlines */
+.xs-plot-outlines {
+  border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  background:
+    radial-gradient(120% 120% at 50% 45%, color-mix(in srgb, var(--zygote, #f97316) 4%, transparent), transparent 62%),
+    var(--surface);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), 0 1px 2px rgba(15, 23, 42, .05);
+}
+.xs-hint { float: right; font-family: var(--sans); font-size: 10px; font-weight: 500;
+  color: var(--muted); letter-spacing: .2px; text-transform: none; }
 .xs-empty { display: flex; align-items: center; justify-content: center;
   height: 100%; min-height: 150px; padding: 16px 24px; }
 .xs-empty > div { max-width: 460px; text-align: center; font-size: 12.5px; line-height: 1.55; color: var(--ink-soft); }
 .xs-empty b { color: var(--ink-2); }
+/* stack vertically when the drawer is narrow */
+@media (max-width: 760px) {
+  .xs-visuals { flex-direction: column; min-height: 480px; }
+  .xs-block-main { flex: 1.6 1 0; } .xs-block-side { flex: 1 1 0; }
+}
 
 /* best-plane per-gene list (right drawer) */
 .best-list { flex: 1 1 auto; overflow-y: auto; padding: 6px 8px 16px; border-top: 1px solid var(--line); }

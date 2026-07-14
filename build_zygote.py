@@ -272,7 +272,9 @@ def process(eid):
             "dmVol": round(float(diff_vol_norm[k]), 7),
             "dmCnt": round(float(diff_cnt_norm[k]), 5),
         })
-    outline = cross_section_outline(pos, com, a, u, v)
+    # Cross-section of the CELL only — exclude the polar body (label 2), which otherwise
+    # bulges the outline when it falls within the COM slab (true for ~1/3 of embryos).
+    outline = cross_section_outline(pos[labels != 2], com, a, u, v)
 
     scene = {
         "id": eid, "z_scale": zs, "extents": ex,

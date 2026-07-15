@@ -1,10 +1,12 @@
 /* Pronuclei Distance vs Transcripts — zygotes with two auto-detected pronuclei.
  * Built on viewer-core.js (VCore). The 3-D view shows the two pronuclei and the
- * shortest line between them. The bottom drawer scatters pronuclei distance against
- * (top) the SELECTED GENE's count and (below) the total transcript count, each with
- * a least-squares fit. The right drawer ranks genes by the Pearson correlation of
- * their count with the distance (most positive / most negative). Precompute in
- * build_pronuclei.py; the UI only reads it.
+ * shortest line between them. The bottom drawer plots transcript count (y) against
+ * pronuclei distance (x, a proxy for developmental time — the pronuclei migrate
+ * together as the zygote ages) for (top) the SELECTED GENE and (below) all transcripts,
+ * fit by a USER-SELECTABLE regression model (linear, quadratic, exponential, log, power,
+ * logistic, Poisson/negative-binomial/binomial GLMs, or LOESS) — fitted client-side; the
+ * R² is reported on each model's natural scale. The right drawer ranks genes by the
+ * Pearson correlation of their count with the distance. Precompute in build_pronuclei.py.
  */
 (() => {
   const $ = (s) => document.querySelector(s);
@@ -21,6 +23,7 @@
   const controlsEl = $("#controls"), plotHost = $("#plot-host");
   const placeholder = $("#placeholder"), loadingEl = $("#loading"), loadingTxt = $("#loading-text");
   const pnReadout = $("#pn-readout"), pnFit = $("#pn-fit");
+  const regTypeEl = $("#reg-type"), regNoteEl = $("#reg-note");
   const geneSelect = $("#gene-select"), geneScatter = $("#gene-scatter"), geneFit = $("#gene-fit");
   const dotsShow = $("#dots-show");
   const drawer = $("#drawer"), drawerHandle = $("#drawer-handle"), drawerBody = $("#drawer-body");
@@ -29,7 +32,8 @@
   const rankNEl = $("#rank-n"), rankPosEl = $("#rank-pos"), rankNegEl = $("#rank-neg");
 
   const state = { points: [], byId: {}, genesAgg: null, geneCorr: [], userGene: null, rankN: 10,
-                  currentId: null, scene: null, fit: null, drawerOpen: false, showDots: false };
+                  currentId: null, scene: null, fit: null, drawerOpen: false, showDots: false,
+                  regType: "linear" };
 
   (async function init() {
     try {
@@ -40,7 +44,6 @@
       state.points = m.embryos; state.genesAgg = ga;
       state.points.forEach((p) => (state.byId[p.id] = p));
       countEl.textContent = `${m.embryos.length} zygotes · pronuclei auto-detected inside the cytoplasm`;
-      state.fit = linreg(state.points.map((p) => p.total), state.points.map((p) => p.distance));
       computeGeneCorr();
       populateGenes();
       V.buildTabs(tabsEl, m.embryos, selectEmbryo, (e) => ({
@@ -51,6 +54,8 @@
       geneSelect.addEventListener("change", () => selectGene(geneSelect.value));
       rankNEl.addEventListener("change", () => { state.rankN = parseInt(rankNEl.value, 10) || 10; renderRanks(); });
       dotsShow.addEventListener("change", () => { state.showDots = dotsShow.checked; if (state.scene) render(); });
+      regTypeEl.addEventListener("change", () => { state.regType = regTypeEl.value; updRegNote(); renderScatter(); renderGeneScatter(); });
+      updRegNote();
     } catch (err) { showError("Failed to load: " + (err.message || err)); }
   })();
 
@@ -148,7 +153,7 @@
     Plotly.react(plotHost, traces, V.sceneLayout(s.extents, s.id), V.plotConfig);
   }
   function renderReadout(meta) {
-    const s = state.scene, pred = state.fit.a + state.fit.b * s.total_transcripts;
+    const s = state.scene;
     const gc = (state.genesAgg.embryos.find((e) => e.id === s.id) || { genes: {} }).genes[gene()];
     pnReadout.innerHTML =
       `<div class="pn-big"><span>${s.distance_um}</span> µm <span class="pn-lbl">pronuclei distance</span></div>` +
@@ -168,48 +173,171 @@
     const r = rden ? (n * sxy - sx * sy) / rden : 0;
     return { a, b, r, r2: r * r, n };
   }
-  function scatter(div, xs, ys, ids, labels, fit, xTitle, unit, curId) {
-    const others = xs.map((x, i) => ({ x, y: ys[i], lab: labels[i], id: ids[i] })).filter((o) => o.id !== curId);
-    const cur = xs.map((x, i) => ({ x, y: ys[i], lab: labels[i], id: ids[i] })).find((o) => o.id === curId);
+  // ---------- regression models: transcript count (y) vs pronuclei distance (x) ----------
+  // The two pronuclei migrate together as the zygote ages, so distance is a proxy for
+  // developmental time (smaller = later) and transcript count is the response. Each model
+  // returns a predictor y(x) + a fit statistic on its NATURAL scale (labelled in the UI).
+  const avg = (a) => a.reduce((s, v) => s + v, 0) / (a.length || 1);
+  const clmp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  const sci = (v) => { const a = Math.abs(v); if (!isFinite(v)) return "–"; if (a === 0) return "0";
+    return (a >= 1e4 || a < 1e-3) ? v.toExponential(2) : String(+v.toPrecision(3)); };
+  function wls(xs, ys, ws) {                      // weighted least squares: y = b0 + b1·x
+    let sw = 0, swx = 0, swy = 0, swxx = 0, swxy = 0;
+    for (let i = 0; i < xs.length; i++) { const w = ws ? ws[i] : 1;
+      sw += w; swx += w * xs[i]; swy += w * ys[i]; swxx += w * xs[i] * xs[i]; swxy += w * xs[i] * ys[i]; }
+    const den = sw * swxx - swx * swx, b1 = den ? (sw * swxy - swx * swy) / den : 0;
+    return [(swy - b1 * swx) / sw, b1];
+  }
+  function r2on(xs, ys, pred) {                   // R² of pred() vs ys over xs
+    const yb = avg(ys); let sr = 0, st = 0;
+    for (let i = 0; i < ys.length; i++) { const e = ys[i] - pred(xs[i]); sr += e * e; st += (ys[i] - yb) ** 2; }
+    return st > 0 ? 1 - sr / st : 0;
+  }
+  const r2lin = (xs, ys) => { const [a, b] = wls(xs, ys); return r2on(xs, ys, (x) => a + b * x); };
+  function solve3(A, d) {                         // 3×3 Gaussian elimination
+    A = A.map((r, i) => r.concat(d[i]));
+    for (let c = 0; c < 3; c++) { let p = c;
+      for (let r = c + 1; r < 3; r++) if (Math.abs(A[r][c]) > Math.abs(A[p][c])) p = r;
+      [A[c], A[p]] = [A[p], A[c]]; if (Math.abs(A[c][c]) < 1e-12) A[c][c] = 1e-12;
+      for (let r = 0; r < 3; r++) { if (r === c) continue; const f = A[r][c] / A[c][c]; for (let k = c; k < 4; k++) A[r][k] -= f * A[c][k]; } }
+    return [A[0][3] / A[0][0], A[1][3] / A[1][1], A[2][3] / A[2][2]];
+  }
+  function quadFit(xs, ys) {                       // y = c0 + c1·x + c2·x²
+    const S = [0, 0, 0, 0, 0], T = [0, 0, 0];
+    for (let i = 0; i < xs.length; i++) { let xp = 1; for (let k = 0; k < 5; k++) { S[k] += xp; if (k < 3) T[k] += xp * ys[i]; xp *= xs[i]; } }
+    return solve3([[S[0], S[1], S[2]], [S[1], S[2], S[3]], [S[2], S[3], S[4]]], T);
+  }
+  function irls(xs, ys, fam, init, iter = 60) {   // GLM via iteratively-reweighted least squares
+    let [b0, b1] = init;
+    for (let k = 0; k < iter; k++) {
+      const z = [], w = [];
+      for (let i = 0; i < xs.length; i++) { const e = b0 + b1 * xs[i], mu = fam.li(e), g = fam.me(e, mu), V = fam.v(mu);
+        w.push(g * g / Math.max(V, 1e-9)); z.push(e + (ys[i] - mu) / (g || 1e-9)); }
+      const [n0, n1] = wls(xs, z, w);
+      if (!isFinite(n0) || !isFinite(n1)) break;
+      if (Math.abs(n0 - b0) + Math.abs(n1 - b1) < 1e-10) { b0 = n0; b1 = n1; break; }
+      b0 = n0; b1 = n1;
+    }
+    return [b0, b1];
+  }
+  const POIS = { li: (e) => Math.exp(Math.min(e, 30)), me: (e, m) => m, v: (m) => Math.max(m, 1e-9) };
+  const NBfam = (t) => ({ li: (e) => Math.exp(Math.min(e, 30)), me: (e, m) => m, v: (m) => m + m * m / t });
+  const BINfam = (N) => ({ li: (e) => N / (1 + Math.exp(-clmp(e, -30, 30))), me: (e, m) => { const p = m / N; return N * p * (1 - p); }, v: (m) => { const p = m / N; return Math.max(N * p * (1 - p), 1e-9); } });
+  const logInit = (xs, ys) => wls(xs, ys.map((y) => Math.log(Math.max(y, 1))));
+  function devR2(xs, ys, mu) {                     // Poisson-deviance pseudo-R²
+    const yb = avg(ys), d = (y, m) => 2 * ((y > 0 ? y * Math.log(y / m) : 0) - (y - m));
+    let dr = 0, dn = 0; for (let i = 0; i < ys.length; i++) { dr += d(ys[i], mu[i]); dn += d(ys[i], yb); }
+    return dn > 0 ? 1 - dr / dn : 0;
+  }
+  function binDevR2(ys, mu, N) {                    // binomial-deviance pseudo-R²
+    const yb = avg(ys);
+    const d = (y, m) => 2 * ((y > 0 ? y * Math.log(y / m) : 0) + (N - y > 0 ? (N - y) * Math.log((N - y) / (N - m)) : 0));
+    let dr = 0, dn = 0; for (let i = 0; i < ys.length; i++) { dr += d(ys[i], mu[i]); dn += d(ys[i], yb); }
+    return dn > 0 ? 1 - dr / dn : 0;
+  }
+  function loessPredictor(xs, ys, span) {          // local linear regression (tricube weights)
+    const n = xs.length, k = Math.max(3, Math.round(span * n));
+    return (x0) => {
+      const sorted = xs.map((x) => Math.abs(x - x0)).sort((a, b) => a - b);
+      const h = sorted[Math.min(n - 1, k - 1)] || 1e-9;
+      const wx = [], wy = [], ww = [];
+      for (let i = 0; i < n; i++) { const u = Math.abs(xs[i] - x0) / h; if (u >= 1) continue; wx.push(xs[i]); wy.push(ys[i]); ww.push((1 - u ** 3) ** 3); }
+      if (wx.length < 2) return avg(ys);
+      const [a, b] = wls(wx, wy, ww); return a + b * x0;
+    };
+  }
+  const MODELS = {
+    linear: { label: "Linear", scale: "raw", bio: "constant rate of change with developmental time — the simplest baseline.",
+      fit(xs, ys) { const [a, b] = wls(xs, ys), p = (x) => a + b * x;
+        return { predict: p, r2: r2on(xs, ys, p), params: `y = ${sci(a)} ${b >= 0 ? "+" : "−"} ${sci(Math.abs(b))}·x` }; } },
+    quadratic: { label: "Quadratic", scale: "raw", bio: "one peak or trough — captures the maternal-to-zygotic hand-off (maternal store depletes, then zygotic transcription rises).",
+      fit(xs, ys) { const [c0, c1, c2] = quadFit(xs, ys), p = (x) => c0 + c1 * x + c2 * x * x;
+        return { predict: p, r2: r2on(xs, ys, p), params: `y = ${sci(c0)} + ${sci(c1)}·x + ${sci(c2)}·x²` }; } },
+    exp: { label: "Exponential", scale: "log", bio: "constant fractional change per unit time — first-order kinetics of maternal-mRNA decay (or exponential accumulation).",
+      fit(xs, ys) { const px = [], py = []; for (let i = 0; i < xs.length; i++) if (ys[i] > 0) { px.push(xs[i]); py.push(Math.log(ys[i])); }
+        const [la, b] = wls(px, py), a = Math.exp(la);
+        return { predict: (x) => a * Math.exp(b * x), r2: r2lin(px, py), params: `y = ${sci(a)}·e^(${b.toFixed(4)}·x)` }; } },
+    log: { label: "Logarithmic", scale: "raw", bio: "fast early change that levels off — diminishing returns.",
+      fit(xs, ys) { const lx = xs.map((x) => Math.log(Math.max(x, 1e-6))); const [a, b] = wls(lx, ys), p = (x) => a + b * Math.log(Math.max(x, 1e-6));
+        return { predict: p, r2: r2on(xs, ys, p), params: `y = ${sci(a)} ${b >= 0 ? "+" : "−"} ${sci(Math.abs(b))}·ln(x)` }; } },
+    power: { label: "Power law", scale: "log-log", bio: "scale-free (allometric) — a fixed % change in count per % change in the time proxy.",
+      fit(xs, ys) { const px = [], py = []; for (let i = 0; i < xs.length; i++) if (xs[i] > 0 && ys[i] > 0) { px.push(Math.log(xs[i])); py.push(Math.log(ys[i])); }
+        const [la, b] = wls(px, py), a = Math.exp(la);
+        return { predict: (x) => a * Math.pow(Math.max(x, 1e-6), b), r2: r2lin(px, py), params: `y = ${sci(a)}·x^${b.toFixed(3)}` }; } },
+    logistic: { label: "Logistic (sigmoid)", scale: "logit", bio: "a saturating switch — the shape of zygotic genome activation (transcription turns on, then plateaus).",
+      fit(xs, ys) { const L = 1.02 * Math.max(...ys); const px = [], py = []; for (let i = 0; i < xs.length; i++) { const q = clmp(ys[i] / L, 0.001, 0.999); px.push(xs[i]); py.push(Math.log(q / (1 - q))); }
+        const [a, b] = wls(px, py);
+        return { predict: (x) => L / (1 + Math.exp(-clmp(a + b * x, -30, 30))), r2: r2lin(px, py), params: `L=${sci(L)}, k=${b.toFixed(3)}, x₀=${b ? (-a / b).toFixed(1) : "–"} µm` }; } },
+    poisson: { label: "Poisson (GLM)", scale: "deviance", bio: "the canonical model for count data — a log-linear rate with variance equal to the mean.",
+      fit(xs, ys) { const [b0, b1] = irls(xs, ys, POIS, logInit(xs, ys)); const mu = xs.map((x) => Math.exp(b0 + b1 * x));
+        return { predict: (x) => Math.exp(b0 + b1 * x), r2: devR2(xs, ys, mu), params: `log μ = ${b0.toFixed(2)} ${b1 >= 0 ? "+" : "−"} ${Math.abs(b1).toFixed(4)}·x` }; } },
+    negbin: { label: "Negative binomial (GLM)", scale: "deviance", bio: "count model for OVER-dispersed data (variance ≫ mean) — the standard for transcript counts (as in DESeq2 / edgeR).",
+      fit(xs, ys) { const [p0, p1] = irls(xs, ys, POIS, logInit(xs, ys)); const m0 = xs.map((x) => Math.exp(p0 + p1 * x));
+        let nu = 0, de = 0; for (let i = 0; i < ys.length; i++) { nu += m0[i] * m0[i]; de += Math.max((ys[i] - m0[i]) ** 2 - m0[i], 0); } const th = de > 0 ? nu / de : 1e6;
+        const [b0, b1] = irls(xs, ys, NBfam(th), [p0, p1]); const mu = xs.map((x) => Math.exp(b0 + b1 * x));
+        return { predict: (x) => Math.exp(b0 + b1 * x), r2: devR2(xs, ys, mu), params: `log μ = ${b0.toFixed(2)} ${b1 >= 0 ? "+" : "−"} ${Math.abs(b1).toFixed(4)}·x · θ=${sci(th)}` }; } },
+    binomial: { label: "Binomial (GLM, logit)", scale: "deviance", bio: "models the count as a fraction of a ceiling via a logit link — a saturating S-curve on the count scale.",
+      fit(xs, ys) { const N = Math.round(1.02 * Math.max(...ys)); const init = wls(xs, ys.map((y) => Math.log((y + 0.5) / (N - y + 0.5))));
+        const [b0, b1] = irls(xs, ys, BINfam(N), init); const pred = (x) => N / (1 + Math.exp(-clmp(b0 + b1 * x, -30, 30)));
+        return { predict: pred, r2: binDevR2(ys, xs.map(pred), N), params: `N=${sci(N)}, logit p = ${b0.toFixed(2)} ${b1 >= 0 ? "+" : "−"} ${Math.abs(b1).toFixed(4)}·x` }; } },
+    loess: { label: "LOESS (local smoother)", scale: "raw", bio: "non-parametric — lets the data show its own trend with no assumed functional form.",
+      fit(xs, ys) { const p = loessPredictor(xs, ys, 0.6); return { predict: p, r2: r2on(xs, ys, p), params: "local linear · span 0.6" }; } },
+  };
+  const SCALE_LABEL = { raw: "R²", log: "R² (log)", "log-log": "R² (log-log)", logit: "R² (logit)", deviance: "pseudo-R²" };
+  function fitModel(type, xs, ys) {
+    const m = MODELS[type] || MODELS.linear;
+    let res; try { res = m.fit(xs.slice(), ys.slice()); } catch (_) { res = MODELS.linear.fit(xs.slice(), ys.slice()); }
+    return { ...res, type, label: m.label, bio: m.bio, scale: m.scale, n: xs.length };
+  }
+
+  // ---------- scatters (x = pronuclei distance µm, y = transcript count) ----------
+  function scatter(div, xs, ys, ids, labels, model, xTitle, yTitle, yUnit, curId) {
+    const pts = xs.map((x, i) => ({ x, y: ys[i], lab: labels[i], id: ids[i] }));
+    const others = pts.filter((o) => o.id !== curId), cur = pts.find((o) => o.id === curId);
     const xmin = Math.min(...xs), xmax = Math.max(...xs);
+    const cx = [], cy = [], N = 90;                // smooth model curve
+    for (let i = 0; i < N; i++) { const x = xmin + (xmax - xmin) * i / (N - 1), y = model.predict(x);
+      if (isFinite(y)) { cx.push(x); cy.push(y); } }
+    const hover = `%{text}<br>%{x:.1f} µm · %{y:,} ${yUnit}<extra></extra>`;
     const traces = [
-      { type: "scatter", mode: "markers", name: "zygotes",
-        x: others.map((o) => o.x), y: others.map((o) => o.y),
-        marker: { size: 8, color: "#94a3b8", opacity: 0.75, line: { width: 0 } },
-        text: others.map((o) => o.lab), hovertemplate: `%{text}<br>%{x:,} ${unit}<br>%{y} µm<extra></extra>` },
-      { type: "scatter", mode: "lines", name: "least-squares fit",
-        x: [xmin, xmax], y: [fit.a + fit.b * xmin, fit.a + fit.b * xmax],
-        line: { color: "#0891b2", width: 2 }, hoverinfo: "skip" },
+      { type: "scatter", mode: "markers", name: "zygotes", x: others.map((o) => o.x), y: others.map((o) => o.y),
+        marker: { size: 8, color: "#94a3b8", opacity: 0.72, line: { width: 0 } },
+        text: others.map((o) => o.lab), hovertemplate: hover },
+      { type: "scatter", mode: "lines", name: model.label, x: cx, y: cy,
+        line: { color: "#0891b2", width: 2.4, shape: "spline" }, hoverinfo: "skip" },
     ];
-    if (cur) traces.push({ type: "scatter", mode: "markers", name: cur.lab,
-      x: [cur.x], y: [cur.y], marker: { size: 15, color: CUR_C, line: { width: 2, color: "#fff" } },
-      hovertemplate: `${cur.lab}<br>%{x:,} ${unit}<br>%{y} µm<extra></extra>` });
+    if (cur) traces.push({ type: "scatter", mode: "markers", name: cur.lab, x: [cur.x], y: [cur.y],
+      marker: { size: 15, color: CUR_C, line: { width: 2, color: "#fff" } },
+      text: [cur.lab], hovertemplate: hover });
     plotInto(div, traces, {
-      margin: { l: 52, r: 12, t: 6, b: 40 }, height: div.clientHeight || 220,
+      margin: { l: 64, r: 12, t: 6, b: 40 }, height: div.clientHeight || 220,
       xaxis: { title: { text: xTitle, font: { size: 11 } }, tickfont: { size: 10 }, gridcolor: "#eef1f5", zeroline: false },
-      yaxis: { title: { text: "min pronuclei distance (µm)", font: { size: 10 } }, tickfont: { size: 9 }, gridcolor: "#eef1f5", rangemode: "tozero" },
+      yaxis: { title: { text: yTitle, font: { size: 10 } }, tickfont: { size: 9 }, gridcolor: "#eef1f5", rangemode: "tozero" },
       paper_bgcolor: "transparent", plot_bgcolor: "transparent",
       legend: { orientation: "h", font: { size: 10 }, y: 1.16, x: 1, xanchor: "right" },
     });
   }
+  function updRegNote() { const m = MODELS[state.regType] || MODELS.linear; if (regNoteEl) regNoteEl.textContent = m.bio; }
   function renderScatter() {
-    const pts = state.points;
-    scatter(scatterPlot, pts.map((p) => p.total), pts.map((p) => p.distance), pts.map((p) => p.id),
-      pts.map((p) => p.label), state.fit, "total transcripts", "transcripts", state.currentId);
+    const pts = state.points, X = pts.map((p) => p.distance), Y = pts.map((p) => p.total);
+    state.fit = fitModel(state.regType, X, Y);
+    scatter(scatterPlot, X, Y, pts.map((p) => p.id), pts.map((p) => p.label), state.fit,
+      "min pronuclei distance (µm)  ·  smaller = later in development", "total transcripts", "transcripts", state.currentId);
     const f = state.fit;
-    pnFit.innerHTML = `· <b>${f.n}</b> zygotes · r = <b>${f.r.toFixed(3)}</b> (r²=${f.r2.toFixed(3)}) · slope ${(f.b * 1e5).toFixed(1)} µm / 100k`;
+    pnFit.innerHTML = `· <b>${f.n}</b> zygotes · <b>${f.label}</b> · ${SCALE_LABEL[f.scale]} = <b>${f.r2.toFixed(3)}</b> · <span class="pn-params">${f.params}</span>`;
   }
   function renderGeneScatter() {
     const g = gene(), s = geneSeries(g);
-    geneFit.innerHTML = `· <b>${g}</b>`;
     if (s.xs.length < 2) {
       Plotly.purge(geneScatter); geneScatter.classList.remove("js-plotly-plot");
-      geneScatter.innerHTML = `<div class="pn-empty">Only ${s.xs.length} zygote${s.xs.length === 1 ? "" : "s"} contain${s.xs.length === 1 ? "s" : ""} <b>${g}</b> — too few to correlate.</div>`;
+      geneScatter.innerHTML = `<div class="pn-empty">Only ${s.xs.length} zygote${s.xs.length === 1 ? "" : "s"} contain${s.xs.length === 1 ? "s" : ""} <b>${g}</b> — too few to fit.</div>`;
+      geneFit.innerHTML = `· <b>${g}</b>`;
       return;
     }
-    const f = linreg(s.xs, s.ys);
-    scatter(geneScatter, s.xs, s.ys, s.ids, s.labels, f, `${g} transcript count`, g, state.currentId);
-    geneFit.innerHTML = `· <b>${g}</b> · r = <b style="color:${f.r >= 0 ? "#dc2626" : "#2563eb"}">${f.r >= 0 ? "+" : ""}${f.r.toFixed(3)}</b> (n=${s.xs.length} zygotes)`;
+    const X = s.ys, Y = s.xs;                        // x = distance, y = this gene's count
+    const model = fitModel(state.regType, X, Y);
+    scatter(geneScatter, X, Y, s.ids, s.labels, model, "min pronuclei distance (µm)", `${g} transcript count`, g, state.currentId);
+    geneFit.innerHTML = `· <b>${g}</b> · ${model.label} · ${SCALE_LABEL[model.scale]} = <b>${model.r2.toFixed(3)}</b> · n=${s.xs.length}`;
   }
 
   // ---------- right drawer: correlation ranking ----------

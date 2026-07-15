@@ -101,11 +101,34 @@
   <section class="drawer" id="drawer" data-open="false" hidden>
     <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
     <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
-      <span class="drawer-title">Distance vs transcripts</span>
-      <span class="drawer-hint">selected gene (top) &amp; all transcripts (below) vs pronuclei distance · one point per zygote</span>
+      <span class="drawer-title">Transcripts vs pronuclei distance</span>
+      <span class="drawer-hint">transcript count vs distance (a proxy for developmental time) · pick a regression model · one point per zygote</span>
       <span class="drawer-chevron" aria-hidden="true"></span>
     </button>
     <div class="drawer-body" id="drawer-body">
+      <div class="pn-reg-ctl">
+        <label class="pn-reg-label">Regression model
+          <select id="reg-type" aria-label="Regression model">
+            <optgroup label="Curve fits">
+              <option value="linear">Linear</option>
+              <option value="quadratic">Quadratic (polynomial)</option>
+              <option value="exp">Exponential</option>
+              <option value="log">Logarithmic</option>
+              <option value="power">Power law</option>
+              <option value="logistic">Logistic (sigmoid)</option>
+            </optgroup>
+            <optgroup label="Count models (GLM)">
+              <option value="poisson">Poisson</option>
+              <option value="negbin">Negative binomial</option>
+              <option value="binomial">Binomial (logit)</option>
+            </optgroup>
+            <optgroup label="Non-parametric">
+              <option value="loess">LOESS smoother</option>
+            </optgroup>
+          </select>
+        </label>
+        <span class="pn-reg-note" id="reg-note"></span>
+      </div>
       <div class="pn-block">
         <div class="mini-title">Selected gene <span class="mini-sub" id="gene-fit"></span></div>
         <div id="gene-scatter" class="scatter-plot"></div>

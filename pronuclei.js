@@ -53,7 +53,7 @@
       wireDrawer(); wireRdrawer(); renderRanks();
       geneSelect.addEventListener("change", () => selectGene(geneSelect.value));
       rankNEl.addEventListener("change", () => { state.rankN = parseInt(rankNEl.value, 10) || 10; renderRanks(); });
-      dotsShow.addEventListener("change", () => { state.showDots = dotsShow.checked; if (state.scene) render(); });
+      dotsShow.addEventListener("change", () => { state.showDots = dotsShow.checked; ensureDotGene(); if (state.scene) render(); });
       regTypeEl.addEventListener("change", () => { state.regType = regTypeEl.value; updRegNote(); renderScatter(); renderGeneScatter(); });
       updRegNote();
     } catch (err) { showError("Failed to load: " + (err.message || err)); }
@@ -93,6 +93,22 @@
     renderGeneScatter(); highlightRank();
     if (state.scene) { renderReadout(state.byId[state.currentId] || {}); if (state.showDots) render(); }
   }
+  // The gene dropdown is the UNION across all zygotes (disjoint MERFISH panels), so the
+  // selected gene often has NO molecules in the current embryo — which silently showed no
+  // dots. These keep "show dots" pointed at a gene that actually exists in this zygote.
+  const geneHasDots = (g) => { const s = state.scene; return !!(s && s.transcripts && s.transcripts[g] && s.transcripts[g].x && s.transcripts[g].x.length); };
+  function topEmbryoGene() {
+    const s = state.scene; if (!s || !s.transcripts) return null;
+    let best = null, bn = -1;
+    for (const g in s.transcripts) { const t = s.transcripts[g], n = t && t.x ? t.x.length : 0; if (n > bn) { bn = n; best = g; } }
+    return best;
+  }
+  function ensureDotGene() {   // when dots are on, snap the selection to a gene present in this zygote
+    if (!state.showDots || !state.scene) return;
+    if (geneHasDots(gene())) return;
+    const g = topEmbryoGene();
+    if (g && g !== gene()) { state.userGene = g; geneSelect.value = g; renderGeneScatter(); highlightRank(); }
+  }
 
   async function selectEmbryo(id) {
     if (id === state.currentId) return;
@@ -105,7 +121,7 @@
       if (state.currentId !== id) return;
       state.scene = scene;
       controlsEl.hidden = false; placeholder.hidden = true; drawer.hidden = false; rdrawer.hidden = false;
-      render(); renderReadout(meta);
+      ensureDotGene(); render(); renderReadout(meta);
       if (!state.drawerOpen) openDrawer(true);
       else { renderScatter(); renderGeneScatter(); }
     } catch (err) { showError(err.message || String(err)); }
@@ -141,12 +157,15 @@
       line: { color: LINE_C, width: 7 }, marker: { size: 4, color: LINE_C },
       hovertemplate: `min distance ${s.distance_um} µm<extra></extra>`, legendrank: 100 });
     if (state.showDots) {
-      const g = gene(), tx = s.transcripts && s.transcripts[g];
+      const sel = gene(), g = geneHasDots(sel) ? sel : topEmbryoGene();
+      const tx = g ? s.transcripts[g] : null;
       if (tx && tx.x.length) {
         const zs = s.z_scale;
-        traces.push({ type: "scatter3d", mode: "markers", name: `${g} · ${tx.x.length} dots`,
+        const nm = g === sel ? `${g} · ${tx.x.length} dots`
+                             : `${g} · ${tx.x.length} dots · (${sel} not in this zygote)`;
+        traces.push({ type: "scatter3d", mode: "markers", name: nm,
           x: tx.x, y: tx.y, z: tx.gz.map((z) => z * zs),
-          marker: { size: 2.4, color: DOT_C, opacity: 0.8, line: { width: 0 } },
+          marker: { size: 2.4, color: DOT_C, opacity: 0.85, line: { width: 0 } },
           hovertemplate: `${g}<extra></extra>`, legendrank: 200 });
       }
     }

@@ -272,9 +272,10 @@ def process(eid):
             "dmVol": round(float(diff_vol_norm[k]), 7),
             "dmCnt": round(float(diff_cnt_norm[k]), 5),
         })
-    # Cross-section of the CELL only — exclude the polar body (label 2), which otherwise
-    # bulges the outline when it falls within the COM slab (true for ~1/3 of embryos).
-    outline = cross_section_outline(pos[labels != 2], com, a, u, v)
+    # Cross-section of the CYTOPLASM ONLY (segment 1). Everything else — polar body (2),
+    # pronuclei (3–4), and any extra peripheral bodies / 2nd polar body (5–6) — is excluded,
+    # so the outline is the embryo cell boundary with no external blobs bulging it out.
+    outline = cross_section_outline(pos[labels == 1], com, a, u, v)
 
     scene = {
         "id": eid, "z_scale": zs, "extents": ex,

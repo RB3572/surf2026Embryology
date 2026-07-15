@@ -109,6 +109,14 @@
             <span class="mini-sub" id="xs-caption"></span>
             <span class="xs-hint" aria-hidden="true">scroll to zoom · drag to pan · double-click to reset</span>
           </div>
+          <div class="xs-otoggles">
+            <label class="xs-tg" title="show/hide the average outline"><input type="checkbox" id="xs-mean" checked><span>mean outline</span></label>
+            <label class="xs-tg" title="hide every outline except the zygote you're viewing"><input type="checkbox" id="xs-only"><span>only this embryo</span></label>
+            <span class="xs-sigkey" title="each outline is coloured by how significantly that zygote's transcriptome splits at its best plane (permutation p, log scale)">
+              <span class="xs-sk-lab">significant</span><span class="xs-sk-bar"></span><span class="xs-sk-lab">n.s.</span>
+            </span>
+            <span class="xs-sk-cur"><i class="xs-sw-cur"></i>current</span>
+          </div>
           <div id="xs-outlines" class="xs-plot xs-plot-outlines"></div>
         </div>
         <div class="xs-block xs-block-side">

@@ -324,13 +324,18 @@ def agg_entry(eid, label, scene):
     and side-A count `a` at each of the 4 best planes (b = n − a)."""
     A = scene["analysis"]
     bp = A["best_planes"]
+    plns = A["planes"]
     best = [bp[k] for k in BEST_KEYS]
     g = {}
     for row in A["genes"]:
         planes = row["planes"]
         g[row["gene"]] = [row["total"]] + [planes[bi]["a"] for bi in best]
+    # per-best-plane significance (transcript-weighted-mean permutation p) for colouring the
+    # cross-section outlines by how significantly that embryo's transcriptome splits.
+    _sigk = {"pVol": "wpVol", "pCnt": "wpCnt", "diffVol": "wpVol", "diffCnt": "wpCnt"}
+    sig = {k: round(float(plns[bp[k]][_sigk[k]]), 5) for k in BEST_KEYS}
     return {"id": eid, "label": label, "outline": A["cross_section"]["outline"],
-            "best": best, "g": g}
+            "best": best, "sig": sig, "g": g}
 
 
 def write_cross_aggregate(entries, path):

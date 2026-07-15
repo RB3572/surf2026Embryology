@@ -30,6 +30,7 @@
   const xsPlane = $("#xs-plane"), xsAlign = $("#xs-align"), xsNote = $("#xs-note");
   const xsCaption = $("#xs-caption"), xsBarSub = $("#xs-bar-sub");
   const xsOutlines = $("#xs-outlines"), xsBars = $("#xs-bars");
+  const xsMean = $("#xs-mean"), xsOnly = $("#xs-only");
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
   const rtabsEl = $("#rtabs"), bestListEl = $("#best-list");
 
@@ -37,6 +38,7 @@
     manifest: [], currentId: null, scene: null, userGene: null, planeIdx: 0,
     drawerOpen: false, bestTab: "pVol", crossMode: "vol",
     crossKey: "pVol", alignGene: null, agg: null,
+    xsShowMean: true, xsOnlyCurrent: false,
   };
   const BESTKEY_LABEL = { pVol: "min p · vol", pCnt: "min p · count", diffVol: "max Δ · vol", diffCnt: "max Δ · count" };
 
@@ -220,7 +222,7 @@
       `<div>p(vol) = <span class="${sigV ? "sig" : ""}">${fmtP(row.pVol)}</span> · ` +
       `p(count) = <span class="${sigC ? "sig" : ""}">${fmtP(row.pCnt)}</span></div>`;
   }
-  const fmtP = (p) => p < 0.001 ? p.toExponential(1) : p.toFixed(3);
+  const fmtP = (p) => (p == null || !isFinite(p)) ? "n/a" : p < 0.001 ? p.toExponential(1) : p.toFixed(3);
 
   // ---------- best-plane list (right drawer) ----------
   // Four best planes: {min weighted p, max Σ|diff|} × {volume, count}.
@@ -353,6 +355,10 @@
     xs.push(xs[0]); ys.push(ys[0]);
     return { xs, ys };
   }
+  // significance → viridis position: log10(p) mapped 0.001 → 0 (dark = most significant)
+  // through 1 → 1 (yellow = not significant). Matches the "All planes (p-value)" colouring.
+  const sigT = (p) => (p == null || !isFinite(p)) ? 1 : Math.max(0, Math.min(1, (Math.log10(Math.max(p, 1e-6)) + 3) / 3));
+  const sigOf = (emb) => (emb.sig ? emb.sig[state.crossKey] : null);
   function renderOutlines() {
     const agg = state.agg; if (!agg) return;
     const ki = bestKeyIndex();
@@ -368,25 +374,34 @@
         const r = Math.hypot(x, y); if (r > R) R = r;
       }
       xs.push(xs[0]); ys.push(ys[0]);                            // close the loop
-      oriented.push({ id: emb.id, label: emb.label, xs, ys, isCurrent: emb.id === state.currentId });
+      oriented.push({ id: emb.id, label: emb.label, xs, ys, sig: sigOf(emb), isCurrent: emb.id === state.currentId });
     });
-    const lim = (R * 1.08) || 1, traces = [];
-    // crowd: uniform slate, low opacity — overlaps read as a clean density envelope
-    for (const o of oriented) {
+    const lim = (R * 1.08) || 1, traces = [], only = state.xsOnlyCurrent;
+    // crowd: each embryo coloured by how significantly its transcriptome splits at its best
+    // plane (viridis: low p → dark/purple = significant, high p → yellow = not). Log-scaled.
+    if (!only) for (const o of oriented) {
       if (o.isCurrent) continue;
-      traces.push({ type: "scatter", mode: "lines", x: o.xs, y: o.ys,
-        line: { color: "rgba(71,85,105,0.26)", width: 1, shape: "spline", smoothing: 1.0 }, showlegend: false,
-        hovertemplate: `${o.label}<extra></extra>` });
+      traces.push({ type: "scatter", mode: "lines", x: o.xs, y: o.ys, opacity: 0.6,
+        line: { color: viridis(sigT(o.sig)), width: 1.4, shape: "spline", smoothing: 1.0 }, showlegend: false,
+        hovertemplate: `${o.label} · p=${fmtP(o.sig)}<extra></extra>` });
     }
-    // mean outline (bold, dark) — the typical aligned cross-section
-    const mean = meanOutline(oriented);
-    if (mean) traces.push({ type: "scatter", mode: "lines", x: mean.xs, y: mean.ys,
-      line: { color: "#0f172a", width: 2.4, shape: "spline", smoothing: 1.0 }, showlegend: false,
-      hovertemplate: `mean outline · ${oriented.length} zygotes<extra></extra>` });
-    // the currently-viewed embryo, highlighted on top
-    for (const o of oriented) if (o.isCurrent) traces.push({ type: "scatter", mode: "lines", x: o.xs, y: o.ys,
-      line: { color: PLANE_C, width: 2.6, shape: "spline", smoothing: 1.0 }, showlegend: false,
-      hovertemplate: `${o.label} · current<extra></extra>` });
+    // mean outline (toggleable) — the typical aligned cross-section
+    if (!only && state.xsShowMean) {
+      const mean = meanOutline(oriented);
+      if (mean) traces.push({ type: "scatter", mode: "lines", x: mean.xs, y: mean.ys,
+        line: { color: "#0f172a", width: 2.4, shape: "spline", smoothing: 1.0 }, showlegend: false,
+        hovertemplate: `mean outline · ${oriented.length} zygotes<extra></extra>` });
+    }
+    // the currently-viewed embryo — its OWN significance colour, cased in white so it stands out
+    // (and is the only thing shown in "only this embryo" mode)
+    const cur = oriented.find((o) => o.isCurrent);
+    if (cur) {
+      traces.push({ type: "scatter", mode: "lines", x: cur.xs, y: cur.ys,
+        line: { color: "#ffffff", width: 5.5, shape: "spline", smoothing: 1.0 }, hoverinfo: "skip", showlegend: false });
+      traces.push({ type: "scatter", mode: "lines", x: cur.xs, y: cur.ys,
+        line: { color: viridis(sigT(cur.sig)), width: 3, shape: "spline", smoothing: 1.0 }, showlegend: false,
+        hovertemplate: `${cur.label} · current · p=${fmtP(cur.sig)}<extra></extra>` });
+    }
     // division-plane guide (vertical) + centre dot
     traces.push({ type: "scatter", mode: "lines", x: [0, 0], y: [-lim, lim],
       line: { color: "#94a3b8", width: 1.3, dash: "dash" }, hoverinfo: "skip", showlegend: false });
@@ -559,6 +574,8 @@
     // cross-embryo controls: best-plane alignment + orientation gene
     xsPlane.addEventListener("change", () => { state.crossKey = xsPlane.value; if (state.agg) renderCrossAgg(); });
     xsAlign.addEventListener("change", () => { state.alignGene = xsAlign.value; if (state.agg) renderCrossAgg(); });
+    xsMean.addEventListener("change", () => { state.xsShowMean = xsMean.checked; if (state.agg) { renderOutlines(); resizeXs(); } });
+    xsOnly.addEventListener("change", () => { state.xsOnlyCurrent = xsOnly.checked; if (state.agg) { renderOutlines(); resizeXs(); } });
   }
 
   function showLoading(t) { loadingTxt.textContent = t; loadingEl.hidden = false; }

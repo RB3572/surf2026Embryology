@@ -324,10 +324,11 @@ def _circ_mesh(mesh, fn, zs):
 
 
 def _circularize_outline(outline, tol=CIRC_TOL):
-    """Enforce a minimum sphericity on a circularized cross-section outline: clamp every
-    radius into a ±tol band around the median (fills inward notches, caps outward spikes —
-    e.g. the cleft where the polar body indents the cell body), then smooth circularly so
-    no residual jag survives. Angles are preserved; returns [[x,y]] in µm."""
+    """Keep a circularized cross-section within a tolerance of its sphere WITHOUT flattening
+    it into a perfect circle: clamp every radius into a ±tol band around the median (fills
+    inward notches like the polar-body cleft, caps outward spikes) so no inward spike can
+    survive, then apply only a LIGHT 3-bin circular smooth to soften the clamp corners —
+    leaving the cell's natural bump texture intact. Angles preserved; returns [[x,y]] µm."""
     if len(outline) < 8:
         return outline
     P = np.asarray(outline, float)
@@ -336,8 +337,8 @@ def _circularize_outline(outline, tol=CIRC_TOL):
     order = np.argsort(ang)
     ang, r = ang[order], r[order]
     Rmed = float(np.median(r))
-    r = np.clip(r, Rmed * (1.0 - tol), Rmed * (1.0 + tol))   # min sphericity: no notch/spike past ±tol
-    k = 4                                                     # circular moving average (wrap) to erase jags
+    r = np.clip(r, Rmed * (1.0 - tol), Rmed * (1.0 + tol))   # within tolerance of the sphere; no inward spike
+    k = 1                                                     # light 3-bin smooth (wrap): soften corners, keep texture
     rp = np.concatenate([r[-k:], r, r[:k]])
     r = np.convolve(rp, np.ones(2 * k + 1) / (2 * k + 1), mode="same")[k:-k]
     return [[round(float(rr * np.cos(a)), 2), round(float(rr * np.sin(a)), 2)] for a, rr in zip(ang, r)]

@@ -149,6 +149,171 @@ def perm_pvals(a_obs, n, V_A, V_B, null_a):
     return p_vol, p_cnt
 
 
+CIRC_W = 0.9           # balloon inflation weight: 0.9 = 90% toward the average-radius sphere
+CIRC_NBIN = 24         # (theta) surface-grid resolution for the radial surface function
+RNG_C = np.random.default_rng(20260715)   # separate RNG so circ nulls don't shift the real p-values
+
+
+def _surface_grid(pos1, center, nbin=CIRC_NBIN):
+    """Max-radius-per-direction surface R_surf(û) of segment 1, as a (theta, phi) grid
+    (empties filled with the mean, lightly smoothed). Returns (grid, R_avg)."""
+    from scipy.ndimage import uniform_filter
+    d = pos1 - center
+    r = np.linalg.norm(d, axis=1)
+    u = d / np.maximum(r, 1e-9)[:, None]
+    theta = np.arccos(np.clip(u[:, 2], -1, 1))
+    phi = np.arctan2(u[:, 1], u[:, 0])
+    ti = np.clip((theta / np.pi * nbin).astype(int), 0, nbin - 1)
+    pj = ((phi + np.pi) / (2 * np.pi) * (2 * nbin)).astype(int) % (2 * nbin)
+    grid = np.zeros((nbin, 2 * nbin))
+    np.maximum.at(grid, (ti, pj), r)
+    filled = grid[grid > 0]
+    grid[grid == 0] = filled.mean() if filled.size else 1.0
+    grid = uniform_filter(grid, size=3, mode="wrap")
+    return grid, float(grid.mean())
+
+
+def balloon(pos1, w=CIRC_W):
+    """Blow-up-the-balloon transform for segment 1: inflate toward the average-radius
+    sphere by weight w, keeping interior points proportionally inside.
+      ρ = r / R_surf(û);  R_new(û) = (1−w)·R_surf(û) + w·R_avg;  r' = ρ·R_new(û).
+    Returns a function fn(P µm) -> P' µm (P are absolute µm positions), plus (center, R_avg)."""
+    C = pos1.mean(axis=0)
+    grid, R_avg = _surface_grid(pos1, C)
+    nbin = grid.shape[0]
+
+    def R_surf(uu):
+        th = np.arccos(np.clip(uu[:, 2], -1, 1))
+        ph = np.arctan2(uu[:, 1], uu[:, 0])
+        ti = np.clip((th / np.pi * nbin).astype(int), 0, nbin - 1)
+        pj = ((ph + np.pi) / (2 * np.pi) * (2 * nbin)).astype(int) % (2 * nbin)
+        return grid[ti, pj]
+
+    def fn(P):
+        d = np.asarray(P, float) - C
+        r = np.linalg.norm(d, axis=1)
+        u = d / np.maximum(r, 1e-9)[:, None]
+        Rs = R_surf(u)
+        rho = r / np.maximum(Rs, 1e-9)
+        Rnew = (1 - w) * Rs + w * R_avg
+        return C + u * (rho * Rnew)[:, None]
+
+    return fn, C, R_avg
+
+
+def analyze(pos1, com, pb_com, genes, tx1, voxvol, ex, zs, rng):
+    """The full division-plane analysis for one geometry. `pos1` = segment-1 voxels (µm),
+    `com`/`pb_com` = cell / polar-body centroids (µm), `tx1` = {gene: seg-1 transcript µm
+    positions}. Returns the `analysis` dict (or None if no segment-1 transcripts)."""
+    a = unit(pb_com - com)
+    ref = np.array([0.0, 0.0, 1.0]) if abs(a[2]) < 0.9 else np.array([1.0, 0.0, 0.0])
+    u = unit(np.cross(a, ref)); v = unit(np.cross(a, u))
+    th, normals, m = plane_normals(u, v)
+    K = N_PLANES
+
+    proj = (pos1 - com) @ normals.T
+    volA = (proj > 0).sum(axis=0).astype(float) * voxvol
+    volB = (proj <= 0).sum(axis=0).astype(float) * voxvol
+    volA = np.maximum(volA, voxvol); volB = np.maximum(volB, voxvol)
+
+    weighted_p_vol = np.zeros(K); weighted_p_cnt = np.zeros(K)
+    diff_cnt_sum = np.zeros(K); diff_vol_sum = np.zeros(K)
+    total_n = 0; gene_rows = []
+    for gi, g in enumerate(genes):
+        P = tx1[g]
+        n = len(P)
+        if n == 0:
+            continue
+        gproj = (P - com) @ normals.T
+        aK = (gproj > 0).sum(axis=0).astype(int)
+        bK = n - aK
+        null_a = rng.binomial(n, 0.5, N_NULL)
+        null_a1 = int(rng.binomial(n, 0.5))
+        planes_g = []; pv = np.empty(K); pc = np.empty(K)
+        for k in range(K):
+            VA, VB = volA[k], volB[k]
+            a_o, b_o = int(aK[k]), int(bK[k])
+            nb1 = n - null_a1
+            row = {
+                "a": a_o, "b": b_o, "aV": a_o / VA, "bV": b_o / VB, "aC": a_o / n, "bC": b_o / n,
+                "dCount": a_o - b_o, "dVol": a_o / VA - b_o / VB, "dNorm": (a_o - b_o) / n,
+                "na": null_a1, "nb": nb1, "naV": null_a1 / VA, "nbV": nb1 / VB,
+                "ndCount": null_a1 - nb1, "ndVol": null_a1 / VA - nb1 / VB, "ndNorm": (null_a1 - nb1) / n,
+            }
+            p_vol, p_cnt = perm_pvals(a_o, n, VA, VB, null_a)
+            row["pVol"] = p_vol; row["pCnt"] = p_cnt
+            pv[k] = p_vol; pc[k] = p_cnt
+            planes_g.append(row)
+        dVolK = aK / volA - bK / volB
+        gene_rows.append({"gene": g, "idx": gi, "total": n, "planes": planes_g,
+                          "bestP_vol": int(np.argmin(pv)), "bestP_cnt": int(np.argmin(pc)),
+                          "bestDiff_vol": int(np.argmax(np.abs(dVolK))),
+                          "bestDiff_cnt": int(np.argmax(np.abs(aK - bK)))})
+        weighted_p_vol += n * pv; weighted_p_cnt += n * pc
+        diff_cnt_sum += np.abs(aK - bK); diff_vol_sum += n * np.abs(dVolK)
+        total_n += n
+
+    if total_n == 0:
+        return None
+    weighted_p_vol /= total_n; weighted_p_cnt /= total_n
+    diff_cnt_norm = diff_cnt_sum / total_n; diff_vol_norm = diff_vol_sum / total_n
+    best_planes = {"pVol": int(np.argmin(weighted_p_vol)), "pCnt": int(np.argmin(weighted_p_cnt)),
+                   "diffVol": int(np.argmax(diff_vol_norm)), "diffCnt": int(np.argmax(diff_cnt_norm))}
+
+    com_plot = [com[0] / XY_UM, com[1] / XY_UM, com[2] * zs]
+    pb_plot = [pb_com[0] / XY_UM, pb_com[1] / XY_UM, pb_com[2] * zs]
+    L_um = 0.62 * 0.5 * max(ex["x"][1] - ex["x"][0], ex["y"][1] - ex["y"][0],
+                            ex["z"][1] - ex["z"][0]) * XY_UM
+    planes_geo = []
+    for k in range(K):
+        planes_geo.append({
+            "angle": round(k * STEP_DEG, 1),
+            "a_plot": [a[0] / XY_UM, a[1] / XY_UM, a[2] * zs],
+            "m_plot": [m[k][0] / XY_UM, m[k][1] / XY_UM, m[k][2] * zs],
+            "normal_um": [round(float(x), 6) for x in normals[k]], "L": L_um,
+            "volA": round(float(volA[k]), 1), "volB": round(float(volB[k]), 1),
+            "wpVol": round(float(weighted_p_vol[k]), 5), "wpCnt": round(float(weighted_p_cnt[k]), 5),
+            "dmVol": round(float(diff_vol_norm[k]), 7), "dmCnt": round(float(diff_cnt_norm[k]), 5),
+        })
+    outline = cross_section_outline(pos1, com, a, u, v)
+    return {
+        "com_plot": [round(c, 2) for c in com_plot], "com_um": [round(float(c), 4) for c in com],
+        "pb_plot": [round(c, 2) for c in pb_plot],
+        "axis_plot": [round(x, 5) for x in [a[0] / XY_UM, a[1] / XY_UM, a[2] * zs]],
+        "planes": planes_geo, "best_planes": best_planes, "n_null": N_NULL,
+        "cross_section": {"u_plot": [u[0] / XY_UM, u[1] / XY_UM, u[2] * zs],
+                          "v_plot": [v[0] / XY_UM, v[1] / XY_UM, v[2] * zs],
+                          "outline": [[round(p[0], 2), round(p[1], 2)] for p in outline]},
+        "genes": gene_rows,
+    }
+
+
+def _circ_transcripts(tx, seg_of, fn):
+    """Circularized display transcripts: seg-1 molecules moved by the balloon fn (µm),
+    everything else unchanged. Kept in the same (x_px, y_px, gz_frame) units + s1 flag."""
+    out = {}
+    for g, t in tx.items():
+        x = np.asarray(t["x"], float); y = np.asarray(t["y"], float); gz = np.asarray(t["gz"], float)
+        s1 = seg_of[g] == 1
+        if s1.any():
+            P = np.stack([x[s1] * XY_UM, y[s1] * XY_UM, gz[s1] * Z_UM], axis=1)
+            Pc = fn(P)
+            x = x.copy(); y = y.copy(); gz = gz.copy()
+            x[s1] = Pc[:, 0] / XY_UM; y[s1] = Pc[:, 1] / XY_UM; gz[s1] = Pc[:, 2] / Z_UM
+        out[g] = {"x": [round(float(a), 2) for a in x], "y": [round(float(a), 2) for a in y],
+                  "gz": [round(float(a), 2) for a in gz], "s1": s1.astype(np.uint8).tolist()}
+    return out
+
+
+def _circ_mesh(mesh, fn, zs):
+    """Balloon-transform a region mesh (plot-space verts x_px,y_px,frame·zs)."""
+    verts = np.asarray(mesh["verts"], float).reshape(-1, 3)
+    P = np.stack([verts[:, 0] * XY_UM, verts[:, 1] * XY_UM, (verts[:, 2] / zs) * Z_UM], axis=1)
+    Pc = fn(P)
+    vc = np.stack([Pc[:, 0] / XY_UM, Pc[:, 1] / XY_UM, (Pc[:, 2] / Z_UM) * zs], axis=1)
+    return {"verts": [round(float(a), 1) for a in vc.ravel()], "faces": mesh["faces"]}
+
+
 def process(eid):
     scene_p = os.path.join(ATLAS, eid, "scene.json.gz")
     lab = glob.glob(os.path.join(SRC, eid, "*_label.tif"))
@@ -301,6 +466,32 @@ def process(eid):
             "genes": gene_rows,
         },
     }
+
+    # ---- circularized ("blow up the balloon") variant: segment 1 only ----
+    # Inflate seg-1 to its average-radius sphere (90%), carrying seg-1 transcripts inside,
+    # and recompute the WHOLE analysis on that geometry. A separate RNG keeps the real
+    # p-values above byte-identical. Stored under scene["circ"]; the front-end toggles it.
+    tx1 = {}
+    for g in genes:
+        t = tx[g]; in1 = seg_of[g] == 1
+        tx1[g] = np.stack([np.asarray(t["x"], float)[in1] * XY_UM,
+                           np.asarray(t["y"], float)[in1] * XY_UM,
+                           np.asarray(t["gz"], float)[in1] * Z_UM], axis=1)
+    fn, _C, _Ravg = balloon(pos1)
+    pos1_c = fn(pos1)
+    pos_c = pos.copy(); pos_c[labels == 1] = pos1_c
+    com_c = pos_c.mean(axis=0)
+    tx1_c = {g: (fn(P) if len(P) else P) for g, P in tx1.items()}
+    analysis_c = analyze(pos1_c, com_c, pb_com, genes, tx1_c, voxvol, ex, zs, RNG_C)
+    if analysis_c is not None:
+        m1 = d["region_meshes"].get("1")
+        scene["circ"] = {"analysis": analysis_c,
+                         "transcripts": _circ_transcripts(tx, seg_of, fn),
+                         "mesh1": _circ_mesh(m1, fn, zs) if m1 else None,
+                         "R_avg_um": round(float(_Ravg), 2)}
+    else:
+        scene["circ"] = None
+
     return scene
 
 
@@ -318,11 +509,11 @@ def _json_default(o):
 BEST_KEYS = ["pVol", "pCnt", "diffVol", "diffCnt"]
 
 
-def agg_entry(eid, label, scene):
+def agg_entry(eid, label, A):
     """Slim per-embryo record for the cross-embryo bottom-drawer visuals: the
     cross-section outline, the 4 best-plane indices, and — per gene — its total n
-    and side-A count `a` at each of the 4 best planes (b = n − a)."""
-    A = scene["analysis"]
+    and side-A count `a` at each of the 4 best planes (b = n − a). `A` = an analysis
+    dict (scene['analysis'] for real, scene['circ']['analysis'] for circularized)."""
     bp = A["best_planes"]
     plns = A["planes"]
     best = [bp[k] for k in BEST_KEYS]
@@ -371,6 +562,7 @@ def main():
     ids = sorted(os.listdir(ATLAS))
     manifest = []
     agg_entries = []
+    agg_circ = []
     for i, eid in enumerate(ids):
         try:
             scene = process(eid)
@@ -399,7 +591,9 @@ def main():
             "size_kb": round(os.path.getsize(out) / 1024),
             "best_planes": bp,
         })
-        agg_entries.append(agg_entry(eid, label, scene))
+        agg_entries.append(agg_entry(eid, label, scene["analysis"]))
+        if scene.get("circ"):
+            agg_circ.append(agg_entry(eid, label, scene["circ"]["analysis"]))
         print(f"  [{i+1}/{len(ids)}] {eid}  pVol={bp['pVol']*10}° pCnt={bp['pCnt']*10}° "
               f"diffVol={bp['diffVol']*10}° diffCnt={bp['diffCnt']*10}°  {manifest[-1]['size_kb']}KB")
     manifest.sort(key=lambda m: m["id"])
@@ -407,6 +601,9 @@ def main():
     with open(OUT_MANIFEST, "w") as fh:
         json.dump({"embryos": manifest, "n_planes": N_PLANES, "step_deg": STEP_DEG}, fh, indent=1)
     write_cross_aggregate(agg_entries, os.path.join(HERE, "public", "data", "zygote_cross.json.gz"))
+    if agg_circ:
+        agg_circ.sort(key=lambda e: e["id"])
+        write_cross_aggregate(agg_circ, os.path.join(HERE, "public", "data", "zygote_cross_circ.json.gz"))
     tot = sum(m["size_kb"] for m in manifest)
     print(f"\nwrote {len(manifest)} zygotes  ({tot/1024:.1f} MB)")
 

@@ -23,6 +23,7 @@
   const placeholder = $("#placeholder"), loadingEl = $("#loading"), loadingTxt = $("#loading-text");
   const geneSelect = $("#gene-select"), planeSelect = $("#plane-select");
   const axisShow = $("#axis-show"), planeShow = $("#plane-show"), allShow = $("#all-show");
+  const circShow = $("#circ-show");
   const chartEl = $("#chart"), chartSub = $("#chart-sub"), chartReadout = $("#chart-readout");
   const drawer = $("#drawer"), drawerHandle = $("#drawer-handle"), drawerBody = $("#drawer-body");
   const drawerEmb = $("#drawer-emb");
@@ -39,7 +40,14 @@
     drawerOpen: false, bestTab: "pVol", crossMode: "vol",
     crossKey: "pVol", alignGene: null, agg: null,
     xsShowMean: true, xsOnlyCurrent: false,
+    circ: false, aggCirc: null, _aggCircP: null,
   };
+  // circularize accessors: when the "blow up the balloon" toggle is on, every read of
+  // the current embryo's analysis / transcripts, and the cross-embryo aggregate, uses
+  // the precomputed circularized (spherical, seg-1-only) version instead of the real one.
+  const curA = () => (state.circ && state.scene && state.scene.circ) ? state.scene.circ.analysis : (state.scene && state.scene.analysis);
+  const curTX = () => (state.circ && state.scene && state.scene.circ) ? state.scene.circ.transcripts : (state.scene && state.scene.transcripts);
+  const curAGG = () => (state.circ && state.aggCirc) ? state.aggCirc : state.agg;
   const BESTKEY_LABEL = { pVol: "min p · vol", pCnt: "min p · count", diffVol: "max Δ · vol", diffCnt: "max Δ · count" };
 
   // ---------- boot ----------
@@ -100,13 +108,13 @@
 
   // ---------- geometry helpers ----------
   const gene = () => geneSelect.value;
-  function planeGeo(k) { return state.scene.analysis.planes[k]; }
+  function planeGeo(k) { return curA().planes[k]; }
   // Split a gene's transcripts into three clouds. Only segment-1 transcripts
   // (t.s1[i]) are counted; those get side A (blue) / side B (red) by plane side:
   // (pos_um − com_um)·normal_um  (matches precompute). Non-segment-1 transcripts
   // are not counted and render green.
   function splitCloud(scene, g, k) {
-    const t = scene.transcripts[g]; const A = scene.analysis;
+    const t = curTX()[g]; const A = curA();
     const com = A.com_um, nrm = planeGeo(k).normal_um, zs = scene.z_scale;
     const s1 = t && t.s1;
     const bx = [], by = [], bz = [], rx = [], ry = [], rz = [], gx = [], gy = [], gz = [];
@@ -121,7 +129,7 @@
   // plane k as an orange quad (physical square in µm → plot space)
   const PLANE_SCALE = 2;                              // rendered plane size (×) vs precomputed L
   function planeQuad(k, color, op, name, rank, showLegend = true) {
-    const A = state.scene.analysis, p = planeGeo(k), zs = state.scene.z_scale;
+    const A = curA(), p = planeGeo(k), zs = state.scene.z_scale;
     const com = A.com_um, L = p.L * PLANE_SCALE;
     const aUm = [p.a_plot[0] * XY, p.a_plot[1] * XY, p.a_plot[2] / zs];
     const mUm = [p.m_plot[0] * XY, p.m_plot[1] * XY, p.m_plot[2] / zs];
@@ -141,8 +149,13 @@
   // ---------- 3-D render ----------
   function render() {
     const s = state.scene; if (!s) return;
-    const zs = s.z_scale, A = s.analysis, k = state.planeIdx, g = gene();
-    const traces = V.bodyTraces(s);
+    const zs = s.z_scale, A = curA(), k = state.planeIdx, g = gene();
+    // when circularized, render the balloon-inflated segment-1 mesh in place of the real one
+    const circOn = state.circ && s.circ && s.circ.mesh1;
+    const bodyScene = circOn
+      ? Object.assign({}, s, { region_meshes: Object.assign({}, s.region_meshes, { "1": s.circ.mesh1 }) })
+      : s;
+    const traces = V.bodyTraces(bodyScene);
 
     const sp = splitCloud(s, g, k);
     traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side A`,
@@ -192,7 +205,7 @@
 
   // ---------- counts chart (floating window) ----------
   function geneRow(g, k) {
-    const rows = state.scene.analysis.genes;
+    const rows = curA().genes;
     const r = rows.find((x) => x.gene === g);
     return r ? r.planes[k] : null;
   }
@@ -234,7 +247,7 @@
   };
   function renderBestList() {
     const s = state.scene; if (!s) return;
-    const A = s.analysis, meta = BEST_META[state.bestTab];
+    const A = curA(), meta = BEST_META[state.bestTab];
     const k = A.best_planes[meta.plane];
     const isVol = meta.isVol;
     // real vs null side-difference under the tab's normalization; p under the same
@@ -276,6 +289,9 @@
   function ensureAgg() {
     if (state.agg) return Promise.resolve(state.agg);
     if (state._aggP) return state._aggP;
+    // lazily load the circularized aggregate too, so the bottom drawer can follow the balloon toggle
+    if (!state._aggCircP) state._aggCircP = V.loadGz("data/zygote_cross_circ.json.gz")
+      .then((a) => { state.aggCirc = a; }).catch(() => {});
     state._aggP = V.loadGz("data/zygote_cross.json.gz").then((agg) => {
       state.agg = agg;
       // No gene spans all embryos (multiple panels), so the dropdown is the union
@@ -293,7 +309,7 @@
   // (panels are disjoint, so the global widest gene can share no embryo with the
   // current display gene) and the orientation stays independent of the display gene.
   function pickDefaultAlign() {
-    const agg = state.agg, sc = state.scene, skip = gene();
+    const agg = curAGG(), sc = state.scene, skip = gene();
     if (sc && sc.genes) {
       let best = null, bestCov = -1;
       for (const g of sc.genes) {
@@ -305,7 +321,7 @@
     }
     return agg.default_align_gene;
   }
-  const bestKeyIndex = () => state.agg.best_keys.indexOf(state.crossKey);
+  const bestKeyIndex = () => curAGG().best_keys.indexOf(state.crossKey);
   // 60 distinct-ish colors via golden-angle hue spread (same index → same embryo
   // in the outline plot and the bar plot).
   const embColor = (i) => `hsl(${((i * 137.508) % 360).toFixed(1)}, 62%, 52%)`;
@@ -313,7 +329,7 @@
   // is vertical (then +x = plane's side A); flip 180° when the alignment gene's
   // higher-count side is on the left, so it always ends up on the right (+x).
   function embOrient(emb, ki) {
-    const theta = emb.best[ki] * state.agg.step_deg * Math.PI / 180;
+    const theta = emb.best[ki] * curAGG().step_deg * Math.PI / 180;
     const ga = emb.g[state.alignGene];
     let flip = false;
     if (ga) { const a = ga[1 + ki]; flip = (ga[0] - a) > a; }   // sideB (=n−a) > sideA
@@ -360,7 +376,7 @@
   const sigT = (p) => (p == null || !isFinite(p)) ? 1 : Math.max(0, Math.min(1, (Math.log10(Math.max(p, 1e-6)) + 3) / 3));
   const sigOf = (emb) => (emb.sig ? emb.sig[state.crossKey] : null);
   function renderOutlines() {
-    const agg = state.agg; if (!agg) return;
+    const agg = curAGG(); if (!agg) return;
     const ki = bestKeyIndex();
     const oriented = []; let R = 0;
     agg.embryos.forEach((emb) => {
@@ -425,7 +441,7 @@
     }, XS_CFG);
   }
   function renderBars() {
-    const agg = state.agg; if (!agg) return;
+    const agg = curAGG(); if (!agg) return;
     const ki = bestKeyIndex(), g = gene();
     const bars = [], connX = [], connY = [];
     let leftCum = 0, rightCum = 0, nEmb = 0;
@@ -465,7 +481,7 @@
   }
   function renderCrossAgg() {
     return ensureAgg().then(() => {
-      const cov = state.agg.gene_cov[state.alignGene] || 0, tot = state.agg.n_embryos;
+      const cov = curAGG().gene_cov[state.alignGene] || 0, tot = curAGG().n_embryos;
       xsCaption.textContent = `· best plane ${BESTKEY_LABEL[state.crossKey]}`;
       xsNote.innerHTML = `No gene spans all zygotes (multiple panels). Showing the <b>${cov}/${tot}</b> ` +
         `zygotes that contain <b>${state.alignGene}</b>, each flipped so its higher-${state.alignGene} side is on the right.`;
@@ -482,6 +498,13 @@
     });
     planeSelect.addEventListener("change", () => { state.planeIdx = parseInt(planeSelect.value, 10) || 0; render(); renderChart(); });
     [axisShow, planeShow, allShow].forEach((c) => c.addEventListener("change", () => render()));
+    // circularize ("blow up the balloon"): switch every plot + analysis to the precomputed
+    // spherical (seg-1) version and re-render the 3-D view, chart, best-planes, and drawer.
+    circShow.addEventListener("change", () => {
+      state.circ = circShow.checked;
+      render(); renderChart(); renderBestList();
+      if (state.drawerOpen && state.agg) renderCrossAgg();
+    });
     // p-value colormap normalization (drives the "All planes" 3-D coloring)
     pcolorMode.addEventListener("change", () => { state.crossMode = pcolorMode.value; if (allShow.checked) render(); });
   }

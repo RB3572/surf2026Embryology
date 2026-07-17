@@ -94,14 +94,14 @@
         <p>The zygotes come from several MERFISH gene panels, so <b>no single gene is measured in all of them</b>. Picking an
         alignment gene shows only the zygotes that contain it — that's why the count changes with the gene.</p>` },
 
-    "circularize": { eyebrow: "Division Planes · toggle", title: "Blow up the balloon",
+    "circularize": { eyebrow: "Division Planes · toggle", title: "Circularize the cell",
       html: `<p class="lede">Real cells are lumpy, and a lump can fake a lopsided split. So we <b>inflate</b> each cell
-        like a balloon until it's almost a perfect sphere — then ask whether the asymmetry <i>survives</i>.</p>
+        until it's a smooth sphere — then ask whether the asymmetry <i>survives</i>.</p>
+        <div class="help-cap">A shape control: normalize the cell's shape, keep the molecules' relative positions.</div>
         <h3>What the toggle does</h3>
-        <p>For the cytoplasm (segment 1) only, every point is pushed toward a sphere of the cell's <b>average radius</b> —
-        <b>90% of the way</b>, so a little bumpiness remains. Transcripts move <b>with</b> the tissue (they stay inside, they
-        don't pile onto the shell). Then the <b>entire</b> analysis — center of mass, per-side counts, p-values, cross-section —
-        is recomputed on the rounded cell.</p>
+        <p>For the cytoplasm (segment 1) only, every point is pushed onto a smooth sphere of the cell's <b>average
+        radius</b>. Transcripts move <b>with</b> the tissue (they stay inside, they don't pile onto the shell). Then the
+        <b>entire</b> analysis — center of mass, per-side counts, p-values, cross-section — is recomputed on the rounded cell.</p>
         <h3>Why</h3>
         <p>If a gene's split stays lopsided after the shape is normalized, the asymmetry is about <b>where the molecules are</b>,
         not about the cell being an odd shape. It's a shape-control for the pre-patterning question.</p>` },

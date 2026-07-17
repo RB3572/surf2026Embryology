@@ -159,13 +159,13 @@
 
     const sp = splitCloud(s, g, k);
     traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side A`,
-      x: sp.bx, y: sp.by, z: sp.bz, marker: { size: 2.6, color: BLUE, opacity: 0.85, line: { width: 0 } },
+      x: sp.bx, y: sp.by, z: sp.bz, marker: { size: 0.5, color: BLUE, opacity: 0.85, line: { width: 0 } },
       hovertemplate: `${g} · side A (counted)<extra></extra>`, legendrank: 20000 });
     traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side B`,
-      x: sp.rx, y: sp.ry, z: sp.rz, marker: { size: 2.6, color: RED, opacity: 0.85, line: { width: 0 } },
+      x: sp.rx, y: sp.ry, z: sp.rz, marker: { size: 0.5, color: RED, opacity: 0.85, line: { width: 0 } },
       hovertemplate: `${g} · side B (counted)<extra></extra>`, legendrank: 20001 });
     traces.push({ type: "scatter3d", mode: "markers", name: `${g} · not counted`,
-      x: sp.gx, y: sp.gy, z: sp.gz, marker: { size: 2.6, color: GREEN, opacity: 0.7, line: { width: 0 } },
+      x: sp.gx, y: sp.gy, z: sp.gz, marker: { size: 0.5, color: GREEN, opacity: 0.7, line: { width: 0 } },
       hovertemplate: `${g} · not counted (not segment 1)<extra></extra>`, legendrank: 20002 });
 
     if (axisShow.checked) {

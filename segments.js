@@ -122,7 +122,7 @@
       const colors = tx.s.map((seg) => (seg >= 1 ? segColor(seg) : "#b6bdc9"));
       traces.push({ type: "scatter3d", mode: "markers", name: `${g} · ${tx.x.length} dots`,
         x: tx.x, y: tx.y, z: tx.gz.map((z) => z * zs),
-        marker: { size: 2.4, color: colors, opacity: 0.85, line: { width: 0 } },
+        marker: { size: 0.5, color: colors, opacity: 0.85, line: { width: 0 } },
         hovertemplate: `${g}<extra></extra>`, legendrank: 20000 });
     }
     Plotly.react(plotHost, traces, V.sceneLayout(s.extents, s.id), V.plotConfig);

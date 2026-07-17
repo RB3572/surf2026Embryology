@@ -89,7 +89,7 @@
   };
   // Gene point-cloud styling (single selected gene).
   const GENE_COLOR = "#ff7f00";
-  const GENE_SIZE  = 2.6;
+  const GENE_SIZE  = 0.5;
 
   // Sperm-condition colors: green = real, red = randomized null.
   const REAL_COLOR = "#16a34a";   // real sperm (diamond) + predicted (circle)

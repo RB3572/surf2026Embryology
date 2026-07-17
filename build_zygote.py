@@ -149,8 +149,8 @@ def perm_pvals(a_obs, n, V_A, V_B, null_a):
     return p_vol, p_cnt
 
 
-CIRC_W = 0.9           # balloon inflation weight: 0.9 = 90% toward the average-radius sphere
-CIRC_NBIN = 24         # (theta) surface-grid resolution for the radial surface function
+CIRC_W = 0.95          # balloon inflation weight: 0.95 = 95% toward the average-radius sphere (smooth, round)
+CIRC_NBIN = 22         # (theta) surface-grid resolution for the radial surface function
 RNG_C = np.random.default_rng(20260715)   # separate RNG so circ nulls don't shift the real p-values
 
 
@@ -168,9 +168,10 @@ def _surface_grid(pos1, center, nbin=CIRC_NBIN):
     grid = np.zeros((nbin, 2 * nbin))
     np.maximum.at(grid, (ti, pj), r)
     filled = grid[grid > 0]
-    grid[grid == 0] = filled.mean() if filled.size else 1.0
+    grid[grid == 0] = float(np.median(filled)) if filled.size else 1.0
     grid = uniform_filter(grid, size=3, mode="wrap")
-    return grid, float(grid.mean())
+    # median (not mean) target radius — robust to thin spikes that would inflate the sphere
+    return grid, float(np.median(grid))
 
 
 def balloon(pos1, w=CIRC_W):
@@ -194,7 +195,9 @@ def balloon(pos1, w=CIRC_W):
         r = np.linalg.norm(d, axis=1)
         u = d / np.maximum(r, 1e-9)[:, None]
         Rs = R_surf(u)
-        rho = r / np.maximum(Rs, 1e-9)
+        # clamp ρ ≤ 1: a point can't be past the surface (mis-binned spikes would otherwise
+        # overshoot outward and stay lumpy) — this pulls protrusions onto the sphere.
+        rho = np.minimum(r / np.maximum(Rs, 1e-9), 1.0)
         Rnew = (1 - w) * Rs + w * R_avg
         return C + u * (rho * Rnew)[:, None]
 

@@ -165,7 +165,7 @@
                              : `${g} · ${tx.x.length} dots · (${sel} not in this zygote)`;
         traces.push({ type: "scatter3d", mode: "markers", name: nm,
           x: tx.x, y: tx.y, z: tx.gz.map((z) => z * zs),
-          marker: { size: 2.4, color: DOT_C, opacity: 0.85, line: { width: 0 } },
+          marker: { size: 0.5, color: DOT_C, opacity: 0.85, line: { width: 0 } },
           hovertemplate: `${g}<extra></extra>`, legendrank: 200 });
       }
     }

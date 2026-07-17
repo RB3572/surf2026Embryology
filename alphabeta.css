@@ -39,6 +39,11 @@
   display: flex; align-items: center; gap: 8px; padding: 0 10px 0 8px; height: 40px;
   border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); }
 .ab-rowname { font-size: 12px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ab-rowname.ab-guess { text-decoration: underline dotted var(--ink-3, #9aa0aa); text-underline-offset: 3px; cursor: help; }
+.ab-rowname.ab-guess::after { content: "≈"; margin-left: 5px; color: #db2777; font-weight: 700; font-size: 11px; }
+.ab-guessnote { font-size: 12px; color: var(--ink-2); margin-top: 6px; line-height: 1.5;
+  border-left: 3px solid color-mix(in srgb, #db2777 45%, transparent); padding-left: 10px; }
+.ab-guessmark { color: #db2777; font-weight: 700; }
 .ab-flip { flex: none; width: 24px; height: 22px; border: 1px solid var(--line); border-radius: 6px;
   background: #f3f4f7; color: var(--ink-2); font-size: 13px; cursor: pointer; line-height: 1; }
 .ab-flip:hover { border-color: #db2777; color: #db2777; }

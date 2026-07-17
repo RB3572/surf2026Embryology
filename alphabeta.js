@@ -33,6 +33,9 @@
     let s = `${r.id}\n${m.label}: ${disp === "NA" ? "unavailable" : disp === "T" ? "tie" : "α = blastomere " + disp}`;
     if (m.id === "total") s += `\nblastomere A (1+3) = ${raw.nA.toLocaleString()} transcripts\nblastomere B (2+4) = ${raw.nB.toLocaleString()}`;
     if (m.id === "sperm") s += raw.spermSeg != null ? `\nsperm in segment ${raw.spermSeg}` : `\nno labelled sperm in this embryo`;
+    const sc = raw.scores && raw.scores[m.id];
+    if (sc != null && sc !== "") s += `\nscore = ${sc}`;
+    if (m.guess) s += `\n≈ best-guess reconstruction of Harry's method`;
     return s;
   }
 
@@ -47,7 +50,9 @@
       const btn = el("button", "ab-flip" + (flips[mi] ? " on" : ""));
       btn.textContent = "⇄"; btn.title = "Flip α/β for this row";
       btn.addEventListener("click", () => { flips[mi] = !flips[mi]; renderGrid(stage); });
-      const name = el("span", "ab-rowname"); name.textContent = m.label;
+      const name = el("span", "ab-rowname" + (m.guess ? " ab-guess" : ""));
+      name.textContent = m.label;
+      if (m.guess) name.title = "Best-guess reconstruction — Harry's deck names this method but not its exact parameters (gene panels, t-statistic, PCA axes).";
       lab.appendChild(btn); lab.appendChild(name);
       frag.appendChild(lab);
       rows.forEach((r) => {

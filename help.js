@@ -177,10 +177,18 @@
         each nominate one of them as <b>alpha</b> — but a test only says "this one," not whether "this one" is the same twin
         another test meant. The chart lines the tests up so you can see if they <b>agree</b>.</p>
         ${figAB}<div class="help-cap">A = original blastomere labels 1+3, B = labels 2+4. Each row is a labeling method.</div>
-        <h3>The methods (so far)</h3>
+        <h3>The methods</h3>
+        <p><b>Exact:</b></p>
         <ul><li><b>Sperm entry</b> — the blastomere the sperm entered is called alpha.</li>
-        <li><b>Higher total transcript</b> — the blastomere with more transcripts is alpha.</li>
-        <li>(Harry's PCA / ratio-sum / exhaustive methods will slot in as more rows.)</li></ul>
+        <li><b>Higher total transcript</b> — the blastomere with more transcripts is alpha (matches Harry's grids 20/20).</li></ul>
+        <p>Rows marked <b style="color:#db2777">≈</b> are <b>best-guess reconstructions</b> of Harry's methods — his deck
+        names each and shows results, but not the exact parameters, so these approximate the likely implementation:</p>
+        <ul><li><b>Expression-axis PCA</b> — project each blastomere's gene profile onto the dominant axis of expression variation.</li>
+        <li><b>Decreased / Increased panel</b> — genes split into <i>maternal</i> (fade from zygote to 2-cell) vs <i>zygotic</i> (rise).</li>
+        <li><b>… : ratio-sum</b> — add up each gene's volume-normalized A-vs-B log-ratio over that panel; the sign picks alpha.</li>
+        <li><b>… : PCA</b> — the same per-gene asymmetries, but weighted toward the dominant shared pattern instead of counted evenly.</li>
+        <li><b>Exhaustive</b> — score each gene by how far its split departs from an even one, then let the most decisive genes vote
+        (<i>unfiltered</i> = all genes; <i>mean count ≥ 20</i> = only well-expressed genes).</li></ul>
         <h3>Why the flips</h3>
         <p>"Alpha vs beta" is just a name, and each method may pick the name in its own arbitrary direction. So each row can be
         <b>flipped</b> (swap A↔B). <b>Auto-align</b> flips rows to make the columns as uniform as possible; a column where every

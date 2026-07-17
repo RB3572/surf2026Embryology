@@ -6,6 +6,7 @@
   <title>Sperm · Embryo 3D Viewer · SURF 2026</title>
   <link rel="stylesheet" href="style.css" />
   <script src="plotly.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="help.css" />
 </head>
 <body>
   <!-- ===================== Top bar: brand + embryo tabs ===================== -->
@@ -26,6 +27,7 @@
       <div class="controls-header" id="controls-header">
         <span class="controls-grip" aria-hidden="true"></span>
         <span class="controls-title">Controls</span>
+        <button class="help-btn" data-help="sperm-pca" style="margin-left:auto" aria-label="What is this analysis?" onpointerdown="event.stopPropagation()">?</button>
       </div>
       <div class="controls-body" id="controls-body">
         <div class="controls-row">
@@ -166,5 +168,6 @@
   </aside>
 
   <script src="app.js"></script>
+  <script src="help.js"></script>
 </body>
 </html>

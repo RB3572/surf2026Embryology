@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="segments.css" />
   <script src="plotly.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="help.css" />
 </head>
 <body>
   <header class="topbar">
@@ -24,6 +25,7 @@
       <div class="controls-header" id="controls-header">
         <span class="controls-grip" aria-hidden="true"></span>
         <span class="controls-title">Controls</span>
+        <button class="help-btn" data-help="segments" style="margin-left:auto" aria-label="What is this analysis?" onpointerdown="event.stopPropagation()">?</button>
       </div>
       <div class="controls-body" id="controls-body">
         <div class="controls-row">
@@ -91,5 +93,6 @@
 
   <script src="viewer-core.js"></script>
   <script src="segments.js"></script>
+  <script src="help.js"></script>
 </body>
 </html>

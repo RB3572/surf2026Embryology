@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="pronuclei.css" />
   <script src="plotly.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="help.css" />
 </head>
 <body>
   <header class="topbar">
@@ -24,6 +25,7 @@
       <div class="controls-header" id="controls-header">
         <span class="controls-grip" aria-hidden="true"></span>
         <span class="controls-title">This zygote</span>
+        <button class="help-btn" data-help="pronuclei" style="margin-left:auto" aria-label="What is this analysis?" onpointerdown="event.stopPropagation()">?</button>
       </div>
       <div class="controls-body" id="controls-body">
         <div class="controls-row" style="margin-bottom:6px">
@@ -73,7 +75,7 @@
     </button>
     <div class="rdrawer-body" id="rdrawer-body">
       <div class="rdrawer-head">
-        <div class="rdrawer-title">Genes correlated with pronuclei distance</div>
+        <div class="rdrawer-title" style="position:relative">Genes correlated with pronuclei distance<button class="help-btn help-corner" data-help="pronuclei-genes" aria-label="What is this?">?</button></div>
         <div class="rdrawer-desc">Pearson correlation between a gene's transcript count and the
           minimum pronuclei distance, across the zygotes that contain the gene (panels are
           disjoint, so n varies per gene). Click a gene to plot it.</div>
@@ -142,5 +144,6 @@
 
   <script src="viewer-core.js"></script>
   <script src="pronuclei.js"></script>
+  <script src="help.js"></script>
 </body>
 </html>

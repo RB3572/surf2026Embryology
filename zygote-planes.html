@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="zygote.css" />
   <script src="plotly.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="help.css" />
 </head>
 <body>
   <header class="topbar">
@@ -25,6 +26,7 @@
       <div class="controls-header" id="controls-header">
         <span class="controls-grip" aria-hidden="true"></span>
         <span class="controls-title">Controls</span>
+        <button class="help-btn" data-help="division-planes" style="margin-left:auto" aria-label="What is this analysis?" onpointerdown="event.stopPropagation()">?</button>
       </div>
       <div class="controls-body" id="controls-body">
         <div class="controls-row">
@@ -44,7 +46,7 @@
         </div>
         <div class="controls-row zt-circ-row">
           <label class="zt zt-circ" title="Inflate each cytoplasm (segment 1) to its average-radius sphere — 90%, so it stays a little bumpy — carrying transcripts inside, and recompute every analysis on that rounded cell.">
-            <input type="checkbox" id="circ-show" /><span>Circularize · blow up the balloon</span></label>
+            <input type="checkbox" id="circ-show" /><span>Circularize · blow up the balloon</span></label><button class="help-btn" data-help="circularize" aria-label="What is circularize?" onpointerdown="event.stopPropagation()">?</button>
         </div>
         <div class="pcolor">
           <div class="pcolor-top">
@@ -109,7 +111,7 @@
       </div>
       <div class="xs-visuals">
         <div class="xs-block xs-block-main">
-          <div class="mini-title">Aligned cross-sections · all zygotes
+          <div class="mini-title" style="position:relative">Aligned cross-sections · all zygotes<button class="help-btn help-corner" data-help="division-crossembryo" aria-label="What is this?">?</button>
             <span class="mini-sub" id="xs-caption"></span>
             <span class="xs-hint" aria-hidden="true">scroll to zoom · drag to pan · double-click to reset</span>
           </div>
@@ -156,5 +158,6 @@
 
   <script src="viewer-core.js"></script>
   <script src="zygote.js"></script>
+  <script src="help.js"></script>
 </body>
 </html>

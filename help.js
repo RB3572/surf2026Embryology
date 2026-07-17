@@ -1,0 +1,225 @@
+/* Shared "?" help system: a corner icon on each analysis opens a modal with an
+ * accessible, figure-illustrated explanation. Pages add <button class="help-btn"
+ * data-help="KEY">?</button>; the content lives in HELP[KEY]. Written in the plain-analogy
+ * voice of the SURF deck (height-on-the-wall clock, the World Cup problem, campus buildings). */
+(() => {
+  // small inline SVG figures (fixed colors — the modal is always light)
+  const BLUE = "#2563eb", RED = "#dc2626", ORANGE = "#e0752f", PURPLE = "#5c4d9e",
+        GREEN = "#16a34a", INK = "#1f2937", GREY = "#94a3b8", PINK = "#db2777";
+
+  const figPlanes = `<svg class="help-fig" viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="160" cy="85" r="72" fill="#f1f5fb" stroke="#dce3ee"/>
+    <line x1="160" y1="20" x2="160" y2="150" stroke="${GREY}" stroke-width="1.5" stroke-dasharray="4 4"/>
+    <line x1="96" y1="150" x2="224" y2="20" stroke="${ORANGE}" stroke-width="3"/>
+    <circle cx="128" cy="60" r="8" fill="${BLUE}"/><circle cx="150" cy="45" r="8" fill="${BLUE}"/>
+    <circle cx="185" cy="70" r="8" fill="${BLUE}"/><circle cx="200" cy="118" r="8" fill="${RED}"/>
+    <circle cx="160" cy="85" r="5" fill="${INK}"/>
+    <text x="235" y="30" font-size="11" fill="${ORANGE}">best line</text>
+    <text x="235" y="128" font-size="11" fill="${INK}">3 vs 1</text>
+  </svg>`;
+  const figClock = `<svg class="help-fig" viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
+    <line x1="40" y1="18" x2="40" y2="150" stroke="${INK}" stroke-width="2"/>
+    ${[0,1,2,3,4].map(i=>`<line x1="34" y1="${30+i*28}" x2="46" y2="${30+i*28}" stroke="${GREY}" stroke-width="1.5"/>`).join("")}
+    <circle cx="120" cy="120" r="9" fill="${PURPLE}"/><circle cx="150" cy="118" r="9" fill="${PURPLE}"/>
+    <text x="112" y="145" font-size="10" fill="${GREY}">early · far apart</text>
+    <circle cx="235" cy="55" r="9" fill="${PURPLE}"/><circle cx="252" cy="55" r="9" fill="${PURPLE}"/>
+    <text x="222" y="38" font-size="10" fill="${GREY}">late · close</text>
+    <path d="M170 112 Q205 90 232 66" stroke="${GREEN}" stroke-width="2" fill="none" marker-end="url(#ar)"/>
+    <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="${GREEN}"/></marker></defs>
+  </svg>`;
+  const figSeg = `<svg class="help-fig" viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="120" cy="90" r="66" fill="#f6f4fb" stroke="#e4dcf1"/>
+    <circle cx="120" cy="90" r="30" fill="#efe9fa" stroke="#d9ccf0"/>
+    <circle cx="175" cy="52" r="15" fill="#fdeede" stroke="#f2d7b3"/>
+    ${Array.from({length:22}).map(()=>{const a=Math.random()*6.28,r=8+Math.random()*20;return `<circle cx="${120+r*Math.cos(a)}" cy="${90+r*Math.sin(a)}" r="2.6" fill="${PURPLE}"/>`;}).join("")}
+    ${Array.from({length:9}).map(()=>{const a=Math.random()*6.28,r=Math.random()*11;return `<circle cx="${175+r*Math.cos(a)}" cy="${52+r*Math.sin(a)}" r="2.6" fill="${ORANGE}"/>`;}).join("")}
+    <text x="96" y="94" font-size="10" fill="#6d5aa8">pronuclei</text>
+    <text x="150" y="30" font-size="10" fill="${ORANGE}">polar body</text>
+    <text x="70" y="165" font-size="11" fill="${INK}">some segments are packed, others sparse</text>
+  </svg>`;
+  const figAxes = `<svg class="help-fig" viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="160" cy="90" r="66" fill="#fdeef3" stroke="#f6d3e0"/>
+    <circle cx="160" cy="24" r="7" fill="${INK}"/><text x="172" y="22" font-size="10" fill="${INK}">polar body (animal pole)</text>
+    <circle cx="215" cy="128" r="6" fill="${GREEN}"/><text x="150" y="150" font-size="10" fill="${GREEN}">sperm entry</text>
+    <line x1="96" y1="70" x2="224" y2="110" stroke="${PINK}" stroke-width="3" stroke-dasharray="6 4"/>
+    <text x="228" y="112" font-size="10" fill="${PINK}">1st cleavage?</text>
+  </svg>`;
+  const figPCA = `<svg class="help-fig" viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="150" cy="90" r="68" fill="#eefaf1" stroke="#cfeedd"/>
+    ${Array.from({length:26}).map((_,i)=>{const a=-0.6+ (Math.random()-.5)*0.7, r=10+Math.random()*46;return `<circle cx="${150+r*Math.cos(a)}" cy="${90+r*Math.sin(a)}" r="2.6" fill="${BLUE}" opacity="0.8"/>`;}).join("")}
+    <line x1="120" y1="108" x2="205" y2="66" stroke="${INK}" stroke-width="2.5" marker-end="url(#ar2)"/>
+    <circle cx="212" cy="62" r="6" fill="${RED}"/><text x="220" y="60" font-size="10" fill="${RED}">sperm</text>
+    <text x="70" y="120" font-size="10" fill="${BLUE}">gene cloud leans toward the sperm</text>
+    <defs><marker id="ar2" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="${INK}"/></marker></defs>
+  </svg>`;
+  const figAB = `<svg class="help-fig" viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="110" cy="80" r="52" fill="#fbede2" stroke="#f0cfa9"/><text x="102" y="85" font-size="20" font-weight="700" fill="${ORANGE}">A</text>
+    <circle cx="210" cy="80" r="52" fill="#ece9f6" stroke="#cfc6ea"/><text x="202" y="85" font-size="20" font-weight="700" fill="${PURPLE}">B</text>
+    <text x="86" y="150" font-size="10" fill="${GREY}">sperm entry →</text>
+    <text x="176" y="150" font-size="10" fill="${GREY}">← more transcripts?</text>
+    <text x="150" y="20" font-size="11" fill="${INK}">which one is α?</text>
+  </svg>`;
+
+  const HELP = {
+    "division-planes": { eyebrow: "Division Planes · the method", title: "The World Cup problem",
+      html: `<p class="lede">Four superstars stand on the pitch. Draw <b>one</b> straight line to split them into
+        two teams — but the line must pass through a fixed dot in the middle. Which line puts the most players on a
+        single side? You can't reason it out; you try every angle and keep the most lopsided split.</p>
+        ${figPlanes}<div class="help-cap">Every line pivots about the same center dot; we keep the most unbalanced split.</div>
+        <h3>What we actually measure</h3>
+        <p>In the zygote the "players" are a gene's <b>transcripts</b> and the fixed dot is the cell's
+        <b>center of mass</b>. A line becomes a <b>plane</b> that must contain the <b>polar-body axis</b>
+        (center → polar body). We sweep <b>18 planes</b>, 10° apart, and for each one count how many of that gene's
+        transcripts fall on side A vs side B.</p>
+        <h3>How to read the 3-D view</h3>
+        <ul><li><span class="tag">blue</span> / <span class="tag">red</span> dots — the selected gene's transcripts on side A / side B of the shown plane.</li>
+        <li><span class="tag">green</span> dots — molecules outside the cytoplasm (polar body, pronuclei); not counted.</li>
+        <li>The orange square is the current plane; "All planes" colors every plane by significance (dark = a strong, lopsided split).</li></ul>
+        <h3>Why it matters</h3>
+        <p>A gene whose transcripts are <b>consistently lopsided</b> across the best plane hints that the zygote is
+        already <b>pre-patterned</b> — that molecular asymmetry, present before the first division, could mark where
+        the two-cell blastomeres (α and β) will differ.</p>
+        <div class="help-callout">The <b>p-value</b> asks: could a split this lopsided happen by chance if each
+        molecule flipped a fair coin for its side? Low p = unlikely to be luck.</div>` },
+
+    "division-crossembryo": { eyebrow: "Division Planes · bottom drawer", title: "Do all zygotes lean the same way?",
+      html: `<p class="lede">One zygote leaning to one side could be luck. The real question is whether <b>many</b> zygotes
+        lean the <b>same</b> way once you line them up.</p>
+        <h3>The two panels</h3>
+        <ul><li><b>Aligned cross-sections</b> — each zygote's outline, rotated so its own best plane is vertical and flipped so
+        the higher-count side is on the right. Each is colored by how significant its split is (dark purple = significant).</li>
+        <li><b>Per-side counts</b> — for the chosen gene, a stacked bar of left-vs-right transcript counts per zygote. A consistent
+        lean across embryos is the signal.</li></ul>
+        <h3>The panel caveat</h3>
+        <p>The zygotes come from several MERFISH gene panels, so <b>no single gene is measured in all of them</b>. Picking an
+        alignment gene shows only the zygotes that contain it — that's why the count changes with the gene.</p>` },
+
+    "circularize": { eyebrow: "Division Planes · toggle", title: "Blow up the balloon",
+      html: `<p class="lede">Real cells are lumpy, and a lump can fake a lopsided split. So we <b>inflate</b> each cell
+        like a balloon until it's almost a perfect sphere — then ask whether the asymmetry <i>survives</i>.</p>
+        <h3>What the toggle does</h3>
+        <p>For the cytoplasm (segment 1) only, every point is pushed toward a sphere of the cell's <b>average radius</b> —
+        <b>90% of the way</b>, so a little bumpiness remains. Transcripts move <b>with</b> the tissue (they stay inside, they
+        don't pile onto the shell). Then the <b>entire</b> analysis — center of mass, per-side counts, p-values, cross-section —
+        is recomputed on the rounded cell.</p>
+        <h3>Why</h3>
+        <p>If a gene's split stays lopsided after the shape is normalized, the asymmetry is about <b>where the molecules are</b>,
+        not about the cell being an odd shape. It's a shape-control for the pre-patterning question.</p>` },
+
+    "pronuclei": { eyebrow: "Pronuclei Distance · the model", title: "A clock you can read from a ruler",
+      html: `<p class="lede">Mark a child's height on the wall each year. The marks creep upward, and the <b>spacing</b> becomes
+        a clock — you can read <i>age</i> from <i>height</i>. We do the same with the zygote, reading developmental <b>time</b>
+        from a physical <b>distance</b>.</p>
+        ${figClock}<div class="help-cap">After fertilization the two pronuclei form near the surface and migrate together; the gap shrinks as the zygote ages.</div>
+        <h3>The measurement</h3>
+        <p>The two pronuclei (maternal + paternal) start far apart and converge just before the first division. So the
+        <b>minimum distance between them</b> is a stand-in for developmental time — <b>smaller distance = later</b>. We plot each
+        zygote's transcript count against that distance and fit a curve.</p>
+        <h3>How to read it</h3>
+        <ul><li>Each dot is one zygote; x = pronuclei distance (µm), y = transcript count.</li>
+        <li>The <b>Regression model</b> menu fits different shapes (linear, exponential decay of maternal mRNA, a ZGA-style
+        sigmoid, count-GLMs, …) — a way to ask <i>how</i> count changes with time, not just whether it does.</li></ul>
+        <div class="help-callout"><b>Total</b> transcript count is a weak clock (r ≈ 0.16). Individual genes do far better —
+        that's what the right drawer ranks.</div>` },
+
+    "pronuclei-genes": { eyebrow: "Pronuclei · gene ranking", title: "Which single gene is the best clock?",
+      html: `<p class="lede">The whole transcriptome is a blurry clock. But a <b>single well-behaved gene</b> can be sharp — its
+        count might track pronuclei distance almost perfectly.</p>
+        <h3>What the ranking shows</h3>
+        <p>For every gene present in enough zygotes, we measure the <b>Pearson correlation</b> between its transcript count and the
+        pronuclei distance, and rank the strongest <b>positive</b> and <b>negative</b> relationships. Positive = more of the gene
+        goes with a larger gap; negative = more of the gene goes with a smaller gap.</p>
+        <p>Click a gene to see its own scatter above the total, and toggle its molecules as dots in the 3-D cell. Because panels
+        are disjoint, each gene is measured in a different subset of zygotes (its <span class="tag">n</span>).</p>` },
+
+    "segments": { eyebrow: "Segment Enrichment · the idea", title: "People on campus",
+      html: `<p class="lede">At any moment some campus buildings are packed and others nearly empty. If you know which building
+        someone is in, you often know what they're doing. Molecules are the same: <b>where</b> a transcript sits often predicts
+        <b>what</b> it's for.</p>
+        ${figSeg}<div class="help-cap">Every transcript is assigned to a segment — cell body, polar body, pronuclei — then we ask which genes are over-represented where.</div>
+        <h3>What "enriched" means</h3>
+        <p>For each segment we compute a gene's <b>density fold-change</b>: how concentrated it is in that segment versus the
+        cell-wide average, correcting for the segment's volume. A gene wholly inside one small segment scores very high. (You can
+        switch to a simpler <b>fraction</b> mode: what share of the gene's molecules land in the segment.)</p>
+        <h3>Why it matters</h3>
+        <p>Subcellular localization is real and pervasive — in fly embryos, 71% of expressed genes had distinct patterns
+        (Lécuyer et al., Cell 2007). Genes that concentrate in the pronuclei or polar body point to the machinery running those
+        structures.</p>` },
+
+    "axes": { eyebrow: "Fertilization Geometry · the question", title: "Do two landmarks predict the first cut?",
+      html: `<p class="lede">Give someone two fixed landmarks on a balloon — where you poked it, and its north pole — and ask them
+        to guess where it will first split. That's the pre-patterning question for the embryo.</p>
+        ${figAxes}<div class="help-cap">Sperm entry (the poke) + the polar body (the animal pole) — do they predict the first cleavage plane?</div>
+        <h3>The landmarks</h3>
+        <ul><li><b>Sperm entry</b> — the GFP-labeled midpiece marks where the sperm fused. A proposed organizer of the first axis.</li>
+        <li><b>Polar body</b> — the extruded body sits at the <b>animal pole</b>; the opposite side is vegetal.</li>
+        <li><b>First cleavage plane</b> — read directly in two-cell embryos (the interface between blastomeres); in zygotes we use
+        the pronuclear axis as the predicted normal.</li></ul>
+        <h3>How it's tested</h3>
+        <p>We measure the angle between these landmarks and the cleavage plane and compare it to an <b>exact random-orientation
+        null</b> — the pattern you'd see if orientation were pure chance. A <b>shape control</b> also checks the signal isn't just
+        the cell being elongated. Modest n, hypotheses fixed in advance.</p>` },
+
+    "sperm-pca": { eyebrow: "Sperm Prediction · the idea", title: "Reading the sperm's wake",
+      html: `<p class="lede">A boat leaves a wake that points back to where it went. Some genes' transcript clouds seem to
+        <b>lean</b> toward the sperm — if enough of them agree, their combined "arrow" can <b>predict</b> where the sperm is.</p>
+        ${figPCA}<div class="help-cap">Each gene's cloud has a long axis (PCA) and a center of mass; consistent genes point at the sperm.</div>
+        <h3>What we compute</h3>
+        <p>For each gene we take its transcript cloud's <b>principal axis</b> (PCA) and its <b>center of mass</b>, and measure how
+        well they align with the direction to the manually-located sperm. Genes are <b>ranked by consistency</b> across embryos;
+        the top genes' directions are averaged into a predicted sperm location.</p>
+        <h3>How to read it</h3>
+        <p>A <b>randomized null</b> (shuffled sperm positions) shows what accuracy chance alone would give — the real prediction
+        has to beat it to mean anything.</p>` },
+
+    "alphabeta": { eyebrow: "Sperm α/β · the chart", title: "Which twin is α?",
+      html: `<p class="lede">The two-cell embryo has two blastomeres that look almost identical. Several independent "tests"
+        each nominate one of them as <b>alpha</b> — but a test only says "this one," not whether "this one" is the same twin
+        another test meant. The chart lines the tests up so you can see if they <b>agree</b>.</p>
+        ${figAB}<div class="help-cap">A = original blastomere labels 1+3, B = labels 2+4. Each row is a labeling method.</div>
+        <h3>The methods (so far)</h3>
+        <ul><li><b>Sperm entry</b> — the blastomere the sperm entered is called alpha.</li>
+        <li><b>Higher total transcript</b> — the blastomere with more transcripts is alpha.</li>
+        <li>(Harry's PCA / ratio-sum / exhaustive methods will slot in as more rows.)</li></ul>
+        <h3>Why the flips</h3>
+        <p>"Alpha vs beta" is just a name, and each method may pick the name in its own arbitrary direction. So each row can be
+        <b>flipped</b> (swap A↔B). <b>Auto-align</b> flips rows to make the columns as uniform as possible; a column where every
+        method agrees is a <b>confident consensus</b> call for that embryo. <b>Flip all</b> swaps the global sense; the
+        <b>consensus</b> row summarizes each column.</p>
+        <div class="help-callout">The goal of all of this: identify the division plane in the zygote and tell the two-cell
+        blastomeres apart — the same asymmetry, one stage later.</div>` },
+  };
+
+  // ---------- modal machinery ----------
+  let overlay;
+  function build() {
+    overlay = document.createElement("div");
+    overlay.className = "help-overlay";
+    overlay.innerHTML = `<div class="help-modal" role="dialog" aria-modal="true">
+      <div class="help-head"><div><div class="help-eyebrow" id="help-eyebrow"></div>
+        <div class="help-title" id="help-title"></div></div>
+        <button class="help-x" id="help-x" aria-label="Close">✕</button></div>
+      <div class="help-body" id="help-body"></div></div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+    overlay.querySelector("#help-x").addEventListener("click", close);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+  }
+  function open(key) {
+    const c = HELP[key]; if (!c) return;
+    if (!overlay) build();
+    overlay.querySelector("#help-eyebrow").textContent = c.eyebrow || "";
+    overlay.querySelector("#help-title").textContent = c.title || "";
+    overlay.querySelector("#help-body").innerHTML = c.html || "";
+    overlay.querySelector(".help-modal").scrollTop = 0;
+    overlay.classList.add("open");
+  }
+  function close() { if (overlay) overlay.classList.remove("open"); }
+
+  // delegate clicks from any [data-help] button (works for buttons added later too)
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-help]");
+    if (b) { e.preventDefault(); e.stopPropagation(); open(b.getAttribute("data-help")); }
+  });
+  window.Help = { open, close, has: (k) => k in HELP };
+})();

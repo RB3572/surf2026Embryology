@@ -151,6 +151,9 @@ def perm_pvals(a_obs, n, V_A, V_B, null_a):
 
 CIRC_W = 0.95          # balloon inflation weight: 0.95 = 95% toward the average-radius sphere (smooth, round)
 CIRC_NBIN = 22         # (theta) surface-grid resolution for the radial surface function
+CIRC_TOL = 0.05        # min sphericity: no direction may bulge more than ±5% off the average-radius
+                       # sphere. Any part that still deviates past this after the 95% pull is clamped
+                       # (circularized further) so residual lobes/spikes can't survive.
 RNG_C = np.random.default_rng(20260715)   # separate RNG so circ nulls don't shift the real p-values
 
 
@@ -199,6 +202,9 @@ def balloon(pos1, w=CIRC_W):
         # overshoot outward and stay lumpy) — this pulls protrusions onto the sphere.
         rho = np.minimum(r / np.maximum(Rs, 1e-9), 1.0)
         Rnew = (1 - w) * Rs + w * R_avg
+        # enforce a minimum sphericity: clamp any direction that still deviates past ±CIRC_TOL
+        # from the average-radius sphere, so a residual lobe/spike gets circularized further.
+        Rnew = np.clip(Rnew, R_avg * (1 - CIRC_TOL), R_avg * (1 + CIRC_TOL))
         return C + u * (rho * Rnew)[:, None]
 
     return fn, C, R_avg
@@ -315,6 +321,26 @@ def _circ_mesh(mesh, fn, zs):
     Pc = fn(P)
     vc = np.stack([Pc[:, 0] / XY_UM, Pc[:, 1] / XY_UM, (Pc[:, 2] / Z_UM) * zs], axis=1)
     return {"verts": [round(float(a), 1) for a in vc.ravel()], "faces": mesh["faces"]}
+
+
+def _circularize_outline(outline, tol=CIRC_TOL):
+    """Enforce a minimum sphericity on a circularized cross-section outline: clamp every
+    radius into a ±tol band around the median (fills inward notches, caps outward spikes —
+    e.g. the cleft where the polar body indents the cell body), then smooth circularly so
+    no residual jag survives. Angles are preserved; returns [[x,y]] in µm."""
+    if len(outline) < 8:
+        return outline
+    P = np.asarray(outline, float)
+    ang = np.arctan2(P[:, 1], P[:, 0])
+    r = np.hypot(P[:, 0], P[:, 1])
+    order = np.argsort(ang)
+    ang, r = ang[order], r[order]
+    Rmed = float(np.median(r))
+    r = np.clip(r, Rmed * (1.0 - tol), Rmed * (1.0 + tol))   # min sphericity: no notch/spike past ±tol
+    k = 4                                                     # circular moving average (wrap) to erase jags
+    rp = np.concatenate([r[-k:], r, r[:k]])
+    r = np.convolve(rp, np.ones(2 * k + 1) / (2 * k + 1), mode="same")[k:-k]
+    return [[round(float(rr * np.cos(a)), 2), round(float(rr * np.sin(a)), 2)] for a, rr in zip(ang, r)]
 
 
 def process(eid):
@@ -487,6 +513,12 @@ def process(eid):
     tx1_c = {g: (fn(P) if len(P) else P) for g, P in tx1.items()}
     analysis_c = analyze(pos1_c, com_c, pb_com, genes, tx1_c, voxvol, ex, zs, RNG_C)
     if analysis_c is not None:
+        # min-sphericity pass: the circularized cross-section can still carry an inward
+        # notch (the polar-body cleft measured from the whole-embryo centroid); clamp +
+        # smooth it into the sphericity band so no spike survives.
+        cs = analysis_c.get("cross_section")
+        if cs and cs.get("outline"):
+            cs["outline"] = _circularize_outline(cs["outline"])
         m1 = d["region_meshes"].get("1")
         scene["circ"] = {"analysis": analysis_c,
                          "transcripts": _circ_transcripts(tx, seg_of, fn),

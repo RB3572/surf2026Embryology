@@ -1,0 +1,65 @@
+/* Sperm α/β · 2-cell blastomere assignments — grid + flip controls */
+
+.ab-main { max-width: 1500px; margin: 0 auto; padding: 20px 26px 90px; }
+
+.ab-intro h1 { font-size: 20px; font-weight: 750; margin: 6px 0 8px; }
+.ab-intro p { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); max-width: 940px; }
+.ab-intro b { color: var(--ink); }
+.ab-flip-inline { display: inline-block; background: #eef1f5; border: 1px solid var(--line); border-radius: 5px;
+  padding: 0 5px; font-weight: 700; color: var(--ink-2); }
+
+.ab-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 12px 20px; margin: 16px 0 8px; }
+.ab-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 11.5px; color: var(--ink-2); }
+.ab-key { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.ab-sw { width: 20px; height: 18px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #fff; }
+
+.ab-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+.ab-btn { font-family: var(--sans); font-size: 12.5px; font-weight: 600; color: var(--ink);
+  padding: 7px 13px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); cursor: pointer; }
+.ab-btn:hover { border-color: #db2777; }
+.ab-btn-primary { background: #db2777; color: #fff; border-color: #db2777; }
+.ab-btn-primary:hover { background: #be1f66; border-color: #be1f66; }
+
+.ab-stage { margin-top: 26px; }
+.ab-stage-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.ab-stage-head h2 { font-size: 15px; font-weight: 700; }
+.ab-stage-sub { font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+/* horizontal scroller so many-column grids stay usable */
+.ab-scroll { overflow-x: auto; overflow-y: visible; padding-bottom: 4px;
+  border: 1px solid var(--line-2); border-radius: 12px; background: var(--surface); }
+.ab-grid { display: grid; grid-template-columns: var(--lw, 214px) repeat(var(--cols), var(--cw, 40px));
+  width: max-content; }
+.ab-lw { }
+
+/* row labels (sticky on the left while scrolling) */
+.ab-rowlabel { position: sticky; left: 0; z-index: 3; background: var(--surface);
+  display: flex; align-items: center; gap: 8px; padding: 0 10px 0 8px; height: 40px;
+  border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); }
+.ab-rowname { font-size: 12px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ab-flip { flex: none; width: 24px; height: 22px; border: 1px solid var(--line); border-radius: 6px;
+  background: #f3f4f7; color: var(--ink-2); font-size: 13px; cursor: pointer; line-height: 1; }
+.ab-flip:hover { border-color: #db2777; color: #db2777; }
+.ab-flip.on { background: #db2777; color: #fff; border-color: #db2777; }
+.ab-consensus-lab { border-top: 2px solid var(--line); background: color-mix(in srgb, #db2777 5%, var(--surface)); }
+.ab-consensus-lab .ab-rowname { font-weight: 700; }
+
+/* cells */
+.ab-cell { display: flex; align-items: center; justify-content: center; height: 40px;
+  font-weight: 700; font-size: 13px; color: #fff; border-right: 1px solid #fff; border-bottom: 1px solid #fff; }
+.c-A { background: #e0752f; }
+.c-B { background: #5c4d9e; }
+.c-T { background: #b7bac2; color: #2e313a; }
+.c-NA { background: #e9ebef; color: #a2a8b2; }
+.ab-cons { border-top: 2px solid var(--line); font-weight: 800; }
+.ab-cons.c-NA { color: #c2c7cf; }
+
+/* rotated embryo id labels along the bottom */
+.ab-corner { position: sticky; left: 0; z-index: 3; background: var(--surface); border-right: 1px solid var(--line-2); }
+.ab-collabel { position: relative; height: 150px; overflow: visible; }
+.ab-collabel span { position: absolute; top: 5px; right: 50%; transform-origin: right top; transform: rotate(-50deg);
+  white-space: nowrap; font-size: 10px; font-family: var(--mono); color: var(--ink-2); }
+
+.ab-loading { padding: 40px; text-align: center; color: var(--ink-soft); font-size: 13px; }

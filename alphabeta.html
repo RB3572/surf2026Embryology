@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sperm α/β · 2-cell blastomeres · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="alphabeta.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#db2777;box-shadow:0 0 0 4px color-mix(in srgb,#db2777 18%,transparent)"></span>
+      <span class="brand-name">Sperm&nbsp;α/β&nbsp;·&nbsp;2-cell</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+  </header>
+
+  <main class="ab-main">
+    <section class="ab-intro">
+      <h1>Which blastomere is α? Sperm entry vs. the other methods</h1>
+      <p>Each column is a 2-cell embryo; each row is a method that labels one blastomere
+        <b>alpha</b> and the other <b>beta</b>. A cell shows which <i>original</i> blastomere that
+        method calls alpha — <b>A</b> = segmentation labels&nbsp;1+3, <b>B</b> = labels&nbsp;2+4. The
+        alpha/beta <i>direction</i> is arbitrary per method, so use the row <span class="ab-flip-inline">⇄</span>
+        buttons (or <b>Auto-align</b>) to flip rows until the columns agree — an aligned column is a
+        consensus call for that embryo.</p>
+      <div class="ab-controls">
+        <div class="ab-legend" id="ab-legend"></div>
+        <div class="ab-buttons">
+          <button id="ab-auto" class="ab-btn ab-btn-primary" title="Flip rows to make the columns as uniform as possible">Auto-align rows</button>
+          <button id="ab-flipall" class="ab-btn" title="Flip every row at once (swap all A↔B)">Flip all</button>
+          <button id="ab-reset" class="ab-btn" title="Undo all flips">Reset</button>
+          <button id="ab-csv" class="ab-btn" title="Download the current assignments as CSV">Export CSV</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="ab-stage" id="stage-early">
+      <div class="ab-stage-head"><h2>Early 2-cell</h2><span class="ab-stage-sub" id="sub-early"></span></div>
+      <div class="ab-scroll"><div class="ab-grid" id="grid-early"></div></div>
+    </section>
+
+    <section class="ab-stage" id="stage-late">
+      <div class="ab-stage-head"><h2>Late 2-cell</h2><span class="ab-stage-sub" id="sub-late"></span></div>
+      <div class="ab-scroll"><div class="ab-grid" id="grid-late"></div></div>
+    </section>
+
+    <div class="ab-loading" id="ab-loading">Loading…</div>
+  </main>
+
+  <script src="alphabeta.js"></script>
+</body>
+</html>

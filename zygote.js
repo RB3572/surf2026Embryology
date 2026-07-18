@@ -34,6 +34,7 @@
   const xsBody = $("#xs-body"), xsPb = $("#xs-pb"), xsPronuclei = $("#xs-pronuclei");
   const xsCrossLegend = $("#xs-cross-legend"), xsCrossDownload = $("#xs-cross-download");
   const xsCrossHighColor = $("#xs-cross-high-color"), xsCrossLowColor = $("#xs-cross-low-color");
+  const xsCrossFillColor = $("#xs-cross-fill-color");
   const xsCrossBodyColor = $("#xs-cross-body-color"), xsCrossPbColor = $("#xs-cross-pb-color");
   const xsCrossPnColor = $("#xs-cross-pn-color"), xsCrossScale = $("#xs-cross-scale"), xsCrossFormat = $("#xs-cross-format");
   const xsBarLog = $("#xs-bar-log"), xsBarLegend = $("#xs-bar-legend"), xsBarNull = $("#xs-bar-null");
@@ -330,7 +331,7 @@
       const rel = [v[i * 3] * XY - basis.com[0], v[i * 3 + 1] * XY - basis.com[1], v[i * 3 + 2] / zs - basis.com[2]];
       pts[i] = { x: dot3(rel, basis.normal), y: dot3(rel, basis.axis), d: dot3(rel, basis.depth) };
     }
-    const xs = [], ys = [], eps = 1e-7;
+    const segments = [], eps = 1e-7;
     for (let i = 0; i < f.length; i += 3) {
       const tri = [pts[f[i]], pts[f[i + 1]], pts[f[i + 2]]], hits = [];
       for (let e = 0; e < 3; e++) {
@@ -348,7 +349,44 @@
         const d = Math.hypot(unique[q][0] - unique[r][0], unique[q][1] - unique[r][1]);
         if (d > far) { far = d; a = unique[q]; b = unique[r]; }
       }
-      xs.push(a[0], b[0], null); ys.push(a[1], b[1], null);
+      segments.push([a, b]);
+    }
+    // Adjacent mesh triangles meet at the same interpolated points. Quantize those
+    // endpoints and walk the resulting graph to recover closed cross-section loops.
+    const nodes = new Map(), keyOf = (p) => `${p[0].toFixed(3)},${p[1].toFixed(3)}`;
+    const nodeFor = (p) => {
+      const key = keyOf(p);
+      if (!nodes.has(key)) nodes.set(key, { key, x: p[0], y: p[1], links: new Set() });
+      return nodes.get(key);
+    };
+    for (const [pa, pb] of segments) {
+      const a = nodeFor(pa), b = nodeFor(pb); if (a.key === b.key) continue;
+      a.links.add(b.key); b.links.add(a.key);
+    }
+    const edgeKey = (a, b) => a < b ? `${a}|${b}` : `${b}|${a}`, used = new Set(), paths = [];
+    for (const start of nodes.values()) for (const first of start.links) {
+      if (used.has(edgeKey(start.key, first))) continue;
+      const path = [[start.x, start.y]]; let current = start.key, next = first;
+      for (let guard = 0; guard < nodes.size + 2; guard++) {
+        used.add(edgeKey(current, next));
+        const n = nodes.get(next); path.push([n.x, n.y]);
+        if (next === start.key) break;
+        const options = [...n.links].filter((k) => !used.has(edgeKey(next, k)));
+        if (!options.length) break;
+        current = next; next = options[0];
+      }
+      if (path.length < 4) continue;
+      const d = Math.hypot(path[0][0] - path[path.length - 1][0], path[0][1] - path[path.length - 1][1]);
+      if (d > 0.01) path.push(path[0]);
+      let area = 0;
+      for (let i = 0; i < path.length - 1; i++) area += path[i][0] * path[i + 1][1] - path[i + 1][0] * path[i][1];
+      if (Math.abs(area) > 0.02) paths.push(path);
+    }
+    paths.sort((a, b) => b.length - a.length);
+    const xs = [], ys = [];
+    for (const path of paths) {
+      for (const p of path) { xs.push(p[0]); ys.push(p[1]); }
+      xs.push(null); ys.push(null);
     }
     return { x: xs, y: ys };
   }
@@ -374,17 +412,18 @@
     const s = state.scene, A = curA(), g = gene(), basis = sectionBasis();
     const pb = Number(A.polar_body_label), pns = pronucleusLabels(); syncPronucleusControls(pns);
     const traces = [], limits = [];
-    const addOutline = (label, name, color, width, visible) => {
+    const addOutline = (label, name, color, width, opacity, visible) => {
       if (!visible) return;
       const mesh = (label === 1 && state.circ && s.circ && s.circ.mesh1) ? s.circ.mesh1 : s.region_meshes[String(label)];
       const sec = projectedMeshSection(mesh, basis); if (!sec.x.length) return;
       sec.x.forEach((x, i) => { if (x != null) limits.push(Math.abs(x), Math.abs(sec.y[i])); });
       traces.push({ type: "scatter", mode: "lines", x: sec.x, y: sec.y, name,
+        fill: "toself", fillcolor: hexAlpha(xsCrossFillColor.value, opacity),
         line: { color, width }, hoverinfo: "name", showlegend: xsCrossLegend.checked });
     };
-    addOutline(1, "Cell outline", xsCrossBodyColor.value, 2.4, xsBody.checked);
-    addOutline(pb, "Polar body", xsCrossPbColor.value, 2.2, xsPb.checked);
-    pns.forEach((label, i) => addOutline(label, `Pronucleus ${i + 1}`, xsCrossPnColor.value, 1.8, state.pronucleusVisible[label] !== false));
+    addOutline(1, "Cell outline", xsCrossBodyColor.value, 1.8, 0.14, xsBody.checked);
+    addOutline(pb, "Polar body", xsCrossPbColor.value, 1.5, 0.34, xsPb.checked);
+    pns.forEach((label, i) => addOutline(label, `Pronucleus ${i + 1}`, xsCrossPnColor.value, 1.35, 0.30, state.pronucleusVisible[label] !== false));
     const t = curTX()[g], sideA = { x: [], y: [] }, sideB = { x: [], y: [] };
     if (t) for (let i = 0; i < t.x.length; i++) {
       if (t.s1 && !t.s1[i]) continue;
@@ -392,7 +431,7 @@
       const x = dot3(rel, basis.normal), y = dot3(rel, basis.axis), dst = x > 0 ? sideA : sideB;
       dst.x.push(x); dst.y.push(y); limits.push(Math.abs(x), Math.abs(y));
     }
-    traces.unshift(
+    traces.push(
       { type: "scattergl", mode: "markers", x: sideA.x, y: sideA.y, name: "Side A transcripts",
         marker: { color: xsCrossHighColor.value, size: 3, opacity: 0.58 }, hoverinfo: "skip", showlegend: xsCrossLegend.checked },
       { type: "scattergl", mode: "markers", x: sideB.x, y: sideB.y, name: "Side B transcripts",
@@ -439,29 +478,52 @@
       xsBarSub.textContent = `· ${g}`;
       return;
     }
-    const x = rows.map((r) => r.label), traces = [
-      { type: "bar", name: "Higher-count half", x, y: rows.map((r) => r.high), width: 0.46,
-        marker: { color: xsBarHighColor.value, line: { width: 0 } }, hovertemplate: "%{x}<br>higher half %{y}<extra></extra>" },
-      { type: "bar", name: "Lower-count half", x, y: rows.map((r) => r.low), base: rows.map((r) => r.high), width: 0.46,
-        marker: { color: xsBarLowColor.value, line: { width: 0 } }, hovertemplate: "%{x}<br>lower half %{y}<extra></extra>" },
-    ];
-    if (xsBarNull.checked) traces.push({ type: "bar", name: "Null mean", x, y: rows.map((r) => r.nullMean), width: 0.72,
-      opacity: 0.52, marker: { color: xsBarNullColor.value, line: { color: xsBarNullColor.value, width: 0.8 } },
-      hovertemplate: "%{x}<br>null mean %{y:.1f}<extra></extra>" });
+    const x = rows.map((_, i) => i), baseline = xsBarLog.checked ? 1 : 0, shapes = [], traces = [];
+    rows.forEach((r, i) => {
+      // Shape rectangles use absolute data coordinates. Plotly's bar `base` is
+      // ambiguous on logarithmic axes and can render a second colored section.
+      if (xsBarNull.checked) shapes.push({ type: "rect", xref: "x", yref: "y", layer: "below",
+        x0: i - 0.36, x1: i + 0.36, y0: baseline, y1: r.nullMean,
+        fillcolor: hexAlpha(xsBarNullColor.value, 0.46), line: { color: "#5f666d", width: 0.7 } });
+      shapes.push(
+        { type: "rect", xref: "x", yref: "y", layer: "above", x0: i - 0.23, x1: i + 0.23,
+          y0: baseline, y1: r.high, fillcolor: xsBarHighColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } },
+        { type: "rect", xref: "x", yref: "y", layer: "above", x0: i - 0.23, x1: i + 0.23,
+          y0: r.high, y1: r.total, fillcolor: xsBarLowColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } }
+      );
+    });
+    if (xsBarLegend.checked) {
+      traces.push(
+        { type: "scatter", mode: "markers", name: "Higher-count half", legendrank: 10, x: [null], y: [null],
+          marker: { symbol: "square", size: 11, color: xsBarHighColor.value }, hoverinfo: "skip" },
+        { type: "scatter", mode: "markers", name: "Lower-count half", legendrank: 20, x: [null], y: [null],
+          marker: { symbol: "square", size: 11, color: xsBarLowColor.value }, hoverinfo: "skip" }
+      );
+      if (xsBarNull.checked) traces.push({ type: "scatter", mode: "markers", name: "Null mean", legendrank: 30,
+        x: [null], y: [null], marker: { symbol: "square", size: 11, color: hexAlpha(xsBarNullColor.value, 0.6) }, hoverinfo: "skip" });
+    }
     if (xsBarInterval.checked) traces.push({ type: "scatter", mode: "markers", name: "95% null interval", x,
+      legendrank: 40,
       y: rows.map((r) => r.nullMean), marker: { size: 1, color: "rgba(0,0,0,0)" },
       error_y: { type: "data", symmetric: false, array: rows.map((r) => r.nullHigh - r.nullMean),
         arrayminus: rows.map((r) => r.nullMean - r.nullLow), color: "#111827", thickness: 1.5, width: 4 },
       hovertemplate: "%{x}<br>95% null interval<extra></extra>" });
+    traces.push({ type: "scatter", mode: "markers", showlegend: false, x, y: rows.map((r) => r.total),
+      customdata: rows.map((r) => [r.label, r.high, r.low, r.total, r.nullMean, r.nullLow, r.nullHigh]),
+      marker: { size: 24, color: "rgba(0,0,0,0)" },
+      hovertemplate: "%{customdata[0]}<br>higher half %{customdata[1]}<br>lower half %{customdata[2]}" +
+        "<br>total %{customdata[3]}<br>null %{customdata[4]:.1f} (%{customdata[5]}–%{customdata[6]})<extra></extra>" });
     xsBarSub.textContent = `· ${g} · ${rows.length} zygotes`;
     const maxY = Math.max(...rows.map((r) => Math.max(r.total, r.nullHigh))) * 1.18;
     plotInto(xsBars, traces, {
-      barmode: "overlay", margin: { l: 56, r: 10, t: xsBarLegend.checked ? 48 : 8, b: 92 }, height: xsBars.clientHeight || 330,
+      shapes, margin: { l: 56, r: 10, t: xsBarLegend.checked ? 48 : 8, b: 92 }, height: xsBars.clientHeight || 330,
       showlegend: xsBarLegend.checked,
       legend: { orientation: "h", x: 0, y: 1.02, xanchor: "left", yanchor: "bottom", font: { size: 9 } },
-      xaxis: { fixedrange: false, tickangle: -48, tickfont: { size: 8 }, automargin: true },
+      xaxis: { fixedrange: false, tickmode: "array", tickvals: x, ticktext: rows.map((r) => r.label),
+        range: [-0.55, rows.length - 0.45], tickangle: -48, tickfont: { size: 8 }, automargin: true },
       yaxis: { title: { text: `${g} transcript count`, font: { size: 10 } }, tickfont: { size: 9 },
                type: xsBarLog.checked ? "log" : "linear", range: xsBarLog.checked ? [0, Math.log10(maxY)] : [0, maxY],
+               dtick: xsBarLog.checked ? 1 : undefined,
                gridcolor: xsBarGrid.checked ? "#e2e5e8" : "rgba(0,0,0,0)", fixedrange: false },
       paper_bgcolor: "transparent", plot_bgcolor: "transparent",
     }, XS_CFG);
@@ -588,7 +650,7 @@
     rz.addEventListener("pointerup", end); rz.addEventListener("pointercancel", end);
     // Cross-embryo criterion and publication-plot settings.
     xsPlane.addEventListener("change", () => { state.crossKey = xsPlane.value; if (state.agg) renderCrossAgg(); });
-    [xsBody, xsPb, xsCrossLegend, xsCrossHighColor, xsCrossLowColor, xsCrossBodyColor, xsCrossPbColor, xsCrossPnColor]
+    [xsBody, xsPb, xsCrossLegend, xsCrossHighColor, xsCrossLowColor, xsCrossFillColor, xsCrossBodyColor, xsCrossPbColor, xsCrossPnColor]
       .forEach((el) => el.addEventListener("change", renderCurrentCrossSection));
     [xsBarLog, xsBarLegend, xsBarNull, xsBarInterval, xsBarGrid, xsBarHighColor, xsBarLowColor, xsBarNullColor]
       .forEach((el) => el.addEventListener("change", renderBars));

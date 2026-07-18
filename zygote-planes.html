@@ -78,7 +78,7 @@
     <div class="placeholder" id="placeholder">
       <div class="ph-inner">
         <div class="ph-title">Select a zygote</div>
-        <div class="ph-sub">Choose one of the 60 zygotes above to view its body, the
+        <div class="ph-sub">Choose a zygote above to view its body, the
           polar-body axis, the 18 candidate division planes, and a gene's
           transcripts split across the selected plane.</div>
       </div>
@@ -88,45 +88,73 @@
     </div>
   </main>
 
-  <!-- Bottom drawer: cross-section -->
+  <!-- Bottom drawer: publication-ready plots for the selected gene and plane -->
   <section class="drawer" id="drawer" data-open="false" hidden>
     <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
     <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
-      <span class="drawer-title">All embryos <span class="drawer-gene" id="drawer-emb"></span></span>
-      <span class="drawer-hint">aligned cross-sections + per-side counts across all zygotes</span>
+      <span class="drawer-title">Analysis plots <span class="drawer-gene" id="drawer-emb"></span></span>
+      <span class="drawer-hint">current-plane cross-section + selected-gene counts across all zygotes</span>
       <span class="drawer-chevron" aria-hidden="true"></span>
     </button>
     <div class="drawer-body" id="drawer-body">
       <div class="xs-controls">
-        <label class="ctl"><span class="ctl-label">Align to best plane</span>
+        <label class="ctl"><span class="ctl-label">Compare each zygote at</span>
           <select id="xs-plane">
             <option value="pVol">Min p · vol</option>
             <option value="pCnt">Min p · count</option>
             <option value="diffVol">Max Δ · vol</option>
             <option value="diffCnt">Max Δ · count</option>
           </select></label>
-        <label class="ctl"><span class="ctl-label">Orient by gene (enriched side → right)</span>
-          <select id="xs-align" aria-label="Alignment gene"></select></label>
         <span class="xs-note" id="xs-note"></span>
       </div>
       <div class="xs-visuals">
         <div class="xs-block xs-block-main">
-          <div class="mini-title" style="position:relative">Aligned cross-sections · all zygotes<button class="help-btn help-corner" data-help="division-crossembryo" aria-label="What is this?">?</button>
-            <span class="mini-sub" id="xs-caption"></span>
-            <span class="xs-hint" aria-hidden="true">scroll to zoom · drag to pan · double-click to reset</span>
+          <div class="plot-head">
+            <div class="mini-title">Current-plane cross-section <span class="mini-sub" id="xs-caption"></span></div>
+            <button class="plot-download" id="xs-cross-download" type="button" title="Download high-resolution cross-section" aria-label="Download high-resolution cross-section">↓</button>
           </div>
           <div class="xs-otoggles">
-            <label class="xs-tg" title="show/hide the average outline"><input type="checkbox" id="xs-mean" checked><span>mean outline</span></label>
-            <label class="xs-tg" title="hide every outline except the zygote you're viewing"><input type="checkbox" id="xs-only"><span>only this embryo</span></label>
-            <span class="xs-sigkey" title="each outline is coloured by how significantly that zygote's transcriptome splits at its best plane (permutation p, log scale)">
-              <span class="xs-sk-lab">significant</span><span class="xs-sk-bar"></span><span class="xs-sk-lab">n.s.</span>
-            </span>
-            <span class="xs-sk-cur"><i class="xs-sw-cur"></i>current</span>
+            <label class="xs-tg"><input type="checkbox" id="xs-body" checked><span>cell outline</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-pb" checked><span>polar body</span></label>
+            <span id="xs-pronuclei" class="xs-dynamic-toggles"></span>
+            <label class="xs-tg"><input type="checkbox" id="xs-cross-legend" checked><span>legend</span></label>
           </div>
+          <details class="plot-settings" id="xs-cross-settings">
+            <summary>Export settings</summary>
+            <div class="settings-grid">
+              <label>Side A <input type="color" id="xs-cross-high-color" value="#2563eb"></label>
+              <label>Side B <input type="color" id="xs-cross-low-color" value="#dc2626"></label>
+              <label>Cell <input type="color" id="xs-cross-body-color" value="#111827"></label>
+              <label>Polar body <input type="color" id="xs-cross-pb-color" value="#7c3aed"></label>
+              <label>Pronuclei <input type="color" id="xs-cross-pn-color" value="#059669"></label>
+              <label>Resolution <select id="xs-cross-scale"><option value="2">2×</option><option value="4" selected>4×</option></select></label>
+              <label>Format <select id="xs-cross-format"><option value="png">PNG</option><option value="svg">SVG</option></select></label>
+            </div>
+          </details>
           <div id="xs-outlines" class="xs-plot xs-plot-outlines"></div>
         </div>
         <div class="xs-block xs-block-side">
-          <div class="mini-title">Per-side counts <span class="mini-sub" id="xs-bar-sub"></span></div>
+          <div class="plot-head">
+            <div class="mini-title">Per-side counts <span class="mini-sub" id="xs-bar-sub"></span></div>
+            <button class="plot-download" id="xs-bar-download" type="button" title="Download high-resolution count chart" aria-label="Download high-resolution count chart">↓</button>
+          </div>
+          <div class="xs-otoggles">
+            <label class="xs-tg"><input type="checkbox" id="xs-bar-log" checked><span>log y axis</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-bar-legend" checked><span>legend</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-bar-null" checked><span>null mean</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-bar-interval" checked><span>95% null interval</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-bar-grid" checked><span>grid</span></label>
+          </div>
+          <details class="plot-settings" id="xs-bar-settings">
+            <summary>Export settings</summary>
+            <div class="settings-grid">
+              <label>Higher half <input type="color" id="xs-bar-high-color" value="#2563eb"></label>
+              <label>Lower half <input type="color" id="xs-bar-low-color" value="#dc2626"></label>
+              <label>Null <input type="color" id="xs-bar-null-color" value="#7f858c"></label>
+              <label>Resolution <select id="xs-bar-scale"><option value="2">2×</option><option value="4" selected>4×</option></select></label>
+              <label>Format <select id="xs-bar-format"><option value="png">PNG</option><option value="svg">SVG</option></select></label>
+            </div>
+          </details>
           <div id="xs-bars" class="xs-plot"></div>
         </div>
       </div>

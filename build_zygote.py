@@ -7,15 +7,16 @@ division plane through the embryo→polar-body axis describes each gene's spatia
 distribution.
 
 Geometry (physical µm space; xy = px·0.15, z = frame·1.0):
-  * embryo COM     = centroid of ALL segmented voxels (labels 1–5)
-  * polar body COM = centroid of segment 2 (small peripheral body)
+  * embryo COM     = centroid of ALL segmented voxels
+  * polar body COM = centroid of the most peripheral segmented object that lies
+                     outside the filled segment-1 cell body
   * axis           = unit(COM → polar-body COM)
   * 18 planes, each CONTAINS the axis, rotated 10° about it (0°,10°,…,170°).
     Plane k normal nₖ = cosθ·u + sinθ·v (u,v ⊥ axis). Side of point p =
     sign((p−COM)·nₖ).
 
-Only SEGMENT 1 (the cell body) counts: transcripts inside the polar body (label 2)
-or the pronuclei (labels 3–5) are excluded from every count, and the per-side
+Only SEGMENT 1 (the cell body) counts: transcripts inside the polar body or the
+pronuclei are excluded from every count, and the per-side
 VOLUME used for normalization is the volume of segment 1 on that side only.
 
 Per plane we get, per side, the segment-1 VOLUME (label-1 voxels on that side) and,
@@ -41,12 +42,14 @@ from collections import Counter
 
 import numpy as np
 import tifffile
+from scipy.ndimage import binary_fill_holes
+from scipy.spatial import ConvexHull
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ATLAS = "/Users/rishib/Desktop/MERFISH/Website2/MerfishAtlasWebsite/public/data/Zygote"
 SRC = os.path.join(HERE, "..", "TranscriptomicsData", "JustTifAndCSVData", "Zygote")
-OUT_DIR = os.path.join(HERE, "public", "data", "zygote")
-OUT_MANIFEST = os.path.join(HERE, "public", "data", "zygote_manifest.json")
+OUT_DIR = os.path.join(HERE, "data", "zygote")
+OUT_MANIFEST = os.path.join(HERE, "data", "zygote_manifest.json")
 
 XY_UM = 0.15          # µm per pixel
 Z_UM = 1.0            # µm per frame
@@ -59,6 +62,15 @@ SLAB_UM = 6.0         # cross-section slab half-thickness (µm)
 N_ANG = 120           # angular bins for the cross-section outline
 RNG = np.random.default_rng(20260707)
 
+# Independent cell-mask and mesh checks determine whether a candidate is external.
+# Distances are in physical micrometres.
+PB_OUTSIDE_TOL_UM = 0.75
+PB_MIN_OUTSIDE_FRACTION = 0.02
+PB_MIN_MAX_DISTANCE_UM = 1.5
+PB_MAX_INSIDE_FRACTION = 0.5
+PB_MIN_RADIAL_RATIO = 0.6
+PB_SURFACE_CONE_DEG = 20.0
+
 
 def unit(v):
     n = np.linalg.norm(v)
@@ -69,7 +81,8 @@ def mask_and_transcripts(label_path, tx, genes):
     """From the label TIFF, return (a) downsampled nonzero voxel positions (µm),
     their segment labels, and the per-voxel volume, and (b) `seg_of`: the segment
     label under every transcript (full-res nearest-voxel lookup), per gene.
-    Segment 1 = cell body; 2 = polar body; 3–5 = pronuclei."""
+    Segment 1 is the cell body. Other label identities vary by embryo and must
+    be inferred from geometry rather than label number."""
     with tifffile.TiffFile(label_path) as t:
         mm = t.series[0].asarray(out="memmap")            # (Z, Y, X)
         Zn, Yn, Xn = mm.shape
@@ -93,10 +106,112 @@ def mask_and_transcripts(label_path, tx, genes):
         del mm
     iz, iy, ix = np.nonzero(sub)
     labels = sub[iz, iy, ix].astype(np.int16)
+    cell_envelope = binary_fill_holes(sub == 1)
+    inside_fractions = {}
+    for label in np.unique(labels):
+        if label == 1:
+            continue
+        segment = sub == label
+        inside_fractions[int(label)] = float((segment & cell_envelope).sum() / segment.sum())
     # full-res index → µm position
     pos = np.stack([ix * DS_XY * XY_UM, iy * DS_XY * XY_UM, iz * DS_Z * Z_UM], axis=1)
     voxel_vol = (DS_XY * XY_UM) ** 2 * (DS_Z * Z_UM)      # µm³ per downsampled voxel
-    return pos.astype(np.float32), labels, voxel_vol, seg_of
+    return pos.astype(np.float32), labels, voxel_vol, seg_of, inside_fractions
+
+
+def mesh_vertices_um(mesh, z_scale):
+    """Convert an atlas render mesh from plot coordinates to physical µm."""
+    vertices = np.asarray(mesh["verts"], dtype=float).reshape(-1, 3).copy()
+    vertices[:, 0] *= XY_UM
+    vertices[:, 1] *= XY_UM
+    vertices[:, 2] = vertices[:, 2] / z_scale * Z_UM
+    return vertices
+
+
+def detect_polar_body(scene, labels, z_scale, inside_fractions):
+    """Return the most peripheral segment demonstrably outside the cell body.
+
+    The filled 3-D segment-1 mask distinguishes enclosed pronuclear cavities from
+    background-connected objects. A convex-hull and directional-radius check then
+    guards against small segmentation leaks and identifies the most peripheral
+    valid object. No label number is assumed.
+    Returns ``(label, diagnostics)`` or ``(None, diagnostics)`` when the scene has
+    no defensible external segment; callers must fail closed in that case.
+    """
+    region_meshes = scene.get("region_meshes", {})
+    body_mesh = region_meshes.get("1")
+    if not body_mesh:
+        return None, {"reason": "missing cell-body mesh", "candidates": []}
+
+    body_vertices = mesh_vertices_um(body_mesh, z_scale)
+    if len(body_vertices) < 4:
+        return None, {"reason": "insufficient cell-body mesh", "candidates": []}
+    try:
+        hull = ConvexHull(body_vertices, qhull_options="QJ")
+    except Exception as exc:  # noqa: BLE001
+        return None, {"reason": f"cell-body hull failed: {exc}", "candidates": []}
+
+    plane_normals = hull.equations[:, :3]
+    plane_offsets = hull.equations[:, 3]
+    body_center = body_vertices.mean(axis=0)
+    body_delta = body_vertices - body_center
+    body_radius = np.linalg.norm(body_delta, axis=1)
+    body_directions = body_delta / np.maximum(body_radius[:, None], 1e-9)
+    label_counts = Counter(int(label) for label in labels)
+    candidates = []
+    for label in sorted(label_counts):
+        if label == 1:
+            continue
+        mesh = region_meshes.get(str(label))
+        if not mesh:
+            continue
+        vertices = mesh_vertices_um(mesh, z_scale)
+        # Positive signed distance means a point is beyond at least one hull face.
+        signed = np.max(plane_normals @ vertices.T + plane_offsets[:, None], axis=0)
+        outside_fraction = float(np.mean(signed > PB_OUTSIDE_TOL_UM))
+        max_outside_um = float(np.max(signed))
+        hull_external = (
+            outside_fraction >= PB_MIN_OUTSIDE_FRACTION
+            or max_outside_um >= PB_MIN_MAX_DISTANCE_UM
+        )
+        candidate_delta = vertices.mean(axis=0) - body_center
+        candidate_radius = float(np.linalg.norm(candidate_delta))
+        direction = candidate_delta / max(candidate_radius, 1e-9)
+        directional = body_radius[
+            body_directions @ direction > np.cos(np.deg2rad(PB_SURFACE_CONE_DEG))
+        ]
+        surface_radius = float(
+            np.percentile(directional, 90) if len(directional) >= 10 else np.percentile(body_radius, 90)
+        )
+        radial_ratio = candidate_radius / max(surface_radius, 1e-9)
+        inside_fraction = float(inside_fractions.get(int(label), 1.0))
+        is_external = (
+            inside_fraction < PB_MAX_INSIDE_FRACTION
+            and (hull_external or radial_ratio >= PB_MIN_RADIAL_RATIO)
+        )
+        candidates.append({
+            "label": int(label),
+            "voxel_count": int(label_counts[label]),
+            "inside_cell_fraction": round(inside_fraction, 4),
+            "radial_ratio": round(radial_ratio, 4),
+            "outside_fraction": round(outside_fraction, 4),
+            "max_outside_um": round(max_outside_um, 3),
+            "external": bool(is_external),
+        })
+
+    external = [candidate for candidate in candidates if candidate["external"]]
+    if not external:
+        return None, {"reason": "no segment passes outside-cell geometry checks", "candidates": candidates}
+    selected = max(
+        external,
+        key=lambda candidate: (
+            candidate["radial_ratio"],
+            candidate["outside_fraction"],
+            candidate["max_outside_um"],
+            candidate["voxel_count"],
+        ),
+    )
+    return int(selected["label"]), {"reason": "most peripheral external segment", "candidates": candidates}
 
 
 def plane_normals(u, v):
@@ -356,18 +471,22 @@ def process(eid):
     tx = d.get("transcripts", {})
     genes = sorted(tx.keys(), key=lambda g: -d.get("gene_totals", {}).get(g, 0))
 
-    pos, labels, voxvol, seg_of = mask_and_transcripts(lab[0], tx, genes)   # µm
-    if 2 not in labels or 1 not in labels:
+    pos, labels, voxvol, seg_of, inside_fractions = mask_and_transcripts(lab[0], tx, genes)   # µm
+    if 1 not in labels:
+        return None
+    polar_body_label, polar_body_detection = detect_polar_body(d, labels, zs, inside_fractions)
+    if polar_body_label is None:
+        print(f"  -- {eid}: {polar_body_detection['reason']}")
         return None
     com = pos.mean(axis=0)                                    # all voxels (µm)
-    pb_com = pos[labels == 2].mean(axis=0)                    # segment 2 (µm)
+    pb_com = pos[labels == polar_body_label].mean(axis=0)     # external segment (µm)
     a = unit(pb_com - com)
     ref = np.array([0.0, 0.0, 1.0]) if abs(a[2]) < 0.9 else np.array([1.0, 0.0, 0.0])
     u = unit(np.cross(a, ref)); v = unit(np.cross(a, u))
     th, normals, m = plane_normals(u, v)
 
-    # per-plane volumes: SEGMENT 1 (cell body) voxels per side only — the polar
-    # body and pronuclei are excluded from the volume normalization.
+    # Per-plane volumes use SEGMENT 1 only. The geometry-selected polar body and
+    # all internal segments are excluded from volume normalization.
     pos1 = pos[labels == 1]
     proj = (pos1 - com) @ normals.T                          # (Nvox1, K)
     volA = (proj > 0).sum(axis=0).astype(float) * voxvol
@@ -467,8 +586,8 @@ def process(eid):
             "dmVol": round(float(diff_vol_norm[k]), 7),
             "dmCnt": round(float(diff_cnt_norm[k]), 5),
         })
-    # Cross-section of the CYTOPLASM ONLY (segment 1). Everything else — polar body (2),
-    # pronuclei (3–4), and any extra peripheral bodies / 2nd polar body (5–6) — is excluded,
+    # Cross-section of the CYTOPLASM ONLY (segment 1). Everything else — polar body,
+    # pronuclei, and any extra peripheral bodies — is excluded,
     # so the outline is the embryo cell boundary with no external blobs bulging it out.
     outline = cross_section_outline(pos[labels == 1], com, a, u, v)
 
@@ -484,6 +603,8 @@ def process(eid):
             "com_plot": [round(c, 2) for c in com_plot],
             "com_um": [round(float(c), 4) for c in com],
             "pb_plot": [round(c, 2) for c in pb_plot],
+            "polar_body_label": int(polar_body_label),
+            "polar_body_detection": polar_body_detection,
             "axis_plot": [round(x, 5) for x in [a[0] / XY_UM, a[1] / XY_UM, a[2] * zs]],
             "planes": planes_geo,
             "best_planes": best_planes,
@@ -625,6 +746,7 @@ def main():
             "n_genes": len(scene["genes"]),
             "n_transcripts": sum(len(t["x"]) for t in scene["transcripts"].values()),
             "size_kb": round(os.path.getsize(out) / 1024),
+            "polar_body_label": scene["analysis"]["polar_body_label"],
             "best_planes": bp,
         })
         agg_entries.append(agg_entry(eid, label, scene["analysis"]))
@@ -636,10 +758,10 @@ def main():
     agg_entries.sort(key=lambda e: e["id"])
     with open(OUT_MANIFEST, "w") as fh:
         json.dump({"embryos": manifest, "n_planes": N_PLANES, "step_deg": STEP_DEG}, fh, indent=1)
-    write_cross_aggregate(agg_entries, os.path.join(HERE, "public", "data", "zygote_cross.json.gz"))
+    write_cross_aggregate(agg_entries, os.path.join(HERE, "data", "zygote_cross.json.gz"))
     if agg_circ:
         agg_circ.sort(key=lambda e: e["id"])
-        write_cross_aggregate(agg_circ, os.path.join(HERE, "public", "data", "zygote_cross_circ.json.gz"))
+        write_cross_aggregate(agg_circ, os.path.join(HERE, "data", "zygote_cross_circ.json.gz"))
     tot = sum(m["size_kb"] for m in manifest)
     print(f"\nwrote {len(manifest)} zygotes  ({tot/1024:.1f} MB)")
 

@@ -1,5 +1,5 @@
 /* Zygote Division Planes — analysis model.
- * Built on viewer-core.js (VCore): 60 zygotes, the polar-body axis, 18 candidate
+ * Built on viewer-core.js (VCore): validated zygotes, the polar-body axis, 18 candidate
  * division planes, per-gene transcript split (blue/red) across the selected plane,
  * a counts+null chart, best-plane tables, and a cross-section plot. All statistics
  * are pre-computed (build_zygote.py); the UI only reads them.
@@ -28,18 +28,25 @@
   const drawer = $("#drawer"), drawerHandle = $("#drawer-handle"), drawerBody = $("#drawer-body");
   const drawerEmb = $("#drawer-emb");
   const pcolorMode = $("#pcolor-mode");
-  const xsPlane = $("#xs-plane"), xsAlign = $("#xs-align"), xsNote = $("#xs-note");
+  const xsPlane = $("#xs-plane"), xsNote = $("#xs-note");
   const xsCaption = $("#xs-caption"), xsBarSub = $("#xs-bar-sub");
   const xsOutlines = $("#xs-outlines"), xsBars = $("#xs-bars");
-  const xsMean = $("#xs-mean"), xsOnly = $("#xs-only");
+  const xsBody = $("#xs-body"), xsPb = $("#xs-pb"), xsPronuclei = $("#xs-pronuclei");
+  const xsCrossLegend = $("#xs-cross-legend"), xsCrossDownload = $("#xs-cross-download");
+  const xsCrossHighColor = $("#xs-cross-high-color"), xsCrossLowColor = $("#xs-cross-low-color");
+  const xsCrossBodyColor = $("#xs-cross-body-color"), xsCrossPbColor = $("#xs-cross-pb-color");
+  const xsCrossPnColor = $("#xs-cross-pn-color"), xsCrossScale = $("#xs-cross-scale"), xsCrossFormat = $("#xs-cross-format");
+  const xsBarLog = $("#xs-bar-log"), xsBarLegend = $("#xs-bar-legend"), xsBarNull = $("#xs-bar-null");
+  const xsBarInterval = $("#xs-bar-interval"), xsBarGrid = $("#xs-bar-grid"), xsBarDownload = $("#xs-bar-download");
+  const xsBarHighColor = $("#xs-bar-high-color"), xsBarLowColor = $("#xs-bar-low-color");
+  const xsBarNullColor = $("#xs-bar-null-color"), xsBarScale = $("#xs-bar-scale"), xsBarFormat = $("#xs-bar-format");
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
   const rtabsEl = $("#rtabs"), bestListEl = $("#best-list");
 
   const state = {
     manifest: [], currentId: null, scene: null, userGene: null, planeIdx: 0,
     drawerOpen: false, bestTab: "pVol", crossMode: "vol",
-    crossKey: "pVol", alignGene: null, agg: null,
-    xsShowMean: true, xsOnlyCurrent: false,
+    crossKey: "pVol", agg: null, pronucleusVisible: {},
     circ: false, aggCirc: null, _aggCircP: null,
   };
   // circularize accessors: when the "blow up the balloon" toggle is on, every read of
@@ -86,9 +93,6 @@
       drawer.hidden = false; rdrawer.hidden = false;
       render(); renderChart(); renderBestList();
       if (state.drawerOpen && state.agg) {
-        // keep the alignment gene in the current embryo's panel so its zygotes can
-        // contain the display gene (disjoint panels ⇒ otherwise the bars go empty)
-        if (!scene.genes.includes(state.alignGene)) { state.alignGene = pickDefaultAlign(); xsAlign.value = state.alignGene; }
         renderCrossAgg();
       }
 
@@ -289,203 +293,185 @@
   function ensureAgg() {
     if (state.agg) return Promise.resolve(state.agg);
     if (state._aggP) return state._aggP;
-    // lazily load the circularized aggregate too, so the bottom drawer can follow the balloon toggle
     if (!state._aggCircP) state._aggCircP = V.loadGz("data/zygote_cross_circ.json.gz")
       .then((a) => { state.aggCirc = a; }).catch(() => {});
     state._aggP = V.loadGz("data/zygote_cross.json.gz").then((agg) => {
       state.agg = agg;
-      // No gene spans all embryos (multiple panels), so the dropdown is the union
-      // of genes, alphabetical, each labeled with how many zygotes contain it.
-      xsAlign.innerHTML = agg.genes_all
-        .map((g) => `<option value="${g}">${g} (${agg.gene_cov[g]}/${agg.n_embryos})</option>`).join("");
-      state.alignGene = pickDefaultAlign();
-      xsAlign.value = state.alignGene;
       return agg;
     });
     return state._aggP;
   }
-  // Default alignment gene = the current embryo's most-widely-covered gene OTHER than
-  // the display gene, so the aligned set overlaps whatever display gene is selected
-  // (panels are disjoint, so the global widest gene can share no embryo with the
-  // current display gene) and the orientation stays independent of the display gene.
-  function pickDefaultAlign() {
-    const agg = curAGG(), sc = state.scene, skip = gene();
-    if (sc && sc.genes) {
-      let best = null, bestCov = -1;
-      for (const g of sc.genes) {
-        if (g === skip) continue;
-        const c = agg.gene_cov[g] || 0;
-        if (c > bestCov) { bestCov = c; best = g; }
-      }
-      if (best) return best;
-    }
-    return agg.default_align_gene;
-  }
   const bestKeyIndex = () => curAGG().best_keys.indexOf(state.crossKey);
-  // 60 distinct-ish colors via golden-angle hue spread (same index → same embryo
-  // in the outline plot and the bar plot).
-  const embColor = (i) => `hsl(${((i * 137.508) % 360).toFixed(1)}, 62%, 52%)`;
-  // Orientation for one embryo at the chosen best plane: rotate by −θ so the plane
-  // is vertical (then +x = plane's side A); flip 180° when the alignment gene's
-  // higher-count side is on the left, so it always ends up on the right (+x).
-  function embOrient(emb, ki) {
-    const theta = emb.best[ki] * curAGG().step_deg * Math.PI / 180;
-    const ga = emb.g[state.alignGene];
-    let flip = false;
-    if (ga) { const a = ga[1 + ki]; flip = (ga[0] - a) > a; }   // sideB (=n−a) > sideA
-    return { c: Math.cos(theta), s: Math.sin(theta), flip };
-  }
-  // interactive config for the cross-section: scroll to zoom, drag to pan, double-click resets.
-  // Minimal modebar (only on hover) keeps the interface clean and professional.
   const XS_CFG = {
     responsive: true, scrollZoom: true, displaylogo: false, displayModeBar: "hover",
     modeBarButtonsToRemove: ["select2d", "lasso2d", "autoScale2d", "toggleSpikelines",
       "hoverClosestCartesian", "hoverCompareCartesian", "zoom2d"],
   };
-  // Mean aligned outline: average each embryo's max-radius-per-angle, lightly smoothed —
-  // the canonical cross-section the crowd is scattered around.
-  function meanOutline(oriented) {
-    if (oriented.length < 4) return null;
-    const M = 120, sum = new Array(M).fill(0), cnt = new Array(M).fill(0);
-    for (const o of oriented) {
-      const rb = new Array(M).fill(0);
-      for (let k = 0; k < o.xs.length; k++) {
-        const r = Math.hypot(o.xs[k], o.ys[k]);
-        let bi = Math.floor((Math.atan2(o.ys[k], o.xs[k]) + Math.PI) / (2 * Math.PI) * M) % M;
-        if (bi < 0) bi += M;
-        if (r > rb[bi]) rb[bi] = r;
-      }
-      for (let b = 0; b < M; b++) if (rb[b] > 0) { sum[b] += rb[b]; cnt[b]++; }
-    }
-    const need = oriented.length * 0.4, raw = [];
-    for (let b = 0; b < M; b++) raw.push(cnt[b] >= need ? sum[b] / cnt[b] : null);
-    const xs = [], ys = [];
-    for (let b = 0; b < M; b++) {                      // 3-bin circular smoothing over present bins
-      let s = 0, n = 0;
-      for (let d = -1; d <= 1; d++) { const v = raw[(b + d + M) % M]; if (v != null) { s += v; n++; } }
-      if (!n) continue;
-      const r = s / n, th = (b + 0.5) / M * 2 * Math.PI - Math.PI;
-      xs.push(r * Math.cos(th)); ys.push(r * Math.sin(th));
-    }
-    if (xs.length < 12) return null;
-    xs.push(xs[0]); ys.push(ys[0]);
-    return { xs, ys };
+  const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const unit3 = (v) => { const d = Math.hypot(v[0], v[1], v[2]) || 1; return v.map((x) => x / d); };
+  const hexAlpha = (hex, alpha) => {
+    const h = hex.replace("#", "");
+    const n = parseInt(h.length === 3 ? h.split("").map((c) => c + c).join("") : h, 16);
+    return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${alpha})`;
+  };
+  function sectionBasis() {
+    const p = planeGeo(state.planeIdx), s = state.scene;
+    return {
+      com: curA().com_um,
+      normal: unit3(p.normal_um),
+      axis: unit3([p.a_plot[0] * XY, p.a_plot[1] * XY, p.a_plot[2] / s.z_scale]),
+      depth: unit3([p.m_plot[0] * XY, p.m_plot[1] * XY, p.m_plot[2] / s.z_scale]),
+    };
   }
-  // significance → viridis position: log10(p) mapped 0.001 → 0 (dark = most significant)
-  // through 1 → 1 (yellow = not significant). Matches the "All planes (p-value)" colouring.
-  const sigT = (p) => (p == null || !isFinite(p)) ? 1 : Math.max(0, Math.min(1, (Math.log10(Math.max(p, 1e-6)) + 3) / 3));
-  const sigOf = (emb) => (emb.sig ? emb.sig[state.crossKey] : null);
-  function renderOutlines() {
-    const agg = curAGG(); if (!agg) return;
-    const ki = bestKeyIndex();
-    const oriented = []; let R = 0;
-    agg.embryos.forEach((emb) => {
-      if (!emb.outline.length || !emb.g[state.alignGene]) return;   // only embryos with the align gene
-      const { c, s, flip } = embOrient(emb, ki);
-      const xs = [], ys = [];
-      for (const p of emb.outline) {
-        let x = p[0] * c + p[1] * s, y = -p[0] * s + p[1] * c;   // rotate by −θ
-        if (flip) { x = -x; y = -y; }
-        xs.push(x); ys.push(y);
-        const r = Math.hypot(x, y); if (r > R) R = r;
+  function projectedMeshSection(mesh, basis) {
+    if (!mesh || !mesh.verts || !mesh.faces) return { x: [], y: [] };
+    const v = mesh.verts, f = mesh.faces, zs = state.scene.z_scale, pts = new Array(v.length / 3);
+    for (let i = 0; i < pts.length; i++) {
+      const rel = [v[i * 3] * XY - basis.com[0], v[i * 3 + 1] * XY - basis.com[1], v[i * 3 + 2] / zs - basis.com[2]];
+      pts[i] = { x: dot3(rel, basis.normal), y: dot3(rel, basis.axis), d: dot3(rel, basis.depth) };
+    }
+    const xs = [], ys = [], eps = 1e-7;
+    for (let i = 0; i < f.length; i += 3) {
+      const tri = [pts[f[i]], pts[f[i + 1]], pts[f[i + 2]]], hits = [];
+      for (let e = 0; e < 3; e++) {
+        const a = tri[e], b = tri[(e + 1) % 3];
+        if (Math.abs(a.d) < eps) hits.push([a.x, a.y]);
+        if (a.d * b.d < 0) {
+          const t = a.d / (a.d - b.d);
+          hits.push([a.x + t * (b.x - a.x), a.y + t * (b.y - a.y)]);
+        }
       }
-      xs.push(xs[0]); ys.push(ys[0]);                            // close the loop
-      oriented.push({ id: emb.id, label: emb.label, xs, ys, sig: sigOf(emb), isCurrent: emb.id === state.currentId });
-    });
-    const lim = (R * 1.08) || 1, traces = [], only = state.xsOnlyCurrent;
-    // crowd: each embryo coloured by how significantly its transcriptome splits at its best
-    // plane (viridis: low p → dark/purple = significant, high p → yellow = not). Log-scaled.
-    if (!only) for (const o of oriented) {
-      if (o.isCurrent) continue;
-      traces.push({ type: "scatter", mode: "lines", x: o.xs, y: o.ys, opacity: 0.6,
-        line: { color: viridis(sigT(o.sig)), width: 1.4, shape: "spline", smoothing: 1.0 }, showlegend: false,
-        hovertemplate: `${o.label} · p=${fmtP(o.sig)}<extra></extra>` });
+      const unique = hits.filter((p, j) => !hits.slice(0, j).some((q) => Math.hypot(p[0] - q[0], p[1] - q[1]) < 1e-5));
+      if (unique.length < 2) continue;
+      let a = unique[0], b = unique[1], far = -1;
+      for (let q = 0; q < unique.length; q++) for (let r = q + 1; r < unique.length; r++) {
+        const d = Math.hypot(unique[q][0] - unique[r][0], unique[q][1] - unique[r][1]);
+        if (d > far) { far = d; a = unique[q]; b = unique[r]; }
+      }
+      xs.push(a[0], b[0], null); ys.push(a[1], b[1], null);
     }
-    // mean outline (toggleable) — the typical aligned cross-section
-    if (!only && state.xsShowMean) {
-      const mean = meanOutline(oriented);
-      if (mean) traces.push({ type: "scatter", mode: "lines", x: mean.xs, y: mean.ys,
-        line: { color: "#0f172a", width: 2.4, shape: "spline", smoothing: 1.0 }, showlegend: false,
-        hovertemplate: `mean outline · ${oriented.length} zygotes<extra></extra>` });
+    return { x: xs, y: ys };
+  }
+  function pronucleusLabels() {
+    const A = curA(), pb = Number(A.polar_body_label);
+    const candidates = (A.polar_body_detection && A.polar_body_detection.candidates) || [];
+    const internal = candidates.filter((c) => !c.external && Number(c.label) !== pb).map((c) => Number(c.label));
+    return internal.length ? internal : state.scene.mask_labels.filter((x) => x !== 1 && x !== pb);
+  }
+  function syncPronucleusControls(labels) {
+    const key = `${state.currentId}:${labels.join(",")}`;
+    if (xsPronuclei.dataset.key === key) return;
+    xsPronuclei.dataset.key = key;
+    xsPronuclei.innerHTML = labels.map((label, i) =>
+      `<label class="xs-tg"><input type="checkbox" data-pronucleus="${label}" checked><span>pronucleus ${i + 1}</span></label>`).join("");
+    state.pronucleusVisible = Object.fromEntries(labels.map((label) => [label, true]));
+    xsPronuclei.querySelectorAll("input").forEach((input) => input.addEventListener("change", () => {
+      state.pronucleusVisible[input.dataset.pronucleus] = input.checked; renderCurrentCrossSection();
+    }));
+  }
+  function renderCurrentCrossSection() {
+    if (!state.scene) return;
+    const s = state.scene, A = curA(), g = gene(), basis = sectionBasis();
+    const pb = Number(A.polar_body_label), pns = pronucleusLabels(); syncPronucleusControls(pns);
+    const traces = [], limits = [];
+    const addOutline = (label, name, color, width, visible) => {
+      if (!visible) return;
+      const mesh = (label === 1 && state.circ && s.circ && s.circ.mesh1) ? s.circ.mesh1 : s.region_meshes[String(label)];
+      const sec = projectedMeshSection(mesh, basis); if (!sec.x.length) return;
+      sec.x.forEach((x, i) => { if (x != null) limits.push(Math.abs(x), Math.abs(sec.y[i])); });
+      traces.push({ type: "scatter", mode: "lines", x: sec.x, y: sec.y, name,
+        line: { color, width }, hoverinfo: "name", showlegend: xsCrossLegend.checked });
+    };
+    addOutline(1, "Cell outline", xsCrossBodyColor.value, 2.4, xsBody.checked);
+    addOutline(pb, "Polar body", xsCrossPbColor.value, 2.2, xsPb.checked);
+    pns.forEach((label, i) => addOutline(label, `Pronucleus ${i + 1}`, xsCrossPnColor.value, 1.8, state.pronucleusVisible[label] !== false));
+    const t = curTX()[g], sideA = { x: [], y: [] }, sideB = { x: [], y: [] };
+    if (t) for (let i = 0; i < t.x.length; i++) {
+      if (t.s1 && !t.s1[i]) continue;
+      const rel = [t.x[i] * XY - basis.com[0], t.y[i] * XY - basis.com[1], t.gz[i] - basis.com[2]];
+      const x = dot3(rel, basis.normal), y = dot3(rel, basis.axis), dst = x > 0 ? sideA : sideB;
+      dst.x.push(x); dst.y.push(y); limits.push(Math.abs(x), Math.abs(y));
     }
-    // the currently-viewed embryo — its OWN significance colour, cased in white so it stands out
-    // (and is the only thing shown in "only this embryo" mode)
-    const cur = oriented.find((o) => o.isCurrent);
-    if (cur) {
-      traces.push({ type: "scatter", mode: "lines", x: cur.xs, y: cur.ys,
-        line: { color: "#ffffff", width: 5.5, shape: "spline", smoothing: 1.0 }, hoverinfo: "skip", showlegend: false });
-      traces.push({ type: "scatter", mode: "lines", x: cur.xs, y: cur.ys,
-        line: { color: viridis(sigT(cur.sig)), width: 3, shape: "spline", smoothing: 1.0 }, showlegend: false,
-        hovertemplate: `${cur.label} · current · p=${fmtP(cur.sig)}<extra></extra>` });
-    }
-    // division-plane guide (vertical) + centre dot
-    traces.push({ type: "scatter", mode: "lines", x: [0, 0], y: [-lim, lim],
-      line: { color: "#94a3b8", width: 1.3, dash: "dash" }, hoverinfo: "skip", showlegend: false });
-    traces.push({ type: "scatter", mode: "markers", x: [0], y: [0],
-      marker: { color: "#94a3b8", size: 4 }, hoverinfo: "skip", showlegend: false });
-    // 20 µm scale bar, lower-left
-    const sb = 20, bx = -lim * 0.9, by = -lim * 0.9;
-    traces.push({ type: "scatter", mode: "lines", x: [bx, bx + sb], y: [by, by],
-      line: { color: "#475569", width: 3 }, hoverinfo: "skip", showlegend: false });
+    traces.unshift(
+      { type: "scattergl", mode: "markers", x: sideA.x, y: sideA.y, name: "Side A transcripts",
+        marker: { color: xsCrossHighColor.value, size: 3, opacity: 0.58 }, hoverinfo: "skip", showlegend: xsCrossLegend.checked },
+      { type: "scattergl", mode: "markers", x: sideB.x, y: sideB.y, name: "Side B transcripts",
+        marker: { color: xsCrossLowColor.value, size: 3, opacity: 0.58 }, hoverinfo: "skip", showlegend: xsCrossLegend.checked }
+    );
+    const lim = Math.max(20, ...(limits.length ? limits : [20])) * 1.08;
+    traces.push({ type: "scatter", mode: "lines", x: [0, 0], y: [-lim, lim], name: "Division plane",
+      line: { color: "#111827", width: 1.5, dash: "dash" }, hoverinfo: "skip", showlegend: xsCrossLegend.checked });
+    xsCaption.textContent = `· ${s.id} · ${g} · ${state.planeIdx * state.step}°`;
     plotInto(xsOutlines, traces, {
-      dragmode: "pan", margin: { l: 8, r: 8, t: 8, b: 8 }, height: xsOutlines.clientHeight || 340,
-      xaxis: { range: [-lim, lim], visible: false, scaleanchor: "y", scaleratio: 1, constrain: "domain" },
-      yaxis: { range: [-lim, lim], visible: false, constrain: "domain" },
-      paper_bgcolor: "transparent", plot_bgcolor: "transparent",
-      annotations: [
-        { x: lim, y: 0, xanchor: "right", yanchor: "bottom", showarrow: false,
-          text: `higher ${state.alignGene} →`, font: { size: 11, color: "#64748b" } },
-        { x: bx + sb / 2, y: by, xanchor: "center", yanchor: "top", yshift: -4, showarrow: false,
-          text: "20 µm", font: { size: 10, color: "#475569" } },
-      ],
+      dragmode: "pan", margin: { l: 42, r: 10, t: 8, b: 38 }, height: xsOutlines.clientHeight || 330,
+      xaxis: { title: { text: "Distance from division plane (µm)", font: { size: 10 } }, range: [-lim, lim],
+        scaleanchor: "y", scaleratio: 1, gridcolor: "#eef1f5", zeroline: false, tickfont: { size: 9 } },
+      yaxis: { title: { text: "Polar-body axis (µm)", font: { size: 10 } }, range: [-lim, lim],
+        gridcolor: "#eef1f5", zeroline: false, tickfont: { size: 9 } },
+      legend: { orientation: "h", x: 0, y: 1.02, xanchor: "left", yanchor: "bottom", font: { size: 9 } },
+      paper_bgcolor: "transparent", plot_bgcolor: "transparent", uirevision: `${s.id}-${state.planeIdx}`,
     }, XS_CFG);
+  }
+  function binomial95(n) {
+    if (!n) return [0, 0];
+    const mode = Math.floor(n / 2), weights = new Float64Array(n + 1); weights[mode] = 1;
+    for (let k = mode - 1; k >= 0; k--) weights[k] = weights[k + 1] * (k + 1) / (n - k);
+    for (let k = mode + 1; k <= n; k++) weights[k] = weights[k - 1] * (n - k + 1) / k;
+    let sum = 0; for (const w of weights) sum += w;
+    let cdf = 0, lo = 0, hi = n;
+    for (let k = 0; k <= n; k++) { cdf += weights[k] / sum; if (cdf >= 0.025) { lo = k; break; } }
+    cdf = 0; for (let k = 0; k <= n; k++) { cdf += weights[k] / sum; if (cdf >= 0.975) { hi = k; break; } }
+    return [lo, hi];
   }
   function renderBars() {
     const agg = curAGG(); if (!agg) return;
     const ki = bestKeyIndex(), g = gene();
-    const bars = [], connX = [], connY = [];
-    let leftCum = 0, rightCum = 0, nEmb = 0;
-    agg.embryos.forEach((emb, i) => {
-      if (!emb.g[state.alignGene]) return;                      // not orientable (no align gene)
-      const row = emb.g[g]; if (!row) return;                   // display gene absent here
-      const a = row[1 + ki], b = row[0] - a;
-      const { flip } = embOrient(emb, ki);
-      const right = flip ? b : a, left = flip ? a : b;
-      if (left + right === 0) return;
-      nEmb++;
-      bars.push({ type: "bar", x: [0, 1], y: [left, right], width: 0.5,
-        marker: { color: embColor(i), line: { width: 0 } }, showlegend: false,
-        hovertemplate: `${emb.label}<br>left ${left} · right ${right}<extra></extra>` });
-      leftCum += left; rightCum += right;
-      connX.push(0.25, 0.75, null); connY.push(leftCum, rightCum, null);
-    });
-    if (!nEmb) {                     // display gene shares no zygote with the align gene
+    const rows = agg.embryos.map((emb) => {
+      const row = emb.g[g]; if (!row) return null;
+      const a = row[1 + ki], b = row[0] - a, total = a + b; if (!total) return null;
+      const [nullLow, nullHigh] = binomial95(total);
+      return { label: emb.label, high: Math.max(a, b), low: Math.min(a, b), total,
+        nullMean: total / 2, nullLow, nullHigh };
+    }).filter(Boolean);
+    if (!rows.length) {
       Plotly.purge(xsBars); xsBars.classList.remove("js-plotly-plot");   // so plotInto re-inits cleanly next time
-      xsBars.innerHTML = `<div class="xs-empty"><div><b>${g}</b> is not detected in any of the ` +
-        `${agg.gene_cov[state.alignGene] || 0} zygotes aligned by <b>${state.alignGene}</b> ` +
-        `(different MERFISH panels).<br>Pick a gene shared with those zygotes, or change the alignment gene above.</div></div>`;
+      xsBars.innerHTML = `<div class="xs-empty"><div><b>${g}</b> is not detected in any retained zygote.</div></div>`;
       xsBarSub.textContent = `· ${g}`;
       return;
     }
-    xsBarSub.textContent = `· ${g} · ${nEmb} zygotes`;
-    bars.push({ type: "scatter", mode: "lines", x: connX, y: connY,
-      line: { color: "rgba(100,116,139,0.35)", width: 1 }, hoverinfo: "skip", showlegend: false });
-    plotInto(xsBars, bars, {
-      barmode: "stack", margin: { l: 46, r: 8, t: 6, b: 24 }, height: xsBars.clientHeight || 190,
-      xaxis: { tickvals: [0, 1], ticktext: [`left (lower ${state.alignGene})`, `right (higher ${state.alignGene})`],
-               range: [-0.5, 1.5], fixedrange: true, tickfont: { size: 10 } },
-      yaxis: { title: { text: `${g} count`, font: { size: 10 } }, tickfont: { size: 9 },
-               gridcolor: "#eef1f5", fixedrange: true, rangemode: "tozero" },
+    const x = rows.map((r) => r.label), traces = [
+      { type: "bar", name: "Higher-count half", x, y: rows.map((r) => r.high), width: 0.46,
+        marker: { color: xsBarHighColor.value, line: { width: 0 } }, hovertemplate: "%{x}<br>higher half %{y}<extra></extra>" },
+      { type: "bar", name: "Lower-count half", x, y: rows.map((r) => r.low), base: rows.map((r) => r.high), width: 0.46,
+        marker: { color: xsBarLowColor.value, line: { width: 0 } }, hovertemplate: "%{x}<br>lower half %{y}<extra></extra>" },
+    ];
+    if (xsBarNull.checked) traces.push({ type: "bar", name: "Null mean", x, y: rows.map((r) => r.nullMean), width: 0.72,
+      opacity: 0.52, marker: { color: xsBarNullColor.value, line: { color: xsBarNullColor.value, width: 0.8 } },
+      hovertemplate: "%{x}<br>null mean %{y:.1f}<extra></extra>" });
+    if (xsBarInterval.checked) traces.push({ type: "scatter", mode: "markers", name: "95% null interval", x,
+      y: rows.map((r) => r.nullMean), marker: { size: 1, color: "rgba(0,0,0,0)" },
+      error_y: { type: "data", symmetric: false, array: rows.map((r) => r.nullHigh - r.nullMean),
+        arrayminus: rows.map((r) => r.nullMean - r.nullLow), color: "#111827", thickness: 1.5, width: 4 },
+      hovertemplate: "%{x}<br>95% null interval<extra></extra>" });
+    xsBarSub.textContent = `· ${g} · ${rows.length} zygotes`;
+    const maxY = Math.max(...rows.map((r) => Math.max(r.total, r.nullHigh))) * 1.18;
+    plotInto(xsBars, traces, {
+      barmode: "overlay", margin: { l: 56, r: 10, t: xsBarLegend.checked ? 48 : 8, b: 92 }, height: xsBars.clientHeight || 330,
+      showlegend: xsBarLegend.checked,
+      legend: { orientation: "h", x: 0, y: 1.02, xanchor: "left", yanchor: "bottom", font: { size: 9 } },
+      xaxis: { fixedrange: false, tickangle: -48, tickfont: { size: 8 }, automargin: true },
+      yaxis: { title: { text: `${g} transcript count`, font: { size: 10 } }, tickfont: { size: 9 },
+               type: xsBarLog.checked ? "log" : "linear", range: xsBarLog.checked ? [0, Math.log10(maxY)] : [0, maxY],
+               gridcolor: xsBarGrid.checked ? "#e2e5e8" : "rgba(0,0,0,0)", fixedrange: false },
       paper_bgcolor: "transparent", plot_bgcolor: "transparent",
-    });
+    }, XS_CFG);
   }
   function renderCrossAgg() {
     return ensureAgg().then(() => {
-      const cov = curAGG().gene_cov[state.alignGene] || 0, tot = curAGG().n_embryos;
-      xsCaption.textContent = `· best plane ${BESTKEY_LABEL[state.crossKey]}`;
-      xsNote.innerHTML = `No gene spans all zygotes (multiple panels). Showing the <b>${cov}/${tot}</b> ` +
-        `zygotes that contain <b>${state.alignGene}</b>, each flipped so its higher-${state.alignGene} side is on the right.`;
-      renderOutlines(); renderBars();
+      const cov = curAGG().gene_cov[gene()] || 0, tot = curAGG().n_embryos;
+      drawerEmb.textContent = `· ${gene()}`;
+      xsNote.innerHTML = `Counts use each zygote's <b>${BESTKEY_LABEL[state.crossKey]}</b> plane; <b>${cov}/${tot}</b> retained zygotes contain <b>${gene()}</b>.`;
+      renderCurrentCrossSection(); renderBars();
       requestAnimationFrame(() => { try { Plotly.Plots.resize(xsOutlines); Plotly.Plots.resize(xsBars); } catch (_) {} });
     });
   }
@@ -494,9 +480,12 @@
   function wireControls() {
     geneSelect.addEventListener("change", () => {
       state.userGene = geneSelect.value; render(); renderChart(); highlightBest();
-      if (state.drawerOpen && state.agg) renderBars();          // bottom bar plot = selected gene
+      if (state.drawerOpen && state.agg) renderCrossAgg();
     });
-    planeSelect.addEventListener("change", () => { state.planeIdx = parseInt(planeSelect.value, 10) || 0; render(); renderChart(); });
+    planeSelect.addEventListener("change", () => {
+      state.planeIdx = parseInt(planeSelect.value, 10) || 0; render(); renderChart();
+      if (state.drawerOpen) renderCurrentCrossSection();
+    });
     [axisShow, planeShow, allShow].forEach((c) => c.addEventListener("change", () => render()));
     // circularize ("blow up the balloon"): switch every plot + analysis to the precomputed
     // spherical (seg-1) version and re-render the 3-D view, chart, best-planes, and drawer.
@@ -567,7 +556,10 @@
     bestListEl.addEventListener("click", (e) => {
       const row = e.target.closest(".best-row"); if (!row) return;
       const g = row.dataset.gene;
-      if (state.scene.genes.includes(g)) { state.userGene = g; geneSelect.value = g; render(); renderChart(); highlightBest(); }
+      if (state.scene.genes.includes(g)) {
+        state.userGene = g; geneSelect.value = g; render(); renderChart(); highlightBest();
+        if (state.drawerOpen && state.agg) renderCrossAgg();
+      }
     });
   }
   const resizeXs = () => { try { Plotly.Plots.resize(xsOutlines); Plotly.Plots.resize(xsBars); } catch (_) {} };
@@ -594,11 +586,23 @@
       drawer.style.setProperty("--drawer-h", h + "px"); });
     const end = (e) => { if (rz._d) { rz._d = null; try { rz.releasePointerCapture(e.pointerId); } catch (_) {} resizeXs(); } };
     rz.addEventListener("pointerup", end); rz.addEventListener("pointercancel", end);
-    // cross-embryo controls: best-plane alignment + orientation gene
+    // Cross-embryo criterion and publication-plot settings.
     xsPlane.addEventListener("change", () => { state.crossKey = xsPlane.value; if (state.agg) renderCrossAgg(); });
-    xsAlign.addEventListener("change", () => { state.alignGene = xsAlign.value; if (state.agg) renderCrossAgg(); });
-    xsMean.addEventListener("change", () => { state.xsShowMean = xsMean.checked; if (state.agg) { renderOutlines(); resizeXs(); } });
-    xsOnly.addEventListener("change", () => { state.xsOnlyCurrent = xsOnly.checked; if (state.agg) { renderOutlines(); resizeXs(); } });
+    [xsBody, xsPb, xsCrossLegend, xsCrossHighColor, xsCrossLowColor, xsCrossBodyColor, xsCrossPbColor, xsCrossPnColor]
+      .forEach((el) => el.addEventListener("change", renderCurrentCrossSection));
+    [xsBarLog, xsBarLegend, xsBarNull, xsBarInterval, xsBarGrid, xsBarHighColor, xsBarLowColor, xsBarNullColor]
+      .forEach((el) => el.addEventListener("change", renderBars));
+    xsCrossDownload.addEventListener("click", () => downloadPlot(xsOutlines, "cross_section", xsCrossFormat, xsCrossScale, 1800, 1400));
+    xsBarDownload.addEventListener("click", () => downloadPlot(xsBars, "side_counts", xsBarFormat, xsBarScale, 2000, 1250));
+  }
+
+  function downloadPlot(div, suffix, formatEl, scaleEl, width, height) {
+    if (!state.scene || !div.classList.contains("js-plotly-plot")) return;
+    const clean = (x) => String(x || "plot").replace(/[^a-z0-9_-]+/gi, "_").replace(/^_+|_+$/g, "");
+    Plotly.downloadImage(div, {
+      format: formatEl.value, width, height, scale: Number(scaleEl.value) || 2,
+      filename: `${clean(state.scene.id)}_${clean(gene())}_${state.planeIdx * state.step}deg_${suffix}`,
+    });
   }
 
   function showLoading(t) { loadingTxt.textContent = t; loadingEl.hidden = false; }

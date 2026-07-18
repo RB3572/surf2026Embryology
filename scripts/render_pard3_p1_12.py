@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Render publication-resolution Pard3 figures for zygote P1.12.
+"""Render the three publication-resolution Pard3 figures used for P1.12.
 
 The script uses the measured transcript coordinates, segmentation meshes, polar
 body location, and precomputed candidate division planes in the zygote dataset.
-It writes individual PNG/PDF figures plus a composite preview.
+It writes exactly three 600-DPI PNG figures and removes obsolete exports.
 """
 
 from __future__ import annotations
@@ -35,8 +35,8 @@ NULL_SEED = 20260717
 FIGURE_DPI = 600
 XY_UM_PER_PIXEL = 0.15
 
-BLUE = "#0099A8"  # reef blue
-RED = "#F05A47"   # sunset red
+BLUE = "#2166AC"
+RED = "#B2182B"
 PARD3 = "#6A1B5D"
 SHELL = "#BBC3CB"
 INK = "#111111"
@@ -125,6 +125,19 @@ def selected_plane_index(scene: dict) -> int:
 
 def polar_body_label(scene: dict) -> str:
     return str(scene["analysis"]["polar_body_label"])
+
+
+def pronucleus_labels(scene: dict) -> list[str]:
+    polar_body = int(scene["analysis"]["polar_body_label"])
+    candidates = scene["analysis"].get("polar_body_detection", {}).get("candidates", [])
+    labels = [
+        str(candidate["label"])
+        for candidate in candidates
+        if not candidate.get("external", False) and int(candidate["label"]) != polar_body
+    ]
+    if labels:
+        return labels[:2]
+    return [str(label) for label in scene["mask_labels"] if int(label) not in (1, polar_body)][:2]
 
 
 def analysis_basis(scene: dict) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
@@ -227,6 +240,14 @@ def save_figure(fig, stem: str) -> tuple[Path, Path]:
     fig.savefig(pdf, bbox_inches="tight", pad_inches=0.18)
     plt.close(fig)
     return png, pdf
+
+
+def save_png(fig, stem: str) -> Path:
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    path = OUTPUT_DIR / f"{stem}.png"
+    fig.savefig(path, dpi=FIGURE_DPI, bbox_inches="tight", pad_inches=0.18)
+    plt.close(fig)
+    return path
 
 
 def render_uncolored_3d(scene: dict, basis) -> tuple[Path, Path]:
@@ -405,16 +426,22 @@ def mesh_cross_section(
     return contour
 
 
-def render_projection(scene: dict, basis) -> tuple[Path, Path]:
+def render_projection(scene: dict, basis) -> Path:
     tx, blue, red = split_counted_transcripts(scene, basis)
     row = gene_row(scene)["planes"][selected_plane_index(scene)]
 
     body_vertices, body_faces = mesh_um(scene, "1")
     pb_vertices, pb_faces = mesh_um(scene, polar_body_label(scene))
+    pn_meshes = [mesh_um(scene, label) for label in pronucleus_labels(scene)]
     body = transform(body_vertices, basis)
     pb = transform(pb_vertices, basis)
+    pronuclei = [(transform(vertices, basis), faces) for vertices, faces in pn_meshes]
     body_hull = mesh_cross_section(body, body_faces, plane_z=0.0)
     pb_hull = mesh_cross_section(pb, pb_faces, plane_z=float(np.median(pb[:, 2])))
+    pn_hulls = [
+        mesh_cross_section(vertices, faces, plane_z=float(np.median(vertices[:, 2])))
+        for vertices, faces in pronuclei
+    ]
 
     fig, ax = plt.subplots(figsize=(8.2, 7.2))
     add_title(
@@ -422,8 +449,13 @@ def render_projection(scene: dict, basis) -> tuple[Path, Path]:
         f"2D projection of {GENE} asymmetry in P1\u202212",
         "Projection along the candidate division plane; each point is one segment-1 transcript",
     )
-    ax.add_patch(Polygon(body_hull, closed=True, facecolor=SHELL, edgecolor=INK, linewidth=1.4, alpha=0.18, zorder=1))
-    ax.add_patch(Polygon(pb_hull, closed=True, facecolor=PB_FILL, edgecolor=INK, linewidth=1.2, alpha=0.78, zorder=4))
+    ax.add_patch(Polygon(body_hull, closed=True, facecolor="#DCEAF3", edgecolor=INK, linewidth=1.4, alpha=0.36, zorder=1))
+    ax.add_patch(Polygon(pb_hull, closed=True, facecolor="#C9E1F0", edgecolor="#1E3A5F", linewidth=1.15, alpha=0.82, zorder=4))
+    pn_colors = ["#D5E8F3", "#E0EDF5"]
+    pn_edges = ["#334155", "#64748B"]
+    for index, hull in enumerate(pn_hulls):
+        ax.add_patch(Polygon(hull, closed=True, facecolor=pn_colors[index], edgecolor=pn_edges[index],
+                             linewidth=1.1, alpha=0.76, zorder=2))
     ax.scatter(tx[blue, 0], tx[blue, 1], s=12, c=BLUE, alpha=0.62, linewidths=0, zorder=3)
     ax.scatter(tx[red, 0], tx[red, 1], s=12, c=RED, alpha=0.56, linewidths=0, zorder=3)
 
@@ -432,6 +464,9 @@ def render_projection(scene: dict, basis) -> tuple[Path, Path]:
 
     pb_center = pb[:, :2].mean(axis=0)
     ax.scatter(*pb_center, s=34, c=INK, linewidths=0, zorder=7)
+    pn_centers = [vertices[:, :2].mean(axis=0) for vertices, _ in pronuclei]
+    for index, center_point in enumerate(pn_centers):
+        ax.scatter(*center_point, s=24, c=pn_edges[index], edgecolors="white", linewidths=0.7, zorder=7)
 
     ax.set_aspect("equal", adjustable="box")
     all_points = np.vstack([body[:, :2], pb[:, :2]])
@@ -451,6 +486,15 @@ def render_projection(scene: dict, basis) -> tuple[Path, Path]:
         va="bottom",
         zorder=8,
     )
+    annotation_offsets = [(-span * 0.32, span * 0.14), (span * 0.30, -span * 0.13)]
+    for index, (center_point, offset) in enumerate(zip(pn_centers, annotation_offsets, strict=False), start=1):
+        ax.annotate(
+            f"Pronucleus {index}",
+            xy=center_point,
+            xytext=(center_point[0] + offset[0], center_point[1] + offset[1]),
+            arrowprops={"arrowstyle": "-", "color": pn_edges[index - 1], "lw": 0.9},
+            color=pn_edges[index - 1], fontsize=9.5, ha="center", va="center", zorder=8,
+        )
     ax.axis("off")
     fig.text(0.19, 0.085, f"Blue side: n = {row['a']:,} ({row['a'] / (row['a'] + row['b']):.1%})", color=BLUE, fontsize=12, fontweight="bold", ha="center", va="center")
     fig.text(0.76, 0.085, f"Red side: n = {row['b']:,} ({row['b'] / (row['a'] + row['b']):.1%})", color=RED, fontsize=12, fontweight="bold", ha="center", va="center")
@@ -459,7 +503,7 @@ def render_projection(scene: dict, basis) -> tuple[Path, Path]:
     ax.plot([scale_x, scale_x + 10], [scale_y, scale_y], color=INK, lw=2.2, solid_capstyle="butt", zorder=8)
     ax.text(scale_x + 5, scale_y - span * 0.025, "10 \u00b5m", ha="center", va="top", color=INK, fontsize=9)
     fig.subplots_adjust(left=0.02, right=0.98, bottom=0.13, top=0.89)
-    return save_figure(fig, "03_p1_12_pard3_2d_projection")
+    return save_png(fig, "03_p1_12_pard3_2d_structures")
 
 
 def pard3_chart_rows(scenes: list[dict]) -> list[dict]:
@@ -489,7 +533,7 @@ def pard3_chart_rows(scenes: list[dict]) -> list[dict]:
     return rows
 
 
-def render_bar_chart(scenes: list[dict]) -> tuple[Path, Path]:
+def render_bar_chart(scenes: list[dict], *, log_scale: bool) -> Path:
     rows = pard3_chart_rows(scenes)
     x = np.arange(len(rows), dtype=float)
     high_counts = np.asarray([row["high_count"] for row in rows])
@@ -501,10 +545,15 @@ def render_bar_chart(scenes: list[dict]) -> tuple[Path, Path]:
 
     fig, ax = plt.subplots(figsize=(14.5, 7.2))
     null_width = 0.72
-    real_width = 0.19
-    real_offset = 0.115
-    ax.bar(x - real_offset, high_counts, color=BLUE, width=real_width, edgecolor="#263238", linewidth=0.45, zorder=3)
-    ax.bar(x + real_offset, low_counts, color=RED, width=real_width, edgecolor="#263238", linewidth=0.45, zorder=3)
+    if log_scale:
+        real_width = 0.19
+        real_offset = 0.115
+        ax.bar(x - real_offset, high_counts, color=BLUE, width=real_width, edgecolor="#263238", linewidth=0.45, zorder=3)
+        ax.bar(x + real_offset, low_counts, color=RED, width=real_width, edgecolor="#263238", linewidth=0.45, zorder=3)
+    else:
+        real_width = 0.42
+        ax.bar(x, high_counts, color=BLUE, width=real_width, edgecolor="#263238", linewidth=0.45, zorder=3)
+        ax.bar(x, low_counts, bottom=high_counts, color=RED, width=real_width, edgecolor="#263238", linewidth=0.45, zorder=3)
     ax.bar(
         x,
         null_means,
@@ -535,18 +584,23 @@ def render_bar_chart(scenes: list[dict]) -> tuple[Path, Path]:
     ]
     ax.legend(handles=null_handles, loc="upper right", frameon=False, fontsize=10, ncol=2)
     ax.set_ylabel("Pard3 transcript count")
-    ax.set_yscale("log")
-    ax.set_ylim(1, max(high_counts.max(), low_counts.max(), null_highs.max()) * 1.18)
+    if log_scale:
+        ax.set_yscale("log")
+        ax.set_ylim(1, max(high_counts.max(), low_counts.max(), null_highs.max()) * 1.18)
+    else:
+        ax.set_ylim(0, max(totals.max(), null_highs.max()) * 1.10)
     ax.set_xlim(-0.75, len(rows) - 0.25)
     ax.set_xticks(x, [row["label"] for row in rows], rotation=48, ha="right", rotation_mode="anchor")
     ax.spines[["top", "right"]].set_visible(False)
     ax.spines[["left", "bottom"]].set_color("#70757A")
     ax.tick_params(axis="both", colors=INK)
     ax.yaxis.grid(True, which="major", color="#D8DCE0", linewidth=0.9, zorder=0)
-    ax.yaxis.grid(True, which="minor", color="#EEF0F2", linewidth=0.55, zorder=0)
+    if log_scale:
+        ax.yaxis.grid(True, which="minor", color="#EEF0F2", linewidth=0.55, zorder=0)
     ax.xaxis.grid(False)
     fig.subplots_adjust(left=0.08, right=0.985, bottom=0.27, top=0.97)
-    return save_figure(fig, "04_all_zygotes_pard3_side_counts")
+    stem = "02_all_zygotes_pard3_side_counts_log" if log_scale else "01_all_zygotes_pard3_side_counts_linear"
+    return save_png(fig, stem)
 
 
 def build_composite(paths: list[Path]) -> Path:
@@ -611,21 +665,19 @@ def main() -> None:
     pard3_scenes = load_pard3_scenes()
     basis = analysis_basis(scene)
 
-    renderers = [
-        lambda: render_uncolored_3d(scene, basis),
-        lambda: render_split_3d(scene, basis),
-        lambda: render_projection(scene, basis),
-        lambda: render_bar_chart(pard3_scenes),
-    ]
-    pairs = [renderer() for renderer in renderers]
-    pngs = [pair[0] for pair in pairs]
-    all_outputs = [path for pair in pairs for path in pair]
-    composite = build_composite(pngs)
-    all_outputs.append(composite)
-    metadata = write_metadata(scene, pard3_scenes, all_outputs)
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    for path in OUTPUT_DIR.iterdir():
+        if path.is_file():
+            path.unlink()
 
-    print(f"Wrote {len(all_outputs)} figures and metadata to {OUTPUT_DIR}")
-    for path in [*all_outputs, metadata]:
+    outputs = [
+        render_bar_chart(pard3_scenes, log_scale=False),
+        render_bar_chart(pard3_scenes, log_scale=True),
+        render_projection(scene, basis),
+    ]
+
+    print(f"Wrote exactly {len(outputs)} figures to {OUTPUT_DIR}")
+    for path in outputs:
         print(path)
 
 

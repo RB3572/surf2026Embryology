@@ -9,7 +9,7 @@
   const V = window.VCore;
   const XY = 0.15;
   const AXIS_C = "#111827", PLANE_C = "#f97316";
-  const BLUE = "#0099a8", RED = "#f05a47", GREEN = "#16a34a";
+  const BLUE = "#2166ac", RED = "#b2182b", GREEN = "#16a34a";
 
   // Plotly.react corrupts if the div was cleared with innerHTML="" while it was
   // a live plot. Only clear non-Plotly content (e.g. an empty-state message).

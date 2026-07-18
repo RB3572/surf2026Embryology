@@ -93,6 +93,9 @@
 .settings-grid { display: flex; align-items: center; flex-wrap: wrap; gap: 7px 12px; padding-top: 7px; }
 .settings-grid label { display: inline-flex; align-items: center; gap: 5px; color: var(--ink-2); font-size: 10.5px; font-weight: 600; white-space: nowrap; }
 .settings-grid input[type="color"] { width: 24px; height: 20px; padding: 1px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface); cursor: pointer; }
+.settings-grid .range-setting { gap: 7px; }
+.settings-grid input[type="range"] { width: 92px; accent-color: #3b528b; cursor: pointer; }
+.settings-grid output { width: 22px; color: var(--ink); font-family: var(--mono); text-align: right; }
 .plot-settings select { min-width: 66px; font-size: 10.5px; padding: 3px 18px 3px 7px; }
 .xs-sigkey { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
 .xs-sk-lab { font-size: 10px; white-space: nowrap; }
@@ -139,7 +142,8 @@
 .best-plane-note b { color: var(--ink); }
 
 /* ---- γ / μ concordance grid (bottom of the drawer, full width) ---- */
-.xs-gm-block { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 10px; }
+.xs-gm-block { width: 100%; margin-top: 16px; border-top: 1px solid var(--line); padding: 10px 0 14px; box-sizing: border-box; }
+.xs-greek-title { font-family: Georgia, "Times New Roman", serif; font-style: italic; text-transform: none; }
 .xs-gm-note { font-size: 11.5px; color: var(--ink-2); line-height: 1.5; margin: 2px 0 8px; }
 .xs-gm-note b { color: var(--ink); }
 .xs-gm-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 11px; color: var(--ink-2); margin-bottom: 8px; }
@@ -153,7 +157,8 @@
 
 .xs-gm-grid {
   display: grid;
-  grid-template-columns: minmax(84px, 180px) repeat(var(--gm-cols, 1), 26px);
+  grid-template-columns: minmax(120px, 180px) repeat(var(--gm-cols, 1), minmax(26px, 1fr));
+  width: 100%; box-sizing: border-box;
   gap: 2px; max-height: 340px; overflow: auto; align-content: start;
   background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 0;
   font-variant-numeric: tabular-nums;

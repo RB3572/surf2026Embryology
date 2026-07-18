@@ -128,6 +128,7 @@
               <label>Cell outline <input type="color" id="xs-cross-body-color" value="#1e293b"></label>
               <label>Polar-body outline <input type="color" id="xs-cross-pb-color" value="#1e3a5f"></label>
               <label>Pronuclei outline <input type="color" id="xs-cross-pn-color" value="#334155"></label>
+              <label class="range-setting">Transcript size <input type="range" id="xs-cross-dot-size" min="1" max="12" step="0.5" value="3"><output id="xs-cross-dot-size-value">3</output></label>
               <label>Resolution <select id="xs-cross-scale"><option value="2">2×</option><option value="4" selected>4×</option></select></label>
               <label>Format <select id="xs-cross-format"><option value="png">PNG</option><option value="svg">SVG</option></select></label>
             </div>
@@ -141,6 +142,7 @@
           </div>
           <div class="xs-otoggles">
             <label class="xs-tg"><input type="checkbox" id="xs-bar-log" checked><span>log y axis</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-bar-stacked"><span>stack bars</span></label>
             <label class="xs-tg"><input type="checkbox" id="xs-bar-legend" checked><span>legend</span></label>
             <label class="xs-tg"><input type="checkbox" id="xs-bar-null" checked><span>null mean</span></label>
             <label class="xs-tg"><input type="checkbox" id="xs-bar-interval" checked><span>95% null interval</span></label>
@@ -161,7 +163,7 @@
       </div>
       <div class="xs-gm-block">
         <div class="plot-head">
-          <div class="mini-title">γ / μ concordance <span class="mini-sub" id="xs-gm-sub"></span></div>
+          <div class="mini-title"><span class="xs-greek-title">&gamma; / &mu;</span> concordance <span class="mini-sub" id="xs-gm-sub"></span></div>
           <button class="plot-download" id="xs-gm-download" type="button" title="Download this grid as CSV" aria-label="Download grid as CSV">↓</button>
         </div>
         <div class="xs-gm-note" id="xs-gm-note"></div>

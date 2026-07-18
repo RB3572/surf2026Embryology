@@ -39,7 +39,9 @@
   const xsCrossFillColor = $("#xs-cross-fill-color");
   const xsCrossBodyColor = $("#xs-cross-body-color"), xsCrossPbColor = $("#xs-cross-pb-color");
   const xsCrossPnColor = $("#xs-cross-pn-color"), xsCrossScale = $("#xs-cross-scale"), xsCrossFormat = $("#xs-cross-format");
-  const xsBarLog = $("#xs-bar-log"), xsBarLegend = $("#xs-bar-legend"), xsBarNull = $("#xs-bar-null");
+  const xsCrossDotSize = $("#xs-cross-dot-size"), xsCrossDotSizeValue = $("#xs-cross-dot-size-value");
+  const xsBarLog = $("#xs-bar-log"), xsBarStacked = $("#xs-bar-stacked");
+  const xsBarLegend = $("#xs-bar-legend"), xsBarNull = $("#xs-bar-null");
   const xsBarInterval = $("#xs-bar-interval"), xsBarGrid = $("#xs-bar-grid"), xsBarDownload = $("#xs-bar-download");
   const xsBarHighColor = $("#xs-bar-high-color"), xsBarLowColor = $("#xs-bar-low-color");
   const xsBarNullColor = $("#xs-bar-null-color"), xsBarScale = $("#xs-bar-scale"), xsBarFormat = $("#xs-bar-format");
@@ -95,9 +97,7 @@
       controlsEl.hidden = false; placeholder.hidden = true;
       drawer.hidden = false; rdrawer.hidden = false;
       render(); renderChart(); renderBestList();
-      if (state.drawerOpen && state.agg) {
-        renderCrossAgg();
-      }
+      if (state.drawerOpen) renderCrossAgg();
 
     } catch (err) { showError(err.message || String(err)); }
     finally { hideLoading(); }
@@ -435,9 +435,9 @@
     }
     traces.push(
       { type: "scattergl", mode: "markers", x: sideA.x, y: sideA.y, name: "Side A transcripts",
-        marker: { color: xsCrossHighColor.value, size: 3, opacity: 0.58 }, hoverinfo: "skip", showlegend: xsCrossLegend.checked },
+        marker: { color: xsCrossHighColor.value, size: Number(xsCrossDotSize.value), opacity: 0.58 }, hoverinfo: "skip", showlegend: xsCrossLegend.checked },
       { type: "scattergl", mode: "markers", x: sideB.x, y: sideB.y, name: "Side B transcripts",
-        marker: { color: xsCrossLowColor.value, size: 3, opacity: 0.58 }, hoverinfo: "skip", showlegend: xsCrossLegend.checked }
+        marker: { color: xsCrossLowColor.value, size: Number(xsCrossDotSize.value), opacity: 0.58 }, hoverinfo: "skip", showlegend: xsCrossLegend.checked }
     );
     const pbUm = [A.pb_plot[0] * XY, A.pb_plot[1] * XY, A.pb_plot[2] / s.z_scale];
     const pbRel = [pbUm[0] - basis.com[0], pbUm[1] - basis.com[1], pbUm[2] - basis.com[2]];
@@ -493,9 +493,9 @@
       return;
     }
     const x = rows.map((_, i) => i), baseline = xsBarLog.checked ? 1 : 0, shapes = [], traces = [];
+    const stacked = xsBarStacked.checked;
     rows.forEach((r, i) => {
-      if (xsBarLog.checked) {
-        // On a log axis both observed halves share the same baseline and sit side by side.
+      if (!stacked) {
         shapes.push(
           { type: "rect", xref: "x", yref: "y", layer: "above", x0: i - 0.24, x1: i - 0.03,
             y0: baseline, y1: r.high, fillcolor: xsBarHighColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } },
@@ -503,7 +503,6 @@
             y0: baseline, y1: r.low, fillcolor: xsBarLowColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } }
         );
       } else {
-        // Linear mode preserves the cumulative stacked comparison.
         shapes.push(
           { type: "rect", xref: "x", yref: "y", layer: "above", x0: i - 0.23, x1: i + 0.23,
             y0: baseline, y1: r.high, fillcolor: xsBarHighColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } },
@@ -532,15 +531,15 @@
         arrayminus: rows.map((r) => r.nullMean - r.nullLow), color: "#111827", thickness: 1.5, width: 4 },
       hovertemplate: "%{x}<br>95% null interval<extra></extra>" });
     traces.push({ type: "scatter", mode: "markers", showlegend: false, x,
-      y: rows.map((r) => xsBarLog.checked ? Math.max(r.high, r.low) : r.total),
+      y: rows.map((r) => stacked ? r.total : Math.max(r.high, r.low)),
       customdata: rows.map((r) => [r.label, r.high, r.low, r.total, r.nullMean, r.nullLow, r.nullHigh]),
       marker: { size: 24, color: "rgba(0,0,0,0)" },
       hovertemplate: "%{customdata[0]}<br>higher half %{customdata[1]}<br>lower half %{customdata[2]}" +
         "<br>total %{customdata[3]}<br>null %{customdata[4]:.1f} (%{customdata[5]}–%{customdata[6]})<extra></extra>" });
     xsBarSub.textContent = `· ${g} · ${rows.length} zygotes`;
-    const maxY = Math.max(...rows.map((r) => xsBarLog.checked
-      ? Math.max(r.high, r.low, r.nullHigh)
-      : Math.max(r.total, r.nullHigh))) * 1.18;
+    const maxY = Math.max(...rows.map((r) => stacked
+      ? Math.max(r.total, r.nullHigh)
+      : Math.max(r.high, r.low, r.nullHigh))) * 1.18;
     plotInto(xsBars, traces, {
       shapes, margin: { l: 56, r: 10, t: xsBarLegend.checked ? 48 : 8, b: 92 }, height: xsBars.clientHeight || 330,
       showlegend: xsBarLegend.checked,
@@ -588,6 +587,7 @@
     if (!m) return;
     const A = m.anchor;
     if (!m.cols.length) {
+      xsGm.dataset.anchor = A;
       xsGm.innerHTML = `<div class="xs-empty"><div><b>${A}</b> is not detected in any retained zygote.</div></div>`;
       if (xsGmSub) xsGmSub.textContent = `· ${A}`;
       if (xsGmNote) xsGmNote.textContent = "";
@@ -618,6 +618,7 @@
       });
     });
     xsGm.style.setProperty("--gm-cols", m.cols.length);
+    xsGm.dataset.anchor = A;
     xsGm.innerHTML = ""; xsGm.appendChild(frag);
     if (xsGmSub) xsGmSub.textContent = `· ${A} · ${m.rows.length} genes × ${m.cols.length} zygotes`;
   }
@@ -646,7 +647,7 @@
   function wireControls() {
     geneSelect.addEventListener("change", () => {
       state.userGene = geneSelect.value; render(); renderChart(); highlightBest();
-      if (state.drawerOpen && state.agg) renderCrossAgg();
+      if (state.drawerOpen) renderCrossAgg();
     });
     planeSelect.addEventListener("change", () => {
       state.planeIdx = parseInt(planeSelect.value, 10) || 0; render(); renderChart();
@@ -658,7 +659,7 @@
     circShow.addEventListener("change", () => {
       state.circ = circShow.checked;
       render(); renderChart(); renderBestList();
-      if (state.drawerOpen && state.agg) renderCrossAgg();
+      if (state.drawerOpen) renderCrossAgg();
     });
     // p-value colormap normalization (drives the "All planes" 3-D coloring)
     pcolorMode.addEventListener("change", () => { state.crossMode = pcolorMode.value; if (allShow.checked) render(); });
@@ -724,7 +725,7 @@
       const g = row.dataset.gene;
       if (state.scene.genes.includes(g)) {
         state.userGene = g; geneSelect.value = g; render(); renderChart(); highlightBest();
-        if (state.drawerOpen && state.agg) renderCrossAgg();
+        if (state.drawerOpen) renderCrossAgg();
       }
     });
   }
@@ -756,7 +757,11 @@
     xsPlane.addEventListener("change", () => { state.crossKey = xsPlane.value; if (state.agg) renderCrossAgg(); });
     [xsBody, xsPb, xsCrossLegend, xsCrossHighColor, xsCrossLowColor, xsCrossFillColor, xsCrossBodyColor, xsCrossPbColor, xsCrossPnColor]
       .forEach((el) => el.addEventListener("change", renderCurrentCrossSection));
-    [xsBarLog, xsBarLegend, xsBarNull, xsBarInterval, xsBarGrid, xsBarHighColor, xsBarLowColor, xsBarNullColor]
+    xsCrossDotSize.addEventListener("input", () => {
+      xsCrossDotSizeValue.value = xsCrossDotSize.value;
+      renderCurrentCrossSection();
+    });
+    [xsBarLog, xsBarStacked, xsBarLegend, xsBarNull, xsBarInterval, xsBarGrid, xsBarHighColor, xsBarLowColor, xsBarNullColor]
       .forEach((el) => el.addEventListener("change", renderBars));
     xsCrossDownload.addEventListener("click", () => downloadPlot(xsOutlines, "cross_section", xsCrossFormat, xsCrossScale, 1800, 1400));
     xsBarDownload.addEventListener("click", () => downloadPlot(xsBars, "side_counts", xsBarFormat, xsBarScale, 2000, 1250));

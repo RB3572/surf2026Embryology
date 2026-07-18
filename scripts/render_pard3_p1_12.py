@@ -3,7 +3,7 @@
 
 The script uses the measured transcript coordinates, segmentation meshes, polar
 body location, and precomputed candidate division planes in the zygote dataset.
-It writes four 600-DPI PNG figures and removes obsolete exports.
+It writes five 600-DPI PNG figures and removes obsolete exports.
 """
 
 from __future__ import annotations
@@ -19,6 +19,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
 from matplotlib.patches import Polygon
+from matplotlib.ticker import PercentFormatter
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from PIL import Image
 from scipy.spatial import ConvexHull
@@ -616,6 +617,68 @@ def render_bar_chart(scenes: list[dict], *, log_scale: bool) -> Path:
     return save_png(fig, stem)
 
 
+def render_ratio_chart(scenes: list[dict]) -> Path:
+    """Render each Pard3 half as a percentage of that zygote's total."""
+    rows = pard3_chart_rows(scenes)
+    x = np.arange(len(rows), dtype=float)
+    totals = np.asarray([row["total"] for row in rows], dtype=float)
+    high_pct = 100 * np.asarray([row["high_count"] for row in rows]) / totals
+    low_pct = 100 * np.asarray([row["low_count"] for row in rows]) / totals
+    null_low_pct = 100 * np.asarray([row["null_low"] for row in rows]) / totals
+    null_high_pct = 100 * np.asarray([row["null_high"] for row in rows]) / totals
+
+    fig, ax = plt.subplots(figsize=(14.5, 7.2))
+    real_width = 0.44
+    ax.bar(x, high_pct, color=BLUE, width=real_width, edgecolor="#263238", linewidth=0.45, zorder=3)
+    ax.bar(x, low_pct, bottom=high_pct, color=RED, width=real_width,
+           edgecolor="#263238", linewidth=0.45, zorder=3)
+
+    for index, (low, high) in enumerate(zip(null_low_pct, null_high_pct)):
+        ax.add_patch(
+            mpl.patches.Rectangle(
+                (index - 0.35, low),
+                0.70,
+                high - low,
+                facecolor="#8F969D",
+                edgecolor="none",
+                alpha=0.30,
+                zorder=5,
+            )
+        )
+    ax.errorbar(
+        x,
+        np.full(len(rows), 50.0),
+        yerr=np.vstack([50.0 - null_low_pct, null_high_pct - 50.0]),
+        fmt="none",
+        ecolor=INK,
+        elinewidth=1.5,
+        capsize=5,
+        capthick=1.5,
+        zorder=6,
+    )
+
+    handles = [
+        mpl.patches.Patch(facecolor=BLUE, edgecolor="none", label="Higher-count half"),
+        mpl.patches.Patch(facecolor=RED, edgecolor="none", label="Lower-count half"),
+        mpl.patches.Patch(facecolor="#8F969D", alpha=0.45, edgecolor="none", label="95% null interval"),
+        Line2D([0], [0], color=INK, lw=1.5, marker="_", markersize=10, label="50% null expectation"),
+    ]
+    ax.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.5, 1.01),
+              frameon=False, fontsize=10, ncol=4)
+    ax.set_ylabel("Share of Pard3 transcripts in each zygote")
+    ax.yaxis.set_major_formatter(PercentFormatter(xmax=100, decimals=0))
+    ax.set_ylim(0, 100)
+    ax.set_xlim(-0.75, len(rows) - 0.25)
+    ax.set_xticks(x, [row["label"] for row in rows], rotation=48, ha="right", rotation_mode="anchor")
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.spines[["left", "bottom"]].set_color("#70757A")
+    ax.tick_params(axis="both", colors=INK)
+    ax.yaxis.grid(True, which="major", color="#D8DCE0", linewidth=0.9, zorder=0)
+    ax.xaxis.grid(False)
+    fig.subplots_adjust(left=0.08, right=0.985, bottom=0.27, top=0.90)
+    return save_png(fig, "05_all_zygotes_pard3_side_percentages")
+
+
 def build_composite(paths: list[Path]) -> Path:
     images = [Image.open(path).convert("RGB") for path in paths]
     tile_width = 3000
@@ -698,6 +761,7 @@ def main() -> None:
             show_pronucleus_labels=False,
             stem="04_p1_12_pard3_2d_structures_no_pronucleus_labels",
         ),
+        render_ratio_chart(pard3_scenes),
     ]
 
     print(f"Wrote exactly {len(outputs)} figures to {OUTPUT_DIR}")

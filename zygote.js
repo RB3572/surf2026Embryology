@@ -30,7 +30,7 @@
   const drawerEmb = $("#drawer-emb");
   const pcolorMode = $("#pcolor-mode");
   const xsPlane = $("#xs-plane"), xsNote = $("#xs-note");
-  const xsCaption = $("#xs-caption"), xsBarSub = $("#xs-bar-sub");
+  const xsCaption = $("#xs-caption"), xsBarTitle = $("#xs-bar-title"), xsBarSub = $("#xs-bar-sub");
   const xsOutlines = $("#xs-outlines"), xsBars = $("#xs-bars");
   const xsGm = $("#xs-gm"), xsGmSub = $("#xs-gm-sub"), xsGmNote = $("#xs-gm-note"), xsGmDownload = $("#xs-gm-download");
   const xsBody = $("#xs-body"), xsPb = $("#xs-pb"), xsPronuclei = $("#xs-pronuclei");
@@ -40,7 +40,7 @@
   const xsCrossBodyColor = $("#xs-cross-body-color"), xsCrossPbColor = $("#xs-cross-pb-color");
   const xsCrossPnColor = $("#xs-cross-pn-color"), xsCrossScale = $("#xs-cross-scale"), xsCrossFormat = $("#xs-cross-format");
   const xsCrossDotSize = $("#xs-cross-dot-size"), xsCrossDotSizeValue = $("#xs-cross-dot-size-value");
-  const xsBarLog = $("#xs-bar-log"), xsBarStacked = $("#xs-bar-stacked");
+  const xsBarPercent = $("#xs-bar-percent"), xsBarLog = $("#xs-bar-log"), xsBarStacked = $("#xs-bar-stacked");
   const xsBarLegend = $("#xs-bar-legend"), xsBarNull = $("#xs-bar-null");
   const xsBarInterval = $("#xs-bar-interval"), xsBarGrid = $("#xs-bar-grid"), xsBarDownload = $("#xs-bar-download");
   const xsBarHighColor = $("#xs-bar-high-color"), xsBarLowColor = $("#xs-bar-low-color");
@@ -478,13 +478,17 @@
   }
   function renderBars() {
     const agg = curAGG(); if (!agg) return;
-    const ki = bestKeyIndex(), g = gene();
+    const ki = bestKeyIndex(), g = gene(), percentMode = xsBarPercent.checked;
     const rows = agg.embryos.map((emb) => {
       const row = emb.g[g]; if (!row) return null;
-      const a = row[1 + ki], b = row[0] - a, total = a + b; if (!total) return null;
-      const [nullLow, nullHigh] = binomial95(total);
-      return { label: emb.label, high: Math.max(a, b), low: Math.min(a, b), total,
-        nullMean: total / 2, nullLow, nullHigh };
+      const a = row[1 + ki], b = row[0] - a, totalCount = a + b; if (!totalCount) return null;
+      const highCount = Math.max(a, b), lowCount = Math.min(a, b);
+      const scale = percentMode ? 100 / totalCount : 1;
+      const [nullLowCount, nullHighCount] = binomial95(totalCount);
+      return { label: emb.label, high: highCount * scale, low: lowCount * scale,
+        total: totalCount * scale, highCount, lowCount, totalCount,
+        nullMean: (totalCount / 2) * scale, nullLow: nullLowCount * scale,
+        nullHigh: nullHighCount * scale };
     }).filter(Boolean);
     if (!rows.length) {
       Plotly.purge(xsBars); xsBars.classList.remove("js-plotly-plot");   // so plotInto re-inits cleanly next time
@@ -492,7 +496,8 @@
       xsBarSub.textContent = `· ${g}`;
       return;
     }
-    const x = rows.map((_, i) => i), baseline = xsBarLog.checked ? 1 : 0, shapes = [], traces = [];
+    const useLog = !percentMode && xsBarLog.checked;
+    const x = rows.map((_, i) => i), baseline = useLog ? 1 : 0, shapes = [], traces = [];
     const stacked = xsBarStacked.checked;
     rows.forEach((r, i) => {
       if (!stacked) {
@@ -510,9 +515,14 @@
             y0: r.high, y1: r.total, fillcolor: xsBarLowColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } }
         );
       }
-      if (xsBarNull.checked) shapes.push({ type: "rect", xref: "x", yref: "y", layer: "above",
-        x0: i - 0.34, x1: i + 0.34, y0: baseline, y1: r.nullMean,
-        fillcolor: hexAlpha(xsBarNullColor.value, 0.30), line: { color: "#5f666d", width: 0.7 } });
+      if (xsBarNull.checked) {
+        if (percentMode) shapes.push({ type: "line", xref: "x", yref: "y", layer: "above",
+          x0: i - 0.34, x1: i + 0.34, y0: 50, y1: 50,
+          line: { color: xsBarNullColor.value, width: 1.5 } });
+        else shapes.push({ type: "rect", xref: "x", yref: "y", layer: "above",
+          x0: i - 0.34, x1: i + 0.34, y0: baseline, y1: r.nullMean,
+          fillcolor: hexAlpha(xsBarNullColor.value, 0.30), line: { color: "#5f666d", width: 0.7 } });
+      }
     });
     if (xsBarLegend.checked) {
       traces.push(
@@ -521,7 +531,7 @@
         { type: "scatter", mode: "markers", name: "Lower-count half", legendrank: 20, x: [null], y: [null],
           marker: { symbol: "square", size: 11, color: xsBarLowColor.value }, hoverinfo: "skip" }
       );
-      if (xsBarNull.checked) traces.push({ type: "scatter", mode: "markers", name: "Null mean", legendrank: 30,
+      if (xsBarNull.checked) traces.push({ type: "scatter", mode: "markers", name: percentMode ? "50% null expectation" : "Null mean", legendrank: 30,
         x: [null], y: [null], marker: { symbol: "square", size: 11, color: hexAlpha(xsBarNullColor.value, 0.6) }, hoverinfo: "skip" });
     }
     if (xsBarInterval.checked) traces.push({ type: "scatter", mode: "markers", name: "95% null interval", x,
@@ -532,12 +542,18 @@
       hovertemplate: "%{x}<br>95% null interval<extra></extra>" });
     traces.push({ type: "scatter", mode: "markers", showlegend: false, x,
       y: rows.map((r) => stacked ? r.total : Math.max(r.high, r.low)),
-      customdata: rows.map((r) => [r.label, r.high, r.low, r.total, r.nullMean, r.nullLow, r.nullHigh]),
+      customdata: rows.map((r) => [r.label, r.high, r.low, r.total, r.nullMean, r.nullLow, r.nullHigh,
+        r.highCount, r.lowCount, r.totalCount]),
       marker: { size: 24, color: "rgba(0,0,0,0)" },
-      hovertemplate: "%{customdata[0]}<br>higher half %{customdata[1]}<br>lower half %{customdata[2]}" +
-        "<br>total %{customdata[3]}<br>null %{customdata[4]:.1f} (%{customdata[5]}–%{customdata[6]})<extra></extra>" });
+      hovertemplate: percentMode
+        ? "%{customdata[0]}<br>higher half %{customdata[1]:.1f}% (%{customdata[7]} transcripts)" +
+          "<br>lower half %{customdata[2]:.1f}% (%{customdata[8]} transcripts)" +
+          "<br>95% null interval %{customdata[5]:.1f}%–%{customdata[6]:.1f}%<extra></extra>"
+        : "%{customdata[0]}<br>higher half %{customdata[1]}<br>lower half %{customdata[2]}" +
+          "<br>total %{customdata[3]}<br>null %{customdata[4]:.1f} (%{customdata[5]}–%{customdata[6]})<extra></extra>" });
+    xsBarTitle.textContent = percentMode ? "Per-side percentage" : "Per-side counts";
     xsBarSub.textContent = `· ${g} · ${rows.length} zygotes`;
-    const maxY = Math.max(...rows.map((r) => stacked
+    const maxY = percentMode ? 100 : Math.max(...rows.map((r) => stacked
       ? Math.max(r.total, r.nullHigh)
       : Math.max(r.high, r.low, r.nullHigh))) * 1.18;
     plotInto(xsBars, traces, {
@@ -546,9 +562,9 @@
       legend: { orientation: "h", x: 0, y: 1.02, xanchor: "left", yanchor: "bottom", font: { size: 9 } },
       xaxis: { fixedrange: false, tickmode: "array", tickvals: x, ticktext: rows.map((r) => r.label),
         range: [-0.55, rows.length - 0.45], tickangle: -48, tickfont: { size: 8 }, automargin: true },
-      yaxis: { title: { text: `${g} transcript count`, font: { size: 10 } }, tickfont: { size: 9 },
-               type: xsBarLog.checked ? "log" : "linear", range: xsBarLog.checked ? [0, Math.log10(maxY)] : [0, maxY],
-               dtick: xsBarLog.checked ? 1 : undefined,
+      yaxis: { title: { text: percentMode ? `${g} share of zygote transcripts (%)` : `${g} transcript count`, font: { size: 10 } }, tickfont: { size: 9 },
+               type: useLog ? "log" : "linear", range: useLog ? [0, Math.log10(maxY)] : [0, maxY],
+               dtick: useLog ? 1 : undefined, ticksuffix: percentMode ? "%" : "",
                gridcolor: xsBarGrid.checked ? "#e2e5e8" : "rgba(0,0,0,0)", fixedrange: false },
       paper_bgcolor: "transparent", plot_bgcolor: "transparent",
     }, XS_CFG);
@@ -754,6 +770,12 @@
     const end = (e) => { if (rz._d) { rz._d = null; try { rz.releasePointerCapture(e.pointerId); } catch (_) {} resizeXs(); } };
     rz.addEventListener("pointerup", end); rz.addEventListener("pointercancel", end);
     // Cross-embryo criterion and publication-plot settings.
+    const syncBarModeControls = () => {
+      xsBarLog.disabled = xsBarPercent.checked;
+      if (xsBarPercent.checked) xsBarLog.checked = false;
+      renderBars();
+    };
+    syncBarModeControls();
     xsPlane.addEventListener("change", () => { state.crossKey = xsPlane.value; if (state.agg) renderCrossAgg(); });
     [xsBody, xsPb, xsCrossLegend, xsCrossHighColor, xsCrossLowColor, xsCrossFillColor, xsCrossBodyColor, xsCrossPbColor, xsCrossPnColor]
       .forEach((el) => el.addEventListener("change", renderCurrentCrossSection));
@@ -761,10 +783,12 @@
       xsCrossDotSizeValue.value = xsCrossDotSize.value;
       renderCurrentCrossSection();
     });
+    xsBarPercent.addEventListener("change", syncBarModeControls);
     [xsBarLog, xsBarStacked, xsBarLegend, xsBarNull, xsBarInterval, xsBarGrid, xsBarHighColor, xsBarLowColor, xsBarNullColor]
       .forEach((el) => el.addEventListener("change", renderBars));
     xsCrossDownload.addEventListener("click", () => downloadPlot(xsOutlines, "cross_section", xsCrossFormat, xsCrossScale, 1800, 1400));
-    xsBarDownload.addEventListener("click", () => downloadPlot(xsBars, "side_counts", xsBarFormat, xsBarScale, 2000, 1250));
+    xsBarDownload.addEventListener("click", () => downloadPlot(xsBars,
+      xsBarPercent.checked ? "side_percentages" : "side_counts", xsBarFormat, xsBarScale, 2000, 1250));
     if (xsGmDownload) xsGmDownload.addEventListener("click", downloadGammaMuCSV);
   }
 

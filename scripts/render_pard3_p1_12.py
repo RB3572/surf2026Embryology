@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Render the three publication-resolution Pard3 figures used for P1.12.
+"""Render the publication-resolution Pard3 figures used for P1.12.
 
 The script uses the measured transcript coordinates, segmentation meshes, polar
 body location, and precomputed candidate division planes in the zygote dataset.
-It writes exactly three 600-DPI PNG figures and removes obsolete exports.
+It writes four 600-DPI PNG figures and removes obsolete exports.
 """
 
 from __future__ import annotations
@@ -426,7 +426,7 @@ def mesh_cross_section(
     return contour
 
 
-def render_projection(scene: dict, basis) -> Path:
+def render_projection(scene: dict, basis, *, show_pronucleus_labels: bool, stem: str) -> Path:
     tx, blue, red = split_counted_transcripts(scene, basis)
     row = gene_row(scene)["planes"][selected_plane_index(scene)]
 
@@ -486,15 +486,28 @@ def render_projection(scene: dict, basis) -> Path:
         va="bottom",
         zorder=8,
     )
-    annotation_offsets = [(-span * 0.32, span * 0.14), (span * 0.30, -span * 0.13)]
-    for index, (center_point, offset) in enumerate(zip(pn_centers, annotation_offsets), start=1):
-        ax.annotate(
-            f"Pronucleus {index}",
-            xy=center_point,
-            xytext=(center_point[0] + offset[0], center_point[1] + offset[1]),
-            arrowprops={"arrowstyle": "-", "color": pn_edges[index - 1], "lw": 0.9},
-            color=pn_edges[index - 1], fontsize=9.5, ha="center", va="center", zorder=8,
-        )
+    if show_pronucleus_labels:
+        body_min = body_hull.min(axis=0)
+        body_max = body_hull.max(axis=0)
+        label_positions = [
+            (body_min[0] - span * 0.10, pn_centers[0][1] + span * 0.05, "right"),
+            (body_max[0] + span * 0.10, pn_centers[1][1] - span * 0.05, "left"),
+        ]
+        for index, (center_point, (label_x, label_y, alignment)) in enumerate(
+            zip(pn_centers, label_positions), start=1
+        ):
+            ax.annotate(
+                f"Pronucleus {index}",
+                xy=center_point,
+                xytext=(label_x, label_y),
+                arrowprops={"arrowstyle": "-", "color": pn_edges[index - 1], "lw": 0.9},
+                color=pn_edges[index - 1],
+                fontsize=9.5,
+                ha=alignment,
+                va="center",
+                zorder=8,
+                annotation_clip=False,
+            )
     ax.axis("off")
     fig.text(0.19, 0.085, f"Blue side: n = {row['a']:,} ({row['a'] / (row['a'] + row['b']):.1%})", color=BLUE, fontsize=12, fontweight="bold", ha="center", va="center")
     fig.text(0.76, 0.085, f"Red side: n = {row['b']:,} ({row['b'] / (row['a'] + row['b']):.1%})", color=RED, fontsize=12, fontweight="bold", ha="center", va="center")
@@ -503,7 +516,7 @@ def render_projection(scene: dict, basis) -> Path:
     ax.plot([scale_x, scale_x + 10], [scale_y, scale_y], color=INK, lw=2.2, solid_capstyle="butt", zorder=8)
     ax.text(scale_x + 5, scale_y - span * 0.025, "10 \u00b5m", ha="center", va="top", color=INK, fontsize=9)
     fig.subplots_adjust(left=0.02, right=0.98, bottom=0.13, top=0.89)
-    return save_png(fig, "03_p1_12_pard3_2d_structures")
+    return save_png(fig, stem)
 
 
 def pard3_chart_rows(scenes: list[dict]) -> list[dict]:
@@ -673,7 +686,18 @@ def main() -> None:
     outputs = [
         render_bar_chart(pard3_scenes, log_scale=False),
         render_bar_chart(pard3_scenes, log_scale=True),
-        render_projection(scene, basis),
+        render_projection(
+            scene,
+            basis,
+            show_pronucleus_labels=True,
+            stem="03_p1_12_pard3_2d_structures",
+        ),
+        render_projection(
+            scene,
+            basis,
+            show_pronucleus_labels=False,
+            stem="04_p1_12_pard3_2d_structures_no_pronucleus_labels",
+        ),
     ]
 
     print(f"Wrote exactly {len(outputs)} figures to {OUTPUT_DIR}")

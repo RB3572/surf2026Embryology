@@ -9,7 +9,7 @@
   const V = window.VCore;
   const XY = 0.15;
   const AXIS_C = "#111827", PLANE_C = "#f97316";
-  const BLUE = "#2563eb", RED = "#dc2626", GREEN = "#16a34a";
+  const BLUE = "#0099a8", RED = "#f05a47", GREEN = "#16a34a";
 
   // Plotly.react corrupts if the div was cleared with innerHTML="" while it was
   // a live plot. Only clear non-Plotly content (e.g. an empty-state message).
@@ -437,6 +437,18 @@
       { type: "scattergl", mode: "markers", x: sideB.x, y: sideB.y, name: "Side B transcripts",
         marker: { color: xsCrossLowColor.value, size: 3, opacity: 0.58 }, hoverinfo: "skip", showlegend: xsCrossLegend.checked }
     );
+    const pbUm = [A.pb_plot[0] * XY, A.pb_plot[1] * XY, A.pb_plot[2] / s.z_scale];
+    const pbRel = [pbUm[0] - basis.com[0], pbUm[1] - basis.com[1], pbUm[2] - basis.com[2]];
+    const pbCenter = [dot3(pbRel, basis.normal), dot3(pbRel, basis.axis)];
+    limits.push(Math.abs(pbCenter[0]), Math.abs(pbCenter[1]));
+    traces.push(
+      { type: "scatter", mode: "markers", x: [0], y: [0], name: "Cell-body center of mass",
+        marker: { symbol: "circle", size: 8, color: "#111827", line: { color: "#ffffff", width: 1.2 } },
+        hovertemplate: "Cell-body center of mass<extra></extra>", showlegend: xsCrossLegend.checked },
+      { type: "scatter", mode: "markers", x: [pbCenter[0]], y: [pbCenter[1]], name: "Polar-body center of mass",
+        marker: { symbol: "diamond", size: 9, color: "#1e3a5f", line: { color: "#ffffff", width: 1.2 } },
+        hovertemplate: "Polar-body center of mass<extra></extra>", showlegend: xsCrossLegend.checked }
+    );
     const lim = Math.max(20, ...(limits.length ? limits : [20])) * 1.08;
     traces.push({ type: "scatter", mode: "lines", x: [0, 0], y: [-lim, lim], name: "Division plane",
       line: { color: "#111827", width: 1.5, dash: "dash" }, hoverinfo: "skip", showlegend: xsCrossLegend.checked });
@@ -480,17 +492,26 @@
     }
     const x = rows.map((_, i) => i), baseline = xsBarLog.checked ? 1 : 0, shapes = [], traces = [];
     rows.forEach((r, i) => {
-      // Shape rectangles use absolute data coordinates. Plotly's bar `base` is
-      // ambiguous on logarithmic axes and can render a second colored section.
-      if (xsBarNull.checked) shapes.push({ type: "rect", xref: "x", yref: "y", layer: "below",
-        x0: i - 0.36, x1: i + 0.36, y0: baseline, y1: r.nullMean,
-        fillcolor: hexAlpha(xsBarNullColor.value, 0.46), line: { color: "#5f666d", width: 0.7 } });
-      shapes.push(
-        { type: "rect", xref: "x", yref: "y", layer: "above", x0: i - 0.23, x1: i + 0.23,
-          y0: baseline, y1: r.high, fillcolor: xsBarHighColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } },
-        { type: "rect", xref: "x", yref: "y", layer: "above", x0: i - 0.23, x1: i + 0.23,
-          y0: r.high, y1: r.total, fillcolor: xsBarLowColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } }
-      );
+      if (xsBarLog.checked) {
+        // On a log axis both observed halves share the same baseline and sit side by side.
+        shapes.push(
+          { type: "rect", xref: "x", yref: "y", layer: "above", x0: i - 0.24, x1: i - 0.03,
+            y0: baseline, y1: r.high, fillcolor: xsBarHighColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } },
+          { type: "rect", xref: "x", yref: "y", layer: "above", x0: i + 0.03, x1: i + 0.24,
+            y0: baseline, y1: r.low, fillcolor: xsBarLowColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } }
+        );
+      } else {
+        // Linear mode preserves the cumulative stacked comparison.
+        shapes.push(
+          { type: "rect", xref: "x", yref: "y", layer: "above", x0: i - 0.23, x1: i + 0.23,
+            y0: baseline, y1: r.high, fillcolor: xsBarHighColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } },
+          { type: "rect", xref: "x", yref: "y", layer: "above", x0: i - 0.23, x1: i + 0.23,
+            y0: r.high, y1: r.total, fillcolor: xsBarLowColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } }
+        );
+      }
+      if (xsBarNull.checked) shapes.push({ type: "rect", xref: "x", yref: "y", layer: "above",
+        x0: i - 0.34, x1: i + 0.34, y0: baseline, y1: r.nullMean,
+        fillcolor: hexAlpha(xsBarNullColor.value, 0.30), line: { color: "#5f666d", width: 0.7 } });
     });
     if (xsBarLegend.checked) {
       traces.push(
@@ -508,13 +529,16 @@
       error_y: { type: "data", symmetric: false, array: rows.map((r) => r.nullHigh - r.nullMean),
         arrayminus: rows.map((r) => r.nullMean - r.nullLow), color: "#111827", thickness: 1.5, width: 4 },
       hovertemplate: "%{x}<br>95% null interval<extra></extra>" });
-    traces.push({ type: "scatter", mode: "markers", showlegend: false, x, y: rows.map((r) => r.total),
+    traces.push({ type: "scatter", mode: "markers", showlegend: false, x,
+      y: rows.map((r) => xsBarLog.checked ? Math.max(r.high, r.low) : r.total),
       customdata: rows.map((r) => [r.label, r.high, r.low, r.total, r.nullMean, r.nullLow, r.nullHigh]),
       marker: { size: 24, color: "rgba(0,0,0,0)" },
       hovertemplate: "%{customdata[0]}<br>higher half %{customdata[1]}<br>lower half %{customdata[2]}" +
         "<br>total %{customdata[3]}<br>null %{customdata[4]:.1f} (%{customdata[5]}–%{customdata[6]})<extra></extra>" });
     xsBarSub.textContent = `· ${g} · ${rows.length} zygotes`;
-    const maxY = Math.max(...rows.map((r) => Math.max(r.total, r.nullHigh))) * 1.18;
+    const maxY = Math.max(...rows.map((r) => xsBarLog.checked
+      ? Math.max(r.high, r.low, r.nullHigh)
+      : Math.max(r.total, r.nullHigh))) * 1.18;
     plotInto(xsBars, traces, {
       shapes, margin: { l: 56, r: 10, t: xsBarLegend.checked ? 48 : 8, b: 92 }, height: xsBars.clientHeight || 330,
       showlegend: xsBarLegend.checked,

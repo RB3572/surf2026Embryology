@@ -35,8 +35,8 @@ NULL_SEED = 20260717
 FIGURE_DPI = 600
 XY_UM_PER_PIXEL = 0.15
 
-BLUE = "#2166AC"
-RED = "#B2182B"
+BLUE = "#0099A8"  # reef blue
+RED = "#F05A47"   # sunset red
 PARD3 = "#6A1B5D"
 SHELL = "#BBC3CB"
 INK = "#111111"
@@ -501,14 +501,15 @@ def render_bar_chart(scenes: list[dict]) -> tuple[Path, Path]:
 
     fig, ax = plt.subplots(figsize=(14.5, 7.2))
     null_width = 0.72
-    real_width = 0.42
-    ax.bar(x, high_counts, color=BLUE, width=real_width, edgecolor="none", zorder=3)
-    ax.bar(x, low_counts, bottom=high_counts, color=RED, width=real_width, edgecolor="none", zorder=3)
+    real_width = 0.19
+    real_offset = 0.115
+    ax.bar(x - real_offset, high_counts, color=BLUE, width=real_width, edgecolor="#263238", linewidth=0.45, zorder=3)
+    ax.bar(x + real_offset, low_counts, color=RED, width=real_width, edgecolor="#263238", linewidth=0.45, zorder=3)
     ax.bar(
         x,
         null_means,
         color="#9EA4AA",
-        alpha=0.55,
+        alpha=0.30,
         edgecolor="#6F757B",
         linewidth=1.0,
         width=null_width,
@@ -533,9 +534,9 @@ def render_bar_chart(scenes: list[dict]) -> tuple[Path, Path]:
         Line2D([0], [0], color=INK, lw=1.5, marker="_", markersize=10, label="95% null interval"),
     ]
     ax.legend(handles=null_handles, loc="upper right", frameon=False, fontsize=10, ncol=2)
-    ax.set_ylabel("Cumulative Pard3 transcript count")
+    ax.set_ylabel("Pard3 transcript count")
     ax.set_yscale("log")
-    ax.set_ylim(1, totals.max() * 1.18)
+    ax.set_ylim(1, max(high_counts.max(), low_counts.max(), null_highs.max()) * 1.18)
     ax.set_xlim(-0.75, len(rows) - 0.25)
     ax.set_xticks(x, [row["label"] for row in rows], rotation=48, ha="right", rotation_mode="anchor")
     ax.spines[["top", "right"]].set_visible(False)

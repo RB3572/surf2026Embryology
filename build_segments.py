@@ -25,6 +25,7 @@ import os
 from collections import Counter
 
 import numpy as np
+from embryo_naming import embryo_label
 import tifffile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -168,7 +169,7 @@ def main():
                 json.dump(scene, fh, separators=(",", ":"), default=_json_default)
             manifest.append({
                 "id": key, "stage": stage, "stage_label": STAGE_LABEL.get(stage, stage),
-                "eid": eid, "label": short_label(eid),
+                "eid": eid, "label": embryo_label(eid, stage),
                 "n_segments": len(scene["mask_labels"]), "segments": scene["mask_labels"],
                 "size_kb": round(os.path.getsize(out) / 1024),
             })
@@ -182,12 +183,7 @@ def main():
 
 
 def short_label(eid):
-    """Compact nav label from an atlas id (drops the date prefix)."""
-    import re
-    s = re.sub(r"^\d{8}_", "", eid)
-    s = re.sub(r"^(zygote|oocyte|l2c|e2c|late2cell|early2cell)_?", "", s, flags=re.I)
-    s = s.replace("sample", "s").replace("_", " ")
-    return s.strip() or eid
+    return embryo_label(eid)
 
 
 if __name__ == "__main__":

@@ -79,9 +79,9 @@ def zygote_label(scene: dict) -> str:
     if not match:
         return scene["id"]
     year, month, day, plate, embryo, replicate = match.groups()
-    embryo_label = f"P{plate}\u2022{embryo}"
+    embryo_label = f"Z-P{plate}-fov{embryo}"
     if replicate is not None:
-        embryo_label += f".{replicate}"
+        embryo_label += f"_{replicate}"
     return f"{embryo_label}\n{year}-{month}-{day}"
 
 
@@ -446,7 +446,7 @@ def render_projection(scene: dict, basis) -> Path:
     fig, ax = plt.subplots(figsize=(8.2, 7.2))
     add_title(
         fig,
-        f"2D projection of {GENE} asymmetry in P1\u202212",
+        f"2D projection of {GENE} asymmetry in Z-P1-fov12",
         "Projection along the candidate division plane; each point is one segment-1 transcript",
     )
     ax.add_patch(Polygon(body_hull, closed=True, facecolor="#DCEAF3", edgecolor=INK, linewidth=1.4, alpha=0.36, zorder=1))
@@ -487,7 +487,7 @@ def render_projection(scene: dict, basis) -> Path:
         zorder=8,
     )
     annotation_offsets = [(-span * 0.32, span * 0.14), (span * 0.30, -span * 0.13)]
-    for index, (center_point, offset) in enumerate(zip(pn_centers, annotation_offsets, strict=False), start=1):
+    for index, (center_point, offset) in enumerate(zip(pn_centers, annotation_offsets), start=1):
         ax.annotate(
             f"Pronucleus {index}",
             xy=center_point,

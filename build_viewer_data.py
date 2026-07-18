@@ -24,6 +24,7 @@ import os
 import re
 
 import numpy as np
+from embryo_naming import embryo_label
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, ".."))
@@ -211,8 +212,8 @@ def main():
         for g, t in d.get("transcripts", {}).items():
             tx[g] = {"x": t["x"], "y": t["y"], "gz": t["gz"]}
 
-        title = f"{r['stage']} · {r['plate'].upper()} · FOV " + \
-                "".join(ch for ch in r["fov"] if ch.isdigit())
+        label = embryo_label(eid, r["stage"])
+        title = label
 
         analysis = compute_analysis(d, sperm, d.get("z_scale", 7.0))
         scene = {
@@ -237,10 +238,7 @@ def main():
         with gzip.open(out, "wt") as fh:
             json.dump(scene, fh, separators=(",", ":"))
 
-        # compact, unique-within-stage tab label, e.g. "P1 · 0_2" / "P2 · 18"
-        m2 = re.search(r"_p\d+_(.+)$", eid)
-        fovsub = m2.group(1) if m2 else "".join(c for c in r["fov"] if c.isdigit())
-        label = f"{r['plate'].upper()} · {fovsub}"
+        # Canonical type-probeset-FOV display name; the date remains a sublabel.
         # imaging date (embryos of the same plate/fov but different runs exist)
         ymd = eid[:8]
         MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",

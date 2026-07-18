@@ -42,6 +42,7 @@ from collections import Counter
 
 import numpy as np
 import tifffile
+from embryo_naming import embryo_label
 from scipy.ndimage import binary_fill_holes
 from scipy.spatial import ConvexHull
 
@@ -735,11 +736,7 @@ def main():
         date = eid[:8]
         MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
         ds = f"{MON[int(date[4:6]) - 1]} {int(date[6:8])}" if date.isdigit() else ""
-        import re
-        m2 = re.search(r"_p(\d+)_(.+)$", eid)
-        plate = f"p{m2.group(1)}" if m2 else "?"
-        fovsub = m2.group(2) if m2 else eid
-        label = f"{plate.upper()} · {fovsub}"
+        label = embryo_label(eid, "zygote")
         bp = scene["analysis"]["best_planes"]
         manifest.append({
             "id": eid, "label": label, "date_short": ds,

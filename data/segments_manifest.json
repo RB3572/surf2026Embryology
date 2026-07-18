@@ -5,7 +5,7 @@
    "stage": "Oocyte",
    "stage_label": "Oocyte",
    "eid": "20260425_oocyte_p2_11",
-   "label": "p2 11",
+   "label": "O-P2-fov11",
    "n_segments": 2,
    "segments": [
     1,
@@ -18,7 +18,7 @@
    "stage": "Oocyte",
    "stage_label": "Oocyte",
    "eid": "20260425_oocyte_p2_19_0",
-   "label": "p2 19 0",
+   "label": "O-P2-fov19_0",
    "n_segments": 2,
    "segments": [
     1,
@@ -31,7 +31,7 @@
    "stage": "Oocyte",
    "stage_label": "Oocyte",
    "eid": "20260425_oocyte_p2_24",
-   "label": "p2 24",
+   "label": "O-P2-fov24",
    "n_segments": 2,
    "segments": [
     1,
@@ -44,7 +44,7 @@
    "stage": "Oocyte",
    "stage_label": "Oocyte",
    "eid": "20260425_oocyte_p2_25_1",
-   "label": "p2 25 1",
+   "label": "O-P2-fov25_1",
    "n_segments": 2,
    "segments": [
     1,
@@ -57,7 +57,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20251226_sample1_zygote5",
-   "label": "s1 zygote5",
+   "label": "Z-P1-fov5",
    "n_segments": 2,
    "segments": [
     1,
@@ -70,7 +70,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20251226_sample1_zygote6",
-   "label": "s1 zygote6",
+   "label": "Z-P1-fov6",
    "n_segments": 2,
    "segments": [
     1,
@@ -83,7 +83,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20251226_zygote_p1_0",
-   "label": "p1 0",
+   "label": "Z-P1-fov0",
    "n_segments": 2,
    "segments": [
     1,
@@ -96,7 +96,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20251226_zygote_p1_1",
-   "label": "p1 1",
+   "label": "Z-P1-fov1",
    "n_segments": 5,
    "segments": [
     1,
@@ -112,7 +112,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20251226_zygote_p1_10",
-   "label": "p1 10",
+   "label": "Z-P1-fov10",
    "n_segments": 5,
    "segments": [
     1,
@@ -128,7 +128,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20251226_zygote_p1_11",
-   "label": "p1 11",
+   "label": "Z-P1-fov11",
    "n_segments": 4,
    "segments": [
     1,
@@ -143,7 +143,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20251226_zygote_p1_2_1",
-   "label": "p1 2 1",
+   "label": "Z-P1-fov2_1",
    "n_segments": 2,
    "segments": [
     1,
@@ -156,7 +156,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20251226_zygote_p1_2_2",
-   "label": "p1 2 2",
+   "label": "Z-P1-fov2_2",
    "n_segments": 4,
    "segments": [
     1,
@@ -171,7 +171,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20251226_zygote_p1_3",
-   "label": "p1 3",
+   "label": "Z-P1-fov3",
    "n_segments": 2,
    "segments": [
     1,
@@ -184,7 +184,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20251226_zygote_p1_4",
-   "label": "p1 4",
+   "label": "Z-P1-fov4",
    "n_segments": 4,
    "segments": [
     1,
@@ -199,7 +199,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20251226_zygote_p1_7",
-   "label": "p1 7",
+   "label": "Z-P1-fov7",
    "n_segments": 5,
    "segments": [
     1,
@@ -215,7 +215,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20251226_zygote_p1_8",
-   "label": "p1 8",
+   "label": "Z-P1-fov8",
    "n_segments": 5,
    "segments": [
     1,
@@ -231,7 +231,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20251226_zygote_p1_9",
-   "label": "p1 9",
+   "label": "Z-P1-fov9",
    "n_segments": 2,
    "segments": [
     1,
@@ -244,7 +244,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_0_1",
-   "label": "p1 0 1",
+   "label": "Z-P1-fov0_1",
    "n_segments": 4,
    "segments": [
     1,
@@ -259,7 +259,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_0_2",
-   "label": "p1 0 2",
+   "label": "Z-P1-fov0_2",
    "n_segments": 4,
    "segments": [
     1,
@@ -274,7 +274,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_1",
-   "label": "p1 1",
+   "label": "Z-P1-fov1",
    "n_segments": 4,
    "segments": [
     1,
@@ -289,7 +289,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_10",
-   "label": "p1 10",
+   "label": "Z-P1-fov10",
    "n_segments": 5,
    "segments": [
     1,
@@ -305,7 +305,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_11",
-   "label": "p1 11",
+   "label": "Z-P1-fov11",
    "n_segments": 5,
    "segments": [
     1,
@@ -321,7 +321,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_12",
-   "label": "p1 12",
+   "label": "Z-P1-fov12",
    "n_segments": 4,
    "segments": [
     1,
@@ -336,7 +336,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_2",
-   "label": "p1 2",
+   "label": "Z-P1-fov2",
    "n_segments": 4,
    "segments": [
     1,
@@ -351,7 +351,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_3",
-   "label": "p1 3",
+   "label": "Z-P1-fov3",
    "n_segments": 4,
    "segments": [
     1,
@@ -366,7 +366,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_4",
-   "label": "p1 4",
+   "label": "Z-P1-fov4",
    "n_segments": 5,
    "segments": [
     1,
@@ -382,7 +382,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_5",
-   "label": "p1 5",
+   "label": "Z-P1-fov5",
    "n_segments": 3,
    "segments": [
     1,
@@ -396,7 +396,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_6_0",
-   "label": "p1 6 0",
+   "label": "Z-P1-fov6_0",
    "n_segments": 4,
    "segments": [
     1,
@@ -411,7 +411,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_6_1",
-   "label": "p1 6 1",
+   "label": "Z-P1-fov6_1",
    "n_segments": 4,
    "segments": [
     1,
@@ -426,7 +426,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_7_0",
-   "label": "p1 7 0",
+   "label": "Z-P1-fov7_0",
    "n_segments": 4,
    "segments": [
     1,
@@ -441,7 +441,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_7_1",
-   "label": "p1 7 1",
+   "label": "Z-P1-fov7_1",
    "n_segments": 3,
    "segments": [
     1,
@@ -455,7 +455,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_8_0",
-   "label": "p1 8 0",
+   "label": "Z-P1-fov8_0",
    "n_segments": 4,
    "segments": [
     1,
@@ -470,7 +470,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260407_zygote_p1_8_1",
-   "label": "p1 8 1",
+   "label": "Z-P1-fov8_1",
    "n_segments": 3,
    "segments": [
     1,
@@ -484,7 +484,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260409_zygote_p2_9",
-   "label": "p2 9",
+   "label": "Z-P2-fov9",
    "n_segments": 3,
    "segments": [
     1,
@@ -498,7 +498,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_0",
-   "label": "p2 0",
+   "label": "Z-P2-fov0",
    "n_segments": 4,
    "segments": [
     1,
@@ -513,7 +513,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_1",
-   "label": "p2 1",
+   "label": "Z-P2-fov1",
    "n_segments": 4,
    "segments": [
     1,
@@ -528,7 +528,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_10",
-   "label": "p2 10",
+   "label": "Z-P2-fov10",
    "n_segments": 4,
    "segments": [
     1,
@@ -543,7 +543,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_12",
-   "label": "p2 12",
+   "label": "Z-P2-fov12",
    "n_segments": 4,
    "segments": [
     1,
@@ -558,7 +558,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_13",
-   "label": "p2 13",
+   "label": "Z-P2-fov13",
    "n_segments": 4,
    "segments": [
     1,
@@ -573,7 +573,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_14",
-   "label": "p2 14",
+   "label": "Z-P2-fov14",
    "n_segments": 4,
    "segments": [
     1,
@@ -588,7 +588,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_15",
-   "label": "p2 15",
+   "label": "Z-P2-fov15",
    "n_segments": 3,
    "segments": [
     1,
@@ -602,7 +602,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_16",
-   "label": "p2 16",
+   "label": "Z-P2-fov16",
    "n_segments": 4,
    "segments": [
     1,
@@ -617,7 +617,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_17",
-   "label": "p2 17",
+   "label": "Z-P2-fov17",
    "n_segments": 4,
    "segments": [
     1,
@@ -632,7 +632,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_18_0",
-   "label": "p2 18 0",
+   "label": "Z-P2-fov18_0",
    "n_segments": 4,
    "segments": [
     1,
@@ -647,7 +647,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_18_1",
-   "label": "p2 18 1",
+   "label": "Z-P2-fov18_1",
    "n_segments": 4,
    "segments": [
     1,
@@ -662,7 +662,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_19_1",
-   "label": "p2 19 1",
+   "label": "Z-P2-fov19_1",
    "n_segments": 4,
    "segments": [
     1,
@@ -677,7 +677,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_2",
-   "label": "p2 2",
+   "label": "Z-P2-fov2",
    "n_segments": 4,
    "segments": [
     1,
@@ -692,7 +692,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_20",
-   "label": "p2 20",
+   "label": "Z-P2-fov20",
    "n_segments": 4,
    "segments": [
     1,
@@ -707,7 +707,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_21",
-   "label": "p2 21",
+   "label": "Z-P2-fov21",
    "n_segments": 4,
    "segments": [
     1,
@@ -722,7 +722,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_22_0",
-   "label": "p2 22 0",
+   "label": "Z-P2-fov22_0",
    "n_segments": 3,
    "segments": [
     1,
@@ -736,7 +736,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_22_1",
-   "label": "p2 22 1",
+   "label": "Z-P2-fov22_1",
    "n_segments": 4,
    "segments": [
     1,
@@ -751,7 +751,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_23",
-   "label": "p2 23",
+   "label": "Z-P2-fov23",
    "n_segments": 4,
    "segments": [
     1,
@@ -766,7 +766,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_25_0",
-   "label": "p2 25 0",
+   "label": "Z-P2-fov25_0",
    "n_segments": 4,
    "segments": [
     1,
@@ -781,7 +781,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_26",
-   "label": "p2 26",
+   "label": "Z-P2-fov26",
    "n_segments": 3,
    "segments": [
     1,
@@ -795,7 +795,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_3",
-   "label": "p2 3",
+   "label": "Z-P2-fov3",
    "n_segments": 4,
    "segments": [
     1,
@@ -810,7 +810,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_4",
-   "label": "p2 4",
+   "label": "Z-P2-fov4",
    "n_segments": 4,
    "segments": [
     1,
@@ -825,7 +825,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_5",
-   "label": "p2 5",
+   "label": "Z-P2-fov5",
    "n_segments": 4,
    "segments": [
     1,
@@ -840,7 +840,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_6",
-   "label": "p2 6",
+   "label": "Z-P2-fov6",
    "n_segments": 4,
    "segments": [
     1,
@@ -855,7 +855,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_7_0",
-   "label": "p2 7 0",
+   "label": "Z-P2-fov7_0",
    "n_segments": 4,
    "segments": [
     1,
@@ -870,7 +870,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_7_1",
-   "label": "p2 7 1",
+   "label": "Z-P2-fov7_1",
    "n_segments": 4,
    "segments": [
     1,
@@ -885,7 +885,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_8_0",
-   "label": "p2 8 0",
+   "label": "Z-P2-fov8_0",
    "n_segments": 4,
    "segments": [
     1,
@@ -900,7 +900,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_8_1",
-   "label": "p2 8 1",
+   "label": "Z-P2-fov8_1",
    "n_segments": 4,
    "segments": [
     1,
@@ -915,7 +915,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_9_0",
-   "label": "p2 9 0",
+   "label": "Z-P2-fov9_0",
    "n_segments": 4,
    "segments": [
     1,
@@ -930,7 +930,7 @@
    "stage": "Zygote",
    "stage_label": "Zygote",
    "eid": "20260425_zygote_p2_9_1",
-   "label": "p2 9 1",
+   "label": "Z-P2-fov9_1",
    "n_segments": 4,
    "segments": [
     1,
@@ -945,7 +945,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_0",
-   "label": "p2 0",
+   "label": "e2c-P2-fov0",
    "n_segments": 5,
    "segments": [
     1,
@@ -961,7 +961,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_1",
-   "label": "p2 1",
+   "label": "e2c-P2-fov1",
    "n_segments": 5,
    "segments": [
     1,
@@ -977,7 +977,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_10",
-   "label": "p2 10",
+   "label": "e2c-P2-fov10",
    "n_segments": 5,
    "segments": [
     1,
@@ -993,7 +993,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_11",
-   "label": "p2 11",
+   "label": "e2c-P2-fov11",
    "n_segments": 5,
    "segments": [
     1,
@@ -1009,7 +1009,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_12",
-   "label": "p2 12",
+   "label": "e2c-P2-fov12",
    "n_segments": 5,
    "segments": [
     1,
@@ -1025,7 +1025,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_13",
-   "label": "p2 13",
+   "label": "e2c-P2-fov13",
    "n_segments": 5,
    "segments": [
     1,
@@ -1041,7 +1041,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_14",
-   "label": "p2 14",
+   "label": "e2c-P2-fov14",
    "n_segments": 5,
    "segments": [
     1,
@@ -1057,7 +1057,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_15_0",
-   "label": "p2 15 0",
+   "label": "e2c-P2-fov15_0",
    "n_segments": 4,
    "segments": [
     1,
@@ -1072,7 +1072,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_15_1",
-   "label": "p2 15 1",
+   "label": "e2c-P2-fov15_1",
    "n_segments": 4,
    "segments": [
     1,
@@ -1087,7 +1087,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_16",
-   "label": "p2 16",
+   "label": "e2c-P2-fov16",
    "n_segments": 5,
    "segments": [
     1,
@@ -1103,7 +1103,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_17",
-   "label": "p2 17",
+   "label": "e2c-P2-fov17",
    "n_segments": 5,
    "segments": [
     1,
@@ -1119,7 +1119,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_18",
-   "label": "p2 18",
+   "label": "e2c-P2-fov18",
    "n_segments": 5,
    "segments": [
     1,
@@ -1135,7 +1135,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_19",
-   "label": "p2 19",
+   "label": "e2c-P2-fov19",
    "n_segments": 5,
    "segments": [
     1,
@@ -1151,7 +1151,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_2",
-   "label": "p2 2",
+   "label": "e2c-P2-fov2",
    "n_segments": 5,
    "segments": [
     1,
@@ -1167,7 +1167,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_20",
-   "label": "p2 20",
+   "label": "e2c-P2-fov20",
    "n_segments": 5,
    "segments": [
     1,
@@ -1183,7 +1183,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_21",
-   "label": "p2 21",
+   "label": "e2c-P2-fov21",
    "n_segments": 4,
    "segments": [
     1,
@@ -1198,7 +1198,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_23",
-   "label": "p2 23",
+   "label": "e2c-P2-fov23",
    "n_segments": 5,
    "segments": [
     1,
@@ -1214,7 +1214,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_25",
-   "label": "p2 25",
+   "label": "e2c-P2-fov25",
    "n_segments": 5,
    "segments": [
     1,
@@ -1230,7 +1230,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_3_0",
-   "label": "p2 3 0",
+   "label": "e2c-P2-fov3_0",
    "n_segments": 5,
    "segments": [
     1,
@@ -1246,7 +1246,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_3_1",
-   "label": "p2 3 1",
+   "label": "e2c-P2-fov3_1",
    "n_segments": 5,
    "segments": [
     1,
@@ -1262,7 +1262,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_4",
-   "label": "p2 4",
+   "label": "e2c-P2-fov4",
    "n_segments": 4,
    "segments": [
     1,
@@ -1277,7 +1277,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_5",
-   "label": "p2 5",
+   "label": "e2c-P2-fov5",
    "n_segments": 5,
    "segments": [
     1,
@@ -1293,7 +1293,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_6",
-   "label": "p2 6",
+   "label": "e2c-P2-fov6",
    "n_segments": 5,
    "segments": [
     1,
@@ -1309,7 +1309,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_7",
-   "label": "p2 7",
+   "label": "e2c-P2-fov7",
    "n_segments": 5,
    "segments": [
     1,
@@ -1325,7 +1325,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_8",
-   "label": "p2 8",
+   "label": "e2c-P2-fov8",
    "n_segments": 5,
    "segments": [
     1,
@@ -1341,7 +1341,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260408_e2c_p2_9",
-   "label": "p2 9",
+   "label": "e2c-P2-fov9",
    "n_segments": 5,
    "segments": [
     1,
@@ -1357,7 +1357,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_0",
-   "label": "p1 0",
+   "label": "e2c-P1-fov0",
    "n_segments": 5,
    "segments": [
     1,
@@ -1373,7 +1373,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_1",
-   "label": "p1 1",
+   "label": "e2c-P1-fov1",
    "n_segments": 5,
    "segments": [
     1,
@@ -1389,7 +1389,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_10",
-   "label": "p1 10",
+   "label": "e2c-P1-fov10",
    "n_segments": 5,
    "segments": [
     1,
@@ -1405,7 +1405,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_11",
-   "label": "p1 11",
+   "label": "e2c-P1-fov11",
    "n_segments": 5,
    "segments": [
     1,
@@ -1421,7 +1421,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_12_0",
-   "label": "p1 12 0",
+   "label": "e2c-P1-fov12_0",
    "n_segments": 4,
    "segments": [
     1,
@@ -1436,7 +1436,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_12_1",
-   "label": "p1 12 1",
+   "label": "e2c-P1-fov12_1",
    "n_segments": 5,
    "segments": [
     1,
@@ -1452,7 +1452,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_13_0",
-   "label": "p1 13 0",
+   "label": "e2c-P1-fov13_0",
    "n_segments": 5,
    "segments": [
     1,
@@ -1468,7 +1468,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_13_1",
-   "label": "p1 13 1",
+   "label": "e2c-P1-fov13_1",
    "n_segments": 5,
    "segments": [
     1,
@@ -1484,7 +1484,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_13_2",
-   "label": "p1 13 2",
+   "label": "e2c-P1-fov13_2",
    "n_segments": 5,
    "segments": [
     1,
@@ -1500,7 +1500,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_13_3",
-   "label": "p1 13 3",
+   "label": "e2c-P1-fov13_3",
    "n_segments": 5,
    "segments": [
     1,
@@ -1516,7 +1516,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_14",
-   "label": "p1 14",
+   "label": "e2c-P1-fov14",
    "n_segments": 5,
    "segments": [
     1,
@@ -1532,7 +1532,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_15_0",
-   "label": "p1 15 0",
+   "label": "e2c-P1-fov15_0",
    "n_segments": 5,
    "segments": [
     1,
@@ -1548,7 +1548,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_15_1",
-   "label": "p1 15 1",
+   "label": "e2c-P1-fov15_1",
    "n_segments": 4,
    "segments": [
     1,
@@ -1563,7 +1563,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_16_0",
-   "label": "p1 16 0",
+   "label": "e2c-P1-fov16_0",
    "n_segments": 5,
    "segments": [
     1,
@@ -1579,7 +1579,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_16_1",
-   "label": "p1 16 1",
+   "label": "e2c-P1-fov16_1",
    "n_segments": 5,
    "segments": [
     1,
@@ -1595,7 +1595,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_17_0",
-   "label": "p1 17 0",
+   "label": "e2c-P1-fov17_0",
    "n_segments": 4,
    "segments": [
     1,
@@ -1610,7 +1610,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_17_1",
-   "label": "p1 17 1",
+   "label": "e2c-P1-fov17_1",
    "n_segments": 5,
    "segments": [
     1,
@@ -1626,7 +1626,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_18",
-   "label": "p1 18",
+   "label": "e2c-P1-fov18",
    "n_segments": 5,
    "segments": [
     1,
@@ -1642,7 +1642,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_19_0",
-   "label": "p1 19 0",
+   "label": "e2c-P1-fov19_0",
    "n_segments": 5,
    "segments": [
     1,
@@ -1658,7 +1658,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_19_1",
-   "label": "p1 19 1",
+   "label": "e2c-P1-fov19_1",
    "n_segments": 5,
    "segments": [
     1,
@@ -1674,7 +1674,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_19_2",
-   "label": "p1 19 2",
+   "label": "e2c-P1-fov19_2",
    "n_segments": 5,
    "segments": [
     1,
@@ -1690,7 +1690,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_2",
-   "label": "p1 2",
+   "label": "e2c-P1-fov2",
    "n_segments": 4,
    "segments": [
     1,
@@ -1705,7 +1705,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_3_0",
-   "label": "p1 3 0",
+   "label": "e2c-P1-fov3_0",
    "n_segments": 5,
    "segments": [
     1,
@@ -1721,7 +1721,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_3_1",
-   "label": "p1 3 1",
+   "label": "e2c-P1-fov3_1",
    "n_segments": 4,
    "segments": [
     1,
@@ -1736,7 +1736,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_4",
-   "label": "p1 4",
+   "label": "e2c-P1-fov4",
    "n_segments": 5,
    "segments": [
     1,
@@ -1752,7 +1752,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_5",
-   "label": "p1 5",
+   "label": "e2c-P1-fov5",
    "n_segments": 5,
    "segments": [
     1,
@@ -1768,7 +1768,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_6",
-   "label": "p1 6",
+   "label": "e2c-P1-fov6",
    "n_segments": 6,
    "segments": [
     1,
@@ -1785,7 +1785,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_9_0",
-   "label": "p1 9 0",
+   "label": "e2c-P1-fov9_0",
    "n_segments": 5,
    "segments": [
     1,
@@ -1801,7 +1801,7 @@
    "stage": "Early2Cell",
    "stage_label": "Early 2-cell",
    "eid": "20260424_e2c_p1_9_1",
-   "label": "p1 9 1",
+   "label": "e2c-P1-fov9_1",
    "n_segments": 5,
    "segments": [
     1,
@@ -1817,7 +1817,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260212_l2c_p2_0_0",
-   "label": "p2 0 0",
+   "label": "l2c-P2-fov0_0",
    "n_segments": 4,
    "segments": [
     1,
@@ -1832,7 +1832,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260212_l2c_p2_0_1",
-   "label": "p2 0 1",
+   "label": "l2c-P2-fov0_1",
    "n_segments": 5,
    "segments": [
     1,
@@ -1848,7 +1848,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260212_l2c_p2_1",
-   "label": "p2 1",
+   "label": "l2c-P2-fov1",
    "n_segments": 6,
    "segments": [
     1,
@@ -1865,7 +1865,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260212_l2c_p2_10",
-   "label": "p2 10",
+   "label": "l2c-P2-fov10",
    "n_segments": 6,
    "segments": [
     1,
@@ -1882,7 +1882,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260212_l2c_p2_11",
-   "label": "p2 11",
+   "label": "l2c-P2-fov11",
    "n_segments": 5,
    "segments": [
     1,
@@ -1898,7 +1898,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260212_l2c_p2_2",
-   "label": "p2 2",
+   "label": "l2c-P2-fov2",
    "n_segments": 5,
    "segments": [
     1,
@@ -1914,7 +1914,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260212_l2c_p2_3",
-   "label": "p2 3",
+   "label": "l2c-P2-fov3",
    "n_segments": 5,
    "segments": [
     1,
@@ -1930,7 +1930,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260212_l2c_p2_4",
-   "label": "p2 4",
+   "label": "l2c-P2-fov4",
    "n_segments": 5,
    "segments": [
     1,
@@ -1946,7 +1946,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260212_l2c_p2_5",
-   "label": "p2 5",
+   "label": "l2c-P2-fov5",
    "n_segments": 5,
    "segments": [
     1,
@@ -1962,7 +1962,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260212_l2c_p2_6",
-   "label": "p2 6",
+   "label": "l2c-P2-fov6",
    "n_segments": 4,
    "segments": [
     1,
@@ -1977,7 +1977,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260212_l2c_p2_7",
-   "label": "p2 7",
+   "label": "l2c-P2-fov7",
    "n_segments": 5,
    "segments": [
     1,
@@ -1993,7 +1993,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260212_l2c_p2_8",
-   "label": "p2 8",
+   "label": "l2c-P2-fov8",
    "n_segments": 5,
    "segments": [
     1,
@@ -2009,7 +2009,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260212_l2c_p2_9",
-   "label": "p2 9",
+   "label": "l2c-P2-fov9",
    "n_segments": 5,
    "segments": [
     1,
@@ -2025,7 +2025,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260409_l2c_blastomere_p2_3",
-   "label": "blastomere p2 3",
+   "label": "l2c-P2-fov3",
    "n_segments": 2,
    "segments": [
     1,
@@ -2038,7 +2038,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260409_l2c_blastomere_p2_4",
-   "label": "blastomere p2 4",
+   "label": "l2c-P2-fov4",
    "n_segments": 2,
    "segments": [
     1,
@@ -2051,7 +2051,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260409_l2c_p2_0",
-   "label": "p2 0",
+   "label": "l2c-P2-fov0",
    "n_segments": 4,
    "segments": [
     1,
@@ -2066,7 +2066,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260409_l2c_p2_1",
-   "label": "p2 1",
+   "label": "l2c-P2-fov1",
    "n_segments": 6,
    "segments": [
     1,
@@ -2083,7 +2083,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260409_l2c_p2_2",
-   "label": "p2 2",
+   "label": "l2c-P2-fov2",
    "n_segments": 5,
    "segments": [
     1,
@@ -2099,7 +2099,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260409_l2c_p2_5",
-   "label": "p2 5",
+   "label": "l2c-P2-fov5",
    "n_segments": 6,
    "segments": [
     1,
@@ -2116,7 +2116,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260409_l2c_p2_6",
-   "label": "p2 6",
+   "label": "l2c-P2-fov6",
    "n_segments": 5,
    "segments": [
     1,
@@ -2132,7 +2132,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260409_l2c_p2_7",
-   "label": "p2 7",
+   "label": "l2c-P2-fov7",
    "n_segments": 5,
    "segments": [
     1,
@@ -2148,7 +2148,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260409_l2c_p2_8",
-   "label": "p2 8",
+   "label": "l2c-P2-fov8",
    "n_segments": 5,
    "segments": [
     1,
@@ -2164,7 +2164,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_0",
-   "label": "p1 0",
+   "label": "l2c-P1-fov0",
    "n_segments": 5,
    "segments": [
     1,
@@ -2180,7 +2180,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_10",
-   "label": "p1 10",
+   "label": "l2c-P1-fov10",
    "n_segments": 5,
    "segments": [
     1,
@@ -2196,7 +2196,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_11",
-   "label": "p1 11",
+   "label": "l2c-P1-fov11",
    "n_segments": 5,
    "segments": [
     1,
@@ -2212,7 +2212,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_12",
-   "label": "p1 12",
+   "label": "l2c-P1-fov12",
    "n_segments": 5,
    "segments": [
     1,
@@ -2228,7 +2228,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_13",
-   "label": "p1 13",
+   "label": "l2c-P1-fov13",
    "n_segments": 4,
    "segments": [
     1,
@@ -2243,7 +2243,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_15",
-   "label": "p1 15",
+   "label": "l2c-P1-fov15",
    "n_segments": 6,
    "segments": [
     1,
@@ -2260,7 +2260,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_16",
-   "label": "p1 16",
+   "label": "l2c-P1-fov16",
    "n_segments": 4,
    "segments": [
     1,
@@ -2275,7 +2275,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_2",
-   "label": "p1 2",
+   "label": "l2c-P1-fov2",
    "n_segments": 5,
    "segments": [
     1,
@@ -2291,7 +2291,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_3_1",
-   "label": "p1 3 1",
+   "label": "l2c-P1-fov3_1",
    "n_segments": 5,
    "segments": [
     1,
@@ -2307,7 +2307,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_3_2",
-   "label": "p1 3 2",
+   "label": "l2c-P1-fov3_2",
    "n_segments": 5,
    "segments": [
     1,
@@ -2323,7 +2323,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_4",
-   "label": "p1 4",
+   "label": "l2c-P1-fov4",
    "n_segments": 5,
    "segments": [
     1,
@@ -2339,7 +2339,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_5",
-   "label": "p1 5",
+   "label": "l2c-P1-fov5",
    "n_segments": 4,
    "segments": [
     1,
@@ -2354,7 +2354,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_6",
-   "label": "p1 6",
+   "label": "l2c-P1-fov6",
    "n_segments": 5,
    "segments": [
     1,
@@ -2370,7 +2370,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_7",
-   "label": "p1 7",
+   "label": "l2c-P1-fov7",
    "n_segments": 5,
    "segments": [
     1,
@@ -2386,7 +2386,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_8",
-   "label": "p1 8",
+   "label": "l2c-P1-fov8",
    "n_segments": 5,
    "segments": [
     1,
@@ -2402,7 +2402,7 @@
    "stage": "Late2Cell",
    "stage_label": "Late 2-cell",
    "eid": "20260420_l2c_p1_9",
-   "label": "p1 9",
+   "label": "l2c-P1-fov9",
    "n_segments": 5,
    "segments": [
     1,

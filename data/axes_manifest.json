@@ -4,7 +4,7 @@
    "id": "20251226_zygote_p1_1",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p1 1",
+   "label": "Z-P1-fov1",
    "angles": {
     "aspect_ratio": 1.252,
     "plane_vs_pb": {
@@ -35,7 +35,7 @@
    "id": "20251226_zygote_p1_10",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p1 10",
+   "label": "Z-P1-fov10",
    "angles": {
     "aspect_ratio": 1.203,
     "plane_vs_pb": {
@@ -66,7 +66,7 @@
    "id": "20251226_zygote_p1_11",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p1 11",
+   "label": "Z-P1-fov11",
    "angles": {
     "aspect_ratio": 1.143,
     "pb_vs_shape": {
@@ -85,7 +85,7 @@
    "id": "20251226_zygote_p1_7",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p1 7",
+   "label": "Z-P1-fov7",
    "angles": {
     "aspect_ratio": 1.116,
     "plane_vs_pb": {
@@ -116,7 +116,7 @@
    "id": "20251226_zygote_p1_8",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p1 8",
+   "label": "Z-P1-fov8",
    "angles": {
     "aspect_ratio": 1.147,
     "plane_vs_pb": {
@@ -147,7 +147,7 @@
    "id": "20260212_l2c_p2_0_1",
    "stage": "twocell",
    "stage_label": "2-cell (late)",
-   "label": "p2 0 1",
+   "label": "l2c-P2-fov0_1",
    "angles": {
     "aspect_ratio": 2.353,
     "plane_vs_pb": {
@@ -178,7 +178,7 @@
    "id": "20260407_zygote_p1_0_2",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p1 0 2",
+   "label": "Z-P1-fov0_2",
    "angles": {
     "aspect_ratio": 1.173,
     "plane_vs_pb": {
@@ -209,7 +209,7 @@
    "id": "20260407_zygote_p1_1",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p1 1",
+   "label": "Z-P1-fov1",
    "angles": {
     "aspect_ratio": 1.092,
     "plane_vs_pb": {
@@ -240,7 +240,7 @@
    "id": "20260407_zygote_p1_12",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p1 12",
+   "label": "Z-P1-fov12",
    "angles": {
     "aspect_ratio": 1.155,
     "plane_vs_pb": {
@@ -271,7 +271,7 @@
    "id": "20260407_zygote_p1_2",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p1 2",
+   "label": "Z-P1-fov2",
    "angles": {
     "aspect_ratio": 1.239,
     "plane_vs_pb": {
@@ -302,7 +302,7 @@
    "id": "20260407_zygote_p1_3",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p1 3",
+   "label": "Z-P1-fov3",
    "angles": {
     "aspect_ratio": 1.142,
     "plane_vs_pb": {
@@ -333,7 +333,7 @@
    "id": "20260407_zygote_p1_4",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p1 4",
+   "label": "Z-P1-fov4",
    "angles": {
     "aspect_ratio": 1.333,
     "plane_vs_pb": {
@@ -364,7 +364,7 @@
    "id": "20260407_zygote_p1_5",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p1 5",
+   "label": "Z-P1-fov5",
    "angles": {
     "aspect_ratio": 1.219,
     "plane_vs_sperm": {
@@ -383,7 +383,7 @@
    "id": "20260407_zygote_p1_6_1",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p1 6 1",
+   "label": "Z-P1-fov6_1",
    "angles": {
     "aspect_ratio": 1.226,
     "plane_vs_pb": {
@@ -414,7 +414,7 @@
    "id": "20260407_zygote_p1_7_1",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p1 7 1",
+   "label": "Z-P1-fov7_1",
    "angles": {
     "aspect_ratio": 1.15,
     "plane_vs_sperm": {
@@ -433,7 +433,7 @@
    "id": "20260408_e2c_p2_13",
    "stage": "twocell",
    "stage_label": "2-cell (early)",
-   "label": "p2 13",
+   "label": "e2c-P2-fov13",
    "angles": {
     "aspect_ratio": 1.747,
     "plane_vs_pb": {
@@ -464,7 +464,7 @@
    "id": "20260408_e2c_p2_15_1",
    "stage": "twocell",
    "stage_label": "2-cell (early)",
-   "label": "p2 15 1",
+   "label": "e2c-P2-fov15_1",
    "angles": {
     "aspect_ratio": 2.337,
     "plane_vs_sperm": {
@@ -483,7 +483,7 @@
    "id": "20260408_e2c_p2_16",
    "stage": "twocell",
    "stage_label": "2-cell (early)",
-   "label": "p2 16",
+   "label": "e2c-P2-fov16",
    "angles": {
     "aspect_ratio": 1.525,
     "plane_vs_pb": {
@@ -514,7 +514,7 @@
    "id": "20260408_e2c_p2_18",
    "stage": "twocell",
    "stage_label": "2-cell (early)",
-   "label": "p2 18",
+   "label": "e2c-P2-fov18",
    "angles": {
     "aspect_ratio": 1.537,
     "plane_vs_pb": {
@@ -545,7 +545,7 @@
    "id": "20260408_e2c_p2_19",
    "stage": "twocell",
    "stage_label": "2-cell (early)",
-   "label": "p2 19",
+   "label": "e2c-P2-fov19",
    "angles": {
     "aspect_ratio": 2.07,
     "plane_vs_pb": {
@@ -576,7 +576,7 @@
    "id": "20260408_e2c_p2_20",
    "stage": "twocell",
    "stage_label": "2-cell (early)",
-   "label": "p2 20",
+   "label": "e2c-P2-fov20",
    "angles": {
     "aspect_ratio": 1.647,
     "plane_vs_pb": {
@@ -607,7 +607,7 @@
    "id": "20260408_e2c_p2_23",
    "stage": "twocell",
    "stage_label": "2-cell (early)",
-   "label": "p2 23",
+   "label": "e2c-P2-fov23",
    "angles": {
     "aspect_ratio": 2.05,
     "plane_vs_pb": {
@@ -638,7 +638,7 @@
    "id": "20260409_l2c_p2_5",
    "stage": "twocell",
    "stage_label": "2-cell (late)",
-   "label": "p2 5",
+   "label": "l2c-P2-fov5",
    "angles": {
     "aspect_ratio": 1.9,
     "plane_vs_pb": {
@@ -669,7 +669,7 @@
    "id": "20260409_l2c_p2_6",
    "stage": "twocell",
    "stage_label": "2-cell (late)",
-   "label": "p2 6",
+   "label": "l2c-P2-fov6",
    "angles": {
     "aspect_ratio": 1.915,
     "plane_vs_pb": {
@@ -700,7 +700,7 @@
    "id": "20260420_l2c_p1_8",
    "stage": "twocell",
    "stage_label": "2-cell (late)",
-   "label": "p1 8",
+   "label": "l2c-P1-fov8",
    "angles": {
     "aspect_ratio": 2.33,
     "plane_vs_pb": {
@@ -731,7 +731,7 @@
    "id": "20260424_e2c_p1_0",
    "stage": "twocell",
    "stage_label": "2-cell (early)",
-   "label": "p1 0",
+   "label": "e2c-P1-fov0",
    "angles": {
     "aspect_ratio": 1.772,
     "plane_vs_pb": {
@@ -762,7 +762,7 @@
    "id": "20260424_e2c_p1_1",
    "stage": "twocell",
    "stage_label": "2-cell (early)",
-   "label": "p1 1",
+   "label": "e2c-P1-fov1",
    "angles": {
     "aspect_ratio": 2.087,
     "plane_vs_pb": {
@@ -793,7 +793,7 @@
    "id": "20260424_e2c_p1_10",
    "stage": "twocell",
    "stage_label": "2-cell (early)",
-   "label": "p1 10",
+   "label": "e2c-P1-fov10",
    "angles": {
     "aspect_ratio": 2.391,
     "plane_vs_pb": {
@@ -824,7 +824,7 @@
    "id": "20260424_e2c_p1_11",
    "stage": "twocell",
    "stage_label": "2-cell (early)",
-   "label": "p1 11",
+   "label": "e2c-P1-fov11",
    "angles": {
     "aspect_ratio": 1.759,
     "plane_vs_pb": {
@@ -855,7 +855,7 @@
    "id": "20260424_e2c_p1_12_1",
    "stage": "twocell",
    "stage_label": "2-cell (early)",
-   "label": "p1 12 1",
+   "label": "e2c-P1-fov12_1",
    "angles": {
     "aspect_ratio": 2.569,
     "plane_vs_pb": {
@@ -886,7 +886,7 @@
    "id": "20260424_e2c_p1_19_2",
    "stage": "twocell",
    "stage_label": "2-cell (early)",
-   "label": "p1 19 2",
+   "label": "e2c-P1-fov19_2",
    "angles": {
     "aspect_ratio": 2.061,
     "plane_vs_pb": {
@@ -917,7 +917,7 @@
    "id": "20260424_e2c_p1_4",
    "stage": "twocell",
    "stage_label": "2-cell (early)",
-   "label": "p1 4",
+   "label": "e2c-P1-fov4",
    "angles": {
     "aspect_ratio": 2.112,
     "plane_vs_pb": {
@@ -948,7 +948,7 @@
    "id": "20260424_e2c_p1_6",
    "stage": "twocell",
    "stage_label": "2-cell (early)",
-   "label": "p1 6",
+   "label": "e2c-P1-fov6",
    "angles": {
     "aspect_ratio": 1.919,
     "plane_vs_pb": {
@@ -979,7 +979,7 @@
    "id": "20260425_zygote_p2_1",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p2 1",
+   "label": "Z-P2-fov1",
    "angles": {
     "aspect_ratio": 1.295,
     "plane_vs_pb": {
@@ -1010,7 +1010,7 @@
    "id": "20260425_zygote_p2_13",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p2 13",
+   "label": "Z-P2-fov13",
    "angles": {
     "aspect_ratio": 1.359,
     "plane_vs_pb": {
@@ -1041,7 +1041,7 @@
    "id": "20260425_zygote_p2_16",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p2 16",
+   "label": "Z-P2-fov16",
    "angles": {
     "aspect_ratio": 1.311,
     "plane_vs_pb": {
@@ -1072,7 +1072,7 @@
    "id": "20260425_zygote_p2_17",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p2 17",
+   "label": "Z-P2-fov17",
    "angles": {
     "aspect_ratio": 1.216,
     "plane_vs_pb": {
@@ -1103,7 +1103,7 @@
    "id": "20260425_zygote_p2_18_1",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p2 18 1",
+   "label": "Z-P2-fov18_1",
    "angles": {
     "aspect_ratio": 1.455,
     "plane_vs_pb": {
@@ -1134,7 +1134,7 @@
    "id": "20260425_zygote_p2_20",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p2 20",
+   "label": "Z-P2-fov20",
    "angles": {
     "aspect_ratio": 1.34,
     "plane_vs_pb": {
@@ -1165,7 +1165,7 @@
    "id": "20260425_zygote_p2_23",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p2 23",
+   "label": "Z-P2-fov23",
    "angles": {
     "aspect_ratio": 1.212,
     "plane_vs_pb": {
@@ -1196,7 +1196,7 @@
    "id": "20260425_zygote_p2_26",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p2 26",
+   "label": "Z-P2-fov26",
    "angles": {
     "aspect_ratio": 1.208,
     "plane_vs_sperm": {
@@ -1215,7 +1215,7 @@
    "id": "20260425_zygote_p2_4",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p2 4",
+   "label": "Z-P2-fov4",
    "angles": {
     "aspect_ratio": 1.275,
     "plane_vs_pb": {
@@ -1246,7 +1246,7 @@
    "id": "20260425_zygote_p2_5",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p2 5",
+   "label": "Z-P2-fov5",
    "angles": {
     "aspect_ratio": 1.231,
     "plane_vs_pb": {
@@ -1277,7 +1277,7 @@
    "id": "20260425_zygote_p2_7_1",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p2 7 1",
+   "label": "Z-P2-fov7_1",
    "angles": {
     "aspect_ratio": 1.342,
     "plane_vs_pb": {
@@ -1308,7 +1308,7 @@
    "id": "20260425_zygote_p2_8_1",
    "stage": "zygote",
    "stage_label": "Zygote",
-   "label": "p2 8 1",
+   "label": "Z-P2-fov8_1",
    "angles": {
     "aspect_ratio": 1.236,
     "plane_vs_pb": {

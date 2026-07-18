@@ -6,6 +6,7 @@
  */
 (() => {
   const $ = (s) => document.querySelector(s);
+  const el = (tag, cls) => { const e = document.createElement(tag); if (cls) e.className = cls; return e; };
   const V = window.VCore;
   const XY = 0.15;
   const AXIS_C = "#111827", PLANE_C = "#f97316";
@@ -31,6 +32,7 @@
   const xsPlane = $("#xs-plane"), xsNote = $("#xs-note");
   const xsCaption = $("#xs-caption"), xsBarSub = $("#xs-bar-sub");
   const xsOutlines = $("#xs-outlines"), xsBars = $("#xs-bars");
+  const xsGm = $("#xs-gm"), xsGmSub = $("#xs-gm-sub"), xsGmNote = $("#xs-gm-note"), xsGmDownload = $("#xs-gm-download");
   const xsBody = $("#xs-body"), xsPb = $("#xs-pb"), xsPronuclei = $("#xs-pronuclei");
   const xsCrossLegend = $("#xs-cross-legend"), xsCrossDownload = $("#xs-cross-download");
   const xsCrossHighColor = $("#xs-cross-high-color"), xsCrossLowColor = $("#xs-cross-low-color");
@@ -552,12 +554,90 @@
       paper_bgcolor: "transparent", plot_bgcolor: "transparent",
     }, XS_CFG);
   }
+  // γ / μ concordance grid: the anchor gene (floating-window selection) splits each zygote
+  // by its best plane into a γ half (more anchor transcripts) and a μ half (fewer). Then, for
+  // EVERY gene, each cell asks: on that same γ half, is this gene also enriched (γ) or does it
+  // flip to the μ side (μ)? Rows = genes, columns = zygotes containing the anchor gene.
+  function gmCall(row, ki, gammaSideA) {
+    if (!row || !row[0]) return null;               // gene absent in this zygote
+    const a = row[1 + ki], gammaCount = gammaSideA ? a : row[0] - a, twice = gammaCount * 2;
+    return twice > row[0] ? "G" : (twice < row[0] ? "M" : "T");
+  }
+  function gmModel() {
+    const agg = curAGG(); if (!agg) return null;
+    const A = gene(), ki = bestKeyIndex();
+    const cols = agg.embryos.filter((e) => e.g[A] && e.g[A][0] > 0);
+    if (!cols.length) return { anchor: A, cols: [], rows: [] };
+    // which side is γ for the anchor in each zygote (side A has more of the anchor gene)
+    const gammaSideA = cols.map((e) => { const r = e.g[A]; return r[1 + ki] * 2 >= r[0]; });
+    const geneSet = new Set(); cols.forEach((e) => Object.keys(e.g).forEach((g) => geneSet.add(g)));
+    geneSet.delete(A);
+    const build = (g) => {
+      const cells = cols.map((e, i) => gmCall(e.g[g], ki, gammaSideA[i]));
+      const present = cells.filter((c) => c !== null);
+      const nG = present.filter((c) => c === "G").length;
+      return { gene: g, cells, cov: present.length, gammaFrac: present.length ? nG / present.length : 0 };
+    };
+    const rows = [build(A), ...[...geneSet].map(build)
+      .sort((x, y) => (y.gammaFrac - x.gammaFrac) || (y.cov - x.cov) || x.gene.localeCompare(y.gene))];
+    return { anchor: A, ki, cols, rows };
+  }
+  function renderGammaMu() {
+    if (!xsGm) return;
+    const m = gmModel();
+    if (!m) return;
+    const A = m.anchor;
+    if (!m.cols.length) {
+      xsGm.innerHTML = `<div class="xs-empty"><div><b>${A}</b> is not detected in any retained zygote.</div></div>`;
+      if (xsGmSub) xsGmSub.textContent = `· ${A}`;
+      if (xsGmNote) xsGmNote.textContent = "";
+      return;
+    }
+    if (xsGmNote) xsGmNote.innerHTML =
+      `Each zygote is split at its <b>${BESTKEY_LABEL[state.crossKey]}</b> plane; the half with more ` +
+      `<b>${A}</b> is <b>γ</b>. Every gene is then <b>γ</b> if it is also enriched on that half, ` +
+      `<b>μ</b> if it flips to the other half.`;
+    const frag = document.createDocumentFragment();
+    const corner = el("div", "xs-gm-corner"); corner.textContent = "gene \\ zygote"; frag.appendChild(corner);
+    m.cols.forEach((e) => { const c = el("div", "xs-gm-collabel"); const s = document.createElement("span"); s.textContent = e.label; c.appendChild(s); frag.appendChild(c); });
+    m.rows.forEach((rd) => {
+      const isA = rd.gene === A;
+      const lab = el("div", "xs-gm-rowlabel" + (isA ? " anchor" : ""));
+      lab.textContent = rd.gene;
+      lab.title = isA ? `${rd.gene} — anchor (defines the γ half)` :
+        `${rd.gene} — γ in ${Math.round(rd.gammaFrac * 100)}% of ${rd.cov} zygote(s)`;
+      frag.appendChild(lab);
+      rd.cells.forEach((c, i) => {
+        const kind = c === "G" ? "g-G" : c === "M" ? "g-M" : c === "T" ? "g-T" : "g-NA";
+        const box = el("div", "xs-gm-cell " + kind);
+        box.textContent = c === "G" ? "γ" : c === "M" ? "μ" : c === "T" ? "·" : "";
+        box.title = `${rd.gene} · ${m.cols[i].label}: ` +
+          (c === "G" ? "γ — shares the anchor's γ half" : c === "M" ? "μ — flipped to the μ half" :
+           c === "T" ? "tie (50/50)" : "gene not present");
+        frag.appendChild(box);
+      });
+    });
+    xsGm.style.setProperty("--gm-cols", m.cols.length);
+    xsGm.innerHTML = ""; xsGm.appendChild(frag);
+    if (xsGmSub) xsGmSub.textContent = `· ${A} · ${m.rows.length} genes × ${m.cols.length} zygotes`;
+  }
+  function downloadGammaMuCSV() {
+    const m = gmModel(); if (!m || !m.cols.length) return;
+    const glyph = (c) => (c === "G" ? "gamma" : c === "M" ? "mu" : c === "T" ? "tie" : "");
+    const head = ["gene", ...m.cols.map((e) => e.label.replace(/,/g, ""))];
+    const lines = [head.join(",")];
+    m.rows.forEach((rd) => lines.push([rd.gene, ...rd.cells.map(glyph)].join(",")));
+    const blob = new Blob([lines.join("\n")], { type: "text/csv" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = `gamma_mu_${m.anchor}.csv`;
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
+  }
   function renderCrossAgg() {
     return ensureAgg().then(() => {
       const cov = curAGG().gene_cov[gene()] || 0, tot = curAGG().n_embryos;
       drawerEmb.textContent = `· ${gene()}`;
       xsNote.innerHTML = `Counts use each zygote's <b>${BESTKEY_LABEL[state.crossKey]}</b> plane; <b>${cov}/${tot}</b> retained zygotes contain <b>${gene()}</b>.`;
-      renderCurrentCrossSection(); renderBars();
+      renderCurrentCrossSection(); renderBars(); renderGammaMu();
       requestAnimationFrame(() => { try { Plotly.Plots.resize(xsOutlines); Plotly.Plots.resize(xsBars); } catch (_) {} });
     });
   }
@@ -680,6 +760,7 @@
       .forEach((el) => el.addEventListener("change", renderBars));
     xsCrossDownload.addEventListener("click", () => downloadPlot(xsOutlines, "cross_section", xsCrossFormat, xsCrossScale, 1800, 1400));
     xsBarDownload.addEventListener("click", () => downloadPlot(xsBars, "side_counts", xsBarFormat, xsBarScale, 2000, 1250));
+    if (xsGmDownload) xsGmDownload.addEventListener("click", downloadGammaMuCSV);
   }
 
   function downloadPlot(div, suffix, formatEl, scaleEl, width, height) {

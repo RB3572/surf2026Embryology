@@ -26,6 +26,7 @@ import json
 import os
 
 import numpy as np
+from embryo_naming import embryo_label
 import tifffile
 from scipy.spatial import cKDTree
 from scipy.ndimage import binary_dilation
@@ -155,10 +156,7 @@ def _json_default(o):
 
 
 def short_label(eid):
-    import re
-    s = re.sub(r"^\d{8}_", "", eid)
-    s = re.sub(r"^zygote_?", "", s, flags=re.I)
-    return (s.replace("sample", "s").replace("_", " ").strip()) or eid
+    return embryo_label(eid, "zygote")
 
 
 def date_short(eid):

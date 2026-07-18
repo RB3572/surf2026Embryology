@@ -54,6 +54,7 @@ import os
 from collections import Counter
 
 import numpy as np
+from embryo_naming import embryo_label
 import tifffile
 from scipy.ndimage import binary_dilation
 
@@ -244,10 +245,7 @@ def _json_default(o):
 
 
 def short_label(eid):
-    import re
-    s = re.sub(r"^\d{8}_", "", eid)
-    s = re.sub(r"^(zygote|e2c|l2c)_?", "", s, flags=re.I)
-    return (s.replace("sample", "s").replace("_", " ").strip()) or eid
+    return embryo_label(eid)
 
 
 def main():

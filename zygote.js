@@ -40,7 +40,7 @@
   const xsCrossBodyColor = $("#xs-cross-body-color"), xsCrossPbColor = $("#xs-cross-pb-color");
   const xsCrossPnColor = $("#xs-cross-pn-color"), xsCrossScale = $("#xs-cross-scale"), xsCrossFormat = $("#xs-cross-format");
   const xsCrossDotSize = $("#xs-cross-dot-size"), xsCrossDotSizeValue = $("#xs-cross-dot-size-value");
-  const xsBarPercent = $("#xs-bar-percent"), xsBarLog = $("#xs-bar-log"), xsBarStacked = $("#xs-bar-stacked");
+  const xsBarPercent = $("#xs-bar-percent"), xsBarLog = $("#xs-bar-log"), xsBarAdjacent = $("#xs-bar-adjacent");
   const xsBarLegend = $("#xs-bar-legend"), xsBarNull = $("#xs-bar-null");
   const xsBarInterval = $("#xs-bar-interval"), xsBarGrid = $("#xs-bar-grid"), xsBarDownload = $("#xs-bar-download");
   const xsBarHighColor = $("#xs-bar-high-color"), xsBarLowColor = $("#xs-bar-low-color");
@@ -498,7 +498,7 @@
     }
     const useLog = !percentMode && xsBarLog.checked;
     const x = rows.map((_, i) => i), baseline = useLog ? 1 : 0, shapes = [], traces = [];
-    const stacked = xsBarStacked.checked;
+    const stacked = !xsBarAdjacent.checked;
     rows.forEach((r, i) => {
       if (!stacked) {
         shapes.push(
@@ -515,14 +515,9 @@
             y0: r.high, y1: r.total, fillcolor: xsBarLowColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } }
         );
       }
-      if (xsBarNull.checked) {
-        if (percentMode) shapes.push({ type: "line", xref: "x", yref: "y", layer: "above",
-          x0: i - 0.34, x1: i + 0.34, y0: 50, y1: 50,
-          line: { color: xsBarNullColor.value, width: 1.5 } });
-        else shapes.push({ type: "rect", xref: "x", yref: "y", layer: "above",
-          x0: i - 0.34, x1: i + 0.34, y0: baseline, y1: r.nullMean,
-          fillcolor: hexAlpha(xsBarNullColor.value, 0.30), line: { color: "#5f666d", width: 0.7 } });
-      }
+      if (xsBarNull.checked) shapes.push({ type: "rect", xref: "x", yref: "y", layer: "above",
+        x0: i - 0.34, x1: i + 0.34, y0: baseline, y1: r.nullMean,
+        fillcolor: hexAlpha(xsBarNullColor.value, 0.30), line: { color: "#5f666d", width: 0.55 } });
     });
     if (xsBarLegend.checked) {
       traces.push(
@@ -538,7 +533,7 @@
       legendrank: 40,
       y: rows.map((r) => r.nullMean), marker: { size: 1, color: "rgba(0,0,0,0)" },
       error_y: { type: "data", symmetric: false, array: rows.map((r) => r.nullHigh - r.nullMean),
-        arrayminus: rows.map((r) => r.nullMean - r.nullLow), color: "#111827", thickness: 1.5, width: 4 },
+        arrayminus: rows.map((r) => r.nullMean - r.nullLow), color: "#111827", thickness: 0.8, width: 2.5 },
       hovertemplate: "%{x}<br>95% null interval<extra></extra>" });
     traces.push({ type: "scatter", mode: "markers", showlegend: false, x,
       y: rows.map((r) => stacked ? r.total : Math.max(r.high, r.low)),
@@ -784,7 +779,7 @@
       renderCurrentCrossSection();
     });
     xsBarPercent.addEventListener("change", syncBarModeControls);
-    [xsBarLog, xsBarStacked, xsBarLegend, xsBarNull, xsBarInterval, xsBarGrid, xsBarHighColor, xsBarLowColor, xsBarNullColor]
+    [xsBarLog, xsBarAdjacent, xsBarLegend, xsBarNull, xsBarInterval, xsBarGrid, xsBarHighColor, xsBarLowColor, xsBarNullColor]
       .forEach((el) => el.addEventListener("change", renderBars));
     xsCrossDownload.addEventListener("click", () => downloadPlot(xsOutlines, "cross_section", xsCrossFormat, xsCrossScale, 1800, 1400));
     xsBarDownload.addEventListener("click", () => downloadPlot(xsBars,

@@ -584,9 +584,9 @@ def render_bar_chart(scenes: list[dict], *, log_scale: bool) -> Path:
         yerr=np.vstack([null_means - null_lows, null_highs - null_means]),
         fmt="none",
         ecolor=INK,
-        elinewidth=1.5,
-        capsize=5,
-        capthick=1.5,
+        elinewidth=0.8,
+        capsize=3,
+        capthick=0.8,
         zorder=6,
     )
 
@@ -594,7 +594,7 @@ def render_bar_chart(scenes: list[dict], *, log_scale: bool) -> Path:
         mpl.patches.Patch(facecolor=BLUE, edgecolor="none", label="Higher-count half"),
         mpl.patches.Patch(facecolor=RED, edgecolor="none", label="Lower-count half"),
         mpl.patches.Patch(facecolor="#9EA4AA", alpha=0.55, edgecolor="#6F757B", label="Null mean"),
-        Line2D([0], [0], color=INK, lw=1.5, marker="_", markersize=10, label="95% null interval"),
+        Line2D([0], [0], color=INK, lw=0.8, marker="_", markersize=7, label="95% null interval"),
     ]
     ax.legend(handles=null_handles, loc="upper right", frameon=False, fontsize=10, ncol=2)
     ax.set_ylabel("Pard3 transcript count")
@@ -633,35 +633,33 @@ def render_ratio_chart(scenes: list[dict]) -> Path:
     ax.bar(x, low_pct, bottom=high_pct, color=RED, width=real_width,
            edgecolor="#263238", linewidth=0.45, zorder=3)
 
-    for index, (low, high) in enumerate(zip(null_low_pct, null_high_pct)):
-        ax.add_patch(
-            mpl.patches.Rectangle(
-                (index - 0.35, low),
-                0.70,
-                high - low,
-                facecolor="#8F969D",
-                edgecolor="none",
-                alpha=0.30,
-                zorder=5,
-            )
-        )
+    ax.bar(
+        x,
+        np.full(len(rows), 50.0),
+        color="#8F969D",
+        alpha=0.30,
+        edgecolor="#666D73",
+        linewidth=0.55,
+        width=0.70,
+        zorder=5,
+    )
     ax.errorbar(
         x,
         np.full(len(rows), 50.0),
         yerr=np.vstack([50.0 - null_low_pct, null_high_pct - 50.0]),
         fmt="none",
         ecolor=INK,
-        elinewidth=1.5,
-        capsize=5,
-        capthick=1.5,
+        elinewidth=0.8,
+        capsize=3,
+        capthick=0.8,
         zorder=6,
     )
 
     handles = [
         mpl.patches.Patch(facecolor=BLUE, edgecolor="none", label="Higher-count half"),
         mpl.patches.Patch(facecolor=RED, edgecolor="none", label="Lower-count half"),
-        mpl.patches.Patch(facecolor="#8F969D", alpha=0.45, edgecolor="none", label="95% null interval"),
-        Line2D([0], [0], color=INK, lw=1.5, marker="_", markersize=10, label="50% null expectation"),
+        mpl.patches.Patch(facecolor="#8F969D", alpha=0.45, edgecolor="#666D73", label="50% null expectation"),
+        Line2D([0], [0], color=INK, lw=0.8, marker="_", markersize=7, label="95% null interval"),
     ]
     ax.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.5, 1.01),
               frameon=False, fontsize=10, ncol=4)

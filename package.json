@@ -2,5 +2,8 @@
   "name": "surf2026-embryology-site",
   "version": "1.0.0",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4"
+  }
 }

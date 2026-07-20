@@ -30,18 +30,22 @@
   const scatterPlot = $("#scatter-plot");
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
   const rankNEl = $("#rank-n"), rankPosEl = $("#rank-pos"), rankNegEl = $("#rank-neg");
+  const pnTabs = $("#pn-rtabs");
+  const enrN = $("#enr-n"), enrList = $("#enr-list"), enrCount = $("#enr-count");
+  const onlyN = $("#only-n"), onlyList = $("#only-list"), onlyCount = $("#only-count");
 
   const state = { points: [], byId: {}, genesAgg: null, geneCorr: [], userGene: null, rankN: 10,
                   currentId: null, scene: null, fit: null, drawerOpen: false, showDots: false,
-                  regType: "linear" };
+                  regType: "linear", enr: null, enrN: 50, onlyN: 50, rtab: "corr" };
 
   (async function init() {
     try {
-      const [m, ga] = await Promise.all([
+      const [m, ga, enr] = await Promise.all([
         (await fetch("data/pronuclei_manifest.json")).json(),
         V.loadGz("data/pronuclei_genes.json.gz"),
+        V.loadGz("data/pronuclei_enrichment.json.gz").catch(() => null),
       ]);
-      state.points = m.embryos; state.genesAgg = ga;
+      state.points = m.embryos; state.genesAgg = ga; state.enr = enr;
       state.points.forEach((p) => (state.byId[p.id] = p));
       countEl.textContent = `${m.embryos.length} zygotes · pronuclei auto-detected inside the cytoplasm`;
       computeGeneCorr();
@@ -50,7 +54,7 @@
         label: e.label, sub: e.date_short,
         title: `${e.label} · dist ${e.distance} µm · ${e.total.toLocaleString()} transcripts`,
       }));
-      wireDrawer(); wireRdrawer(); renderRanks();
+      wireDrawer(); wireRdrawer(); renderRanks(); wireEnrichment();
       geneSelect.addEventListener("change", () => selectGene(geneSelect.value));
       rankNEl.addEventListener("change", () => { state.rankN = parseInt(rankNEl.value, 10) || 10; renderRanks(); });
       dotsShow.addEventListener("change", () => { state.showDots = dotsShow.checked; ensureDotGene(); if (state.scene) render(); });
@@ -121,7 +125,7 @@
       if (state.currentId !== id) return;
       state.scene = scene;
       controlsEl.hidden = false; placeholder.hidden = true; drawer.hidden = false; rdrawer.hidden = false;
-      ensureDotGene(); render(); renderReadout(meta);
+      ensureDotGene(); render(); renderReadout(meta); highlightElists();
       if (!state.drawerOpen) openDrawer(true);
       else { renderScatter(); renderGeneScatter(); }
     } catch (err) { showError(err.message || String(err)); }
@@ -379,6 +383,55 @@
   function highlightRank() {
     const cur = gene();
     rdrawer.querySelectorAll(".pn-row").forEach((r) => r.classList.toggle("current", r.dataset.gene === cur));
+    highlightElists();
+  }
+
+  // ---------- right drawer: pronuclei-enrichment lists ----------
+  const fmtP = (p) => (p == null ? "—" : p < 1e-4 ? p.toExponential(1) : p.toFixed(4));
+  function elistRows(rows, valFn, valHead) {
+    const curG = gene(), curId = state.currentId;
+    let html = `<div class="best-head pn-ehead"><span></span><span>gene · zygote</span><span>${valHead}</span><span>p</span></div>`;
+    html += rows.map((r, i) =>
+      `<div class="best-row pn-erow${r.gene === curG && r.id === curId ? " current" : ""}" data-id="${r.id}" data-gene="${r.gene}" ` +
+      `title="${r.gene} · ${r.label} · ${r.npn}/${r.n} transcripts in the pronuclei` +
+      `${r.fold != null ? " · fold " + r.fold + "×" : ""}${r.frac != null ? " · " + Math.round(r.frac * 100) + "% in pronuclei" : ""} · p ${fmtP(r.p)}">` +
+      `<span class="best-num">${i + 1}</span>` +
+      `<span class="pn-egene"><b>${r.gene}</b><span class="pn-ezyg">${r.label}</span></span>` +
+      `<span class="best-real">${valFn(r)}</span>` +
+      `<span class="best-p${r.p <= 0.05 ? " sig" : ""}">${fmtP(r.p)}</span></div>`).join("");
+    return html || `<div class="pn-empty">None found.</div>`;
+  }
+  function renderEnriched() {
+    if (!enrList) return;
+    if (!state.enr) { enrList.innerHTML = `<div class="pn-empty">No enrichment data.</div>`; return; }
+    const all = state.enr.enriched || [], rows = state.enrN ? all.slice(0, state.enrN) : all;
+    enrList.innerHTML = elistRows(rows, (r) => r.fold.toFixed(2) + "×", "fold");
+    if (enrCount) enrCount.innerHTML = `<b>${all.length}</b> gene·zygote hits · fold ≥ 1.5, n ≥ 10`;
+  }
+  function renderOnlyPn() {
+    if (!onlyList) return;
+    if (!state.enr) { onlyList.innerHTML = `<div class="pn-empty">No enrichment data.</div>`; return; }
+    const all = state.enr.onlyPn || [], rows = state.onlyN ? all.slice(0, state.onlyN) : all;
+    onlyList.innerHTML = elistRows(rows, (r) => Math.round(r.frac * 100) + "%", "in PN");
+    if (onlyCount) onlyCount.innerHTML = `<b>${all.length}</b> gene·zygote hits · ≥ 75% in pronuclei`;
+  }
+  function highlightElists() {
+    const curG = gene(), curId = state.currentId;
+    rdrawer.querySelectorAll(".pn-erow").forEach((r) =>
+      r.classList.toggle("current", r.dataset.gene === curG && r.dataset.id === curId));
+  }
+  function setRtab(tab) {
+    state.rtab = tab;
+    pnTabs.querySelectorAll(".rtab").forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
+    rdrawer.querySelectorAll(".pn-panel").forEach((p) => (p.hidden = p.dataset.panel !== tab));
+    if (tab === "enr") renderEnriched();
+    else if (tab === "only") renderOnlyPn();
+  }
+  function wireEnrichment() {
+    renderEnriched(); renderOnlyPn();
+    pnTabs.addEventListener("click", (e) => { const b = e.target.closest(".rtab"); if (b) setRtab(b.dataset.tab); });
+    enrN.addEventListener("change", () => { state.enrN = parseInt(enrN.value, 10); renderEnriched(); });
+    onlyN.addEventListener("change", () => { state.onlyN = parseInt(onlyN.value, 10); renderOnlyPn(); });
   }
 
   // ---------- drawers ----------
@@ -417,6 +470,15 @@
     const end = (e) => { if (rrz._d) { rrz._d = null; try { rrz.releasePointerCapture(e.pointerId); } catch (_) {} } };
     rrz.addEventListener("pointerup", end); rrz.addEventListener("pointercancel", end);
     rdrawer.addEventListener("click", (e) => {
+      // enrichment rows are a specific (zygote, gene) hit — open that zygote, then the gene
+      const erow = e.target.closest(".pn-erow");
+      if (erow) {
+        const id = erow.dataset.id, g = erow.dataset.gene;
+        state.userGene = g;
+        if (id === state.currentId) selectGene(g);
+        else selectEmbryo(id).then(() => selectGene(g));
+        return;
+      }
       const row = e.target.closest(".pn-row"); if (row) selectGene(row.dataset.gene);
     });
   }

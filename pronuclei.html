@@ -74,6 +74,13 @@
       <span class="rdrawer-handle-label">Gene ⟷ distance</span>
     </button>
     <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rtabs" id="pn-rtabs">
+        <button class="rtab active" data-tab="corr">Distance corr</button>
+        <button class="rtab" data-tab="enr">Enriched in PN</button>
+        <button class="rtab" data-tab="only">Only in PN</button>
+      </div>
+
+      <div class="pn-panel" data-panel="corr">
       <div class="rdrawer-head">
         <div class="rdrawer-title" style="position:relative">Genes correlated with pronuclei distance<button class="help-btn help-corner" data-help="pronuclei-genes" aria-label="What is this?">?</button></div>
         <div class="rdrawer-desc">Pearson correlation between a gene's transcript count and the
@@ -95,6 +102,41 @@
           <div class="pn-rank-title neg">Most negative — distance falls as the gene's count rises</div>
           <div id="rank-neg" class="best-list"></div>
         </div>
+      </div>
+      </div><!-- /panel corr -->
+
+      <div class="pn-panel" data-panel="enr" hidden>
+        <div class="rdrawer-head">
+          <div class="rdrawer-title">Enriched in the pronuclei</div>
+          <div class="rdrawer-desc">Across all zygotes, genes whose transcripts are <b>≥1.5× denser</b> in
+            the two pronuclei than the cell average (≥10 in-cell transcripts). <b>Fold</b> = pronuclei
+            density ÷ cell-average density; <b>p</b> = chance that many land in the pronuclei if the same
+            number were scattered at random (by volume). Click a row to open that zygote &amp; gene.</div>
+          <div class="pn-rank-ctl">
+            <label class="ctl"><span class="ctl-label">Show</span>
+              <select id="enr-n"><option value="25">25</option><option value="50" selected>50</option>
+                <option value="100">100</option><option value="0">all</option></select></label>
+            <span class="pn-rank-min" id="enr-count"></span>
+          </div>
+        </div>
+        <div id="enr-list" class="best-list pn-elist"></div>
+      </div>
+
+      <div class="pn-panel" data-panel="only" hidden>
+        <div class="rdrawer-head">
+          <div class="rdrawer-title">Only in the pronuclei</div>
+          <div class="rdrawer-desc">Genes with <b>≥75%</b> of their in-cell transcripts inside the
+            pronuclei (≥5 transcripts) — effectively <i>only</i> there, since the pronuclei are only
+            ~5% of the cell volume. <b>p</b> = chance of that under the same random-scatter null.
+            Click a row to open that zygote &amp; gene.</div>
+          <div class="pn-rank-ctl">
+            <label class="ctl"><span class="ctl-label">Show</span>
+              <select id="only-n"><option value="25">25</option><option value="50" selected>50</option>
+                <option value="100">100</option><option value="0">all</option></select></label>
+            <span class="pn-rank-min" id="only-count"></span>
+          </div>
+        </div>
+        <div id="only-list" class="best-list pn-elist"></div>
       </div>
     </div>
   </aside>

@@ -499,26 +499,31 @@
       return;
     }
     const useLog = !percentMode && xsBarLog.checked;
-    const x = rows.map((_, i) => i), baseline = useLog ? 1 : 0, shapes = [], traces = [];
+    // Bar centres are offset by BAR_X0 (and the axis starts at 0) so the first bar sits clear
+    // of the vertical axis instead of straddling it. Widest element is the null bar (±0.34),
+    // so BAR_X0 = 0.6 leaves the same 0.26 gap at both ends of the axis.
+    const BAR_X0 = 0.6;
+    const x = rows.map((_, i) => i + BAR_X0), baseline = useLog ? 1 : 0, shapes = [], traces = [];
     const stacked = !xsBarAdjacent.checked;
     rows.forEach((r, i) => {
+      const cx = i + BAR_X0;
       if (!stacked) {
         shapes.push(
-          { type: "rect", xref: "x", yref: "y", layer: "above", x0: i - 0.24, x1: i - 0.03,
+          { type: "rect", xref: "x", yref: "y", layer: "above", x0: cx - 0.24, x1: cx - 0.03,
             y0: baseline, y1: r.high, fillcolor: xsBarHighColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } },
-          { type: "rect", xref: "x", yref: "y", layer: "above", x0: i + 0.03, x1: i + 0.24,
+          { type: "rect", xref: "x", yref: "y", layer: "above", x0: cx + 0.03, x1: cx + 0.24,
             y0: baseline, y1: r.low, fillcolor: xsBarLowColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } }
         );
       } else {
         shapes.push(
-          { type: "rect", xref: "x", yref: "y", layer: "above", x0: i - 0.23, x1: i + 0.23,
+          { type: "rect", xref: "x", yref: "y", layer: "above", x0: cx - 0.23, x1: cx + 0.23,
             y0: baseline, y1: r.high, fillcolor: xsBarHighColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } },
-          { type: "rect", xref: "x", yref: "y", layer: "above", x0: i - 0.23, x1: i + 0.23,
+          { type: "rect", xref: "x", yref: "y", layer: "above", x0: cx - 0.23, x1: cx + 0.23,
             y0: r.high, y1: r.total, fillcolor: xsBarLowColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } }
         );
       }
       if (xsBarNull.checked) shapes.push({ type: "rect", xref: "x", yref: "y", layer: "above",
-        x0: i - 0.34, x1: i + 0.34, y0: baseline, y1: r.nullMean,
+        x0: cx - 0.34, x1: cx + 0.34, y0: baseline, y1: r.nullMean,
         fillcolor: hexAlpha(xsBarNullColor.value, 0.30), line: { color: "#5f666d", width: 0.55 } });
     });
     if (xsBarLegend.checked) {
@@ -558,7 +563,7 @@
       showlegend: xsBarLegend.checked,
       legend: { orientation: "h", x: 0, y: 1.02, xanchor: "left", yanchor: "bottom", font: { size: 9 } },
       xaxis: { fixedrange: false, tickmode: "array", tickvals: x, ticktext: rows.map((r) => r.label),
-        range: [-0.55, rows.length - 0.45], tickangle: -48, tickfont: { size: 8 }, automargin: true },
+        range: [0, rows.length - 1 + 2 * BAR_X0], tickangle: -48, tickfont: { size: 8 }, automargin: true },
       yaxis: { title: { text: percentMode ? `${g} share of zygote transcripts (%)` : `${g} transcript count`, font: { size: 10 } }, tickfont: { size: 9 },
                type: useLog ? "log" : "linear", range: useLog ? [0, Math.log10(maxY)] : [0, maxY],
                dtick: useLog ? 1 : undefined, ticksuffix: percentMode ? "%" : "",

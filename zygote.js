@@ -48,12 +48,14 @@
   const xsBarNullColor = $("#xs-bar-null-color"), xsBarScale = $("#xs-bar-scale"), xsBarFormat = $("#xs-bar-format");
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
   const rtabsEl = $("#rtabs"), bestListEl = $("#best-list");
+  const rconcordControls = $("#rconcord-controls"), rconcordRank = $("#rconcord-rank");
 
   const state = {
     manifest: [], currentId: null, scene: null, userGene: null, planeIdx: 0,
     drawerOpen: false, bestTab: "pVol", crossMode: "vol",
     crossKey: "pVol", agg: null, pronucleusVisible: {},
     gmAnchor: "gene", gmDraw: null, gmDrawKey: null,   // γ/μ grid: real anchor vs random control
+    concordRank: "frac", _concord: null,               // right-drawer concordance tab
     circ: false, aggCirc: null, _aggCircP: null,
   };
   // circularize accessors: when the "blow up the balloon" toggle is on, every read of
@@ -254,7 +256,86 @@
     diffVol: { plane: "diffVol", isVol: true,  which: "maximizes Σ|side density-difference| / total (volume)" },
     diffCnt: { plane: "diffCnt", isVol: false, which: "maximizes Σ|side count-difference| / total (count)" },
   };
+  // ---------- concordance ranking (right drawer, "Concordance" tab) ----------
+  // Every gene taken as the anchor in turn: what share of the panel stays γ on the half that
+  // gene defines, and is it beyond the random-plane/random-side null? Doing this per gene the
+  // naive way is O(genes² × planes), so the per-plane totals are computed ONCE over all genes
+  // and each anchor's own row is just subtracted back out.
+  const CONCORD_MIN_COV = 5, CONCORD_DRAWS = 1000;
+  function gmAllPlaneStats(embryos) {
+    return embryos.map((e) => {
+      const gp = e.gp || {}, g = e.g;
+      let nP = 0; for (const k in gp) { nP = gp[k].length; break; }
+      const cAll = new Int32Array(nP), nAll = new Int32Array(nP);
+      for (const name in gp) {
+        const total = g[name] && g[name][0]; if (!total) continue;
+        const arr = gp[name];
+        for (let p = 0; p < nP; p++) {
+          const twice = arr[p] * 2;
+          if (twice > total) { cAll[p]++; nAll[p]++; } else if (twice < total) nAll[p]++;
+        }
+      }
+      return { cAll, nAll, nP };
+    });
+  }
+  function concordanceRanking() {
+    const agg = curAGG(); if (!agg || !agg.embryos) return [];
+    const ki = bestKeyIndex();
+    const key = `${state.circ ? "circ" : "real"}|${state.crossKey}|${agg.n_embryos}`;
+    if (state._concord && state._concord.key === key) return state._concord.rows;
+    const embryos = agg.embryos, all = gmAllPlaneStats(embryos), rows = [];
+    for (const name of (agg.genes_all || [])) {
+      const idx = [];
+      embryos.forEach((e, i) => { if (e.gp && e.gp[name] && e.g[name] && e.g[name][0] > 0) idx.push(i); });
+      if (idx.length < CONCORD_MIN_COV) continue;
+      const stats = idx.map((i) => {
+        const base = all[i], e = embryos[i], arr = e.gp[name], total = e.g[name][0];
+        const cA = new Int32Array(base.nP), nD = new Int32Array(base.nP);
+        for (let p = 0; p < base.nP; p++) {          // drop the anchor's own row from the totals
+          const twice = arr[p] * 2;
+          cA[p] = base.cAll[p] - (twice > total ? 1 : 0);
+          nD[p] = base.nAll[p] - (twice !== total ? 1 : 0);
+        }
+        return { cA, nD, nP: base.nP };
+      });
+      const realPlanes = idx.map((i) => embryos[i].best[ki]);
+      const realSides = idx.map((i) => { const r = embryos[i].g[name]; return r[1 + ki] * 2 >= r[0]; });
+      const st = gmNullTestFrom(stats, realPlanes, realSides, CONCORD_DRAWS);
+      if (st) rows.push({ gene: name, n: idx.length, frac: st.sObs, p: st.p, pSide: st.pSide });
+    }
+    state._concord = { key, rows };
+    return rows;
+  }
+  function renderConcordList() {
+    const rows = concordanceRanking().slice();
+    const byP = state.concordRank === "p";
+    rows.sort(byP ? (a, b) => (a.p - b.p) || (b.frac - a.frac) || a.gene.localeCompare(b.gene)
+                  : (a, b) => (b.frac - a.frac) || (a.p - b.p) || a.gene.localeCompare(b.gene));
+    const cur = gene();
+    let html = `<div class="best-plane-note">Each gene used as the <b>anchor</b>: the share of the panel ` +
+      `that stays <b>γ</b> on the half it defines, with the random plane+side p ` +
+      `(${CONCORD_DRAWS} draws). Genes in <b>≥${CONCORD_MIN_COV}</b> zygotes, split at each zygote's ` +
+      `<b>${BESTKEY_LABEL[state.crossKey]}</b> plane. Ranked by <b>${byP ? "p value" : "concordance"}</b>.</div>`;
+    html += `<div class="best-head"><span></span><span>gene</span><span>n</span><span>γ frac</span><span>p</span></div>`;
+    html += rows.map((r, i) =>
+      `<div class="best-row${r.gene === cur ? " current" : ""}" data-gene="${r.gene}"` +
+      ` title="${r.gene} · anchor in ${r.n} zygotes · ${(r.frac * 100).toFixed(1)}% γ · ` +
+      `p ${fmtP(r.p)} (side-flip only: ${fmtP(r.pSide)})">` +
+      `<span class="best-num">${i + 1}</span>` +
+      `<span class="best-gene">${r.gene}</span>` +
+      `<span class="best-null">${r.n}</span>` +
+      `<span class="best-real">${(r.frac * 100).toFixed(1)}%</span>` +
+      `<span class="best-p${r.p <= 0.05 ? " sig" : ""}">${fmtP(r.p)}</span></div>`).join("");
+    bestListEl.innerHTML = rows.length ? html
+      : `<div class="best-plane-note">No gene reaches ${CONCORD_MIN_COV} zygotes in this aggregate.</div>`;
+  }
   function renderBestList() {
+    if (rconcordControls) rconcordControls.hidden = state.bestTab !== "concord";
+    if (state.bestTab === "concord") {
+      bestListEl.innerHTML = `<div class="best-plane-note">Scoring every gene as an anchor…</div>`;
+      ensureAgg().then(() => { if (state.bestTab === "concord") renderConcordList(); });
+      return;
+    }
     const s = state.scene; if (!s) return;
     const A = curA(), meta = BEST_META[state.bestTab];
     const k = A.best_planes[meta.plane];
@@ -630,19 +711,21 @@
   // γ side is chosen per zygote), so the null must randomise per zygote — a naive per-cell
   // binomial would wildly overstate significance.
   function gmNullTest(cols, anchor, realPlanes, realSides, N) {
-    const stats = gmPlaneStats(cols, anchor);
+    return gmNullTestFrom(gmPlaneStats(cols, anchor), realPlanes, realSides, N);
+  }
+  function gmNullTestFrom(stats, realPlanes, realSides, N) {
     const nP = stats.length ? stats[0].nP : 0;
     if (!nP) return null;
     const sObs = gmGammaFrac(stats, realPlanes, realSides), dev = Math.abs(sObs - 0.5);
-    const planes = new Array(cols.length), sides = new Array(cols.length);
+    const planes = new Array(stats.length), sides = new Array(stats.length);
     let ge = 0, geSide = 0, sum = 0, sum2 = 0;
     for (let it = 0; it < N; it++) {
-      for (let i = 0; i < cols.length; i++) { planes[i] = (Math.random() * nP) | 0; sides[i] = Math.random() < 0.5; }
+      for (let i = 0; i < stats.length; i++) { planes[i] = (Math.random() * nP) | 0; sides[i] = Math.random() < 0.5; }
       const s = gmGammaFrac(stats, planes, sides);
       sum += s; sum2 += s * s;
       if (Math.abs(s - 0.5) >= dev) ge++;
       // conservative variant: keep each zygote's real best plane, flip only the γ side
-      for (let i = 0; i < cols.length; i++) sides[i] = Math.random() < 0.5;
+      for (let i = 0; i < stats.length; i++) sides[i] = Math.random() < 0.5;
       if (Math.abs(gmGammaFrac(stats, realPlanes, sides) - 0.5) >= dev) geSide++;
     }
     const mean = sum / N, sd = Math.sqrt(Math.max(0, sum2 / N - mean * mean));
@@ -855,6 +938,10 @@
       rtabsEl.querySelectorAll(".rtab").forEach((x) => x.classList.toggle("active", x === b));
       renderBestList();
     }));
+    if (rconcordRank) rconcordRank.addEventListener("change", () => {
+      state.concordRank = rconcordRank.value;
+      if (state.bestTab === "concord") renderConcordList();
+    });
     bestListEl.addEventListener("click", (e) => {
       const row = e.target.closest(".best-row"); if (!row) return;
       const g = row.dataset.gene;
@@ -895,7 +982,10 @@
       renderBars();
     };
     syncBarModeControls();
-    xsPlane.addEventListener("change", () => { state.crossKey = xsPlane.value; if (state.agg) renderCrossAgg(); });
+    xsPlane.addEventListener("change", () => { state.crossKey = xsPlane.value;
+      if (state.agg) renderCrossAgg();
+      if (state.bestTab === "concord") renderBestList();   // ranking depends on the plane choice
+    });
     [xsBody, xsPb, xsCrossLegend, xsCrossHighColor, xsCrossLowColor, xsCrossFillColor, xsCrossBodyColor, xsCrossPbColor, xsCrossPnColor]
       .forEach((el) => el.addEventListener("change", renderCurrentCrossSection));
     xsCrossDotSize.addEventListener("input", () => {

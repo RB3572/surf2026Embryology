@@ -196,3 +196,7 @@
 .xs-gm-stats { font-size: 11.5px; color: var(--ink-2); line-height: 1.5; }
 .xs-gm-stats b { color: var(--ink); font-variant-numeric: tabular-nums; }
 .xs-gm-p2 { color: var(--ink-2); opacity: .8; }
+.rconcord-controls { padding: 6px 10px 2px; border-bottom: 1px solid var(--line-2); }
+.rconcord-controls .ctl { display: flex; align-items: center; gap: 8px; }
+.rconcord-controls .ctl-label { font-size: 11px; font-weight: 600; color: var(--ink-2); white-space: nowrap; }
+.rconcord-controls select { flex: 1; }

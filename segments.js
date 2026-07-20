@@ -23,7 +23,8 @@
   const minCountEl = $("#min-count"), metricModeEl = $("#metric-mode");
 
   const state = { manifest: [], currentId: null, scene: null, userGene: null,
-                  segTab: null, geneMap: null, cutoff: 0, metric: "density" };
+                  segTab: null, geneMap: null, cutoff: 0, metric: "density", dotSize: 1.5 };
+  let vcExtras = null;   // dot-size + atlas-link row (VCore.addWindowExtras)
 
   const segColor = (lbl) => {
     const d = (state.scene.region_defaults || {})[String(lbl)];
@@ -43,6 +44,7 @@
       V.wireWindow(controlsEl, $("#controls-header"),
         [...controlsEl.querySelectorAll(".rz")], "segments_controls_box")
         .setResizeCb(() => { try { Plotly.Plots.resize(chartEl); } catch (_) {} });
+      vcExtras = V.addWindowExtras($("#controls-body"), { defaultSize: state.dotSize, onDotSize: (s) => { state.dotSize = s; if (state.scene) render(); } });
       wireRdrawer();
       geneSelect.addEventListener("change", () => { state.userGene = geneSelect.value; render(); renderChart(); highlightGene(); });
       minCountEl.addEventListener("input", () => {
@@ -66,6 +68,7 @@
       const scene = await V.loadGz(`data/segments/${id}.json.gz`);
       if (state.currentId !== id) return;
       state.scene = scene;
+      if (vcExtras) vcExtras.setAtlas(id);
       buildGeneMap(scene);
       populateGenes(scene);
       if (!scene.mask_labels.includes(state.segTab)) state.segTab = scene.mask_labels[0];
@@ -122,7 +125,7 @@
       const colors = tx.s.map((seg) => (seg >= 1 ? segColor(seg) : "#b6bdc9"));
       traces.push({ type: "scatter3d", mode: "markers", name: `${g} · ${tx.x.length} dots`,
         x: tx.x, y: tx.y, z: tx.gz.map((z) => z * zs),
-        marker: { size: 0.5, color: colors, opacity: 0.85, line: { width: 0 } },
+        marker: { size: state.dotSize, color: colors, opacity: 0.85, line: { width: 0 } },
         hovertemplate: `${g}<extra></extra>`, legendrank: 20000 });
     }
     Plotly.react(plotHost, traces, V.sceneLayout(s.extents, s.id), V.plotConfig);

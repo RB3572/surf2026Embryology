@@ -47,6 +47,18 @@ export default async function middleware(request) {
   const cookies = request.headers.get("cookie") || "";
   const account = BY_TOKEN.get(cookieValue(cookies, COOKIE));
 
+  // Log out: clear the session cookie and bounce to the gate.
+  if (url.pathname === "/logout") {
+    return new Response(null, {
+      status: 303,
+      headers: {
+        "set-cookie": `${COOKIE}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax`,
+        location: "/",
+        "cache-control": "no-store",
+      },
+    });
+  }
+
   // Admin-only surface. Anything under /admin (page, assets, data) is 404 unless this is an
   // admin session — indistinguishable from "does not exist", so non-admins never see it.
   const p = url.pathname;

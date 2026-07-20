@@ -62,3 +62,8 @@ body {
 .lp-card-go {
   margin-top: 6px; font-size: 13px; font-weight: 700; color: var(--accent);
 }
+
+/* log out — top-right of the landing navbar, red */
+.lp-logout { margin-left: auto; color: #dc2626; font-size: 13px; font-weight: 600;
+  text-decoration: none; padding: 5px 12px; border: 1px solid transparent; border-radius: 8px; }
+.lp-logout:hover { border-color: #dc2626; background: color-mix(in srgb, #dc2626 8%, transparent); }

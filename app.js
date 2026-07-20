@@ -11,6 +11,8 @@
  */
 (() => {
   const $ = (s) => document.querySelector(s);
+  const V = window.VCore;
+  let vcExtras = null;   // dot-size + atlas-link row (VCore.addWindowExtras)
   const tabsEl     = $("#tabs");
   const controlsEl = $("#controls");
   const controlsHeader = $("#controls-header");
@@ -117,6 +119,7 @@
     manifest: [],
     byId: new Map(),
     currentId: null,
+    dotSize: 1.5,         // transcript dot marker size (floating-window control)
     scene: null,          // decoded scene for the current embryo
     sceneCache: new Map(),
     // Vector-toggle visibility is GLOBAL: it persists as the user switches
@@ -210,6 +213,7 @@
       }
       if (state.currentId !== id) return;   // user switched away mid-load
       state.scene = scene;
+      if (vcExtras) vcExtras.setAtlas(id);
       populateGenes(scene);
       controlsEl.hidden = false;
       placeholder.hidden = true;
@@ -340,7 +344,7 @@
         type: "scatter3d", mode: "markers",
         name: `${gene}  (n=${n.toLocaleString()})`,
         x: t.x, y: t.y, z: gz,
-        marker: { size: GENE_SIZE, color: GENE_COLOR, opacity: 0.85, line: { width: 0 } },
+        marker: { size: state.dotSize, color: GENE_COLOR, opacity: 0.85, line: { width: 0 } },
         hovertemplate: `<b>${gene}</b><br>x=%{x:.0f}, y=%{y:.0f}<extra></extra>`,
         legendrank: 20000,
       });
@@ -1237,6 +1241,7 @@
       loadViolinWidth();
       loadDrawerSizes();
       loadControlsBox();
+      if (V && V.addWindowExtras) vcExtras = V.addWindowExtras($("#controls-body"), { defaultSize: state.dotSize, onDotSize: (s) => { state.dotSize = s; render(); } });
       // Cross-embryo vectors for the violin plots + gene ranking (load once).
       state.index = await loadScene("data/analysis_index.json.gz").catch(() => null);
       if (state.index) {

@@ -36,7 +36,8 @@
 
   const state = { points: [], byId: {}, genesAgg: null, geneCorr: [], userGene: null, rankN: 10,
                   currentId: null, scene: null, fit: null, drawerOpen: false, showDots: false,
-                  regType: "linear", enr: null, enrN: 50, onlyN: 50, rtab: "corr" };
+                  regType: "linear", enr: null, enrN: 50, onlyN: 50, rtab: "corr", dotSize: 1.5 };
+  let vcExtras = null;   // dot-size + atlas-link row (VCore.addWindowExtras)
 
   (async function init() {
     try {
@@ -55,6 +56,7 @@
         title: `${e.label} · dist ${e.distance} µm · ${e.total.toLocaleString()} transcripts`,
       }));
       wireDrawer(); wireRdrawer(); renderRanks(); wireEnrichment();
+      vcExtras = V.addWindowExtras($("#controls-body"), { defaultSize: state.dotSize, onDotSize: (s) => { state.dotSize = s; if (state.scene) render(); } });
       geneSelect.addEventListener("change", () => selectGene(geneSelect.value));
       rankNEl.addEventListener("change", () => { state.rankN = parseInt(rankNEl.value, 10) || 10; renderRanks(); });
       dotsShow.addEventListener("change", () => { state.showDots = dotsShow.checked; ensureDotGene(); if (state.scene) render(); });
@@ -124,6 +126,7 @@
       const scene = await V.loadGz(`data/pronuclei/${id}.json.gz`);
       if (state.currentId !== id) return;
       state.scene = scene;
+      if (vcExtras) vcExtras.setAtlas(id);
       controlsEl.hidden = false; placeholder.hidden = true; drawer.hidden = false; rdrawer.hidden = false;
       ensureDotGene(); render(); renderReadout(meta); highlightElists();
       if (!state.drawerOpen) openDrawer(true);
@@ -169,7 +172,7 @@
                              : `${g} · ${tx.x.length} dots · (${sel} not in this zygote)`;
         traces.push({ type: "scatter3d", mode: "markers", name: nm,
           x: tx.x, y: tx.y, z: tx.gz.map((z) => z * zs),
-          marker: { size: 0.5, color: DOT_C, opacity: 0.85, line: { width: 0 } },
+          marker: { size: state.dotSize, color: DOT_C, opacity: 0.85, line: { width: 0 } },
           hovertemplate: `${g}<extra></extra>`, legendrank: 200 });
       }
     }

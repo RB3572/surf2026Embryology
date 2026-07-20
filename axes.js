@@ -41,7 +41,9 @@
   const verdictEl = $("#ax-verdict"), histsEl = $("#ax-hists");
 
   const state = { manifest: null, mol: null, currentId: null, scene: null, userGene: null, drawerOpen: false,
+                  dotSize: 1.5,
                   show: { av: true, sperm: true, plane: true, shape: false, dots: false } };
+  let vcExtras = null;   // dot-size + atlas-link row (VCore.addWindowExtras)
 
   const TOGGLES = [
     { key: "av", label: "Animal–Vegetal axis", desc: "COM → polar body — the polar body is the accepted animal-pole landmark." },
@@ -65,6 +67,7 @@
       }));
       buildToggles();
       V.wireWindow(controlsEl, $("#controls-header"), [...controlsEl.querySelectorAll(".rz")], "axes_controls_box");
+      vcExtras = V.addWindowExtras($("#controls-body"), { defaultSize: state.dotSize, onDotSize: (s) => { state.dotSize = s; if (state.scene) render(); } });
       wireRdrawer(); wireDrawer();
       geneSelect.addEventListener("change", () => { state.userGene = geneSelect.value; render(); renderReadout(); });
     } catch (err) { showError("Failed to load: " + (err.message || err)); }
@@ -89,6 +92,7 @@
       const scene = await V.loadGz(`data/axes/${id}.json.gz`);
       if (state.currentId !== id) return;
       state.scene = scene;
+      if (vcExtras) vcExtras.setAtlas(id);
       populateGenes(scene);
       controlsEl.hidden = false; placeholder.hidden = true; rdrawer.hidden = false; drawer.hidden = false;
       render(); renderReadout(); renderGeneList(); renderAggregate();
@@ -188,11 +192,11 @@
         traces.push({ type: "scatter3d", mode: "markers", name: `${gene()} · side 0`,
           x: tx.x.filter((_, i) => tx.s[i] === 0), y: tx.y.filter((_, i) => tx.s[i] === 0),
           z: tx.gz.filter((_, i) => tx.s[i] === 0).map((z) => z * zs),
-          marker: { size: 0.5, color: C.side0, opacity: 0.8 }, hovertemplate: `${gene()}<extra></extra>` });
+          marker: { size: state.dotSize, color: C.side0, opacity: 0.8 }, hovertemplate: `${gene()}<extra></extra>` });
         traces.push({ type: "scatter3d", mode: "markers", name: `${gene()} · side 1`,
           x: tx.x.filter((_, i) => tx.s[i] === 1), y: tx.y.filter((_, i) => tx.s[i] === 1),
           z: tx.gz.filter((_, i) => tx.s[i] === 1).map((z) => z * zs),
-          marker: { size: 0.5, color: C.side1, opacity: 0.8 }, hovertemplate: `${gene()}<extra></extra>` });
+          marker: { size: state.dotSize, color: C.side1, opacity: 0.8 }, hovertemplate: `${gene()}<extra></extra>` });
       }
     }
     Plotly.react(plotHost, traces, V.sceneLayout(s.extents, s.id), V.plotConfig);

@@ -53,7 +53,7 @@
   const state = {
     manifest: [], currentId: null, scene: null, userGene: null, planeIdx: 0,
     drawerOpen: false, bestTab: "pVol", crossMode: "vol",
-    crossKey: "pVol", agg: null, pronucleusVisible: {},
+    crossKey: "pVol", agg: null, pronucleusVisible: {}, dotSize: 1.5,
     gmAnchor: "gene", gmDraw: null, gmDrawKey: null,   // γ/μ grid: real anchor vs random control
     concordRank: "frac", _concord: null,               // right-drawer concordance tab
     circ: false, aggCirc: null, _aggCircP: null,
@@ -65,6 +65,7 @@
   const curTX = () => (state.circ && state.scene && state.scene.circ) ? state.scene.circ.transcripts : (state.scene && state.scene.transcripts);
   const curAGG = () => (state.circ && state.aggCirc) ? state.aggCirc : state.agg;
   const BESTKEY_LABEL = { pVol: "min p · vol", pCnt: "min p · count", diffVol: "max Δ · vol", diffCnt: "max Δ · count" };
+  let vcExtras = null;   // dot-size + atlas-link row (VCore.addWindowExtras)
 
   // ---------- boot ----------
   (async function init() {
@@ -84,6 +85,7 @@
       V.wireWindow(controlsEl, $("#controls-header"),
         [...controlsEl.querySelectorAll(".rz")], "zygote_controls_box")
         .setResizeCb(() => { try { Plotly.Plots.resize(chartEl); } catch (_) {} });
+      vcExtras = V.addWindowExtras($("#controls-body"), { defaultSize: state.dotSize, onDotSize: (s) => { state.dotSize = s; render(); } });
       wireDrawer(); wireRdrawer(); wireControls();
     } catch (err) { showError("Failed to load manifest: " + (err.message || err)); }
   })();
@@ -98,6 +100,7 @@
       if (state.currentId !== id) return;
       state.scene = scene;
       populateGenes(scene);
+      if (vcExtras) vcExtras.setAtlas(id);
       controlsEl.hidden = false; placeholder.hidden = true;
       drawer.hidden = false; rdrawer.hidden = false;
       render(); renderChart(); renderBestList();
@@ -182,13 +185,13 @@
 
     const sp = splitCloud(s, g, k);
     traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side A`,
-      x: sp.bx, y: sp.by, z: sp.bz, marker: { size: 0.5, color: BLUE, opacity: 0.85, line: { width: 0 } },
+      x: sp.bx, y: sp.by, z: sp.bz, marker: { size: state.dotSize, color: BLUE, opacity: 0.85, line: { width: 0 } },
       hovertemplate: `${g} · side A (counted)<extra></extra>`, legendrank: 20000 });
     traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side B`,
-      x: sp.rx, y: sp.ry, z: sp.rz, marker: { size: 0.5, color: RED, opacity: 0.85, line: { width: 0 } },
+      x: sp.rx, y: sp.ry, z: sp.rz, marker: { size: state.dotSize, color: RED, opacity: 0.85, line: { width: 0 } },
       hovertemplate: `${g} · side B (counted)<extra></extra>`, legendrank: 20001 });
     traces.push({ type: "scatter3d", mode: "markers", name: `${g} · not counted`,
-      x: sp.gx, y: sp.gy, z: sp.gz, marker: { size: 0.5, color: GREEN, opacity: 0.7, line: { width: 0 } },
+      x: sp.gx, y: sp.gy, z: sp.gz, marker: { size: state.dotSize, color: GREEN, opacity: 0.7, line: { width: 0 } },
       hovertemplate: `${g} · not counted (not segment 1)<extra></extra>`, legendrank: 20002 });
 
     if (axisShow.checked) {

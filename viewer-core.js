@@ -143,6 +143,35 @@ window.VCore = (function () {
   const umToPlot = (p, zs) => [p[0] / XY, p[1] / XY, p[2] * zs];
   const plotToUm = (p, zs) => [p[0] * XY, p[1] * XY, p[2] / zs];
 
+  // Deep-link to the partner MERFISH atlas (merfish.rishib.com) for one embryo id, e.g.
+  // "20260425_zygote_p2_2" -> https://merfish.rishib.com/?embryo=Zygote%2F20260425_zygote_p2_2.html
+  function atlasLink(id) {
+    const stage = /oocyte/i.test(id) ? "Oocyte"
+      : /zygote/i.test(id) ? "Zygote"
+        : /e2c/i.test(id) ? "Early2Cell"
+          : /l2c/i.test(id) ? "Late2Cell"
+            : "Zygote";
+    return "https://merfish.rishib.com/?embryo=" + encodeURIComponent(stage + "/" + id + ".html");
+  }
+
+  // Append the shared "Dot size + Atlas link" row to a floating control window's body.
+  // opts.onDotSize(size) fires on change; returns { size(), setAtlas(id) }.
+  function addWindowExtras(body, opts) {
+    opts = opts || {};
+    const size = opts.defaultSize == null ? 1.5 : opts.defaultSize;
+    const row = document.createElement("div");
+    row.className = "controls-row vc-extras";
+    row.innerHTML =
+      '<label class="ctl vc-dotsize"><span class="ctl-label">Dot size</span>' +
+      '<input type="range" min="0.5" max="6" step="0.5" value="' + size + '"><output>' + size + '</output></label>' +
+      '<a class="vc-atlas" href="https://merfish.rishib.com" target="_blank" rel="noopener"' +
+      ' title="Open this embryo in the MERFISH atlas">Atlas ↗</a>';
+    body.appendChild(row);
+    const range = row.querySelector("input"), out = row.querySelector("output"), link = row.querySelector("a");
+    range.addEventListener("input", () => { out.textContent = range.value; if (opts.onDotSize) opts.onDotSize(+range.value); });
+    return { size: () => +range.value, setAtlas: (id) => { if (id) link.href = atlasLink(id); } };
+  }
+
   return { loadGz, buildTabs, markActiveTab, sceneLayout, plotConfig, bodyTraces,
-           wireWindow, XY, umToPlot, plotToUm };
+           wireWindow, XY, umToPlot, plotToUm, atlasLink, addWindowExtras };
 })();

@@ -167,6 +167,15 @@
           <div class="mini-title"><span class="xs-greek-title">&gamma; / &mu;</span> concordance <span class="mini-sub" id="xs-gm-sub"></span></div>
           <button class="plot-download" id="xs-gm-download" type="button" title="Download this grid as CSV" aria-label="Download grid as CSV">↓</button>
         </div>
+        <div class="xs-gm-controls">
+          <label class="ctl"><span class="ctl-label">Anchor</span>
+            <select id="xs-gm-anchor">
+              <option value="gene">Selected gene (real)</option>
+              <option value="null">Random plane + side — negative control</option>
+            </select></label>
+          <button class="xs-gm-btn" id="xs-gm-reroll" type="button" title="Draw a new random negative control">Re-roll</button>
+          <span class="xs-gm-stats" id="xs-gm-stats"></span>
+        </div>
         <div class="xs-gm-note" id="xs-gm-note"></div>
         <div class="xs-gm-legend" aria-hidden="true">
           <span class="xs-gm-key"><i class="gm-sw g-G">γ</i> shares the anchor's γ half</span>

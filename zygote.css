@@ -188,3 +188,11 @@
 .xs-gm-cell { height: 20px; display: grid; place-items: center; font-size: 11px; color: #fff; border-radius: 3px; }
 .xs-gm-cell.g-NA { color: transparent; }
 .xs-gm-cell.g-T { color: #fff; }
+.xs-gm-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; margin-bottom: 8px; }
+.xs-gm-btn { font-family: var(--sans); font-size: 11.5px; font-weight: 600; color: var(--ink-2);
+  padding: 5px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); cursor: pointer; }
+.xs-gm-btn:hover:not(:disabled) { border-color: #f97316; color: #f97316; }
+.xs-gm-btn:disabled { opacity: .45; cursor: default; }
+.xs-gm-stats { font-size: 11.5px; color: var(--ink-2); line-height: 1.5; }
+.xs-gm-stats b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.xs-gm-p2 { color: var(--ink-2); opacity: .8; }

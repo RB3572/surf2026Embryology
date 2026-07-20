@@ -33,6 +33,7 @@
   const xsCaption = $("#xs-caption"), xsBarTitle = $("#xs-bar-title"), xsBarSub = $("#xs-bar-sub");
   const xsOutlines = $("#xs-outlines"), xsBars = $("#xs-bars");
   const xsGm = $("#xs-gm"), xsGmSub = $("#xs-gm-sub"), xsGmNote = $("#xs-gm-note"), xsGmDownload = $("#xs-gm-download");
+  const xsGmAnchor = $("#xs-gm-anchor"), xsGmReroll = $("#xs-gm-reroll"), xsGmStats = $("#xs-gm-stats");
   const xsBody = $("#xs-body"), xsPb = $("#xs-pb"), xsPronuclei = $("#xs-pronuclei");
   const xsCrossLegend = $("#xs-cross-legend"), xsCrossDownload = $("#xs-cross-download");
   const xsCrossHighColor = $("#xs-cross-high-color"), xsCrossLowColor = $("#xs-cross-low-color");
@@ -52,6 +53,7 @@
     manifest: [], currentId: null, scene: null, userGene: null, planeIdx: 0,
     drawerOpen: false, bestTab: "pVol", crossMode: "vol",
     crossKey: "pVol", agg: null, pronucleusVisible: {},
+    gmAnchor: "gene", gmDraw: null, gmDrawKey: null,   // γ/μ grid: real anchor vs random control
     circ: false, aggCirc: null, _aggCircP: null,
   };
   // circularize accessors: when the "blow up the balloon" toggle is on, every read of
@@ -568,55 +570,167 @@
   // by its best plane into a γ half (more anchor transcripts) and a μ half (fewer). Then, for
   // EVERY gene, each cell asks: on that same γ half, is this gene also enriched (γ) or does it
   // flip to the μ side (μ)? Rows = genes, columns = zygotes containing the anchor gene.
-  function gmCall(row, ki, gammaSideA) {
-    if (!row || !row[0]) return null;               // gene absent in this zygote
-    const a = row[1 + ki], gammaCount = gammaSideA ? a : row[0] - a, twice = gammaCount * 2;
-    return twice > row[0] ? "G" : (twice < row[0] ? "M" : "T");
+  // NEGATIVE CONTROL (Harry's null test): instead of an anchor gene, give each zygote a RANDOM
+  // plane and call one side γ at random. Concordance is then scored against that null to get a
+  // p-value. Row ORDER always comes from the real anchor — re-sorting the control by its own
+  // γ-fraction would manufacture a gradient out of pure noise and make the null look structured.
+  function gmCall(a, total, gammaSideA) {
+    if (a == null || !total) return null;           // gene absent in this zygote
+    const gammaCount = gammaSideA ? a : total - a, twice = gammaCount * 2;
+    return twice > total ? "G" : (twice < total ? "M" : "T");
+  }
+  function gmNPlanes(cols) {
+    for (const e of cols) { const gp = e.gp; if (gp) { for (const k in gp) return gp[k].length; } }
+    return 0;                                       // aggregate predates the per-plane counts
+  }
+  function gmColsKey(cols) { return cols.map((e) => e.id).join("|"); }
+  function gmEnsureDraw(cols) {
+    const key = gmColsKey(cols), nP = gmNPlanes(cols);
+    if (!state.gmDraw || state.gmDrawKey !== key) {
+      state.gmDraw = cols.map(() => ({ p: nP ? (Math.random() * nP) | 0 : 0, sideA: Math.random() < 0.5 }));
+      state.gmDrawKey = key;
+    }
+    return state.gmDraw;
+  }
+  // per zygote, per plane: how many genes sit on side A and how many are decided (non-tie).
+  // The anchor's own row is excluded — it is γ by construction and would inflate concordance.
+  function gmPlaneStats(cols, anchor) {
+    return cols.map((e) => {
+      const gp = e.gp || {}, g = e.g;
+      let nP = 0; for (const k in gp) { nP = gp[k].length; break; }
+      const cA = new Int32Array(nP), nD = new Int32Array(nP);
+      for (const name in gp) {
+        if (name === anchor) continue;
+        const total = g[name] && g[name][0]; if (!total) continue;
+        const arr = gp[name];
+        for (let p = 0; p < nP; p++) {
+          const twice = arr[p] * 2;
+          if (twice > total) { cA[p]++; nD[p]++; } else if (twice < total) nD[p]++;
+        }
+      }
+      return { cA, nD, nP };
+    });
+  }
+  function gmGammaFrac(stats, planes, sides) {
+    let gam = 0, tot = 0;
+    for (let i = 0; i < stats.length; i++) {
+      const s = stats[i], p = planes[i];
+      if (!s.nP || p >= s.nP) continue;
+      const a = s.cA[p], n = s.nD[p];
+      gam += sides[i] ? a : n - a; tot += n;
+    }
+    return tot ? gam / tot : 0.5;
+  }
+  // Sign-flip / random-plane permutation test. Cells within a zygote are NOT independent (one
+  // γ side is chosen per zygote), so the null must randomise per zygote — a naive per-cell
+  // binomial would wildly overstate significance.
+  function gmNullTest(cols, anchor, realPlanes, realSides, N) {
+    const stats = gmPlaneStats(cols, anchor);
+    const nP = stats.length ? stats[0].nP : 0;
+    if (!nP) return null;
+    const sObs = gmGammaFrac(stats, realPlanes, realSides), dev = Math.abs(sObs - 0.5);
+    const planes = new Array(cols.length), sides = new Array(cols.length);
+    let ge = 0, geSide = 0, sum = 0, sum2 = 0;
+    for (let it = 0; it < N; it++) {
+      for (let i = 0; i < cols.length; i++) { planes[i] = (Math.random() * nP) | 0; sides[i] = Math.random() < 0.5; }
+      const s = gmGammaFrac(stats, planes, sides);
+      sum += s; sum2 += s * s;
+      if (Math.abs(s - 0.5) >= dev) ge++;
+      // conservative variant: keep each zygote's real best plane, flip only the γ side
+      for (let i = 0; i < cols.length; i++) sides[i] = Math.random() < 0.5;
+      if (Math.abs(gmGammaFrac(stats, realPlanes, sides) - 0.5) >= dev) geSide++;
+    }
+    const mean = sum / N, sd = Math.sqrt(Math.max(0, sum2 / N - mean * mean));
+    return { sObs, nullMean: mean, nullSd: sd, p: (1 + ge) / (1 + N), pSide: (1 + geSide) / (1 + N), N };
   }
   function gmModel() {
     const agg = curAGG(); if (!agg) return null;
     const A = gene(), ki = bestKeyIndex();
     const cols = agg.embryos.filter((e) => e.g[A] && e.g[A][0] > 0);
-    if (!cols.length) return { anchor: A, cols: [], rows: [] };
-    // which side is γ for the anchor in each zygote (side A has more of the anchor gene)
-    const gammaSideA = cols.map((e) => { const r = e.g[A]; return r[1 + ki] * 2 >= r[0]; });
+    const isNull = state.gmAnchor === "null";
+    if (!cols.length) return { anchor: A, ki, isNull, cols: [], rows: [], stats: null, hasGp: false };
+    const hasGp = gmNPlanes(cols) > 0;
+    // real anchor: each zygote's best plane + the side the anchor is enriched on
+    const realPlanes = cols.map((e) => e.best[ki]);
+    const realSides = cols.map((e) => { const r = e.g[A]; return r[1 + ki] * 2 >= r[0]; });
+    const useNull = isNull && hasGp;
+    const draw = useNull ? gmEnsureDraw(cols) : null;
+    const planes = useNull ? draw.map((d) => d.p) : realPlanes;
+    const sides = useNull ? draw.map((d) => d.sideA) : realSides;
+    const aOf = (e, i, g) => {
+      if (useNull) { const arr = e.gp && e.gp[g]; return arr ? arr[planes[i]] : null; }
+      return e.g[g] ? e.g[g][1 + ki] : null;
+    };
+    const totalOf = (e, g) => (e.g[g] ? e.g[g][0] : 0);
+
     const geneSet = new Set(); cols.forEach((e) => Object.keys(e.g).forEach((g) => geneSet.add(g)));
-    geneSet.delete(A);
-    const build = (g) => {
-      const cells = cols.map((e, i) => gmCall(e.g[g], ki, gammaSideA[i]));
+    // fixed row order, always from the REAL anchor (see note above)
+    const realFrac = {};
+    for (const g of geneSet) {
+      let nG = 0, n = 0;
+      cols.forEach((e, i) => {
+        const c = gmCall(e.g[g] ? e.g[g][1 + ki] : null, totalOf(e, g), realSides[i]);
+        if (c === "G") { nG++; n++; } else if (c === "M") n++;
+      });
+      realFrac[g] = n ? nG / n : 0;
+    }
+    const rowNames = [A, ...[...geneSet].filter((g) => g !== A)
+      .sort((x, y) => (realFrac[y] - realFrac[x]) || x.localeCompare(y))];
+    const rows = rowNames.map((g) => {
+      const cells = cols.map((e, i) => gmCall(aOf(e, i, g), totalOf(e, g), sides[i]));
       const present = cells.filter((c) => c !== null);
       const nG = present.filter((c) => c === "G").length;
-      return { gene: g, cells, cov: present.length, gammaFrac: present.length ? nG / present.length : 0 };
-    };
-    const rows = [build(A), ...[...geneSet].map(build)
-      .sort((x, y) => (y.gammaFrac - x.gammaFrac) || (y.cov - x.cov) || x.gene.localeCompare(y.gene))];
-    return { anchor: A, ki, cols, rows };
+      return { gene: g, cells, cov: present.length,
+               gammaFrac: present.length ? nG / present.length : 0, realFrac: realFrac[g] };
+    });
+    return { anchor: A, ki, isNull, hasGp, cols, rows,
+             stats: gmNullTest(cols, A, realPlanes, realSides, 2000) };
   }
+  // NOTE: injected via innerHTML, so the "<" must be escaped.
+  function gmFmtP(p) { return p < 0.001 ? "&lt; 0.001" : "= " + p.toFixed(3); }
   function renderGammaMu() {
     if (!xsGm) return;
     const m = gmModel();
     if (!m) return;
-    const A = m.anchor;
+    const A = m.anchor, showingNull = m.isNull && m.hasGp;
+    if (xsGmReroll) xsGmReroll.disabled = !showingNull;
     if (!m.cols.length) {
       xsGm.dataset.anchor = A;
       xsGm.innerHTML = `<div class="xs-empty"><div><b>${A}</b> is not detected in any retained zygote.</div></div>`;
       if (xsGmSub) xsGmSub.textContent = `· ${A}`;
       if (xsGmNote) xsGmNote.textContent = "";
+      if (xsGmStats) xsGmStats.textContent = "";
       return;
     }
-    if (xsGmNote) xsGmNote.innerHTML =
-      `Each zygote is split at its <b>${BESTKEY_LABEL[state.crossKey]}</b> plane; the half with more ` +
-      `<b>${A}</b> is <b>γ</b>. Every gene is then <b>γ</b> if it is also enriched on that half, ` +
-      `<b>μ</b> if it flips to the other half.`;
+    if (xsGmNote) xsGmNote.innerHTML = m.isNull && !m.hasGp
+      ? `<b>Negative control unavailable:</b> this aggregate predates the per-plane counts — rerun ` +
+        `<code>scripts/add_plane_counts_to_cross_agg.py</code> to enable it.`
+      : showingNull
+        ? `<b>Negative control</b> — no anchor gene: every zygote uses a <b>random plane</b> and a ` +
+          `<b>randomly chosen γ side</b>. Rows keep the real anchor's order, so real structure would ` +
+          `still line up here; noise will not. Hit <b>Re-roll</b> for another draw.`
+        : `Each zygote is split at its <b>${BESTKEY_LABEL[state.crossKey]}</b> plane; the half with more ` +
+          `<b>${A}</b> is <b>γ</b>. Every gene is then <b>γ</b> if it is also enriched on that half, ` +
+          `<b>μ</b> if it flips to the other half.`;
+    if (xsGmStats) {
+      const st = m.stats;
+      xsGmStats.innerHTML = st
+        ? `<b>${A}</b>: observed <b>${(st.sObs * 100).toFixed(1)}% γ</b> vs null ` +
+          `<b>${(st.nullMean * 100).toFixed(1)}% ± ${(st.nullSd * 100).toFixed(1)}</b> · ` +
+          `<b>p ${gmFmtP(st.p)}</b> <span class="xs-gm-p2">(${st.N} random plane+side draws; ` +
+          `side-flip only: p ${gmFmtP(st.pSide)})</span>`
+        : "";
+    }
     const frag = document.createDocumentFragment();
     const corner = el("div", "xs-gm-corner"); corner.textContent = "gene \\ zygote"; frag.appendChild(corner);
     m.cols.forEach((e) => { const c = el("div", "xs-gm-collabel"); const s = document.createElement("span"); s.textContent = e.label; c.appendChild(s); frag.appendChild(c); });
     m.rows.forEach((rd) => {
-      const isA = rd.gene === A;
+      const isA = rd.gene === A && !showingNull;    // no anchor exists in the control
       const lab = el("div", "xs-gm-rowlabel" + (isA ? " anchor" : ""));
       lab.textContent = rd.gene;
       lab.title = isA ? `${rd.gene} — anchor (defines the γ half)` :
-        `${rd.gene} — γ in ${Math.round(rd.gammaFrac * 100)}% of ${rd.cov} zygote(s)`;
+        `${rd.gene} — γ in ${Math.round(rd.gammaFrac * 100)}% of ${rd.cov} zygote(s)` +
+        (showingNull ? ` (control draw; real anchor: ${Math.round(rd.realFrac * 100)}%)` : "");
       frag.appendChild(lab);
       rd.cells.forEach((c, i) => {
         const kind = c === "G" ? "g-G" : c === "M" ? "g-M" : c === "T" ? "g-T" : "g-NA";
@@ -636,12 +750,17 @@
   function downloadGammaMuCSV() {
     const m = gmModel(); if (!m || !m.cols.length) return;
     const glyph = (c) => (c === "G" ? "gamma" : c === "M" ? "mu" : c === "T" ? "tie" : "");
-    const head = ["gene", ...m.cols.map((e) => e.label.replace(/,/g, ""))];
-    const lines = [head.join(",")];
+    const showingNull = m.isNull && m.hasGp, st = m.stats;
+    const lines = [];
+    lines.push(`# anchor=${showingNull ? "RANDOM negative control (random plane + random side)" : m.anchor}`);
+    lines.push(`# plane=${BESTKEY_LABEL[state.crossKey]}${showingNull ? " (control uses random planes)" : ""}`);
+    if (st) lines.push(`# observed_gamma_fraction=${st.sObs.toFixed(4)} null_mean=${st.nullMean.toFixed(4)} ` +
+      `null_sd=${st.nullSd.toFixed(4)} p_random_plane_and_side=${st.p.toFixed(4)} p_side_flip_only=${st.pSide.toFixed(4)} draws=${st.N}`);
+    lines.push(["gene", ...m.cols.map((e) => e.label.replace(/,/g, ""))].join(","));
     m.rows.forEach((rd) => lines.push([rd.gene, ...rd.cells.map(glyph)].join(",")));
     const blob = new Blob([lines.join("\n")], { type: "text/csv" });
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob); a.download = `gamma_mu_${m.anchor}.csv`;
+    a.href = URL.createObjectURL(blob); a.download = `gamma_mu_${showingNull ? "NULL_control" : m.anchor}.csv`;
     document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
   }
   function renderCrossAgg() {
@@ -785,6 +904,13 @@
     xsBarDownload.addEventListener("click", () => downloadPlot(xsBars,
       xsBarPercent.checked ? "side_percentages" : "side_counts", xsBarFormat, xsBarScale, 2000, 1250));
     if (xsGmDownload) xsGmDownload.addEventListener("click", downloadGammaMuCSV);
+    if (xsGmAnchor) xsGmAnchor.addEventListener("change", () => {
+      state.gmAnchor = xsGmAnchor.value; renderGammaMu();
+    });
+    if (xsGmReroll) xsGmReroll.addEventListener("click", () => {
+      state.gmDrawKey = null;                       // force a fresh random draw
+      renderGammaMu();
+    });
   }
 
   function downloadPlot(div, suffix, formatEl, scaleEl, width, height) {

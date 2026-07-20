@@ -107,6 +107,18 @@
     finally { hideLoading(); }
   }
   state.byLabel = (id) => (state.manifest.find((m) => m.id === id) || {}).label || id;
+  // Zygote holding the most transcripts of a gene — the most informative one to jump to when
+  // a gene is picked that the current zygote doesn't carry. Only offers loadable embryos.
+  function mostAbundantEmbryoFor(g) {
+    const agg = curAGG(); if (!agg || !agg.embryos) return null;
+    const loadable = new Set(state.manifest.map((m) => m.id));
+    let bestId = null, bestN = -1;
+    for (const e of agg.embryos) {
+      const r = e.g[g];
+      if (r && r[0] > bestN && loadable.has(e.id)) { bestN = r[0]; bestId = e.id; }
+    }
+    return bestId;
+  }
 
   function populateGenes(scene) {
     const tot = scene.gene_totals || {};
@@ -945,10 +957,19 @@
     bestListEl.addEventListener("click", (e) => {
       const row = e.target.closest(".best-row"); if (!row) return;
       const g = row.dataset.gene;
-      if (state.scene.genes.includes(g)) {
-        state.userGene = g; geneSelect.value = g; render(); renderChart(); highlightBest();
+      state.userGene = g;                       // remembered, so it survives an embryo switch
+      if (state.scene && state.scene.genes.includes(g)) {
+        geneSelect.value = g; render(); renderChart(); highlightBest();
         if (state.drawerOpen) renderCrossAgg();
+        return;
       }
+      // The gene dropdown only holds THIS zygote's genes, so a cross-embryo pick (the
+      // Concordance tab especially) can't just be selected — jump to the zygote where the
+      // gene is most abundant; populateGenes() then picks it up from state.userGene.
+      ensureAgg().then(() => {
+        const id = mostAbundantEmbryoFor(g);
+        if (id && id !== state.currentId) selectEmbryo(id);
+      });
     });
   }
   const resizeXs = () => { try { Plotly.Plots.resize(xsOutlines); Plotly.Plots.resize(xsBars); } catch (_) {} };

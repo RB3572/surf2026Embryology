@@ -21,9 +21,12 @@
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
   const rtabsEl = $("#rtabs"), segListEl = $("#seg-list"), rdrawerDesc = $("#rdrawer-desc");
   const minCountEl = $("#min-count"), metricModeEl = $("#metric-mode");
+  const drawer = $("#drawer"), drawerHandle = $("#drawer-handle"), drawerBody = $("#drawer-body");
+  const crossGeneEl = $("#cross-gene"), crossMetricEl = $("#cross-metric"), crossNote = $("#cross-note"), crossChart = $("#cross-chart");
 
   const state = { manifest: [], currentId: null, scene: null, userGene: null,
-                  segTab: null, geneMap: null, cutoff: 0, metric: "density", dotSize: 1.5 };
+                  segTab: null, geneMap: null, cutoff: 0, metric: "density", dotSize: 1.5,
+                  segGenes: null, crossMetric: "density", drawerOpen: false };
   let vcExtras = null;   // dot-size + atlas-link row (VCore.addWindowExtras)
 
   const segColor = (lbl) => {
@@ -36,6 +39,7 @@
     try {
       const m = await (await fetch("data/segments_manifest.json")).json();
       state.manifest = m.embryos;
+      V.loadGz("data/segments_genes.json.gz").then((g) => { state.segGenes = g; if (state.drawerOpen) renderCrossGene(); }).catch(() => {});
       countEl.textContent = `${m.embryos.length} embryos · ${m.stages.length} stages`;
       V.buildTabs(tabsEl, m.embryos, selectEmbryo, (e) => ({
         label: e.label, sub: e.stage_label,
@@ -45,8 +49,8 @@
         [...controlsEl.querySelectorAll(".rz")], "segments_controls_box")
         .setResizeCb(() => { try { Plotly.Plots.resize(chartEl); } catch (_) {} });
       vcExtras = V.addWindowExtras($("#controls-body"), { defaultSize: state.dotSize, onDotSize: (s) => { state.dotSize = s; if (state.scene) render(); } });
-      wireRdrawer();
-      geneSelect.addEventListener("change", () => { state.userGene = geneSelect.value; render(); renderChart(); highlightGene(); });
+      wireRdrawer(); wireCrossDrawer();
+      geneSelect.addEventListener("change", () => { state.userGene = geneSelect.value; render(); renderChart(); highlightGene(); if (state.drawerOpen) renderCrossGene(); });
       minCountEl.addEventListener("input", () => {
         state.cutoff = Math.max(0, parseInt(minCountEl.value, 10) || 0);
         if (state.scene) renderSegList();
@@ -72,7 +76,7 @@
       buildGeneMap(scene);
       populateGenes(scene);
       if (!scene.mask_labels.includes(state.segTab)) state.segTab = scene.mask_labels[0];
-      controlsEl.hidden = false; placeholder.hidden = true; rdrawer.hidden = false;
+      controlsEl.hidden = false; placeholder.hidden = true; rdrawer.hidden = false; drawer.hidden = false;
       renderLegend(); buildSegTabs(); render(); renderChart(); renderSegList();
     } catch (err) { showError(err.message || String(err)); }
     finally { hideLoading(); }
@@ -216,6 +220,61 @@
     const cur = gene();
     segListEl.querySelectorAll(".seg-row").forEach((r) => r.classList.toggle("current", r.dataset.gene === cur));
   }
+  // ---------- bottom drawer: the selected gene's enrichment across every embryo it appears in ----------
+  const STAGE_RANK = (s) => /oocyte/i.test(s) ? 0 : /zygote/i.test(s) ? 1 : /early/i.test(s) ? 2 : /late/i.test(s) ? 3 : 4;
+  const SEG_PALETTE = ["#8dd3c7", "#ffd92f", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5"];
+  function renderCrossGene() {
+    if (!crossChart) return;
+    const g = gene(), sg = state.segGenes;
+    if (crossGeneEl) crossGeneEl.textContent = g ? `· ${g}` : "";
+    if (!sg) { crossChart.innerHTML = `<div class="seg-cross-empty">Loading cross-embryo data…</div>`; return; }
+    if (!g || !sg.genes[g]) {
+      crossChart.innerHTML = `<div class="seg-cross-empty"><b>${g || "—"}</b> is not present in any embryo.</div>`;
+      if (crossNote) crossNote.textContent = ""; return;
+    }
+    const entries = sg.genes[g].map(([idx, rows]) => ({ e: sg.embInfo[idx], rows }))
+      .sort((a, b) => STAGE_RANK(a.e.stage) - STAGE_RANK(b.e.stage) || a.e.label.localeCompare(b.e.label));
+    const frac = state.crossMetric === "fraction";
+    const xlabels = entries.map((x) => x.e.label);
+    const segNums = [...new Set(entries.flatMap((x) => x.rows.map((r) => r[0])))].sort((a, b) => a - b);
+    const traces = segNums.map((seg) => ({
+      type: "bar", name: `Segment ${seg}`, x: xlabels,
+      y: entries.map((x) => { const r = x.rows.find((rr) => rr[0] === seg); if (!r) return null;
+        return frac ? (r[3] ? r[2] / r[3] : 0) : r[1]; }),                        // [seg, enrich, count, ntot]
+      marker: { color: SEG_PALETTE[(seg - 1) % SEG_PALETTE.length] },
+      hovertemplate: `%{x} · seg ${seg}<br>${frac ? "%{y:.0%} of the gene" : "%{y}× enrichment"}<extra></extra>`,
+    }));
+    const shapes = frac ? [] : [{ type: "line", xref: "paper", x0: 0, x1: 1, y0: 1, y1: 1,
+      line: { color: "#94a3b8", width: 1, dash: "dot" } }];
+    if (crossNote) crossNote.innerHTML = `<b>${g}</b> · ${entries.length} embryos · bars grouped by segment ` +
+      `— segment meanings vary by stage, hover for detail`;
+    plotInto(crossChart, traces, {
+      barmode: "group", bargap: 0.25, bargroupgap: 0.04, shapes,
+      margin: { l: 46, r: 8, t: 6, b: 104 }, height: crossChart.clientHeight || 300,
+      showlegend: true, legend: { orientation: "h", y: 1.06, x: 0, font: { size: 9 } },
+      xaxis: { type: "category", tickangle: -55, tickfont: { size: 7 }, automargin: true, fixedrange: false },
+      yaxis: { title: { text: frac ? "fraction of the gene" : "fold enrichment", font: { size: 10 } },
+        tickfont: { size: 9 }, gridcolor: "#eef1f5", rangemode: "tozero", tickformat: frac ? ".0%" : undefined, fixedrange: false },
+      paper_bgcolor: "transparent", plot_bgcolor: "transparent",
+    }, { responsive: true, displayModeBar: false, scrollZoom: true });
+  }
+  function setDrawerOpen(open) {
+    state.drawerOpen = open;
+    drawer.dataset.open = open ? "true" : "false";
+    drawerHandle.setAttribute("aria-expanded", String(open));
+    if (open) { renderCrossGene(); requestAnimationFrame(() => { try { Plotly.Plots.resize(crossChart); } catch (_) {} }); }
+  }
+  function wireCrossDrawer() {
+    drawerHandle.addEventListener("click", () => setDrawerOpen(!state.drawerOpen));
+    let sh = 0; const rz = $("#drawer-resize");
+    rz.addEventListener("pointerdown", (e) => { sh = drawerBody.getBoundingClientRect().height; rz._d = { y: e.clientY }; rz.setPointerCapture(e.pointerId); e.preventDefault(); });
+    rz.addEventListener("pointermove", (e) => { if (!rz._d) return;
+      drawer.style.setProperty("--drawer-h", Math.max(220, Math.min(window.innerHeight - 120, sh + (rz._d.y - e.clientY))) + "px"); });
+    const end = (e) => { if (rz._d) { rz._d = null; try { rz.releasePointerCapture(e.pointerId); } catch (_) {}
+      requestAnimationFrame(() => { try { Plotly.Plots.resize(crossChart); } catch (_) {} }); } };
+    rz.addEventListener("pointerup", end); rz.addEventListener("pointercancel", end);
+    if (crossMetricEl) crossMetricEl.addEventListener("change", () => { state.crossMetric = crossMetricEl.value; renderCrossGene(); });
+  }
   function wireRdrawer() {
     // pull-open + resize via the handle (tap toggles); grabber fine-tunes width
     wireHandleDrag(rdrawer, rdrawerHandle, {
@@ -234,7 +293,7 @@
     segListEl.addEventListener("click", (e) => {
       const row = e.target.closest(".seg-row"); if (!row) return;
       const g = row.dataset.gene;
-      if (state.geneMap[g]) { state.userGene = g; geneSelect.value = g; render(); renderChart(); highlightGene(); }
+      if (state.geneMap[g]) { state.userGene = g; geneSelect.value = g; render(); renderChart(); highlightGene(); if (state.drawerOpen) renderCrossGene(); }
     });
   }
   function wireHandleDrag(drawerEl, handleEl, cfg) {

@@ -61,6 +61,27 @@
     </div>
   </main>
 
+  <!-- Bottom drawer: the selected gene's enrichment across every embryo it appears in -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Enrichment across all embryos <span class="drawer-gene" id="cross-gene"></span></span>
+      <span class="drawer-hint">the selected gene's per-segment enrichment in every embryo it appears in</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="seg-cross-ctl">
+        <label class="ctl"><span class="ctl-label">Metric</span>
+          <select id="cross-metric">
+            <option value="density">Density — ÷ segment volume (fold-change)</option>
+            <option value="fraction">Fraction — ÷ the gene's total count</option>
+          </select></label>
+        <span class="seg-cross-note" id="cross-note"></span>
+      </div>
+      <div id="cross-chart" class="seg-cross-plot"></div>
+    </div>
+  </section>
+
   <!-- Right drawer: per-segment ranked genes -->
   <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
     <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>

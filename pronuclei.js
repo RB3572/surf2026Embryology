@@ -31,20 +31,28 @@
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
   const rankNEl = $("#rank-n"), rankPosEl = $("#rank-pos"), rankNegEl = $("#rank-neg");
   const ptToggle = $("#pseudotime-toggle");
+  const regionSel = $("#region-sel"), normSel = $("#norm-sel"), flipToggle = $("#flip-toggle");
+  const setAdd = $("#set-add"), setChipsEl = $("#set-chips"), setPresetsEl = $("#set-presets"),
+        setRequireAllEl = $("#set-requireall"), setClearEl = $("#set-clear"),
+        setScatter = $("#set-scatter"), setFit = $("#set-fit");
 
-  const state = { points: [], byId: {}, genesAgg: null, geneCorr: [], userGene: null, rankN: 10,
+  const state = { points: [], byId: {}, genesAgg: null, gaById: {}, geneCorr: [], userGene: null, rankN: 10,
                   currentId: null, scene: null, fit: null, drawerOpen: false, showDots: false,
-                  regType: "linear", dotSize: 1.5, pseudotime: false };
+                  regType: "linear", dotSize: 1.5, pseudotime: false,
+                  region: "all", norm: "count", flip: false, segData: null,
+                  geneSet: [], setRequireAll: false };
   let vcExtras = null;   // dot-size + atlas-link row (VCore.addWindowExtras)
 
   (async function init() {
     try {
-      const [m, ga] = await Promise.all([
+      const [m, ga, sd] = await Promise.all([
         (await fetch("data/pronuclei_manifest.json")).json(),
         V.loadGz("data/pronuclei_genes.json.gz"),
+        V.loadGz("data/pronuclei_segcounts.json.gz").catch(() => null),   // per-segment counts + volumes (optional)
       ]);
-      state.points = m.embryos; state.genesAgg = ga;
+      state.points = m.embryos; state.genesAgg = ga; state.segData = sd;
       state.points.forEach((p) => (state.byId[p.id] = p));
+      state.genesAgg.embryos.forEach((e) => (state.gaById[e.id] = e));
       countEl.textContent = `${m.embryos.length} zygotes · pronuclei auto-detected inside the cytoplasm`;
       computeGeneCorr();
       populateGenes();
@@ -53,12 +61,25 @@
         title: `${e.label} · dist ${e.distance} µm · ${e.total.toLocaleString()} transcripts`,
       }));
       wireDrawer(); wireRdrawer(); renderRanks();
-      ptToggle.addEventListener("change", () => { state.pseudotime = ptToggle.checked; renderScatter(); renderGeneScatter(); });
+      ptToggle.addEventListener("change", () => { state.pseudotime = ptToggle.checked; renderAllScatters(); });
       vcExtras = V.addWindowExtras($("#controls-body"), { defaultSize: state.dotSize, onDotSize: (s) => { state.dotSize = s; if (state.scene) render(); } });
       geneSelect.addEventListener("change", () => selectGene(geneSelect.value));
       rankNEl.addEventListener("change", () => { state.rankN = parseInt(rankNEl.value, 10) || 10; renderRanks(); });
       dotsShow.addEventListener("change", () => { state.showDots = dotsShow.checked; ensureDotGene(); if (state.scene) render(); });
-      regTypeEl.addEventListener("change", () => { state.regType = regTypeEl.value; updRegNote(); renderScatter(); renderGeneScatter(); });
+      regTypeEl.addEventListener("change", () => { state.regType = regTypeEl.value; updRegNote(); renderAllScatters(); });
+      // region + normalization + flip (bottom-drawer scatters)
+      regionSel.addEventListener("change", () => { state.region = regionSel.value; renderAllScatters(); });
+      normSel.addEventListener("change", () => { state.norm = normSel.value; renderAllScatters(); });
+      flipToggle.addEventListener("change", () => { state.flip = flipToggle.checked; renderAllScatters(); });
+      // gene-set config
+      setAdd.addEventListener("change", () => { addSetGene(setAdd.value); setAdd.value = ""; });
+      setPresetsEl.addEventListener("click", (e) => { const b = e.target.closest(".pn-set-preset"); if (b) addPreset(parseInt(b.dataset.i, 10)); });
+      setChipsEl.addEventListener("click", (e) => { const x = e.target.closest(".pn-set-x"); if (x) removeSetGene(x.dataset.g); });
+      setClearEl.addEventListener("click", clearSet);
+      setRequireAllEl.addEventListener("change", () => { state.setRequireAll = setRequireAllEl.checked; renderSetScatter(); });
+      populateSetAdd(); renderSetPresets(); applySegAvail();
+      PRESETS[1].genes.forEach((g) => { if (!state.geneSet.includes(g)) state.geneSet.push(g); });   // seed with ZGA markers
+      renderSetChips();
       updRegNote();
     } catch (err) { showError("Failed to load: " + (err.message || err)); }
   })();
@@ -128,7 +149,7 @@
       controlsEl.hidden = false; placeholder.hidden = true; drawer.hidden = false; rdrawer.hidden = false;
       ensureDotGene(); render(); renderReadout(meta);
       if (!state.drawerOpen) openDrawer(true);
-      else { renderScatter(); renderGeneScatter(); }
+      else renderAllScatters();
     } catch (err) { showError(err.message || String(err)); }
     finally { hideLoading(); }
   }
@@ -185,6 +206,94 @@
       `<div class="pn-resid"><b>${gene()}</b> here: ${gc != null ? gc.toLocaleString() + " transcripts" : "not in this zygote's panel"}</div>` +
       `<div class="pn-resid">pronuclei auto-detected as segments <b>${s.pron_labels[0]}</b> &amp; <b>${s.pron_labels[1]}</b></div>`;
   }
+
+  // ---------- region + normalization + gene-set config (bottom drawer) ----------
+  // Regions: "all" = whole embryo (uses the per-gene TOTAL aggregate); seg1 / pron / polar use the
+  // per-segment counts from pronuclei_segcounts.json.gz (full-res transcript→label assignment).
+  const SEG_IDX = { seg1: 0, pron: 1, polar: 2 };
+  const REGION_IN = { all: "", seg1: " · segment 1", pron: " · pronuclei", polar: " · polar bodies" };
+  // Preset gene sets. Each preset ADDS its genes to the current set (deduped). Biology-based sets
+  // (maternal / ZGA / pronucleus-associated) span multiple MERFISH panels, so use them with
+  // "require all genes" OFF; the panel-anchored sets from the deck work either way.
+  const PRESETS = [
+    { name: "Maternally deposited", genes: "Nlrp5 Padi6 Nlrp2 Nlrp9c Zp2 Mos Fbxo43 Zar1 Tle6 Dnmt1".split(" ") },
+    { name: "ZGA markers", genes: "Zscan4a Zscan4b Zscan4d Zscan4e Zscan4f Duxf1 Duxf3 Obox1 Obox2 Obox3 Obox8 MuERV-L L1td1 Eif1ad12 Kdm4dl Zfp352 Trib3 Gadd45a Pqbp1".split(" ") },
+    { name: "Paternal-pronucleus assoc.", genes: "Brdt Brd4 Ddx43 Ddx20 Fthl17f Nanos2 Btbd18 Hspa2".split(" ") },
+    { name: "Maternal-pronucleus assoc.", genes: "Nlrp5 Padi6 Dnmt1 Carm1 Nono Setd2 Ddb1 Mta2 Uhrf1 Fmn2".split(" ") },
+    { name: "Maternal, depleting → 2-cell", genes: "Zp2 Prkci Lin28a Aldh2 Nlrp2 Jag2 Btbd18 Ets2 Nup153 Immt Mitd1 Fam110c Hspa5 Smad2".split(" ") },
+    { name: "Pluripotency / early-2C anchor", genes: "Esrrb Itgb3 Rbm8a Jag2 Clip2 Usp54 Trnp1 Raly Pard3 Eid2 Zp2 Pi4k2b Zscan4d Btbd18 Raf1 Stat6 Egfr Nup62cl Nup153 Fgf8".split(" ") },
+    { name: "TGF-β signaling", genes: "Rps13 Ifi35 Tcl1b4 Bambi Vdac2 Zfp622 Sec1 Duxf3 Fkbp1a Psen1 Vps4a Ldhb Mlxipl Tulp3 Lpar6 Smad2 Pin1 Srp72 Zscan4e Obox2".split(" ") },
+    { name: "Developmental regulation", genes: "Pqbp1 Gstm5 Clock Cdc42 Mlxipl Psg26 Zscan4a Gdap1".split(" ") },
+  ];
+  let allGenesCache = null;
+  const allGenes = () => (allGenesCache ||= [...new Set(state.genesAgg.embryos.flatMap((e) => Object.keys(e.genes)))]);
+  const geneInData = (g) => allGenes().includes(g);
+
+  const embTotal = (id) => (state.byId[id] || {}).total || 0;
+  const segOf = (id) => state.segData && state.segData.embryos[id];
+  const hasSeg = (id) => state.region === "all" || !!segOf(id);   // can this embryo be plotted for the region?
+  function volIn(id) {                                            // region volume (µm³)
+    const sd = segOf(id); if (!sd) return 0;
+    if (state.region === "all") return (sd.vol.seg1 || 0) + (sd.vol.pron || 0) + (sd.vol.polar || 0);
+    return sd.vol[state.region] || 0;
+  }
+  function totalIn(id) {                                          // total transcripts in the region
+    if (state.region === "all") return embTotal(id);
+    const sd = segOf(id); return sd ? (sd.tot[state.region] || 0) : 0;
+  }
+  function geneCountIn(id, g) {                                   // one gene's count in the region
+    if (state.region === "all") { const e = state.gaById[id]; return e ? (e.genes[g] || 0) : 0; }
+    const sd = segOf(id); if (!sd) return 0;
+    const a = sd.genes[g]; return a ? (a[SEG_IDX[state.region]] || 0) : 0;
+  }
+  function normVal(val, id) {                                     // apply the count-axis normalization
+    if (state.norm === "total") { const T = embTotal(id); return T ? val / T : 0; }
+    if (state.norm === "vol") { const V = volIn(id); return V ? val / V : 0; }
+    return val;
+  }
+  const yLabel = (base) => {
+    const rin = REGION_IN[state.region] || "";
+    if (state.norm === "total") return `${base} ÷ total${rin}`;
+    if (state.norm === "vol") return `${base} per µm³${rin}`;
+    return `${base}${rin}`;
+  };
+  const yUnitNow = () => (state.norm === "total" ? "" : state.norm === "vol" ? "/µm³" : "transcripts");
+  const yFmtNow = () => (state.norm === "count" ? "," : ".3~g");
+
+  function applySegAvail() {   // no per-segment data → lock to whole-embryo + disable volume density
+    if (state.segData) return;
+    state.region = "all"; regionSel.value = "all";
+    [...regionSel.options].forEach((o) => { if (o.value !== "all") o.disabled = true; });
+    regionSel.disabled = true; regionSel.title = "Per-segment data unavailable — run build_pronuclei_segcounts.py";
+    const volOpt = [...normSel.options].find((o) => o.value === "vol"); if (volOpt) volOpt.disabled = true;
+  }
+
+  // gene-set config UI
+  function populateSetAdd() {
+    const genes = allGenes().slice().sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base", numeric: true }));
+    setAdd.innerHTML = `<option value="">＋ add a gene…</option>` + genes.map((g) => `<option value="${g}">${g}</option>`).join("");
+    setAdd.value = "";
+  }
+  function renderSetPresets() {
+    setPresetsEl.innerHTML = PRESETS.map((p, i) =>
+      `<button type="button" class="pn-set-preset" data-i="${i}" title="Add ${p.genes.length} genes — ${p.genes.join(", ")}">${p.name} +${p.genes.length}</button>`).join("");
+  }
+  function renderSetChips() {
+    if (!state.geneSet.length) { setChipsEl.innerHTML = `<span class="pn-set-empty">No genes yet — pick a preset above or add genes one at a time.</span>`; return; }
+    setChipsEl.innerHTML = state.geneSet.map((g) => {
+      const ok = geneInData(g);
+      return `<span class="pn-set-chip${ok ? "" : " absent"}" title="${ok ? g : g + " — not in any zygote's panel"}">${g}` +
+        `<button type="button" class="pn-set-x" data-g="${g}" aria-label="Remove ${g}">×</button></span>`;
+    }).join("");
+  }
+  function addSetGene(g) { if (g && !state.geneSet.includes(g)) { state.geneSet.push(g); renderSetChips(); renderSetScatter(); } }
+  function removeSetGene(g) { state.geneSet = state.geneSet.filter((x) => x !== g); renderSetChips(); renderSetScatter(); }
+  function addPreset(i) {
+    const p = PRESETS[i]; if (!p) return;
+    p.genes.forEach((g) => { if (!state.geneSet.includes(g)) state.geneSet.push(g); });
+    renderSetChips(); renderSetScatter();
+  }
+  function clearSet() { state.geneSet = []; renderSetChips(); renderSetScatter(); }
 
   // ---------- scatters ----------
   function linreg(xs, ys) {
@@ -314,30 +423,40 @@
     return { ...res, type, label: m.label, bio: m.bio, scale: m.scale, n: xs.length };
   }
 
-  // ---------- scatters (x = pronuclei distance µm, y = transcript count) ----------
-  function scatter(div, xs, ys, ids, labels, model, xTitle, yTitle, yUnit, curId, xUnit) {
+  // ---------- scatters (logical x = pronuclei distance µm, y = transcript count) ----------
+  // model.predict maps distance→count. When state.flip is on we transpose the VIEW only (swap
+  // which variable is on which axis + the curve) — the underlying fit is unchanged.
+  function scatter(div, xs, ys, ids, labels, model, xTitle, yTitle, yUnit, curId, xUnit, yFmt) {
     xUnit = xUnit == null ? "µm" : xUnit;
-    const pts = xs.map((x, i) => ({ x, y: ys[i], lab: labels[i], id: ids[i] }));
-    const others = pts.filter((o) => o.id !== curId), cur = pts.find((o) => o.id === curId);
+    yFmt = yFmt || ",";
+    const flip = state.flip;
     const xmin = Math.min(...xs), xmax = Math.max(...xs);
-    const cx = [], cy = [], N = 90;                // smooth model curve
-    for (let i = 0; i < N; i++) { const x = xmin + (xmax - xmin) * i / (N - 1), y = model.predict(x);
-      if (isFinite(y)) { cx.push(x); cy.push(y); } }
-    const hover = `%{text}<br>%{x:.1f}${xUnit ? " " + xUnit : ""} · %{y:,} ${yUnit}<extra></extra>`;
+    const cxD = [], cyP = [], N = 90;              // smooth model curve, sampled over distance
+    for (let i = 0; i < N; i++) { const d = xmin + (xmax - xmin) * i / (N - 1), p = model.predict(d);
+      if (isFinite(p)) { cxD.push(d); cyP.push(p); } }
+    const H = (d, c) => (flip ? c : d), Vv = (d, c) => (flip ? d : c);   // → horizontal / vertical
+    const pts = xs.map((x, i) => ({ h: H(x, ys[i]), v: Vv(x, ys[i]), lab: labels[i], id: ids[i] }));
+    const others = pts.filter((o) => o.id !== curId), cur = pts.find((o) => o.id === curId);
+    const chx = cxD.map((d, i) => H(d, cyP[i])), chy = cxD.map((d, i) => Vv(d, cyP[i]));
+    const hUnit = flip ? yUnit : xUnit, vUnit = flip ? xUnit : yUnit;
+    const hFmt = flip ? yFmt : ".1f", vFmt = flip ? ".1f" : yFmt;
+    const hTitle = flip ? yTitle : xTitle, vTitle = flip ? xTitle : yTitle;
+    const hover = `%{text}<br>%{x:${hFmt}}${hUnit ? " " + hUnit : ""} · %{y:${vFmt}}${vUnit ? " " + vUnit : ""}<extra></extra>`;
     const traces = [
-      { type: "scatter", mode: "markers", name: "zygotes", x: others.map((o) => o.x), y: others.map((o) => o.y),
+      { type: "scatter", mode: "markers", name: "zygotes", x: others.map((o) => o.h), y: others.map((o) => o.v),
         marker: { size: 8, color: "#94a3b8", opacity: 0.72, line: { width: 0 } },
         text: others.map((o) => o.lab), hovertemplate: hover },
-      { type: "scatter", mode: "lines", name: model.label, x: cx, y: cy,
+      { type: "scatter", mode: "lines", name: model.label, x: chx, y: chy,
         line: { color: "#0891b2", width: 2.4, shape: "spline" }, hoverinfo: "skip" },
     ];
-    if (cur) traces.push({ type: "scatter", mode: "markers", name: cur.lab, x: [cur.x], y: [cur.y],
+    if (cur) traces.push({ type: "scatter", mode: "markers", name: cur.lab, x: [cur.h], y: [cur.v],
       marker: { size: 15, color: CUR_C, line: { width: 2, color: "#fff" } },
       text: [cur.lab], hovertemplate: hover });
+    const countIsX = flip;                          // count axis gets rangemode:tozero; distance floats
     plotInto(div, traces, {
       margin: { l: 64, r: 12, t: 6, b: 40 }, height: div.clientHeight || 220,
-      xaxis: { title: { text: xTitle, font: { size: 11 } }, tickfont: { size: 10 }, gridcolor: "#eef1f5", zeroline: false },
-      yaxis: { title: { text: yTitle, font: { size: 10 } }, tickfont: { size: 9 }, gridcolor: "#eef1f5", rangemode: "tozero" },
+      xaxis: { title: { text: hTitle, font: { size: 11 } }, tickfont: { size: 10 }, gridcolor: "#eef1f5", zeroline: false, rangemode: countIsX ? "tozero" : "normal" },
+      yaxis: { title: { text: vTitle, font: { size: 10 } }, tickfont: { size: 9 }, gridcolor: "#eef1f5", rangemode: countIsX ? "normal" : "tozero" },
       paper_bgcolor: "transparent", plot_bgcolor: "transparent",
       legend: { orientation: "h", font: { size: 10 }, y: 1.16, x: 1, xanchor: "right" },
     });
@@ -347,30 +466,77 @@
   // development (pronuclei approach over time). maxD is per-chart (the embryos being plotted).
   const ptx = (dists, maxD) => (state.pseudotime ? dists.map((d) => maxD - d) : dists);
   const PT_X_TITLE = "pseudotime  ·  max distance − pronuclei distance (larger = later)";
+  const X_TITLE = () => (state.pseudotime ? PT_X_TITLE : "min pronuclei distance (µm)  ·  smaller = later in development");
+  function renderAllScatters() { renderScatter(); renderGeneScatter(); renderSetScatter(); }
   function renderScatter() {
-    const pts = state.points, dists = pts.map((p) => p.distance), Y = pts.map((p) => p.total);
+    const pts = state.points.filter((p) => hasSeg(p.id));   // region≠all drops embryos without per-segment data
+    const dists = pts.map((p) => p.distance);
+    const Y = pts.map((p) => normVal(totalIn(p.id), p.id));
     const X = ptx(dists, Math.max(...dists));
     state.fit = fitModel(state.regType, X, Y);
     scatter(scatterPlot, X, Y, pts.map((p) => p.id), pts.map((p) => p.label), state.fit,
-      state.pseudotime ? PT_X_TITLE : "min pronuclei distance (µm)  ·  smaller = later in development",
-      "total transcripts", "transcripts", state.currentId, state.pseudotime ? "" : "µm");
+      X_TITLE(), yLabel("total transcripts"), yUnitNow(), state.currentId, state.pseudotime ? "" : "µm", yFmtNow());
     const f = state.fit;
     pnFit.innerHTML = `· <b>${f.n}</b> zygotes · <b>${f.label}</b> · ${SCALE_LABEL[f.scale]} = <b>${f.r2.toFixed(3)}</b> · <span class="pn-params">${f.params}</span>`;
   }
   function renderGeneScatter() {
-    const g = gene(), s = geneSeries(g);
-    if (s.xs.length < 2) {
+    const g = gene();
+    const xs = [], ys = [], ids = [], labels = [];   // region-aware series for the selected gene
+    for (const e of state.genesAgg.embryos) {
+      if (!(g in e.genes) || !hasSeg(e.id)) continue;
+      xs.push(e.distance); ys.push(normVal(geneCountIn(e.id, g), e.id));
+      ids.push(e.id); labels.push((state.byId[e.id] || {}).label || e.id);
+    }
+    if (xs.length < 2) {
       Plotly.purge(geneScatter); geneScatter.classList.remove("js-plotly-plot");
-      geneScatter.innerHTML = `<div class="pn-empty">Only ${s.xs.length} zygote${s.xs.length === 1 ? "" : "s"} contain${s.xs.length === 1 ? "s" : ""} <b>${g}</b> — too few to fit.</div>`;
+      geneScatter.innerHTML = `<div class="pn-empty">Only ${xs.length} zygote${xs.length === 1 ? "" : "s"} contain${xs.length === 1 ? "s" : ""} <b>${g}</b>${state.region === "all" ? "" : " with per-segment data"} — too few to fit.</div>`;
       geneFit.innerHTML = `· <b>${g}</b>`;
       return;
     }
-    const X = ptx(s.ys, Math.max(...s.ys)), Y = s.xs;   // x = distance (or pseudotime), y = this gene's count
+    const X = ptx(xs, Math.max(...xs)), Y = ys;
     const model = fitModel(state.regType, X, Y);
-    scatter(geneScatter, X, Y, s.ids, s.labels, model,
-      state.pseudotime ? "pseudotime" : "min pronuclei distance (µm)", `${g} transcript count`, g, state.currentId,
-      state.pseudotime ? "" : "µm");
-    geneFit.innerHTML = `· <b>${g}</b> · ${model.label} · ${SCALE_LABEL[model.scale]} = <b>${model.r2.toFixed(3)}</b> · n=${s.xs.length}`;
+    scatter(geneScatter, X, Y, ids, labels, model,
+      state.pseudotime ? "pseudotime" : "min pronuclei distance (µm)", yLabel(`${g} count`), yUnitNow(), state.currentId,
+      state.pseudotime ? "" : "µm", yFmtNow());
+    geneFit.innerHTML = `· <b>${g}</b> · ${model.label} · ${SCALE_LABEL[model.scale]} = <b>${model.r2.toFixed(3)}</b> · n=${xs.length}`;
+  }
+  // Gene-set scatter: per zygote, SUM the set genes' counts (in the chosen region) vs distance.
+  // "require all" → only zygotes that contain every set gene (identical gene list per point);
+  // otherwise sum whichever set genes are present, dropping a zygote only if it contains none.
+  function setSeries() {
+    const set = state.geneSet, out = { xs: [], ys: [], ids: [], labels: [] };
+    if (!set.length) return out;
+    for (const p of state.points) {
+      const e = state.gaById[p.id]; if (!e || !hasSeg(p.id)) continue;
+      const present = set.filter((g) => g in e.genes);
+      if (state.setRequireAll ? present.length !== set.length : present.length === 0) continue;
+      let sum = 0; for (const g of present) sum += geneCountIn(p.id, g);
+      out.xs.push(p.distance); out.ys.push(normVal(sum, p.id)); out.ids.push(p.id); out.labels.push(p.label);
+    }
+    return out;
+  }
+  function renderSetScatter() {
+    const nSet = state.geneSet.length;
+    if (nSet === 0) {
+      Plotly.purge(setScatter); setScatter.classList.remove("js-plotly-plot");
+      setScatter.innerHTML = `<div class="pn-empty">Add genes to the set (or pick a preset) to plot the summed count vs pronuclei distance.</div>`;
+      setFit.innerHTML = ""; return;
+    }
+    const s = setSeries();
+    if (s.xs.length < 2) {
+      Plotly.purge(setScatter); setScatter.classList.remove("js-plotly-plot");
+      const why = state.setRequireAll
+        ? "no zygote contains all of them — panels are disjoint, so turn off “require all genes”"
+        : "no zygote contains any of them";
+      setScatter.innerHTML = `<div class="pn-empty">Only ${s.xs.length} zygote${s.xs.length === 1 ? "" : "s"} plottable — ${why}.</div>`;
+      setFit.innerHTML = `· <b>${nSet}</b> gene${nSet === 1 ? "" : "s"}`;
+      return;
+    }
+    const X = ptx(s.xs, Math.max(...s.xs)), Y = s.ys;
+    const model = fitModel(state.regType, X, Y);
+    scatter(setScatter, X, Y, s.ids, s.labels, model,
+      X_TITLE(), yLabel("Σ set count"), yUnitNow(), state.currentId, state.pseudotime ? "" : "µm", yFmtNow());
+    setFit.innerHTML = `· <b>${nSet}</b> gene${nSet === 1 ? "" : "s"} · <b>${s.xs.length}</b> zygotes · ${state.setRequireAll ? "all present" : "≥1 present"} · ${model.label} · ${SCALE_LABEL[model.scale]} = <b>${model.r2.toFixed(3)}</b>`;
   }
 
   // ---------- right drawer: correlation ranking ----------
@@ -396,12 +562,12 @@
   }
 
   // ---------- drawers ----------
-  const resizeScatters = () => { try { Plotly.Plots.resize(scatterPlot); Plotly.Plots.resize(geneScatter); } catch (_) {} };
+  const resizeScatters = () => { try { Plotly.Plots.resize(scatterPlot); Plotly.Plots.resize(geneScatter); Plotly.Plots.resize(setScatter); } catch (_) {} };
   function openDrawer(open) {
     state.drawerOpen = open;
     drawer.dataset.open = open ? "true" : "false";
     drawerHandle.setAttribute("aria-expanded", String(open));
-    if (open) { renderScatter(); renderGeneScatter(); requestAnimationFrame(resizeScatters); }
+    if (open) { renderAllScatters(); requestAnimationFrame(resizeScatters); }
   }
   function wireDrawer() {
     wireHandleDrag(drawer, drawerHandle, {

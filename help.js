@@ -118,9 +118,22 @@
         <h3>How to read it</h3>
         <ul><li>Each dot is one zygote; x = pronuclei distance (µm), y = transcript count.</li>
         <li>The <b>Regression model</b> menu fits different shapes (linear, exponential decay of maternal mRNA, a ZGA-style
-        sigmoid, count-GLMs, …) — a way to ask <i>how</i> count changes with time, not just whether it does.</li></ul>
-        <div class="help-callout"><b>Total</b> transcript count is a weak clock (r ≈ 0.16). Individual genes do far better —
-        that's what the right drawer ranks.</div>` },
+        sigmoid, count-GLMs, …) — a way to ask <i>how</i> count changes with time, not just whether it does.</li>
+        <li><b>Region</b> restricts the count to one part of the embryo — the whole embryo, segment 1 (cytoplasm), the two
+        <b>pronuclei</b> (auto-detected, the same segments used for the distance), or the <b>polar bodies</b> (every labelled
+        segment that is not segment 1 or a pronucleus).</li>
+        <li><b>Count axis</b> plots the raw count, the count ÷ the zygote's total transcripts (a fraction), or ÷ the region's
+        volume (density per µm³ — controls for a bigger region simply holding more molecules).</li>
+        <li><b>Pseudotime</b> flips the x-axis to (max distance − distance) so larger = later; <b>Flip x / y</b> transposes any
+        graph (the fit is unchanged).</li></ul>
+        <h3>Gene sets</h3>
+        <p>The bottom graph sums a <b>set</b> of genes' counts per zygote and plots that against distance. Build a set by hand or
+        from a <b>preset</b> (maternally-deposited, ZGA markers, pronucleus-associated, …); presets <i>add</i> to the current set.
+        By default a zygote is plotted if it contains <i>any</i> set gene (missing genes are simply left out of its sum); tick
+        <b>require all genes</b> for a strictly comparable sum over an identical gene list — best for a set drawn from one MERFISH
+        panel, since the panels are disjoint.</p>
+        <div class="help-callout"><b>Total</b> transcript count is a weak clock (r ≈ 0.16). Individual genes — and curated gene
+        sets — do far better; the right drawer ranks single genes by that correlation.</div>` },
 
     "pronuclei-genes": { eyebrow: "Pronuclei · gene ranking", title: "Which single gene is the best clock?",
       html: `<p class="lede">The whole transcriptome is a blurry clock. But a <b>single well-behaved gene</b> can be sharp — its

@@ -99,17 +99,17 @@
     </div>
   </aside>
 
-  <!-- Bottom drawer: per-gene scatter (top) + overall distance-vs-transcripts (below) -->
+  <!-- Bottom drawer: selected-gene scatter, all-transcripts scatter, and a gene-set scatter -->
   <section class="drawer" id="drawer" data-open="false" hidden>
     <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
     <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
       <span class="drawer-title">Transcripts vs pronuclei distance</span>
-      <span class="drawer-hint">transcript count vs distance (a proxy for developmental time) · pick a regression model · one point per zygote</span>
+      <span class="drawer-hint">count vs distance (a proxy for developmental time) · choose a region, normalization &amp; model · one point per zygote</span>
       <span class="drawer-chevron" aria-hidden="true"></span>
     </button>
     <div class="drawer-body" id="drawer-body">
       <div class="pn-reg-ctl">
-        <label class="pn-reg-label">Regression model
+        <label class="pn-reg-label">Regression
           <select id="reg-type" aria-label="Regression model">
             <optgroup label="Curve fits">
               <option value="linear">Linear</option>
@@ -129,8 +129,25 @@
             </optgroup>
           </select>
         </label>
+        <label class="pn-reg-label">Region
+          <select id="region-sel" title="Which part of the embryo to count transcripts in. Pronuclei are auto-detected (the same segments used for the distance); polar bodies = every labelled segment that is not segment 1 or a pronucleus.">
+            <option value="all">Whole embryo</option>
+            <option value="seg1">Segment 1 · cytoplasm</option>
+            <option value="pron">Pronuclei</option>
+            <option value="polar">Polar body / bodies</option>
+          </select>
+        </label>
+        <label class="pn-reg-label">Count axis
+          <select id="norm-sel" title="Raw transcript count, or normalized by the zygote's total transcripts (a fraction), or by the region's volume (density per µm³).">
+            <option value="count">Count</option>
+            <option value="total">÷ total count (fraction)</option>
+            <option value="vol">÷ volume (density /µm³)</option>
+          </select>
+        </label>
         <label class="pn-pt-toggle" title="Use (max distance − pronuclei distance) as a pseudotime axis, where max distance is the largest among the plotted embryos — larger pseudotime = later in development.">
           <input type="checkbox" id="pseudotime-toggle"><span>Pseudotime axis</span></label>
+        <label class="pn-pt-toggle" title="Swap the x and y axes on every graph below (the fit is unchanged — only the view is transposed).">
+          <input type="checkbox" id="flip-toggle"><span>Flip x / y</span></label>
         <span class="pn-reg-note" id="reg-note"></span>
       </div>
       <div class="pn-block">
@@ -140,6 +157,23 @@
       <div class="pn-block">
         <div class="mini-title">All transcripts <span class="mini-sub" id="pn-fit"></span></div>
         <div id="scatter-plot" class="scatter-plot"></div>
+      </div>
+      <div class="pn-block pn-setblock">
+        <div class="mini-title">Gene set — summed count vs distance <span class="mini-sub" id="set-fit"></span></div>
+        <div class="pn-set-cfg">
+          <div class="pn-set-row">
+            <span class="pn-set-lbl">Presets <span class="pn-set-hint">(add to the set)</span></span>
+            <div class="pn-set-presets" id="set-presets"></div>
+          </div>
+          <div class="pn-set-row">
+            <label class="ctl pn-set-addl"><span class="ctl-label">Add gene</span><select id="set-add" aria-label="Add a gene to the set"></select></label>
+            <label class="pn-pt-toggle pn-set-allto" title="On: only plot zygotes that contain EVERY gene in the set, so the sum is over an identical gene list. Off: sum whichever set genes are present in each zygote, and drop a zygote only if it contains none of them.">
+              <input type="checkbox" id="set-requireall"><span>require all genes</span></label>
+            <button type="button" class="pn-set-clear" id="set-clear" title="Remove every gene from the set">Clear</button>
+          </div>
+          <div class="pn-set-chips" id="set-chips"></div>
+        </div>
+        <div id="set-scatter" class="scatter-plot"></div>
       </div>
     </div>
   </section>

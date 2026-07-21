@@ -199,6 +199,7 @@
                 <option value="null">Random plane + side — negative control</option>
               </select></label>
             <button class="xs-gm-btn" id="xs-gm-reroll" type="button" title="Draw a new random negative control">Re-roll</button>
+            <label class="xs-tg" title="Add a bottom row marking, for each zygote with a located sperm, whether the sperm is on the anchor gene's γ half (Ω) or its μ half (Σ). Updates as you change the anchor gene."><input type="checkbox" id="xs-gm-sperm" checked><span>sperm row</span></label>
             <label class="xs-tg" title="γ/μ by transcript DENSITY (count ÷ each side's volume) rather than raw count — comparable even when a plane splits the zygote into very uneven halves"><input type="checkbox" id="xs-gm-density" checked><span>density</span></label>
             <span class="xs-gm-stats" id="xs-gm-stats"></span>
           </div>
@@ -207,6 +208,8 @@
             <span class="xs-gm-key"><i class="gm-sw g-G">γ</i> shares the anchor's γ half</span>
             <span class="xs-gm-key"><i class="gm-sw g-M">μ</i> flipped to the μ half</span>
             <span class="xs-gm-key"><i class="gm-sw g-NA"></i> gene absent</span>
+            <span class="xs-gm-key"><i class="gm-sw g-O">Ω</i> sperm on the γ half</span>
+            <span class="xs-gm-key"><i class="gm-sw g-S">Σ</i> sperm on the μ half</span>
           </div>
           <div class="xs-resizable xs-resizable-grid"><div id="xs-gm" class="xs-gm-grid"></div></div>
         </div>

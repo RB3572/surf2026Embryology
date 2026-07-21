@@ -36,7 +36,7 @@
   const xsGmAnchor = $("#xs-gm-anchor"), xsGmReroll = $("#xs-gm-reroll"), xsGmStats = $("#xs-gm-stats");
   const xsTabsEl = $("#xs-tabs"), xsPanels = $("#xs-panels");
   const xsSp = $("#xs-sp"), xsSpSub = $("#xs-sp-sub"), xsSpNote = $("#xs-sp-note"), xsSpDownload = $("#xs-sp-download");
-  const xsSpDensity = $("#xs-sp-density"), xsGmDensity = $("#xs-gm-density");
+  const xsSpDensity = $("#xs-sp-density"), xsGmDensity = $("#xs-gm-density"), xsGmSperm = $("#xs-gm-sperm");
   const xsBody = $("#xs-body"), xsPb = $("#xs-pb"), xsPronuclei = $("#xs-pronuclei");
   const xsCrossLegend = $("#xs-cross-legend"), xsCrossDownload = $("#xs-cross-download");
   const xsCrossHighColor = $("#xs-cross-high-color"), xsCrossLowColor = $("#xs-cross-low-color");
@@ -821,7 +821,7 @@
       return { gene: g, cells, cov: present.length,
                gammaFrac: present.length ? nG / present.length : 0, realFrac: realFrac[g] };
     });
-    return { anchor: A, ki, isNull, hasGp, density, cols, rows,
+    return { anchor: A, ki, isNull, hasGp, density, cols, rows, realSides,
              stats: gmNullTest(cols, A, realPlanes, realSides, 2000, density) };
   }
   // NOTE: injected via innerHTML, so the "<" must be escaped.
@@ -880,10 +880,31 @@
         frag.appendChild(box);
       });
     });
+    // optional bottom SPERM row — gene-relative: is the sperm on the anchor's γ half (Ω) or μ half (Σ)?
+    // Depends on the anchor gene (via realSides), so it updates whenever the gene changes.
+    let spN = 0, spOm = 0;
+    if (xsGmSperm && xsGmSperm.checked && !showingNull && state.spermData && m.realSides) {
+      const spById = {}; state.spermData.embryos.forEach((r) => (spById[r.id] = r));
+      const lab = el("div", "xs-gm-rowlabel anchor"); lab.textContent = "Sperm side";
+      lab.title = "Ω = sperm on the anchor gene's γ (higher) half · Σ = its μ (lower) half";
+      frag.appendChild(lab);
+      m.cols.forEach((e, i) => {
+        const sp = spById[e.id], sm = sp && sp.modes[state.crossKey];
+        let kind = "g-NA", glyph = "", title = `${e.label}: no located sperm`;
+        if (sm) {
+          const spermSideA = sm.spermSide > 0, onGamma = spermSideA === m.realSides[i];
+          kind = onGamma ? "g-O" : "g-S"; glyph = onGamma ? "Ω" : "Σ"; spN++; if (onGamma) spOm++;
+          title = `${e.label}: sperm on the anchor's ${onGamma ? "γ (higher)" : "μ (lower)"} half of ${A}`;
+        }
+        const box = el("div", "xs-gm-cell " + kind); box.textContent = glyph; box.title = title;
+        frag.appendChild(box);
+      });
+    }
     xsGm.style.setProperty("--gm-cols", m.cols.length);
     xsGm.dataset.anchor = A;
     xsGm.innerHTML = ""; xsGm.appendChild(frag);
-    if (xsGmSub) xsGmSub.textContent = `· ${A} · ${m.rows.length} genes × ${m.cols.length} zygotes`;
+    if (xsGmSub) xsGmSub.textContent = `· ${A} · ${m.rows.length} genes × ${m.cols.length} zygotes` +
+      (spN ? ` · sperm Ω ${spOm}/${spN} on the γ half` : "");
   }
   function downloadGammaMuCSV() {
     const m = gmModel(); if (!m || !m.cols.length) return;
@@ -952,7 +973,7 @@
     const om = rows.filter((r) => isOmega(r.modes[mode])).length, sg = rows.length - om;
     const p = binomTwoSided(Math.min(om, sg), rows.length);
     const unit = density ? "density" : "transcripts";
-    xsSpSub.textContent = `· ${BESTKEY_LABEL[mode]} plane · by ${density ? "density" : "count"} · ${rows.length} zygotes with sperm`;
+    xsSpSub.textContent = `· ${BESTKEY_LABEL[mode]} plane · by ${density ? "density" : "count"} · total transcripts (not gene-specific) · ${rows.length} zygotes`;
     xsSpNote.innerHTML =
       `Sperm on the <b style="color:#16a34a">greater-${unit}</b> side (Ω) in <b>${om}</b> of ${rows.length}; ` +
       `on the <b style="color:#7c3aed">lesser</b> side (Σ) in <b>${sg}</b>. ` +
@@ -1142,6 +1163,7 @@
     if (xsSpDownload) xsSpDownload.addEventListener("click", downloadSpermCSV);
     if (xsSpDensity) xsSpDensity.addEventListener("change", () => { state.spDensity = xsSpDensity.checked; renderSperm(); });
     if (xsGmDensity) xsGmDensity.addEventListener("change", () => { state.gmDensity = xsGmDensity.checked; renderGammaMu(); });
+    if (xsGmSperm) xsGmSperm.addEventListener("change", renderGammaMu);
   }
   function downloadSpermCSV() {
     const sp = state.spermData; if (!sp) return;

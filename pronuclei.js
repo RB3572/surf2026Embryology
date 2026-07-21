@@ -30,23 +30,20 @@
   const scatterPlot = $("#scatter-plot");
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
   const rankNEl = $("#rank-n"), rankPosEl = $("#rank-pos"), rankNegEl = $("#rank-neg");
-  const pnTabs = $("#pn-rtabs");
-  const enrN = $("#enr-n"), enrList = $("#enr-list"), enrCount = $("#enr-count");
-  const onlyN = $("#only-n"), onlyList = $("#only-list"), onlyCount = $("#only-count");
+  const ptToggle = $("#pseudotime-toggle");
 
   const state = { points: [], byId: {}, genesAgg: null, geneCorr: [], userGene: null, rankN: 10,
                   currentId: null, scene: null, fit: null, drawerOpen: false, showDots: false,
-                  regType: "linear", enr: null, enrN: 50, onlyN: 50, rtab: "corr", dotSize: 1.5 };
+                  regType: "linear", dotSize: 1.5, pseudotime: false };
   let vcExtras = null;   // dot-size + atlas-link row (VCore.addWindowExtras)
 
   (async function init() {
     try {
-      const [m, ga, enr] = await Promise.all([
+      const [m, ga] = await Promise.all([
         (await fetch("data/pronuclei_manifest.json")).json(),
         V.loadGz("data/pronuclei_genes.json.gz"),
-        V.loadGz("data/pronuclei_enrichment.json.gz").catch(() => null),
       ]);
-      state.points = m.embryos; state.genesAgg = ga; state.enr = enr;
+      state.points = m.embryos; state.genesAgg = ga;
       state.points.forEach((p) => (state.byId[p.id] = p));
       countEl.textContent = `${m.embryos.length} zygotes · pronuclei auto-detected inside the cytoplasm`;
       computeGeneCorr();
@@ -55,7 +52,8 @@
         label: e.label, sub: e.date_short,
         title: `${e.label} · dist ${e.distance} µm · ${e.total.toLocaleString()} transcripts`,
       }));
-      wireDrawer(); wireRdrawer(); renderRanks(); wireEnrichment();
+      wireDrawer(); wireRdrawer(); renderRanks();
+      ptToggle.addEventListener("change", () => { state.pseudotime = ptToggle.checked; renderScatter(); renderGeneScatter(); });
       vcExtras = V.addWindowExtras($("#controls-body"), { defaultSize: state.dotSize, onDotSize: (s) => { state.dotSize = s; if (state.scene) render(); } });
       geneSelect.addEventListener("change", () => selectGene(geneSelect.value));
       rankNEl.addEventListener("change", () => { state.rankN = parseInt(rankNEl.value, 10) || 10; renderRanks(); });
@@ -128,7 +126,7 @@
       state.scene = scene;
       if (vcExtras) vcExtras.setAtlas(id);
       controlsEl.hidden = false; placeholder.hidden = true; drawer.hidden = false; rdrawer.hidden = false;
-      ensureDotGene(); render(); renderReadout(meta); highlightElists();
+      ensureDotGene(); render(); renderReadout(meta);
       if (!state.drawerOpen) openDrawer(true);
       else { renderScatter(); renderGeneScatter(); }
     } catch (err) { showError(err.message || String(err)); }
@@ -317,14 +315,15 @@
   }
 
   // ---------- scatters (x = pronuclei distance µm, y = transcript count) ----------
-  function scatter(div, xs, ys, ids, labels, model, xTitle, yTitle, yUnit, curId) {
+  function scatter(div, xs, ys, ids, labels, model, xTitle, yTitle, yUnit, curId, xUnit) {
+    xUnit = xUnit == null ? "µm" : xUnit;
     const pts = xs.map((x, i) => ({ x, y: ys[i], lab: labels[i], id: ids[i] }));
     const others = pts.filter((o) => o.id !== curId), cur = pts.find((o) => o.id === curId);
     const xmin = Math.min(...xs), xmax = Math.max(...xs);
     const cx = [], cy = [], N = 90;                // smooth model curve
     for (let i = 0; i < N; i++) { const x = xmin + (xmax - xmin) * i / (N - 1), y = model.predict(x);
       if (isFinite(y)) { cx.push(x); cy.push(y); } }
-    const hover = `%{text}<br>%{x:.1f} µm · %{y:,} ${yUnit}<extra></extra>`;
+    const hover = `%{text}<br>%{x:.1f}${xUnit ? " " + xUnit : ""} · %{y:,} ${yUnit}<extra></extra>`;
     const traces = [
       { type: "scatter", mode: "markers", name: "zygotes", x: others.map((o) => o.x), y: others.map((o) => o.y),
         marker: { size: 8, color: "#94a3b8", opacity: 0.72, line: { width: 0 } },
@@ -344,11 +343,17 @@
     });
   }
   function updRegNote() { const m = MODELS[state.regType] || MODELS.linear; if (regNoteEl) regNoteEl.textContent = m.bio; }
+  // pseudotime = max(distance among the plotted embryos) − distance, so larger = later in
+  // development (pronuclei approach over time). maxD is per-chart (the embryos being plotted).
+  const ptx = (dists, maxD) => (state.pseudotime ? dists.map((d) => maxD - d) : dists);
+  const PT_X_TITLE = "pseudotime  ·  max distance − pronuclei distance (larger = later)";
   function renderScatter() {
-    const pts = state.points, X = pts.map((p) => p.distance), Y = pts.map((p) => p.total);
+    const pts = state.points, dists = pts.map((p) => p.distance), Y = pts.map((p) => p.total);
+    const X = ptx(dists, Math.max(...dists));
     state.fit = fitModel(state.regType, X, Y);
     scatter(scatterPlot, X, Y, pts.map((p) => p.id), pts.map((p) => p.label), state.fit,
-      "min pronuclei distance (µm)  ·  smaller = later in development", "total transcripts", "transcripts", state.currentId);
+      state.pseudotime ? PT_X_TITLE : "min pronuclei distance (µm)  ·  smaller = later in development",
+      "total transcripts", "transcripts", state.currentId, state.pseudotime ? "" : "µm");
     const f = state.fit;
     pnFit.innerHTML = `· <b>${f.n}</b> zygotes · <b>${f.label}</b> · ${SCALE_LABEL[f.scale]} = <b>${f.r2.toFixed(3)}</b> · <span class="pn-params">${f.params}</span>`;
   }
@@ -360,9 +365,11 @@
       geneFit.innerHTML = `· <b>${g}</b>`;
       return;
     }
-    const X = s.ys, Y = s.xs;                        // x = distance, y = this gene's count
+    const X = ptx(s.ys, Math.max(...s.ys)), Y = s.xs;   // x = distance (or pseudotime), y = this gene's count
     const model = fitModel(state.regType, X, Y);
-    scatter(geneScatter, X, Y, s.ids, s.labels, model, "min pronuclei distance (µm)", `${g} transcript count`, g, state.currentId);
+    scatter(geneScatter, X, Y, s.ids, s.labels, model,
+      state.pseudotime ? "pseudotime" : "min pronuclei distance (µm)", `${g} transcript count`, g, state.currentId,
+      state.pseudotime ? "" : "µm");
     geneFit.innerHTML = `· <b>${g}</b> · ${model.label} · ${SCALE_LABEL[model.scale]} = <b>${model.r2.toFixed(3)}</b> · n=${s.xs.length}`;
   }
 
@@ -386,55 +393,6 @@
   function highlightRank() {
     const cur = gene();
     rdrawer.querySelectorAll(".pn-row").forEach((r) => r.classList.toggle("current", r.dataset.gene === cur));
-    highlightElists();
-  }
-
-  // ---------- right drawer: pronuclei-enrichment lists ----------
-  const fmtP = (p) => (p == null ? "—" : p < 1e-4 ? p.toExponential(1) : p.toFixed(4));
-  function elistRows(rows, valFn, valHead) {
-    const curG = gene(), curId = state.currentId;
-    let html = `<div class="best-head pn-ehead"><span></span><span>gene · zygote</span><span>${valHead}</span><span>p</span></div>`;
-    html += rows.map((r, i) =>
-      `<div class="best-row pn-erow${r.gene === curG && r.id === curId ? " current" : ""}" data-id="${r.id}" data-gene="${r.gene}" ` +
-      `title="${r.gene} · ${r.label} · ${r.npn}/${r.n} transcripts in the pronuclei` +
-      `${r.fold != null ? " · fold " + r.fold + "×" : ""}${r.frac != null ? " · " + Math.round(r.frac * 100) + "% in pronuclei" : ""} · p ${fmtP(r.p)}">` +
-      `<span class="best-num">${i + 1}</span>` +
-      `<span class="pn-egene"><b>${r.gene}</b><span class="pn-ezyg">${r.label}</span></span>` +
-      `<span class="best-real">${valFn(r)}</span>` +
-      `<span class="best-p${r.p <= 0.05 ? " sig" : ""}">${fmtP(r.p)}</span></div>`).join("");
-    return html || `<div class="pn-empty">None found.</div>`;
-  }
-  function renderEnriched() {
-    if (!enrList) return;
-    if (!state.enr) { enrList.innerHTML = `<div class="pn-empty">No enrichment data.</div>`; return; }
-    const all = state.enr.enriched || [], rows = state.enrN ? all.slice(0, state.enrN) : all;
-    enrList.innerHTML = elistRows(rows, (r) => r.fold.toFixed(2) + "×", "fold");
-    if (enrCount) enrCount.innerHTML = `<b>${all.length}</b> gene·zygote hits · fold ≥ 1.5, n ≥ 10`;
-  }
-  function renderOnlyPn() {
-    if (!onlyList) return;
-    if (!state.enr) { onlyList.innerHTML = `<div class="pn-empty">No enrichment data.</div>`; return; }
-    const all = state.enr.onlyPn || [], rows = state.onlyN ? all.slice(0, state.onlyN) : all;
-    onlyList.innerHTML = elistRows(rows, (r) => Math.round(r.frac * 100) + "%", "in PN");
-    if (onlyCount) onlyCount.innerHTML = `<b>${all.length}</b> gene·zygote hits · ≥ 75% in pronuclei`;
-  }
-  function highlightElists() {
-    const curG = gene(), curId = state.currentId;
-    rdrawer.querySelectorAll(".pn-erow").forEach((r) =>
-      r.classList.toggle("current", r.dataset.gene === curG && r.dataset.id === curId));
-  }
-  function setRtab(tab) {
-    state.rtab = tab;
-    pnTabs.querySelectorAll(".rtab").forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
-    rdrawer.querySelectorAll(".pn-panel").forEach((p) => (p.hidden = p.dataset.panel !== tab));
-    if (tab === "enr") renderEnriched();
-    else if (tab === "only") renderOnlyPn();
-  }
-  function wireEnrichment() {
-    renderEnriched(); renderOnlyPn();
-    pnTabs.addEventListener("click", (e) => { const b = e.target.closest(".rtab"); if (b) setRtab(b.dataset.tab); });
-    enrN.addEventListener("change", () => { state.enrN = parseInt(enrN.value, 10); renderEnriched(); });
-    onlyN.addEventListener("change", () => { state.onlyN = parseInt(onlyN.value, 10); renderOnlyPn(); });
   }
 
   // ---------- drawers ----------
@@ -473,15 +431,6 @@
     const end = (e) => { if (rrz._d) { rrz._d = null; try { rrz.releasePointerCapture(e.pointerId); } catch (_) {} } };
     rrz.addEventListener("pointerup", end); rrz.addEventListener("pointercancel", end);
     rdrawer.addEventListener("click", (e) => {
-      // enrichment rows are a specific (zygote, gene) hit — open that zygote, then the gene
-      const erow = e.target.closest(".pn-erow");
-      if (erow) {
-        const id = erow.dataset.id, g = erow.dataset.gene;
-        state.userGene = g;
-        if (id === state.currentId) selectGene(g);
-        else selectEmbryo(id).then(() => selectGene(g));
-        return;
-      }
       const row = e.target.closest(".pn-row"); if (row) selectGene(row.dataset.gene);
     });
   }

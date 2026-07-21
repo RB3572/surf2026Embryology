@@ -23,10 +23,13 @@
   const minCountEl = $("#min-count"), metricModeEl = $("#metric-mode");
   const drawer = $("#drawer"), drawerHandle = $("#drawer-handle"), drawerBody = $("#drawer-body");
   const crossGeneEl = $("#cross-gene"), crossMetricEl = $("#cross-metric"), crossNote = $("#cross-note"), crossChart = $("#cross-chart");
+  const geneChips = $("#gene-chips"), segDotToggles = $("#seg-dot-toggles");
 
   const state = { manifest: [], currentId: null, scene: null, userGene: null,
                   segTab: null, geneMap: null, cutoff: 0, metric: "density", dotSize: 1.5,
-                  segGenes: null, crossMetric: "density", drawerOpen: false };
+                  segGenes: null, crossMetric: "density", drawerOpen: false,
+                  genes: [], segShow: {}, pnEnr: null };
+  const GENE_PALETTE = ["#e11d48", "#2563eb", "#16a34a", "#f97316", "#7c3aed", "#0891b2", "#db2777", "#ca8a04"];
   let vcExtras = null;   // dot-size + atlas-link row (VCore.addWindowExtras)
 
   const segColor = (lbl) => {
@@ -40,6 +43,7 @@
       const m = await (await fetch("data/segments_manifest.json")).json();
       state.manifest = m.embryos;
       V.loadGz("data/segments_genes.json.gz").then((g) => { state.segGenes = g; if (state.drawerOpen) renderCrossGene(); }).catch(() => {});
+      V.loadGz("data/pronuclei_enrichment.json.gz").then((e) => { state.pnEnr = e; if (state.segTab === "enr" || state.segTab === "only") renderSegList(); }).catch(() => {});
       countEl.textContent = `${m.embryos.length} embryos · ${m.stages.length} stages`;
       V.buildTabs(tabsEl, m.embryos, selectEmbryo, (e) => ({
         label: e.label, sub: e.stage_label,
@@ -50,7 +54,17 @@
         .setResizeCb(() => { try { Plotly.Plots.resize(chartEl); } catch (_) {} });
       vcExtras = V.addWindowExtras($("#controls-body"), { defaultSize: state.dotSize, onDotSize: (s) => { state.dotSize = s; if (state.scene) render(); } });
       wireRdrawer(); wireCrossDrawer();
-      geneSelect.addEventListener("change", () => { state.userGene = geneSelect.value; render(); renderChart(); highlightGene(); if (state.drawerOpen) renderCrossGene(); });
+      geneSelect.addEventListener("change", () => {
+        if (!geneSelect.value) return;
+        addGene(geneSelect.value); geneSelect.value = "";
+        render(); renderChart(); highlightGene(); if (state.drawerOpen) renderCrossGene();
+      });
+      geneChips.addEventListener("click", (e) => {
+        const x = e.target.closest(".seg-gx");
+        if (x) { removeGene(x.dataset.gene); render(); renderChart(); highlightGene(); if (state.drawerOpen) renderCrossGene(); return; }
+        const chip = e.target.closest(".seg-gchip");
+        if (chip) { state.userGene = chip.dataset.gene; renderChips(); highlightGene(); renderChart(); if (state.drawerOpen) renderCrossGene(); }
+      });
       minCountEl.addEventListener("input", () => {
         state.cutoff = Math.max(0, parseInt(minCountEl.value, 10) || 0);
         if (state.scene) renderSegList();
@@ -75,9 +89,9 @@
       if (vcExtras) vcExtras.setAtlas(id);
       buildGeneMap(scene);
       populateGenes(scene);
-      if (!scene.mask_labels.includes(state.segTab)) state.segTab = scene.mask_labels[0];
+      if (state.segTab !== "enr" && state.segTab !== "only" && !scene.mask_labels.includes(state.segTab)) state.segTab = scene.mask_labels[0];
       controlsEl.hidden = false; placeholder.hidden = true; rdrawer.hidden = false; drawer.hidden = false;
-      renderLegend(); buildSegTabs(); render(); renderChart(); renderSegList();
+      renderLegend(); buildSegDotToggles(); buildSegTabs(); render(); renderChart(); renderSegList();
     } catch (err) { showError(err.message || String(err)); }
     finally { hideLoading(); }
   }
@@ -95,11 +109,15 @@
   function populateGenes(scene) {
     const genes = Object.keys(state.geneMap).sort((a, b) =>
       a.localeCompare(b, undefined, { sensitivity: "base", numeric: true }));
-    geneSelect.innerHTML = genes.map((g) => `<option value="${g}">${g}</option>`).join("");
-    geneSelect.value = (state.userGene && state.geneMap[state.userGene]) ? state.userGene : (genes[0] || "");
-    state.userGene = geneSelect.value;
+    geneSelect.innerHTML = `<option value="">＋ add a gene…</option>` +
+      genes.map((g) => `<option value="${g}">${g}</option>`).join("");
+    geneSelect.value = "";
+    // keep only genes still present in this embryo; always plot at least one
+    state.genes = state.genes.filter((x) => state.geneMap[x.gene]);
+    if (!state.genes.length && genes[0]) addGene(genes[0]);
+    if (!state.userGene || !state.geneMap[state.userGene]) state.userGene = state.genes.length ? state.genes[0].gene : "";
+    renderChips();
   }
-  const gene = () => geneSelect.value;
 
   // ---------- 3-D ----------
   function segMesh(scene, lbl, color, opacity) {
@@ -113,57 +131,106 @@
       name: segName(lbl), showlegend: true, flatshading: false, hoverinfo: "name",
       lighting: { ambient: 0.68, diffuse: 0.6, specular: 0.12, roughness: 0.9 }, legendrank: lbl };
   }
+  // ---------- multi-gene set + per-segment dot toggles ----------
+  function addGene(g) {
+    if (!g || state.genes.some((x) => x.gene === g)) return;
+    const used = new Set(state.genes.map((x) => x.color));
+    const color = GENE_PALETTE.find((c) => !used.has(c)) || GENE_PALETTE[state.genes.length % GENE_PALETTE.length];
+    state.genes.push({ gene: g, color });
+    state.userGene = g; renderChips();
+  }
+  function removeGene(g) {
+    state.genes = state.genes.filter((x) => x.gene !== g);
+    if (state.userGene === g) state.userGene = state.genes.length ? state.genes[state.genes.length - 1].gene : "";
+    renderChips();
+  }
+  function renderChips() {
+    geneChips.innerHTML = state.genes.map((x) =>
+      `<span class="seg-gchip${x.gene === gene() ? " current" : ""}" data-gene="${x.gene}" title="click to focus, × to remove">` +
+      `<span class="seg-gdot" style="background:${x.color}"></span>${x.gene}` +
+      `<button class="seg-gx" data-gene="${x.gene}" aria-label="remove ${x.gene}">×</button></span>`).join("") ||
+      `<span class="seg-gchips-empty">pick a gene above to plot it</span>`;
+  }
+  const gene = () => state.userGene;                          // the focused gene (right-drawer highlight)
+  function buildSegDotToggles() {
+    const s = state.scene; if (!s) return;
+    segDotToggles.innerHTML = s.mask_labels.map((l) =>
+      `<label class="seg-dtog" title="show/hide the plotted genes' dots that fall in ${segName(l)}">` +
+      `<input type="checkbox" data-seg="${l}" ${state.segShow[String(l)] === false ? "" : "checked"}>` +
+      `<span class="seg-dot" style="background:${segColor(l)}"></span>${l}</label>`).join("");
+    segDotToggles.querySelectorAll("input").forEach((c) => c.addEventListener("change", () => {
+      state.segShow[c.dataset.seg] = c.checked; render();
+    }));
+  }
   function render() {
     const s = state.scene; if (!s) return;
-    const g = gene();
     const traces = [];
-    // faint segmentation meshes for spatial context
-    for (const lbl of s.mask_labels) {
-      const t = segMesh(s, lbl, segColor(lbl), 0.1);
-      if (t) traces.push(t);
-    }
-    // the selected gene's transcript dots, coloured by the segment they fall in
-    const tx = s.transcripts ? s.transcripts[g] : null;
-    if (tx && tx.x.length) {
-      const zs = s.z_scale;
-      const colors = tx.s.map((seg) => (seg >= 1 ? segColor(seg) : "#b6bdc9"));
-      traces.push({ type: "scatter3d", mode: "markers", name: `${g} · ${tx.x.length} dots`,
-        x: tx.x, y: tx.y, z: tx.gz.map((z) => z * zs),
-        marker: { size: state.dotSize, color: colors, opacity: 0.85, line: { width: 0 } },
+    for (const lbl of s.mask_labels) { const t = segMesh(s, lbl, segColor(lbl), 0.1); if (t) traces.push(t); }
+    const zs = s.z_scale;
+    // each plotted gene's transcript dots, coloured by gene, filtered to the shown segments
+    for (const { gene: g, color } of state.genes) {
+      const tx = s.transcripts ? s.transcripts[g] : null;
+      if (!tx || !tx.x.length) continue;
+      const xi = [], yi = [], zi = [];
+      for (let i = 0; i < tx.x.length; i++) {
+        if (state.segShow[String(tx.s[i])] === false) continue;
+        xi.push(tx.x[i]); yi.push(tx.y[i]); zi.push(tx.gz[i] * zs);
+      }
+      if (!xi.length) continue;
+      traces.push({ type: "scatter3d", mode: "markers", name: `${g} · ${xi.length}`,
+        x: xi, y: yi, z: zi, marker: { size: state.dotSize, color, opacity: 0.85, line: { width: 0 } },
         hovertemplate: `${g}<extra></extra>`, legendrank: 20000 });
     }
     Plotly.react(plotHost, traces, V.sceneLayout(s.extents, s.id), V.plotConfig);
   }
 
   // ---------- floating-window chart: gene enrichment across segments ----------
+  // Layered bar across segments: a wide translucent grey bar for ALL plotted genes combined,
+  // with skinny per-gene coloured bars sitting inside it.
   function renderChart() {
     const s = state.scene; if (!s) return;
-    const g = gene(); chartSub.textContent = g ? `· ${g}` : "";
-    const gm = state.geneMap[g] || {};
-    const frac = isFrac(), labels = s.mask_labels;
-    const y = labels.map((l) => (gm[l] ? metricVal(gm[l]) : 0));
-    const colors = labels.map((l) => (gm[l] ? segColor(l) : "#d5d9e2"));
-    const traces = [
-      { type: "bar", x: labels.map(segName), y, marker: { color: colors },
-        hovertemplate: frac ? "%{x}: %{y:.0%} of the gene<extra></extra>" : "%{x}: %{y}× enrichment<extra></extra>" },
-    ];
-    if (!frac) traces.push({ type: "scatter", mode: "lines", x: [segName(labels[0]), segName(labels[labels.length - 1])],
-      y: [1, 1], line: { color: "#94a3b8", width: 1, dash: "dot" }, hoverinfo: "skip" });
+    const genes = state.genes.filter((x) => state.geneMap[x.gene]);
+    chartSub.textContent = genes.length ? `· ${genes.map((x) => x.gene).join(", ")}` : "";
+    const frac = isFrac(), labels = s.mask_labels, xcat = labels.map(segName);
+    const vtot = s.segments.reduce((a, q) => a + (q.volume || 0), 0);
+    const volOf = (l) => (s.segments.find((q) => q.label === l) || {}).volume || 0;
+    const gv = (g, l) => { const r = (state.geneMap[g] || {})[l]; return r ? metricVal(r) : 0; };
+    const combined = (l) => {                                  // all plotted genes pooled as one
+      let cs = 0, ct = 0;
+      for (const { gene: g } of genes) { const r = (state.geneMap[g] || {})[l]; if (r) { cs += r.count; ct += r.ntot; } }
+      if (!ct) return 0;
+      if (frac) return cs / ct;
+      const vol = volOf(l); return vol ? (cs / vol) / (ct / vtot) : 0;
+    };
+    const traces = [];
+    traces.push({ type: "bar", name: "all genes", x: xcat, y: labels.map(combined),
+      marker: { color: "rgba(100,110,125,0.28)", line: { width: 0 } }, width: 0.74, offset: -0.37,
+      hovertemplate: frac ? "%{x}: %{y:.0%} combined<extra></extra>" : "%{x}: %{y:.2f}× combined<extra></extra>" });
+    const n = Math.max(1, genes.length), bw = 0.66 / n;
+    genes.forEach(({ gene: g, color }, gi) => {
+      traces.push({ type: "bar", name: g, x: xcat, y: labels.map((l) => gv(g, l)),
+        marker: { color }, width: bw, offset: -0.33 + gi * bw,
+        hovertemplate: `${g} · %{x}: ${frac ? "%{y:.0%}" : "%{y:.2f}×"}<extra></extra>` });
+    });
+    if (!frac) traces.push({ type: "scatter", mode: "lines", x: [xcat[0], xcat[xcat.length - 1]], y: [1, 1],
+      line: { color: "#94a3b8", width: 1, dash: "dot" }, hoverinfo: "skip", showlegend: false });
     plotInto(chartEl, traces, {
-      margin: { l: 38, r: 6, t: 6, b: 34 }, height: 150,
+      barmode: "overlay", margin: { l: 38, r: 6, t: genes.length > 1 ? 22 : 6, b: 34 }, height: 158,
       yaxis: { tickfont: { size: 9 }, gridcolor: "#eef1f5", fixedrange: true,
         title: { text: frac ? "fraction" : "fold", font: { size: 9 } }, rangemode: "tozero",
         tickformat: frac ? ".0%" : undefined },
-      xaxis: { tickfont: { size: 9 }, fixedrange: true, tickangle: -30 }, bargap: 0.45,
-      paper_bgcolor: "transparent", plot_bgcolor: "transparent", showlegend: false,
+      xaxis: { tickfont: { size: 9 }, fixedrange: true, tickangle: -30, type: "category" },
+      paper_bgcolor: "transparent", plot_bgcolor: "transparent",
+      showlegend: genes.length > 1, legend: { orientation: "h", font: { size: 8 }, y: 1.02, x: 0, yanchor: "bottom" },
     });
+    const gc = gene();
+    const gm = state.geneMap[gc] || {};
     const segs = Object.entries(gm).sort((a, b) => metricVal(b[1]) - metricVal(a[1]));
     if (segs.length) {
       const [top, ti] = segs[0];
-      chartReadout.innerHTML = `<div><b>${g}</b> — ${ti.ntot} transcripts in segments</div>` +
-        `<div>${frac ? "most concentrated" : "most enriched"} in <b>${segName(top)}</b>: ` +
-        `<b>${metricStr(ti)}</b> (${ti.count} here)</div>`;
-    } else chartReadout.innerHTML = `<div><b>${g}</b> — below the count threshold in every segment.</div>`;
+      chartReadout.innerHTML = `<div><b>${gc}</b> — ${ti.ntot} transcripts · ${genes.length} gene${genes.length === 1 ? "" : "s"} plotted</div>` +
+        `<div>${frac ? "most concentrated" : "most enriched"} in <b>${segName(top)}</b>: <b>${metricStr(ti)}</b> (${ti.count} here)</div>`;
+    } else chartReadout.innerHTML = `<div>${genes.length} gene${genes.length === 1 ? "" : "s"} plotted.</div>`;
   }
 
   function renderLegend() {
@@ -178,10 +245,15 @@
   // ---------- right drawer: ranked genes per segment ----------
   function buildSegTabs() {
     const s = state.scene;
-    rtabsEl.innerHTML = s.mask_labels.map((l) =>
+    let html = s.mask_labels.map((l) =>
       `<button class="rtab${l === state.segTab ? " active" : ""}" data-seg="${l}">Seg ${l}</button>`).join("");
+    // cross-embryo pronuclei-enrichment lists (all zygotes)
+    html += `<button class="rtab${state.segTab === "enr" ? " active" : ""}" data-seg="enr" title="Genes enriched in the pronuclei, across all zygotes">Enriched in PN</button>`;
+    html += `<button class="rtab${state.segTab === "only" ? " active" : ""}" data-seg="only" title="Genes only in the pronuclei, across all zygotes">Only in PN</button>`;
+    rtabsEl.innerHTML = html;
     rtabsEl.querySelectorAll(".rtab").forEach((b) => b.addEventListener("click", () => {
-      state.segTab = parseInt(b.dataset.seg, 10);
+      const v = b.dataset.seg;
+      state.segTab = (v === "enr" || v === "only") ? v : parseInt(v, 10);
       rtabsEl.querySelectorAll(".rtab").forEach((x) => x.classList.toggle("active", x === b));
       renderSegList();
     }));
@@ -196,6 +268,8 @@
   }
   function renderSegList() {
     const s = state.scene; if (!s) return;
+    if (state.segTab === "enr" || state.segTab === "only") { renderPnList(state.segTab); return; }
+    segListEl.classList.remove("seg-pnlist");
     updateDesc();
     const cut = state.cutoff || 0, frac = isFrac();
     // cutoff = minimum total transcripts of the gene in this embryo (ntot); re-sort by the chosen metric
@@ -219,6 +293,29 @@
   function highlightGene() {
     const cur = gene();
     segListEl.querySelectorAll(".seg-row").forEach((r) => r.classList.toggle("current", r.dataset.gene === cur));
+    renderChips();
+  }
+  // Cross-embryo pronuclei enrichment (from build_pronuclei_enrichment.py), shown in the right drawer.
+  function renderPnList(which) {
+    const enr = state.pnEnr;
+    rdrawerDesc.innerHTML = which === "enr"
+      ? "Across all zygotes: genes whose transcripts are <b>≥1.5× denser</b> in the two pronuclei than the cell average (≥10 in-cell transcripts). Fold = pronuclei density ÷ cell-average; p = the random-scatter null. Click to open that zygote &amp; gene."
+      : "Genes with <b>≥75%</b> of their in-cell transcripts inside the pronuclei (≥5) — effectively <i>only</i> there (pronuclei ≈5% of the cell volume). Click to open that zygote &amp; gene.";
+    segListEl.classList.add("seg-pnlist");
+    if (!enr) { segListEl.innerHTML = `<div class="best-plane-note">Loading pronuclei enrichment…</div>`; return; }
+    const all = (which === "enr" ? enr.enriched : enr.onlyPn) || [];
+    const cur = gene();
+    const fmtP = (p) => (p == null ? "—" : p < 1e-4 ? p.toExponential(1) : p.toFixed(4));
+    let html = `<div class="best-plane-note"><b>${all.length}</b> gene·zygote hits · ${which === "enr" ? "fold ≥ 1.5, n ≥ 10" : "≥ 75% in pronuclei"}</div>`;
+    html += `<div class="best-head"><span></span><span>gene · zygote</span><span>${which === "enr" ? "fold" : "in PN"}</span><span>p</span></div>`;
+    html += all.slice(0, 250).map((r, i) =>
+      `<div class="best-row seg-row seg-pnrow${r.gene === cur ? " current" : ""}" data-gene="${r.gene}" data-zid="${r.id}" ` +
+      `title="${r.gene} · ${r.label} · ${r.npn}/${r.n} in pronuclei${r.fold != null ? " · fold " + r.fold + "×" : ""}${r.frac != null ? " · " + Math.round(r.frac * 100) + "%" : ""} · p ${fmtP(r.p)}">` +
+      `<span class="best-num">${i + 1}</span>` +
+      `<span class="best-gene"><b>${r.gene}</b> <span class="seg-pnzyg">${r.label}</span></span>` +
+      `<span class="best-real">${which === "enr" ? r.fold.toFixed(2) + "×" : Math.round(r.frac * 100) + "%"}</span>` +
+      `<span class="best-p${r.p <= 0.05 ? " sig" : ""}">${fmtP(r.p)}</span></div>`).join("");
+    segListEl.innerHTML = html || `<div class="best-plane-note">None found.</div>`;
   }
   // ---------- bottom drawer: the selected gene's enrichment across every embryo it appears in ----------
   const STAGE_RANK = (s) => /oocyte/i.test(s) ? 0 : /zygote/i.test(s) ? 1 : /early/i.test(s) ? 2 : /late/i.test(s) ? 3 : 4;
@@ -292,8 +389,15 @@
     rrz.addEventListener("pointerup", rend); rrz.addEventListener("pointercancel", rend);
     segListEl.addEventListener("click", (e) => {
       const row = e.target.closest(".seg-row"); if (!row) return;
-      const g = row.dataset.gene;
-      if (state.geneMap[g]) { state.userGene = g; geneSelect.value = g; render(); renderChart(); highlightGene(); if (state.drawerOpen) renderCrossGene(); }
+      const g = row.dataset.gene, zid = row.dataset.zid;
+      if (zid) {                                          // a pronuclei-enrichment hit → open that zygote + gene
+        const segId = "Zygote__" + zid;
+        if (segId !== state.currentId && state.manifest.some((m) => m.id === segId)) {
+          selectEmbryo(segId).then(() => { state.genes = []; addGene(g); render(); renderChart(); highlightGene(); });
+        } else { addGene(g); render(); renderChart(); highlightGene(); }
+        return;
+      }
+      addGene(g); render(); renderChart(); highlightGene(); if (state.drawerOpen) renderCrossGene();
     });
   }
   function wireHandleDrag(drawerEl, handleEl, cfg) {

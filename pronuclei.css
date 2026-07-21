@@ -72,18 +72,7 @@
 .drawer.dragging .drawer-handle, .rdrawer.dragging .rdrawer-handle { cursor: grabbing; }
 .drawer.dragging, .rdrawer.dragging { transition: none; }
 
-/* ---- right-drawer tabs + pronuclei-enrichment lists ---- */
-.rtabs { display: flex; gap: 4px; padding: 8px 10px 0; }
-.rtab { flex: 1; font-family: var(--sans); font-size: 11px; font-weight: 600; color: var(--ink-2);
-  padding: 7px 5px; border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0;
-  background: transparent; cursor: pointer; white-space: nowrap; }
-.rtab:hover { color: var(--ink); }
-.rtab.active { color: var(--ink); background: var(--surface); border-color: var(--line); }
-.pn-panel[hidden] { display: none; }
-.pn-elist .best-head, .pn-elist .best-row { grid-template-columns: 22px 1fr 52px 58px; }
-.pn-egene { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
-.pn-egene b { font-size: 12px; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pn-ezyg { font-size: 10px; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pn-elist .best-real { text-align: right; font-variant-numeric: tabular-nums; color: #b45309; font-weight: 600; }
-.pn-elist .best-p { text-align: right; font-variant-numeric: tabular-nums; }
-.pn-elist .best-p.sig { color: #157347; font-weight: 600; }
+/* pseudotime axis toggle in the bottom-drawer regression controls */
+.pn-pt-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
+  color: var(--ink-2, #5b6472); cursor: pointer; white-space: nowrap; }
+.pn-pt-toggle input { margin: 0; }

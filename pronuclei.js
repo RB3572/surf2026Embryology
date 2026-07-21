@@ -306,6 +306,72 @@
     const r = rden ? (n * sxy - sx * sy) / rden : 0;
     return { a, b, r, r2: r * r, n };
   }
+  // ---------- significance statistics (Pearson r + p, shown on every scatter) ----------
+  // Exact two-sided p that the correlation is zero, via the Student-t transform of r and the
+  // regularized incomplete beta (Numerical Recipes betai). Cross-checked by a permutation null.
+  function gammaln(x) {
+    const c = [76.18009172947146, -86.50532032941677, 24.01409824083091,
+               -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+    let y = x, tmp = x + 5.5; tmp -= (x + 0.5) * Math.log(tmp);
+    let ser = 1.000000000190015; for (let j = 0; j < 6; j++) { y++; ser += c[j] / y; }
+    return -tmp + Math.log(2.5066282746310005 * ser / x);
+  }
+  function betacf(a, b, x) {
+    const MAXIT = 200, EPS = 3e-12, FPMIN = 1e-300;
+    const qab = a + b, qap = a + 1, qam = a - 1; let c = 1, d = 1 - qab * x / qap;
+    if (Math.abs(d) < FPMIN) d = FPMIN; d = 1 / d; let h = d;
+    for (let m = 1; m <= MAXIT; m++) {
+      const m2 = 2 * m;
+      let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+      d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN; c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN; d = 1 / d; h *= d * c;
+      aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+      d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN; c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN; d = 1 / d;
+      const del = d * c; h *= del; if (Math.abs(del - 1) < EPS) break;
+    }
+    return h;
+  }
+  function betai(a, b, x) {
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    const bt = Math.exp(gammaln(a + b) - gammaln(a) - gammaln(b) + a * Math.log(x) + b * Math.log(1 - x));
+    return x < (a + 1) / (a + b + 2) ? bt * betacf(a, b, x) / a : 1 - bt * betacf(b, a, 1 - x) / b;
+  }
+  function pearsonP(r, n) {                        // exact two-sided p, H0: ρ = 0 (Student-t, df = n−2)
+    if (n < 3) return NaN;
+    if (Math.abs(r) >= 1) return 0;
+    const df = n - 2, t2 = r * r * df / (1 - r * r);
+    return betai(0.5 * df, 0.5, df / (df + t2));
+  }
+  const pearsonR = (xs, ys) => linreg(xs, ys).r;
+  function mulberry32(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function permP(xs, ys, robs, B) {               // label-permutation null (deterministic seed): shuffle
+    const n = xs.length; if (n < 3) return NaN;    // the count↔distance pairing, fraction with |r| ≥ |r_obs|
+    const a = Math.abs(robs), y = ys.slice(), rnd = mulberry32(0x5eed);
+    let count = 0;
+    for (let b = 0; b < B; b++) {
+      for (let i = n - 1; i > 0; i--) { const j = (rnd() * (i + 1)) | 0; const t = y[i]; y[i] = y[j]; y[j] = t; }
+      if (Math.abs(pearsonR(xs, y)) >= a - 1e-12) count++;
+    }
+    return (count + 1) / (B + 1);                   // add-one estimator → never exactly 0
+  }
+  function fmtP(p) {
+    if (p == null || !isFinite(p)) return "–";
+    if (p < 1e-4) return p.toExponential(1);
+    if (p < 0.1) return p.toPrecision(2);
+    return p.toFixed(2);
+  }
+  const pStars = (p) => (!isFinite(p) ? "" : p < 1e-3 ? " ***" : p < 0.01 ? " **" : p < 0.05 ? " *" : " ns");
+  // full stat line shared by every scatter: model · equation · R² · Pearson r · p (with a null cross-check in the tooltip)
+  function statsHtml(xs, ys, fit) {
+    const n = xs.length, r = pearsonR(xs, ys);
+    const pA = pearsonP(r, n), pP = permP(xs, ys, r, 2000);
+    const eq = fit.params ? ` · <span class="pn-params">${fit.params}</span>` : "";
+    const rTxt = isFinite(r) ? (r >= 0 ? "+" : "") + r.toFixed(3) : "–";
+    const tip = `p tests H0: pronuclei distance & count are uncorrelated (two-sided). ` +
+      `Pearson t-test p = ${fmtP(pA)}, df ${Math.max(n - 2, 0)}. Label-permutation null p ≈ ${fmtP(pP)} (2000 shuffles). ` +
+      `R² is the ${fit.label} fit on its ${SCALE_LABEL[fit.scale]} scale.`;
+    return `<b>${fit.label}</b>${eq} · ${SCALE_LABEL[fit.scale]} = <b>${fit.r2.toFixed(3)}</b>` +
+      ` · Pearson r = <b>${rTxt}</b> · <span class="pn-pval" title="${tip}">p = <b>${fmtP(pA)}</b>${pStars(pA)}</span>`;
+  }
   // ---------- regression models: transcript count (y) vs pronuclei distance (x) ----------
   // The two pronuclei migrate together as the zygote ages, so distance is a proxy for
   // developmental time (smaller = later) and transcript count is the response. Each model
@@ -477,7 +543,7 @@
     scatter(scatterPlot, X, Y, pts.map((p) => p.id), pts.map((p) => p.label), state.fit,
       X_TITLE(), yLabel("total transcripts"), yUnitNow(), state.currentId, state.pseudotime ? "" : "µm", yFmtNow());
     const f = state.fit;
-    pnFit.innerHTML = `· <b>${f.n}</b> zygotes · <b>${f.label}</b> · ${SCALE_LABEL[f.scale]} = <b>${f.r2.toFixed(3)}</b> · <span class="pn-params">${f.params}</span>`;
+    pnFit.innerHTML = `· <b>${f.n}</b> zygotes · ${statsHtml(X, Y, f)}`;
   }
   function renderGeneScatter() {
     const g = gene();
@@ -498,7 +564,7 @@
     scatter(geneScatter, X, Y, ids, labels, model,
       state.pseudotime ? "pseudotime" : "min pronuclei distance (µm)", yLabel(`${g} count`), yUnitNow(), state.currentId,
       state.pseudotime ? "" : "µm", yFmtNow());
-    geneFit.innerHTML = `· <b>${g}</b> · ${model.label} · ${SCALE_LABEL[model.scale]} = <b>${model.r2.toFixed(3)}</b> · n=${xs.length}`;
+    geneFit.innerHTML = `· <b>${g}</b> · n=${xs.length} · ${statsHtml(X, Y, model)}`;
   }
   // Gene-set scatter: per zygote, SUM the set genes' counts (in the chosen region) vs distance.
   // "require all" → only zygotes that contain every set gene (identical gene list per point);
@@ -536,7 +602,7 @@
     const model = fitModel(state.regType, X, Y);
     scatter(setScatter, X, Y, s.ids, s.labels, model,
       X_TITLE(), yLabel("Σ set count"), yUnitNow(), state.currentId, state.pseudotime ? "" : "µm", yFmtNow());
-    setFit.innerHTML = `· <b>${nSet}</b> gene${nSet === 1 ? "" : "s"} · <b>${s.xs.length}</b> zygotes · ${state.setRequireAll ? "all present" : "≥1 present"} · ${model.label} · ${SCALE_LABEL[model.scale]} = <b>${model.r2.toFixed(3)}</b>`;
+    setFit.innerHTML = `· <b>${nSet}</b> gene${nSet === 1 ? "" : "s"} · <b>${s.xs.length}</b> zygotes · ${state.setRequireAll ? "all present" : "≥1 present"} · ${statsHtml(X, Y, model)}`;
   }
 
   // ---------- right drawer: correlation ranking ----------

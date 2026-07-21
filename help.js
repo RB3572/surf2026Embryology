@@ -145,6 +145,51 @@
         <p>Click a gene to see its own scatter above the total, and toggle its molecules as dots in the 3-D cell. Because panels
         are disjoint, each gene is measured in a different subset of zygotes (its <span class="tag">n</span>).</p>` },
 
+    "pronuclei-stats": { eyebrow: "Pronuclei · the statistics", title: "What every number under a graph means",
+      html: `<p class="lede">Each scatter (selected gene, all transcripts, and the gene set) reports the same five things, so you
+        can judge at a glance whether a trend is real or could be luck.</p>
+        <svg class="help-fig" viewBox="0 0 320 150" xmlns="http://www.w3.org/2000/svg">
+          <line x1="30" y1="18" x2="30" y2="128" stroke="${INK}" stroke-width="1.5"/>
+          <line x1="30" y1="128" x2="150" y2="128" stroke="${INK}" stroke-width="1.5"/>
+          <text x="16" y="88" font-size="9" fill="${GREY}" transform="rotate(-90 16 88)">count</text>
+          <text x="60" y="144" font-size="9" fill="${GREY}">distance</text>
+          ${[[42,110],[60,96],[74,100],[92,78],[108,70],[128,52]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="${BLUE}"/>`).join("")}
+          <line x1="38" y1="112" x2="140" y2="52" stroke="${ORANGE}" stroke-width="2.5"/>
+          <text x="150" y="30" font-size="10" fill="${ORANGE}">y = m·x + b</text>
+          <text x="170" y="70" font-size="9" fill="${GREY}">real: points hug the line</text>
+          <line x1="180" y1="88" x2="300" y2="88" stroke="#e5e7eb" stroke-width="1"/>
+          <text x="170" y="104" font-size="9" fill="${GREY}">null: shuffle count↔distance</text>
+          ${[[190,118],[210,100],[228,120],[246,102],[266,116],[288,104]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="${GREY}"/>`).join("")}
+        </svg>
+        <div class="help-cap">The fit line is the model; the p-value asks how often a random re-pairing of the same points would look as trend-y.</div>
+        <h3>The five numbers</h3>
+        <ul>
+        <li><b>Equation</b> — the fitted curve's formula. For the default <b>Linear</b> model it is <b>y = m·x + b</b>: the slope
+        <b>m</b> is transcripts gained (or lost) per micron of pronuclei distance, and <b>b</b> is the intercept. Other models show
+        their own form (e.g. <span class="tag">y = a·e^(k·x)</span> for exponential).</li>
+        <li><b>R²</b> — the share of the variation the fit explains (1 = perfect, 0 = no better than a flat line). Because some
+        models are fitted in a transformed space, R² is reported on that model's <b>natural scale</b> — labelled <span class="tag">R²</span>,
+        <span class="tag">R² (log)</span>, <span class="tag">R² (logit)</span> or <span class="tag">pseudo-R²</span> — so a
+        log-fit's R² isn't compared unfairly against a raw one.</li>
+        <li><b>Pearson r</b> — the straight-line correlation of distance and count, from <b>−1</b> to <b>+1</b>. The sign is the
+        direction (＋ = count rises with distance); |r| is the strength. r² equals the linear R².</li>
+        <li><b>p-value</b> — the chance of seeing a correlation this strong <b>if distance and count were actually unrelated</b>
+        (two-sided). Small p = unlikely to be a fluke. We compute it two independent ways that agree:</li>
+        </ul>
+        <h3>How the p-value is calculated</h3>
+        <p><b>1 · Exact test.</b> Turn r into a t-statistic, <b>t = r·√((n−2)/(1−r²))</b>, which follows a Student-t distribution
+        with <b>n−2</b> degrees of freedom when there is no real correlation; the two-sided tail area is the p-value (via the
+        incomplete-beta function). This is the classic significance test for a correlation.</p>
+        <p><b>2 · Permutation null (the honest cross-check).</b> Keep the same numbers but <b>shuffle which count is paired with
+        which distance</b> 2000 times — this is a world where, by construction, there is <i>no</i> relationship. Each shuffle gets
+        its own r; the p-value is how often that random |r| is at least as big as the one we actually saw. Both methods land in the
+        same place (shown together in the tooltip on the <span class="tag">p</span>).</p>
+        <p>Shorthand stars: <b>***</b> p&lt;0.001, <b>**</b> p&lt;0.01, <b>*</b> p&lt;0.05, <b>ns</b> = not significant.</p>
+        <div class="help-callout"><b>Watch two traps.</b> (1) <b>n</b> is small and varies per gene (disjoint panels), so one
+        outlier can swing r — trust <b>*</b>/<b>**</b> more when n is larger. (2) The p-value tests a <i>straight-line</i>
+        association; a curved model can have a high R² yet a near-zero Pearson r (a U-shape) — so read the R², the r, <i>and</i> the
+        shape together, not any one alone.</div>` },
+
     "segments": { eyebrow: "Segment Enrichment · the idea", title: "People on campus",
       html: `<p class="lede">At any moment some campus buildings are packed and others nearly empty. If you know which building
         someone is in, you often know what they're doing. Molecules are the same: <b>where</b> a transcript sits often predicts

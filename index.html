@@ -82,5 +82,15 @@
     </section>
   </main>
   <script src="/analytics.js" defer></script>
+  <script>
+    // Admin sessions get a readable surf_admin cookie; pull the gated admin card fragment
+    // (404 for everyone else) and drop it in as the first project card.
+    if (/(?:^|;\s*)surf_admin=1(?:;|$)/.test(document.cookie)) {
+      fetch("/admin.card.html", { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.text() : ""; })
+        .then(function (h) { var g = document.querySelector(".lp-grid"); if (h && g) g.insertAdjacentHTML("afterbegin", h); })
+        .catch(function () {});
+    }
+  </script>
 </body>
 </html>

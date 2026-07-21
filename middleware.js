@@ -18,18 +18,6 @@ const ACCOUNTS = [
 ];
 const BY_TOKEN = new Map(ACCOUNTS.map((a) => [a.token, a]));
 
-// The admin console card, injected into the landing for admin sessions only. It lives here
-// (server-side) so it never appears in the HTML any non-admin receives.
-const ADMIN_CARD = `
-      <a class="lp-card" href="admin.html" style="--accent:#111827">
-        <span class="lp-card-tag">Admin only</span>
-        <h2>Usage Analytics</h2>
-        <p>Who is using the site, which projects and genes they view, and what they
-           download — attributed by login. Visible only with the admin password.</p>
-        <span class="lp-card-go">Open console →</span>
-      </a>
-`;
-
 export const config = {
   matcher: "/((?!_vercel).*)", // gate every path except Vercel's own internals
 };
@@ -47,16 +35,12 @@ export default async function middleware(request) {
   const cookies = request.headers.get("cookie") || "";
   const account = BY_TOKEN.get(cookieValue(cookies, COOKIE));
 
-  // Log out: clear the session cookie and bounce to the gate.
+  // Log out: clear the session cookies and bounce to the gate.
   if (url.pathname === "/logout") {
-    return new Response(null, {
-      status: 303,
-      headers: {
-        "set-cookie": `${COOKIE}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax`,
-        location: "/",
-        "cache-control": "no-store",
-      },
-    });
+    const headers = new Headers({ location: "/", "cache-control": "no-store" });
+    headers.append("set-cookie", `${COOKIE}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax`);
+    headers.append("set-cookie", `surf_admin=; Path=/; Max-Age=0; Secure; SameSite=Lax`);
+    return new Response(null, { status: 303, headers });
   }
 
   // Admin-only surface. Anything under /admin (page, assets, data) is 404 unless this is an
@@ -71,28 +55,11 @@ export default async function middleware(request) {
     });
   }
 
-  if (account) {
-    // Reveal the admin console card on the landing — admins only, injected server-side so the
-    // card never appears in the HTML delivered to anyone else. The x-surf-internal guard stops
-    // our own sub-fetch from recursing; it can never bypass auth (account is still required).
-    if (account.role === "admin" && (p === "/" || p === "/index.html") &&
-        request.headers.get("x-surf-internal") !== "1") {
-      try {
-        const origin = await fetch(new URL("/index.html", url).toString(), {
-          headers: { "x-surf-internal": "1", cookie: cookies },
-        });
-        if (origin.ok) {
-          const html = (await origin.text())
-            .replace('<section class="lp-grid">', '<section class="lp-grid">' + ADMIN_CARD);
-          return new Response(html, {
-            status: 200,
-            headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" },
-          });
-        }
-      } catch (_) { /* fall through to the normal landing */ }
-    }
-    return; // authenticated → serve the requested file
-  }
+  // Authenticated → serve the requested file. (The admin console card is revealed on the
+  // landing client-side from the gated /admin.card.html fragment — see index.html — because an
+  // edge self-fetch to inject it deadlocks on a custom domain. The fragment + page stay 404 for
+  // everyone else, so the console is still invisible to non-admins.)
+  if (account) return;
 
   // login form submitted
   if (request.method === "POST") {
@@ -100,14 +67,12 @@ export default async function middleware(request) {
     try { pwd = String((await request.formData()).get("password") || ""); } catch (_) { /* malformed */ }
     const match = ACCOUNTS.find((a) => a.pw === pwd);
     if (match) {
-      return new Response(null, {
-        status: 303,
-        headers: {
-          "set-cookie": `${COOKIE}=${match.token}; Path=/; Max-Age=${MAX_AGE}; HttpOnly; Secure; SameSite=Lax`,
-          location: url.pathname + url.search,
-          "cache-control": "no-store",
-        },
-      });
+      const headers = new Headers({ location: url.pathname + url.search, "cache-control": "no-store" });
+      headers.append("set-cookie", `${COOKIE}=${match.token}; Path=/; Max-Age=${MAX_AGE}; HttpOnly; Secure; SameSite=Lax`);
+      // readable (non-HttpOnly) hint so the landing knows to pull in the admin card; useless to
+      // forge — the card fragment + console are still server-gated to the admin token.
+      if (match.role === "admin") headers.append("set-cookie", `surf_admin=1; Path=/; Max-Age=${MAX_AGE}; Secure; SameSite=Lax`);
+      return new Response(null, { status: 303, headers });
     }
     return gate(true); // wrong password
   }

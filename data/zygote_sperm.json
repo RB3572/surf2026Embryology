@@ -18,30 +18,34 @@
     "pVol": {
      "plane": 9,
      "spermSide": -1,
-     "cntSperm": 75598,
-     "cntOther": 82927,
-     "mark": "sigma"
+     "cntSperm": 70388,
+     "cntOther": 78409,
+     "volSperm": 187416.2,
+     "volOther": 187915.1
     },
     "pCnt": {
      "plane": 14,
      "spermSide": -1,
-     "cntSperm": 73993,
-     "cntOther": 84532,
-     "mark": "sigma"
+     "cntSperm": 69098,
+     "cntOther": 79699,
+     "volSperm": 184237.7,
+     "volOther": 191093.6
     },
     "diffVol": {
      "plane": 11,
      "spermSide": -1,
-     "cntSperm": 74213,
-     "cntOther": 84312,
-     "mark": "sigma"
+     "cntSperm": 69099,
+     "cntOther": 79698,
+     "volSperm": 186419.9,
+     "volOther": 188911.4
     },
     "diffCnt": {
      "plane": 13,
      "spermSide": -1,
-     "cntSperm": 73644,
-     "cntOther": 84881,
-     "mark": "sigma"
+     "cntSperm": 68697,
+     "cntOther": 80100,
+     "volSperm": 184749.7,
+     "volOther": 190581.7
     }
    }
   },
@@ -57,30 +61,34 @@
     "pVol": {
      "plane": 8,
      "spermSide": 1,
-     "cntSperm": 71377,
-     "cntOther": 56317,
-     "mark": "omega"
+     "cntSperm": 70149,
+     "cntOther": 53097,
+     "volSperm": 160305.5,
+     "volOther": 155468.2
     },
     "pCnt": {
      "plane": 10,
      "spermSide": 1,
-     "cntSperm": 72709,
-     "cntOther": 54985,
-     "mark": "omega"
+     "cntSperm": 71511,
+     "cntOther": 51735,
+     "volSperm": 164245.3,
+     "volOther": 151528.3
     },
     "diffVol": {
      "plane": 9,
      "spermSide": 1,
-     "cntSperm": 72253,
-     "cntOther": 55441,
-     "mark": "omega"
+     "cntSperm": 71049,
+     "cntOther": 52197,
+     "volSperm": 162366.1,
+     "volOther": 153407.5
     },
     "diffCnt": {
      "plane": 11,
      "spermSide": -1,
-     "cntSperm": 54908,
-     "cntOther": 72786,
-     "mark": "sigma"
+     "cntSperm": 51630,
+     "cntOther": 71616,
+     "volSperm": 150002.3,
+     "volOther": 165771.4
     }
    }
   },
@@ -96,30 +104,34 @@
     "pVol": {
      "plane": 10,
      "spermSide": 1,
-     "cntSperm": 76883,
-     "cntOther": 59310,
-     "mark": "omega"
+     "cntSperm": 75392,
+     "cntOther": 58263,
+     "volSperm": 175088.0,
+     "volOther": 177349.5
     },
     "pCnt": {
      "plane": 10,
      "spermSide": 1,
-     "cntSperm": 76883,
-     "cntOther": 59310,
-     "mark": "omega"
+     "cntSperm": 75392,
+     "cntOther": 58263,
+     "volSperm": 175088.0,
+     "volOther": 177349.5
     },
     "diffVol": {
      "plane": 10,
      "spermSide": 1,
-     "cntSperm": 76883,
-     "cntOther": 59310,
-     "mark": "omega"
+     "cntSperm": 75392,
+     "cntOther": 58263,
+     "volSperm": 175088.0,
+     "volOther": 177349.5
     },
     "diffCnt": {
      "plane": 10,
      "spermSide": 1,
-     "cntSperm": 76883,
-     "cntOther": 59310,
-     "mark": "omega"
+     "cntSperm": 75392,
+     "cntOther": 58263,
+     "volSperm": 175088.0,
+     "volOther": 177349.5
     }
    }
   },
@@ -135,30 +147,34 @@
     "pVol": {
      "plane": 10,
      "spermSide": -1,
-     "cntSperm": 85733,
-     "cntOther": 95605,
-     "mark": "sigma"
+     "cntSperm": 83713,
+     "cntOther": 93301,
+     "volSperm": 169524.9,
+     "volOther": 170799.8
     },
     "pCnt": {
      "plane": 5,
      "spermSide": -1,
-     "cntSperm": 85407,
-     "cntOther": 95931,
-     "mark": "sigma"
+     "cntSperm": 83250,
+     "cntOther": 93764,
+     "volSperm": 166510.1,
+     "volOther": 173814.7
     },
     "diffVol": {
      "plane": 9,
      "spermSide": -1,
-     "cntSperm": 84806,
-     "cntOther": 96532,
-     "mark": "sigma"
+     "cntSperm": 82775,
+     "cntOther": 94239,
+     "volSperm": 168193.3,
+     "volOther": 172131.5
     },
     "diffCnt": {
      "plane": 8,
      "spermSide": -1,
-     "cntSperm": 84328,
-     "cntOther": 97010,
-     "mark": "sigma"
+     "cntSperm": 82303,
+     "cntOther": 94711,
+     "volSperm": 167201.8,
+     "volOther": 173122.9
     }
    }
   },
@@ -174,30 +190,34 @@
     "pVol": {
      "plane": 9,
      "spermSide": -1,
-     "cntSperm": 54819,
-     "cntOther": 85181,
-     "mark": "sigma"
+     "cntSperm": 52107,
+     "cntOther": 82565,
+     "volSperm": 156023.8,
+     "volOther": 160874.1
     },
     "pCnt": {
      "plane": 9,
      "spermSide": -1,
-     "cntSperm": 54819,
-     "cntOther": 85181,
-     "mark": "sigma"
+     "cntSperm": 52107,
+     "cntOther": 82565,
+     "volSperm": 156023.8,
+     "volOther": 160874.1
     },
     "diffVol": {
      "plane": 9,
      "spermSide": -1,
-     "cntSperm": 54819,
-     "cntOther": 85181,
-     "mark": "sigma"
+     "cntSperm": 52107,
+     "cntOther": 82565,
+     "volSperm": 156023.8,
+     "volOther": 160874.1
     },
     "diffCnt": {
      "plane": 9,
      "spermSide": -1,
-     "cntSperm": 54819,
-     "cntOther": 85181,
-     "mark": "sigma"
+     "cntSperm": 52107,
+     "cntOther": 82565,
+     "volSperm": 156023.8,
+     "volOther": 160874.1
     }
    }
   },
@@ -213,30 +233,34 @@
     "pVol": {
      "plane": 10,
      "spermSide": 1,
-     "cntSperm": 7263,
-     "cntOther": 5420,
-     "mark": "omega"
+     "cntSperm": 7039,
+     "cntOther": 5357,
+     "volSperm": 158832.9,
+     "volOther": 160099.7
     },
     "pCnt": {
      "plane": 8,
      "spermSide": -1,
-     "cntSperm": 5325,
-     "cntOther": 7358,
-     "mark": "sigma"
+     "cntSperm": 5255,
+     "cntOther": 7141,
+     "volSperm": 157342.5,
+     "volOther": 161590.1
     },
     "diffVol": {
      "plane": 9,
      "spermSide": -1,
-     "cntSperm": 5348,
-     "cntOther": 7335,
-     "mark": "sigma"
+     "cntSperm": 5286,
+     "cntOther": 7110,
+     "volSperm": 158687.1,
+     "volOther": 160245.5
     },
     "diffCnt": {
      "plane": 8,
      "spermSide": -1,
-     "cntSperm": 5325,
-     "cntOther": 7358,
-     "mark": "sigma"
+     "cntSperm": 5255,
+     "cntOther": 7141,
+     "volSperm": 157342.5,
+     "volOther": 161590.1
     }
    }
   },
@@ -252,30 +276,34 @@
     "pVol": {
      "plane": 2,
      "spermSide": 1,
-     "cntSperm": 3899,
-     "cntOther": 3372,
-     "mark": "omega"
+     "cntSperm": 3809,
+     "cntOther": 3315,
+     "volSperm": 160532.3,
+     "volOther": 174205.1
     },
     "pCnt": {
      "plane": 2,
      "spermSide": 1,
-     "cntSperm": 3899,
-     "cntOther": 3372,
-     "mark": "omega"
+     "cntSperm": 3809,
+     "cntOther": 3315,
+     "volSperm": 160532.3,
+     "volOther": 174205.1
     },
     "diffVol": {
      "plane": 2,
      "spermSide": 1,
-     "cntSperm": 3899,
-     "cntOther": 3372,
-     "mark": "omega"
+     "cntSperm": 3809,
+     "cntOther": 3315,
+     "volSperm": 160532.3,
+     "volOther": 174205.1
     },
     "diffCnt": {
      "plane": 2,
      "spermSide": 1,
-     "cntSperm": 3899,
-     "cntOther": 3372,
-     "mark": "omega"
+     "cntSperm": 3809,
+     "cntOther": 3315,
+     "volSperm": 160532.3,
+     "volOther": 174205.1
     }
    }
   },
@@ -291,30 +319,34 @@
     "pVol": {
      "plane": 4,
      "spermSide": -1,
-     "cntSperm": 3051,
-     "cntOther": 3724,
-     "mark": "sigma"
+     "cntSperm": 2917,
+     "cntOther": 3666,
+     "volSperm": 170655.7,
+     "volOther": 172782.7
     },
     "pCnt": {
      "plane": 4,
      "spermSide": -1,
-     "cntSperm": 3051,
-     "cntOther": 3724,
-     "mark": "sigma"
+     "cntSperm": 2917,
+     "cntOther": 3666,
+     "volSperm": 170655.7,
+     "volOther": 172782.7
     },
     "diffVol": {
      "plane": 16,
      "spermSide": 1,
-     "cntSperm": 3048,
-     "cntOther": 3727,
-     "mark": "sigma"
+     "cntSperm": 2908,
+     "cntOther": 3675,
+     "volSperm": 164992.1,
+     "volOther": 178446.2
     },
     "diffCnt": {
      "plane": 0,
      "spermSide": -1,
-     "cntSperm": 2974,
-     "cntOther": 3801,
-     "mark": "sigma"
+     "cntSperm": 2834,
+     "cntOther": 3749,
+     "volSperm": 163555.2,
+     "volOther": 179883.2
     }
    }
   },
@@ -330,30 +362,34 @@
     "pVol": {
      "plane": 7,
      "spermSide": -1,
-     "cntSperm": 25702,
-     "cntOther": 27861,
-     "mark": "sigma"
+     "cntSperm": 25470,
+     "cntOther": 26594,
+     "volSperm": 158594.8,
+     "volOther": 155814.8
     },
     "pCnt": {
      "plane": 7,
      "spermSide": -1,
-     "cntSperm": 25702,
-     "cntOther": 27861,
-     "mark": "sigma"
+     "cntSperm": 25470,
+     "cntOther": 26594,
+     "volSperm": 158594.8,
+     "volOther": 155814.8
     },
     "diffVol": {
      "plane": 3,
      "spermSide": -1,
-     "cntSperm": 25625,
-     "cntOther": 27938,
-     "mark": "sigma"
+     "cntSperm": 25406,
+     "cntOther": 26658,
+     "volSperm": 161133.3,
+     "volOther": 153276.3
     },
     "diffCnt": {
      "plane": 10,
      "spermSide": -1,
-     "cntSperm": 25921,
-     "cntOther": 27642,
-     "mark": "sigma"
+     "cntSperm": 25380,
+     "cntOther": 26684,
+     "volSperm": 154439.5,
+     "volOther": 159970.1
     }
    }
   },
@@ -369,30 +405,34 @@
     "pVol": {
      "plane": 6,
      "spermSide": -1,
-     "cntSperm": 1924,
-     "cntOther": 2662,
-     "mark": "sigma"
+     "cntSperm": 1918,
+     "cntOther": 2656,
+     "volSperm": 130074.7,
+     "volOther": 127336.9
     },
     "pCnt": {
      "plane": 8,
      "spermSide": -1,
-     "cntSperm": 1900,
-     "cntOther": 2686,
-     "mark": "sigma"
+     "cntSperm": 1894,
+     "cntOther": 2680,
+     "volSperm": 126287.1,
+     "volOther": 131124.4
     },
     "diffVol": {
      "plane": 6,
      "spermSide": -1,
-     "cntSperm": 1924,
-     "cntOther": 2662,
-     "mark": "sigma"
+     "cntSperm": 1918,
+     "cntOther": 2656,
+     "volSperm": 130074.7,
+     "volOther": 127336.9
     },
     "diffCnt": {
      "plane": 8,
      "spermSide": -1,
-     "cntSperm": 1900,
-     "cntOther": 2686,
-     "mark": "sigma"
+     "cntSperm": 1894,
+     "cntOther": 2680,
+     "volSperm": 126287.1,
+     "volOther": 131124.4
     }
    }
   },
@@ -408,30 +448,34 @@
     "pVol": {
      "plane": 8,
      "spermSide": -1,
-     "cntSperm": 2696,
-     "cntOther": 2830,
-     "mark": "sigma"
+     "cntSperm": 2526,
+     "cntOther": 2802,
+     "volSperm": 173048.4,
+     "volOther": 181127.3
     },
     "pCnt": {
      "plane": 9,
      "spermSide": -1,
-     "cntSperm": 2646,
-     "cntOther": 2880,
-     "mark": "sigma"
+     "cntSperm": 2473,
+     "cntOther": 2855,
+     "volSperm": 172037.5,
+     "volOther": 182138.2
     },
     "diffVol": {
      "plane": 8,
      "spermSide": -1,
-     "cntSperm": 2696,
-     "cntOther": 2830,
-     "mark": "sigma"
+     "cntSperm": 2526,
+     "cntOther": 2802,
+     "volSperm": 173048.4,
+     "volOther": 181127.3
     },
     "diffCnt": {
      "plane": 9,
      "spermSide": -1,
-     "cntSperm": 2646,
-     "cntOther": 2880,
-     "mark": "sigma"
+     "cntSperm": 2473,
+     "cntOther": 2855,
+     "volSperm": 172037.5,
+     "volOther": 182138.2
     }
    }
   },
@@ -447,30 +491,34 @@
     "pVol": {
      "plane": 9,
      "spermSide": 1,
-     "cntSperm": 1774,
-     "cntOther": 2414,
-     "mark": "sigma"
+     "cntSperm": 1767,
+     "cntOther": 2409,
+     "volSperm": 131283.2,
+     "volOther": 133790.9
     },
     "pCnt": {
      "plane": 9,
      "spermSide": 1,
-     "cntSperm": 1774,
-     "cntOther": 2414,
-     "mark": "sigma"
+     "cntSperm": 1767,
+     "cntOther": 2409,
+     "volSperm": 131283.2,
+     "volOther": 133790.9
     },
     "diffVol": {
      "plane": 14,
      "spermSide": -1,
-     "cntSperm": 2488,
-     "cntOther": 1700,
-     "mark": "omega"
+     "cntSperm": 2483,
+     "cntOther": 1693,
+     "volSperm": 135167.9,
+     "volOther": 129906.2
     },
     "diffCnt": {
      "plane": 14,
      "spermSide": -1,
-     "cntSperm": 2488,
-     "cntOther": 1700,
-     "mark": "omega"
+     "cntSperm": 2483,
+     "cntOther": 1693,
+     "volSperm": 135167.9,
+     "volOther": 129906.2
     }
    }
   },
@@ -486,30 +534,34 @@
     "pVol": {
      "plane": 16,
      "spermSide": -1,
-     "cntSperm": 4286,
-     "cntOther": 4441,
-     "mark": "sigma"
+     "cntSperm": 4210,
+     "cntOther": 4283,
+     "volSperm": 145218.4,
+     "volOther": 143491.5
     },
     "pCnt": {
      "plane": 3,
      "spermSide": 1,
-     "cntSperm": 4072,
-     "cntOther": 4655,
-     "mark": "sigma"
+     "cntSperm": 3951,
+     "cntOther": 4542,
+     "volSperm": 140108.9,
+     "volOther": 148601.0
     },
     "diffVol": {
      "plane": 17,
      "spermSide": -1,
-     "cntSperm": 4238,
-     "cntOther": 4489,
-     "mark": "sigma"
+     "cntSperm": 4150,
+     "cntOther": 4343,
+     "volSperm": 144055.3,
+     "volOther": 144654.7
     },
     "diffCnt": {
      "plane": 3,
      "spermSide": 1,
-     "cntSperm": 4072,
-     "cntOther": 4655,
-     "mark": "sigma"
+     "cntSperm": 3951,
+     "cntOther": 4542,
+     "volSperm": 140108.9,
+     "volOther": 148601.0
     }
    }
   },
@@ -525,30 +577,34 @@
     "pVol": {
      "plane": 4,
      "spermSide": 1,
-     "cntSperm": 5486,
-     "cntOther": 4456,
-     "mark": "omega"
+     "cntSperm": 5415,
+     "cntOther": 4351,
+     "volSperm": 117195.7,
+     "volOther": 119709.9
     },
     "pCnt": {
      "plane": 4,
      "spermSide": 1,
-     "cntSperm": 5486,
-     "cntOther": 4456,
-     "mark": "omega"
+     "cntSperm": 5415,
+     "cntOther": 4351,
+     "volSperm": 117195.7,
+     "volOther": 119709.9
     },
     "diffVol": {
      "plane": 3,
      "spermSide": 1,
-     "cntSperm": 5472,
-     "cntOther": 4470,
-     "mark": "omega"
+     "cntSperm": 5409,
+     "cntOther": 4357,
+     "volSperm": 117743.2,
+     "volOther": 119162.3
     },
     "diffCnt": {
      "plane": 3,
      "spermSide": 1,
-     "cntSperm": 5472,
-     "cntOther": 4470,
-     "mark": "omega"
+     "cntSperm": 5409,
+     "cntOther": 4357,
+     "volSperm": 117743.2,
+     "volOther": 119162.3
     }
    }
   },
@@ -564,30 +620,34 @@
     "pVol": {
      "plane": 14,
      "spermSide": -1,
-     "cntSperm": 63671,
-     "cntOther": 83505,
-     "mark": "sigma"
+     "cntSperm": 62680,
+     "cntOther": 82528,
+     "volSperm": 140175.4,
+     "volOther": 143365.1
     },
     "pCnt": {
      "plane": 14,
      "spermSide": -1,
-     "cntSperm": 63671,
-     "cntOther": 83505,
-     "mark": "sigma"
+     "cntSperm": 62680,
+     "cntOther": 82528,
+     "volSperm": 140175.4,
+     "volOther": 143365.1
     },
     "diffVol": {
      "plane": 14,
      "spermSide": -1,
-     "cntSperm": 63671,
-     "cntOther": 83505,
-     "mark": "sigma"
+     "cntSperm": 62680,
+     "cntOther": 82528,
+     "volSperm": 140175.4,
+     "volOther": 143365.1
     },
     "diffCnt": {
      "plane": 15,
      "spermSide": -1,
-     "cntSperm": 63393,
-     "cntOther": 83783,
-     "mark": "sigma"
+     "cntSperm": 62382,
+     "cntOther": 82826,
+     "volSperm": 139145.0,
+     "volOther": 144395.5
     }
    }
   },
@@ -603,30 +663,34 @@
     "pVol": {
      "plane": 2,
      "spermSide": -1,
-     "cntSperm": 172054,
-     "cntOther": 186378,
-     "mark": "sigma"
+     "cntSperm": 167104,
+     "cntOther": 178174,
+     "volSperm": 134202.4,
+     "volOther": 133282.3
     },
     "pCnt": {
      "plane": 15,
      "spermSide": 1,
-     "cntSperm": 167320,
-     "cntOther": 191112,
-     "mark": "sigma"
+     "cntSperm": 157032,
+     "cntOther": 188246,
+     "volSperm": 127694.9,
+     "volOther": 139789.8
     },
     "diffVol": {
      "plane": 16,
      "spermSide": 1,
-     "cntSperm": 166664,
-     "cntOther": 191768,
-     "mark": "sigma"
+     "cntSperm": 157692,
+     "cntOther": 187586,
+     "volSperm": 128804.6,
+     "volOther": 138680.1
     },
     "diffCnt": {
      "plane": 15,
      "spermSide": 1,
-     "cntSperm": 167320,
-     "cntOther": 191112,
-     "mark": "sigma"
+     "cntSperm": 157032,
+     "cntOther": 188246,
+     "volSperm": 127694.9,
+     "volOther": 139789.8
     }
    }
   },
@@ -642,30 +706,34 @@
     "pVol": {
      "plane": 11,
      "spermSide": -1,
-     "cntSperm": 126180,
-     "cntOther": 142710,
-     "mark": "sigma"
+     "cntSperm": 123312,
+     "cntOther": 142132,
+     "volSperm": 123628.7,
+     "volOther": 126697.0
     },
     "pCnt": {
      "plane": 11,
      "spermSide": -1,
-     "cntSperm": 126180,
-     "cntOther": 142710,
-     "mark": "sigma"
+     "cntSperm": 123312,
+     "cntOther": 142132,
+     "volSperm": 123628.7,
+     "volOther": 126697.0
     },
     "diffVol": {
      "plane": 17,
      "spermSide": -1,
-     "cntSperm": 122936,
-     "cntOther": 145954,
-     "mark": "sigma"
+     "cntSperm": 120312,
+     "cntOther": 145132,
+     "volSperm": 122013.5,
+     "volOther": 128312.1
     },
     "diffCnt": {
      "plane": 1,
      "spermSide": 1,
-     "cntSperm": 121032,
-     "cntOther": 147858,
-     "mark": "sigma"
+     "cntSperm": 118574,
+     "cntOther": 146870,
+     "volSperm": 120163.5,
+     "volOther": 130162.1
     }
    }
   },
@@ -681,30 +749,34 @@
     "pVol": {
      "plane": 17,
      "spermSide": 1,
-     "cntSperm": 228724,
-     "cntOther": 217608,
-     "mark": "omega"
+     "cntSperm": 220250,
+     "cntOther": 208856,
+     "volSperm": 153691.0,
+     "volOther": 154458.9
     },
     "pCnt": {
      "plane": 4,
      "spermSide": -1,
-     "cntSperm": 228850,
-     "cntOther": 217482,
-     "mark": "omega"
+     "cntSperm": 224296,
+     "cntOther": 204810,
+     "volSperm": 157441.3,
+     "volOther": 150708.6
     },
     "diffVol": {
      "plane": 11,
      "spermSide": 1,
-     "cntSperm": 226068,
-     "cntOther": 220264,
-     "mark": "omega"
+     "cntSperm": 211296,
+     "cntOther": 217810,
+     "volSperm": 149441.8,
+     "volOther": 158708.2
     },
     "diffCnt": {
      "plane": 4,
      "spermSide": -1,
-     "cntSperm": 228850,
-     "cntOther": 217482,
-     "mark": "omega"
+     "cntSperm": 224296,
+     "cntOther": 204810,
+     "volSperm": 157441.3,
+     "volOther": 150708.6
     }
    }
   },
@@ -720,30 +792,34 @@
     "pVol": {
      "plane": 9,
      "spermSide": 1,
-     "cntSperm": 41126,
-     "cntOther": 20170,
-     "mark": "omega"
+     "cntSperm": 40536,
+     "cntOther": 19158,
+     "volSperm": 120954.1,
+     "volOther": 107780.2
     },
     "pCnt": {
      "plane": 10,
      "spermSide": 1,
-     "cntSperm": 41402,
-     "cntOther": 19894,
-     "mark": "omega"
+     "cntSperm": 40774,
+     "cntOther": 18920,
+     "volSperm": 122697.2,
+     "volOther": 106037.1
     },
     "diffVol": {
      "plane": 9,
      "spermSide": 1,
-     "cntSperm": 41126,
-     "cntOther": 20170,
-     "mark": "omega"
+     "cntSperm": 40536,
+     "cntOther": 19158,
+     "volSperm": 120954.1,
+     "volOther": 107780.2
     },
     "diffCnt": {
      "plane": 10,
      "spermSide": 1,
-     "cntSperm": 41402,
-     "cntOther": 19894,
-     "mark": "omega"
+     "cntSperm": 40774,
+     "cntOther": 18920,
+     "volSperm": 122697.2,
+     "volOther": 106037.1
     }
    }
   },
@@ -759,30 +835,34 @@
     "pVol": {
      "plane": 1,
      "spermSide": -1,
-     "cntSperm": 34498,
-     "cntOther": 60906,
-     "mark": "sigma"
+     "cntSperm": 30008,
+     "cntOther": 60004,
+     "volSperm": 117113.0,
+     "volOther": 125899.9
     },
     "pCnt": {
      "plane": 4,
      "spermSide": -1,
-     "cntSperm": 31478,
-     "cntOther": 63926,
-     "mark": "sigma"
+     "cntSperm": 26566,
+     "cntOther": 63446,
+     "volSperm": 110299.3,
+     "volOther": 132713.6
     },
     "diffVol": {
      "plane": 4,
      "spermSide": -1,
-     "cntSperm": 31478,
-     "cntOther": 63926,
-     "mark": "sigma"
+     "cntSperm": 26566,
+     "cntOther": 63446,
+     "volSperm": 110299.3,
+     "volOther": 132713.6
     },
     "diffCnt": {
      "plane": 4,
      "spermSide": -1,
-     "cntSperm": 31478,
-     "cntOther": 63926,
-     "mark": "sigma"
+     "cntSperm": 26566,
+     "cntOther": 63446,
+     "volSperm": 110299.3,
+     "volOther": 132713.6
     }
    }
   },
@@ -798,30 +878,34 @@
     "pVol": {
      "plane": 10,
      "spermSide": -1,
-     "cntSperm": 118564,
-     "cntOther": 167450,
-     "mark": "sigma"
+     "cntSperm": 111566,
+     "cntOther": 164190,
+     "volSperm": 141824.5,
+     "volOther": 146540.3
     },
     "pCnt": {
      "plane": 9,
      "spermSide": -1,
-     "cntSperm": 116858,
-     "cntOther": 169156,
-     "mark": "sigma"
+     "cntSperm": 108810,
+     "cntOther": 166946,
+     "volSperm": 138301.0,
+     "volOther": 150063.8
     },
     "diffVol": {
      "plane": 10,
      "spermSide": -1,
-     "cntSperm": 118564,
-     "cntOther": 167450,
-     "mark": "sigma"
+     "cntSperm": 111566,
+     "cntOther": 164190,
+     "volSperm": 141824.5,
+     "volOther": 146540.3
     },
     "diffCnt": {
      "plane": 8,
      "spermSide": -1,
-     "cntSperm": 116908,
-     "cntOther": 169106,
-     "mark": "sigma"
+     "cntSperm": 108354,
+     "cntOther": 167402,
+     "volSperm": 135887.2,
+     "volOther": 152477.6
     }
    }
   },
@@ -837,30 +921,34 @@
     "pVol": {
      "plane": 12,
      "spermSide": 1,
-     "cntSperm": 180150,
-     "cntOther": 150988,
-     "mark": "omega"
+     "cntSperm": 177144,
+     "cntOther": 147520,
+     "volSperm": 130215.6,
+     "volOther": 132831.9
     },
     "pCnt": {
      "plane": 12,
      "spermSide": 1,
-     "cntSperm": 180150,
-     "cntOther": 150988,
-     "mark": "omega"
+     "cntSperm": 177144,
+     "cntOther": 147520,
+     "volSperm": 130215.6,
+     "volOther": 132831.9
     },
     "diffVol": {
      "plane": 9,
      "spermSide": 1,
-     "cntSperm": 180944,
-     "cntOther": 150194,
-     "mark": "omega"
+     "cntSperm": 178632,
+     "cntOther": 146032,
+     "volSperm": 130824.7,
+     "volOther": 132222.8
     },
     "diffCnt": {
      "plane": 8,
      "spermSide": -1,
-     "cntSperm": 149806,
-     "cntOther": 181332,
-     "mark": "sigma"
+     "cntSperm": 145486,
+     "cntOther": 179178,
+     "volSperm": 131451.7,
+     "volOther": 131595.8
     }
    }
   },
@@ -876,30 +964,34 @@
     "pVol": {
      "plane": 12,
      "spermSide": -1,
-     "cntSperm": 89242,
-     "cntOther": 120386,
-     "mark": "sigma"
+     "cntSperm": 85336,
+     "cntOther": 119166,
+     "volSperm": 126355.1,
+     "volOther": 133470.2
     },
     "pCnt": {
      "plane": 8,
      "spermSide": -1,
-     "cntSperm": 89880,
-     "cntOther": 119748,
-     "mark": "sigma"
+     "cntSperm": 86900,
+     "cntOther": 117602,
+     "volSperm": 125396.1,
+     "volOther": 134429.2
     },
     "diffVol": {
      "plane": 14,
      "spermSide": -1,
-     "cntSperm": 89536,
-     "cntOther": 120092,
-     "mark": "sigma"
+     "cntSperm": 85662,
+     "cntOther": 118840,
+     "volSperm": 126023.0,
+     "volOther": 133802.3
     },
     "diffCnt": {
      "plane": 12,
      "spermSide": -1,
-     "cntSperm": 89242,
-     "cntOther": 120386,
-     "mark": "sigma"
+     "cntSperm": 85336,
+     "cntOther": 119166,
+     "volSperm": 126355.1,
+     "volOther": 133470.2
     }
    }
   },
@@ -915,30 +1007,34 @@
     "pVol": {
      "plane": 14,
      "spermSide": -1,
-     "cntSperm": 189788,
-     "cntOther": 202742,
-     "mark": "sigma"
+     "cntSperm": 183044,
+     "cntOther": 198678,
+     "volSperm": 143101.1,
+     "volOther": 144695.2
     },
     "pCnt": {
      "plane": 2,
      "spermSide": 1,
-     "cntSperm": 191058,
-     "cntOther": 201472,
-     "mark": "sigma"
+     "cntSperm": 186424,
+     "cntOther": 195298,
+     "volSperm": 139987.4,
+     "volOther": 147808.8
     },
     "diffVol": {
      "plane": 12,
      "spermSide": -1,
-     "cntSperm": 189710,
-     "cntOther": 202820,
-     "mark": "sigma"
+     "cntSperm": 181268,
+     "cntOther": 200454,
+     "volSperm": 141910.4,
+     "volOther": 145885.9
     },
     "diffCnt": {
      "plane": 12,
      "spermSide": -1,
-     "cntSperm": 189710,
-     "cntOther": 202820,
-     "mark": "sigma"
+     "cntSperm": 181268,
+     "cntOther": 200454,
+     "volSperm": 141910.4,
+     "volOther": 145885.9
     }
    }
   },
@@ -954,30 +1050,34 @@
     "pVol": {
      "plane": 12,
      "spermSide": -1,
-     "cntSperm": 240174,
-     "cntOther": 249238,
-     "mark": "sigma"
+     "cntSperm": 233316,
+     "cntOther": 245196,
+     "volSperm": 136818.7,
+     "volOther": 136081.6
     },
     "pCnt": {
      "plane": 9,
      "spermSide": -1,
-     "cntSperm": 229188,
-     "cntOther": 260224,
-     "mark": "sigma"
+     "cntSperm": 222292,
+     "cntOther": 256220,
+     "volSperm": 132691.0,
+     "volOther": 140209.4
     },
     "diffVol": {
      "plane": 7,
      "spermSide": -1,
-     "cntSperm": 229620,
-     "cntOther": 259792,
-     "mark": "sigma"
+     "cntSperm": 223254,
+     "cntOther": 255258,
+     "volSperm": 132810.8,
+     "volOther": 140089.5
     },
     "diffCnt": {
      "plane": 8,
      "spermSide": -1,
-     "cntSperm": 228700,
-     "cntOther": 260712,
-     "mark": "sigma"
+     "cntSperm": 221978,
+     "cntOther": 256534,
+     "volSperm": 132490.1,
+     "volOther": 140410.3
     }
    }
   },
@@ -993,30 +1093,34 @@
     "pVol": {
      "plane": 17,
      "spermSide": 1,
-     "cntSperm": 85310,
-     "cntOther": 75736,
-     "mark": "omega"
+     "cntSperm": 82515,
+     "cntOther": 70739,
+     "volSperm": 126040.9,
+     "volOther": 122376.4
     },
     "pCnt": {
      "plane": 1,
      "spermSide": -1,
-     "cntSperm": 85376,
-     "cntOther": 75670,
-     "mark": "omega"
+     "cntSperm": 82630,
+     "cntOther": 70624,
+     "volSperm": 125969.6,
+     "volOther": 122447.7
     },
     "diffVol": {
      "plane": 1,
      "spermSide": -1,
-     "cntSperm": 85376,
-     "cntOther": 75670,
-     "mark": "omega"
+     "cntSperm": 82630,
+     "cntOther": 70624,
+     "volSperm": 125969.6,
+     "volOther": 122447.7
     },
     "diffCnt": {
      "plane": 0,
      "spermSide": -1,
-     "cntSperm": 85434,
-     "cntOther": 75612,
-     "mark": "omega"
+     "cntSperm": 82679,
+     "cntOther": 70575,
+     "volSperm": 125980.9,
+     "volOther": 122436.4
     }
    }
   }
@@ -1028,8 +1132,8 @@
    "n": 26
   },
   "pCnt": {
-   "omega": 8,
-   "sigma": 18,
+   "omega": 9,
+   "sigma": 17,
    "n": 26
   },
   "diffVol": {

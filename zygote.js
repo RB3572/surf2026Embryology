@@ -36,6 +36,7 @@
   const xsGmAnchor = $("#xs-gm-anchor"), xsGmReroll = $("#xs-gm-reroll"), xsGmStats = $("#xs-gm-stats");
   const xsTabsEl = $("#xs-tabs"), xsPanels = $("#xs-panels");
   const xsSp = $("#xs-sp"), xsSpSub = $("#xs-sp-sub"), xsSpNote = $("#xs-sp-note"), xsSpDownload = $("#xs-sp-download");
+  const xsSpDensity = $("#xs-sp-density"), xsGmDensity = $("#xs-gm-density");
   const xsBody = $("#xs-body"), xsPb = $("#xs-pb"), xsPronuclei = $("#xs-pronuclei");
   const xsCrossLegend = $("#xs-cross-legend"), xsCrossDownload = $("#xs-cross-download");
   const xsCrossHighColor = $("#xs-cross-high-color"), xsCrossLowColor = $("#xs-cross-low-color");
@@ -44,6 +45,7 @@
   const xsCrossPnColor = $("#xs-cross-pn-color"), xsCrossScale = $("#xs-cross-scale"), xsCrossFormat = $("#xs-cross-format");
   const xsCrossDotSize = $("#xs-cross-dot-size"), xsCrossDotSizeValue = $("#xs-cross-dot-size-value");
   const xsBarPercent = $("#xs-bar-percent"), xsBarLog = $("#xs-bar-log"), xsBarAdjacent = $("#xs-bar-adjacent");
+  const xsBarDensity = $("#xs-bar-density");
   const xsBarLegend = $("#xs-bar-legend"), xsBarNull = $("#xs-bar-null");
   const xsBarInterval = $("#xs-bar-interval"), xsBarGrid = $("#xs-bar-grid"), xsBarDownload = $("#xs-bar-download");
   const xsBarHighColor = $("#xs-bar-high-color"), xsBarLowColor = $("#xs-bar-low-color");
@@ -57,6 +59,7 @@
     drawerOpen: false, bestTab: "pVol", crossMode: "vol", xsTab: "sperm", spermData: null,
     crossKey: "pVol", agg: null, pronucleusVisible: {}, dotSize: 1.5,
     gmAnchor: "gene", gmDraw: null, gmDrawKey: null,   // γ/μ grid: real anchor vs random control
+    gmDensity: true, spDensity: true,                  // concordance by density (count ÷ side volume)
     concordRank: "frac", _concord: null,               // right-drawer concordance tab
     circ: false, aggCirc: null, _aggCircP: null,
   };
@@ -581,11 +584,21 @@
   function renderBars() {
     if (!xsBars.offsetParent) return;                       // skip when its tab is hidden
     const agg = curAGG(); if (!agg) return;
-    const ki = bestKeyIndex(), g = gene(), percentMode = xsBarPercent.checked;
+    const ki = bestKeyIndex(), g = gene();
+    // DENSITY mode: each side's count ÷ that side's volume (adjacent bars); needs per-side volumes.
+    const density = !!(xsBarDensity && xsBarDensity.checked && agg.embryos[0] && agg.embryos[0].vp);
+    const percentMode = !density && xsBarPercent.checked;
+    const DSCALE = 1e4;                                      // show density as ×10⁻⁴ per µm³
     const rows = agg.embryos.map((emb) => {
       const row = emb.g[g]; if (!row) return null;
       const a = row[1 + ki], b = row[0] - a, totalCount = a + b; if (!totalCount) return null;
       const highCount = Math.max(a, b), lowCount = Math.min(a, b);
+      if (density) {
+        const p = emb.best[ki], vA = emb.vp[p], vB = Math.max(emb.vt - emb.vp[p], 1);
+        const dA = a / vA * DSCALE, dB = b / vB * DSCALE, hi = Math.max(dA, dB), lo = Math.min(dA, dB);
+        return { label: emb.label, high: hi, low: lo, total: hi + lo, highCount, lowCount, totalCount,
+          nullMean: 0, nullLow: 0, nullHigh: 0 };
+      }
       const scale = percentMode ? 100 / totalCount : 1;
       const [nullLowCount, nullHighCount] = binomial95(totalCount);
       return { label: emb.label, high: highCount * scale, low: lowCount * scale,
@@ -605,7 +618,7 @@
     // so BAR_X0 = 0.6 leaves the same 0.26 gap at both ends of the axis.
     const BAR_X0 = 0.6;
     const x = rows.map((_, i) => i + BAR_X0), baseline = useLog ? 1 : 0, shapes = [], traces = [];
-    const stacked = !xsBarAdjacent.checked;
+    const stacked = !density && !xsBarAdjacent.checked;     // density is always adjacent side-by-side
     rows.forEach((r, i) => {
       const cx = i + BAR_X0;
       if (!stacked) {
@@ -623,21 +636,21 @@
             y0: r.high, y1: r.total, fillcolor: xsBarLowColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } }
         );
       }
-      if (xsBarNull.checked) shapes.push({ type: "rect", xref: "x", yref: "y", layer: "above",
+      if (!density && xsBarNull.checked) shapes.push({ type: "rect", xref: "x", yref: "y", layer: "above",
         x0: cx - 0.34, x1: cx + 0.34, y0: baseline, y1: r.nullMean,
         fillcolor: hexAlpha(xsBarNullColor.value, 0.30), line: { color: "#5f666d", width: 0.55 } });
     });
     if (xsBarLegend.checked) {
       traces.push(
-        { type: "scatter", mode: "markers", name: "Higher-count half", legendrank: 10, x: [null], y: [null],
+        { type: "scatter", mode: "markers", name: density ? "Higher-density half" : "Higher-count half", legendrank: 10, x: [null], y: [null],
           marker: { symbol: "square", size: 11, color: xsBarHighColor.value }, hoverinfo: "skip" },
-        { type: "scatter", mode: "markers", name: "Lower-count half", legendrank: 20, x: [null], y: [null],
+        { type: "scatter", mode: "markers", name: density ? "Lower-density half" : "Lower-count half", legendrank: 20, x: [null], y: [null],
           marker: { symbol: "square", size: 11, color: xsBarLowColor.value }, hoverinfo: "skip" }
       );
-      if (xsBarNull.checked) traces.push({ type: "scatter", mode: "markers", name: percentMode ? "50% null expectation" : "Null mean", legendrank: 30,
+      if (!density && xsBarNull.checked) traces.push({ type: "scatter", mode: "markers", name: percentMode ? "50% null expectation" : "Null mean", legendrank: 30,
         x: [null], y: [null], marker: { symbol: "square", size: 11, color: hexAlpha(xsBarNullColor.value, 0.6) }, hoverinfo: "skip" });
     }
-    if (xsBarInterval.checked) traces.push({ type: "scatter", mode: "markers", name: "95% null interval", x,
+    if (!density && xsBarInterval.checked) traces.push({ type: "scatter", mode: "markers", name: "95% null interval", x,
       legendrank: 40,
       y: rows.map((r) => r.nullMean), marker: { size: 1, color: "rgba(0,0,0,0)" },
       error_y: { type: "data", symmetric: false, array: rows.map((r) => r.nullHigh - r.nullMean),
@@ -648,14 +661,17 @@
       customdata: rows.map((r) => [r.label, r.high, r.low, r.total, r.nullMean, r.nullLow, r.nullHigh,
         r.highCount, r.lowCount, r.totalCount]),
       marker: { size: 24, color: "rgba(0,0,0,0)" },
-      hovertemplate: percentMode
-        ? "%{customdata[0]}<br>higher half %{customdata[1]:.1f}% (%{customdata[7]} transcripts)" +
-          "<br>lower half %{customdata[2]:.1f}% (%{customdata[8]} transcripts)" +
-          "<br>95% null interval %{customdata[5]:.1f}%–%{customdata[6]:.1f}%<extra></extra>"
-        : "%{customdata[0]}<br>higher half %{customdata[1]}<br>lower half %{customdata[2]}" +
-          "<br>total %{customdata[3]}<br>null %{customdata[4]:.1f} (%{customdata[5]}–%{customdata[6]})<extra></extra>" });
-    xsBarTitle.textContent = percentMode ? "Per-side percentage" : "Per-side counts";
-    xsBarSub.textContent = `· ${g} · ${rows.length} zygotes`;
+      hovertemplate: density
+        ? "%{customdata[0]}<br>higher-density half %{customdata[1]:.1f}<br>lower-density half %{customdata[2]:.1f}" +
+          " ×10⁻⁴/µm³<br>counts %{customdata[7]} / %{customdata[8]}<extra></extra>"
+        : percentMode
+          ? "%{customdata[0]}<br>higher half %{customdata[1]:.1f}% (%{customdata[7]} transcripts)" +
+            "<br>lower half %{customdata[2]:.1f}% (%{customdata[8]} transcripts)" +
+            "<br>95% null interval %{customdata[5]:.1f}%–%{customdata[6]:.1f}%<extra></extra>"
+          : "%{customdata[0]}<br>higher half %{customdata[1]}<br>lower half %{customdata[2]}" +
+            "<br>total %{customdata[3]}<br>null %{customdata[4]:.1f} (%{customdata[5]}–%{customdata[6]})<extra></extra>" });
+    xsBarTitle.textContent = density ? "Per-side density" : percentMode ? "Per-side percentage" : "Per-side counts";
+    xsBarSub.textContent = `· ${g} · ${rows.length} zygotes${density ? " · count ÷ side volume" : ""}`;
     const maxY = percentMode ? 100 : Math.max(...rows.map((r) => stacked
       ? Math.max(r.total, r.nullHigh)
       : Math.max(r.high, r.low, r.nullHigh))) * 1.18;
@@ -665,7 +681,7 @@
       legend: { orientation: "h", x: 0, y: 1.02, xanchor: "left", yanchor: "bottom", font: { size: 9 } },
       xaxis: { fixedrange: false, tickmode: "array", tickvals: x, ticktext: rows.map((r) => r.label),
         range: [0, rows.length - 1 + 2 * BAR_X0], tickangle: -48, tickfont: { size: 8 }, automargin: true },
-      yaxis: { title: { text: percentMode ? `${g} share of zygote transcripts (%)` : `${g} transcript count`, font: { size: 10 } }, tickfont: { size: 9 },
+      yaxis: { title: { text: density ? `${g} density (×10⁻⁴ per µm³)` : percentMode ? `${g} share of zygote transcripts (%)` : `${g} transcript count`, font: { size: 10 } }, tickfont: { size: 9 },
                type: useLog ? "log" : "linear", range: useLog ? [0, Math.log10(maxY)] : [0, maxY],
                dtick: useLog ? 1 : undefined, ticksuffix: percentMode ? "%" : "",
                gridcolor: xsBarGrid.checked ? "#e2e5e8" : "rgba(0,0,0,0)", fixedrange: false },
@@ -680,10 +696,14 @@
   // plane and call one side γ at random. Concordance is then scored against that null to get a
   // p-value. Row ORDER always comes from the real anchor — re-sorting the control by its own
   // γ-fraction would manufacture a gradient out of pure noise and make the null look structured.
-  function gmCall(a, total, gammaSideA) {
+  // γ if the gene sits higher on the anchor's γ half — by raw count, or by DENSITY (count ÷ side
+  // volume) when `density` + the per-side volumes (volA/volB) are supplied.
+  function gmCall(a, total, gammaSideA, volA, volB, density) {
     if (a == null || !total) return null;           // gene absent in this zygote
-    const gammaCount = gammaSideA ? a : total - a, twice = gammaCount * 2;
-    return twice > total ? "G" : (twice < total ? "M" : "T");
+    const b = total - a;
+    const vA = density ? a / volA : a, vB = density ? b / volB : b;
+    const gv = gammaSideA ? vA : vB, ov = gammaSideA ? vB : vA;
+    return gv > ov ? "G" : (gv < ov ? "M" : "T");
   }
   function gmNPlanes(cols) {
     for (const e of cols) { const gp = e.gp; if (gp) { for (const k in gp) return gp[k].length; } }
@@ -700,9 +720,9 @@
   }
   // per zygote, per plane: how many genes sit on side A and how many are decided (non-tie).
   // The anchor's own row is excluded — it is γ by construction and would inflate concordance.
-  function gmPlaneStats(cols, anchor) {
+  function gmPlaneStats(cols, anchor, density) {
     return cols.map((e) => {
-      const gp = e.gp || {}, g = e.g;
+      const gp = e.gp || {}, g = e.g, vp = e.vp, vt = e.vt, canD = !!(density && vp && vt);
       let nP = 0; for (const k in gp) { nP = gp[k].length; break; }
       const cA = new Int32Array(nP), nD = new Int32Array(nP);
       for (const name in gp) {
@@ -710,8 +730,10 @@
         const total = g[name] && g[name][0]; if (!total) continue;
         const arr = gp[name];
         for (let p = 0; p < nP; p++) {
-          const twice = arr[p] * 2;
-          if (twice > total) { cA[p]++; nD[p]++; } else if (twice < total) nD[p]++;
+          const a = arr[p], b = total - a; let onA;
+          if (canD) { const dA = a / vp[p], dB = b / Math.max(vt - vp[p], 1); onA = dA > dB ? 1 : (dA < dB ? -1 : 0); }
+          else { const twice = a * 2; onA = twice > total ? 1 : (twice < total ? -1 : 0); }
+          if (onA > 0) { cA[p]++; nD[p]++; } else if (onA < 0) nD[p]++;
         }
       }
       return { cA, nD, nP };
@@ -730,8 +752,8 @@
   // Sign-flip / random-plane permutation test. Cells within a zygote are NOT independent (one
   // γ side is chosen per zygote), so the null must randomise per zygote — a naive per-cell
   // binomial would wildly overstate significance.
-  function gmNullTest(cols, anchor, realPlanes, realSides, N) {
-    return gmNullTestFrom(gmPlaneStats(cols, anchor), realPlanes, realSides, N);
+  function gmNullTest(cols, anchor, realPlanes, realSides, N, density) {
+    return gmNullTestFrom(gmPlaneStats(cols, anchor, density), realPlanes, realSides, N);
   }
   function gmNullTestFrom(stats, realPlanes, realSides, N) {
     const nP = stats.length ? stats[0].nP : 0;
@@ -758,9 +780,16 @@
     const isNull = state.gmAnchor === "null";
     if (!cols.length) return { anchor: A, ki, isNull, cols: [], rows: [], stats: null, hasGp: false };
     const hasGp = gmNPlanes(cols) > 0;
-    // real anchor: each zygote's best plane + the side the anchor is enriched on
+    const density = !!(state.gmDensity && cols[0].vp && cols[0].vt);   // needs per-side volumes
+    const volAt = (e, p) => (e.vp ? e.vp[p] : 1);
+    const volBt = (e, p) => (e.vp ? Math.max(e.vt - e.vp[p], 1) : 1);
+    // real anchor: each zygote's best plane + the side the anchor is enriched on (count or density)
     const realPlanes = cols.map((e) => e.best[ki]);
-    const realSides = cols.map((e) => { const r = e.g[A]; return r[1 + ki] * 2 >= r[0]; });
+    const realSides = cols.map((e, i) => {
+      const r = e.g[A], a = r[1 + ki], b = r[0] - a, p = realPlanes[i];
+      const vA = density ? a / volAt(e, p) : a, vB = density ? b / volBt(e, p) : b;
+      return vA >= vB;
+    });
     const useNull = isNull && hasGp;
     const draw = useNull ? gmEnsureDraw(cols) : null;
     const planes = useNull ? draw.map((d) => d.p) : realPlanes;
@@ -777,7 +806,8 @@
     for (const g of geneSet) {
       let nG = 0, n = 0;
       cols.forEach((e, i) => {
-        const c = gmCall(e.g[g] ? e.g[g][1 + ki] : null, totalOf(e, g), realSides[i]);
+        const p = realPlanes[i];
+        const c = gmCall(e.g[g] ? e.g[g][1 + ki] : null, totalOf(e, g), realSides[i], volAt(e, p), volBt(e, p), density);
         if (c === "G") { nG++; n++; } else if (c === "M") n++;
       });
       realFrac[g] = n ? nG / n : 0;
@@ -785,14 +815,14 @@
     const rowNames = [A, ...[...geneSet].filter((g) => g !== A)
       .sort((x, y) => (realFrac[y] - realFrac[x]) || x.localeCompare(y))];
     const rows = rowNames.map((g) => {
-      const cells = cols.map((e, i) => gmCall(aOf(e, i, g), totalOf(e, g), sides[i]));
+      const cells = cols.map((e, i) => gmCall(aOf(e, i, g), totalOf(e, g), sides[i], volAt(e, planes[i]), volBt(e, planes[i]), density));
       const present = cells.filter((c) => c !== null);
       const nG = present.filter((c) => c === "G").length;
       return { gene: g, cells, cov: present.length,
                gammaFrac: present.length ? nG / present.length : 0, realFrac: realFrac[g] };
     });
-    return { anchor: A, ki, isNull, hasGp, cols, rows,
-             stats: gmNullTest(cols, A, realPlanes, realSides, 2000) };
+    return { anchor: A, ki, isNull, hasGp, density, cols, rows,
+             stats: gmNullTest(cols, A, realPlanes, realSides, 2000, density) };
   }
   // NOTE: injected via innerHTML, so the "<" must be escaped.
   function gmFmtP(p) { return p < 0.001 ? "&lt; 0.001" : "= " + p.toFixed(3); }
@@ -817,9 +847,9 @@
         ? `<b>Negative control</b> — no anchor gene: every zygote uses a <b>random plane</b> and a ` +
           `<b>randomly chosen γ side</b>. Rows keep the real anchor's order, so real structure would ` +
           `still line up here; noise will not. Hit <b>Re-roll</b> for another draw.`
-        : `Each zygote is split at its <b>${BESTKEY_LABEL[state.crossKey]}</b> plane; the half with more ` +
-          `<b>${A}</b> is <b>γ</b>. Every gene is then <b>γ</b> if it is also enriched on that half, ` +
-          `<b>μ</b> if it flips to the other half.`;
+        : `Each zygote is split at its <b>${BESTKEY_LABEL[state.crossKey]}</b> plane; the half with the higher ` +
+          `<b>${A}</b> ${m.density ? "<b>density</b> (count ÷ side volume)" : "count"} is <b>γ</b>. Every gene is then ` +
+          `<b>γ</b> if it is also higher on that half, <b>μ</b> if it flips.`;
     if (xsGmStats) {
       const st = m.stats;
       xsGmStats.innerHTML = st
@@ -910,24 +940,30 @@
     const sp = state.spermData;
     if (!sp) { xsSp.innerHTML = `<div class="xs-gm-empty">Loading sperm data…</div>`; return; }
     const mode = state.crossKey;
+    const density = xsSpDensity ? xsSpDensity.checked : state.spDensity;
     const cross = curAGG(); const known = cross ? new Set(cross.embryos.map((e) => e.id)) : null;
     // only zygotes that have sperm AND are in the current (real/circularized) cross set
     const rows = sp.embryos.filter((r) => r.modes && r.modes[mode] && (!known || known.has(r.id)));
     if (!rows.length) { xsSp.innerHTML = `<div class="xs-gm-empty">No zygotes with a located sperm.</div>`; xsSpSub.textContent = ""; return; }
-    const om = rows.filter((r) => r.modes[mode].mark === "omega").length;
-    const sg = rows.length - om;
+    // Ω (omega) = sperm on the side with GREATER transcript density (or count); Σ (sigma) = lesser
+    const vSperm = (m) => (density ? m.cntSperm / (m.volSperm || 1) : m.cntSperm);
+    const vOther = (m) => (density ? m.cntOther / (m.volOther || 1) : m.cntOther);
+    const isOmega = (m) => vSperm(m) > vOther(m);
+    const om = rows.filter((r) => isOmega(r.modes[mode])).length, sg = rows.length - om;
     const p = binomTwoSided(Math.min(om, sg), rows.length);
-    xsSpSub.textContent = `· ${BESTKEY_LABEL[mode]} plane · ${rows.length} zygotes with sperm`;
+    const unit = density ? "density" : "transcripts";
+    xsSpSub.textContent = `· ${BESTKEY_LABEL[mode]} plane · by ${density ? "density" : "count"} · ${rows.length} zygotes with sperm`;
     xsSpNote.innerHTML =
-      `Sperm on the <b style="color:#16a34a">greater-transcript</b> side (Ω) in <b>${om}</b> of ${rows.length}; ` +
+      `Sperm on the <b style="color:#16a34a">greater-${unit}</b> side (Ω) in <b>${om}</b> of ${rows.length}; ` +
       `on the <b style="color:#7c3aed">lesser</b> side (Σ) in <b>${sg}</b>. ` +
       `Binomial vs 50/50: <b>p ${p < 0.001 ? "< 0.001" : "= " + p.toFixed(3)}</b>.`;
     // grid: a row-label column + one column per zygote; top row = Ω/Σ marks, below = zygote labels
     xsSp.style.gridTemplateColumns = `minmax(74px,auto) repeat(${rows.length}, minmax(20px, 1fr))`;
     const cell = (r) => {
-      const m = r.modes[mode]; const cls = m.mark === "omega" ? "g-O" : "g-S"; const gl = m.mark === "omega" ? "Ω" : "Σ";
-      const frac = m.cntSperm + m.cntOther ? (100 * m.cntSperm / (m.cntSperm + m.cntOther)).toFixed(0) : "–";
-      return `<div class="xs-gm-cell ${cls}" title="${r.label}: sperm on the ${m.mark === "omega" ? "greater" : "lesser"} side — ${frac}% of transcripts on the sperm's side (plane ${m.plane})">${gl}</div>`;
+      const m = r.modes[mode], om1 = isOmega(m); const cls = om1 ? "g-O" : "g-S", gl = om1 ? "Ω" : "Σ";
+      const share = m.cntSperm + m.cntOther ? (100 * m.cntSperm / (m.cntSperm + m.cntOther)).toFixed(0) : "–";
+      const dS = (m.cntSperm / (m.volSperm || 1) * 1e4).toFixed(2), dO = (m.cntOther / (m.volOther || 1) * 1e4).toFixed(2);
+      return `<div class="xs-gm-cell ${cls}" title="${r.label}: sperm on the ${om1 ? "greater" : "lesser"}-${unit} side — ${share}% of transcripts on the sperm's side · density sperm ${dS} vs other ${dO} (×10⁻⁴/µm³, plane ${m.plane})">${gl}</div>`;
     };
     xsSp.innerHTML =
       `<div class="xs-gm-corner"></div>` +
@@ -1061,8 +1097,10 @@
     rz.addEventListener("pointerup", end); rz.addEventListener("pointercancel", end);
     // Cross-embryo criterion and publication-plot settings.
     const syncBarModeControls = () => {
-      xsBarLog.disabled = xsBarPercent.checked;
-      if (xsBarPercent.checked) xsBarLog.checked = false;
+      const dens = !!(xsBarDensity && xsBarDensity.checked);   // density → percent/adjacent don't apply
+      xsBarPercent.disabled = dens; xsBarAdjacent.disabled = dens;
+      xsBarLog.disabled = xsBarPercent.checked && !dens;
+      if (xsBarLog.disabled) xsBarLog.checked = false;
       renderBars();
     };
     syncBarModeControls();
@@ -1077,6 +1115,7 @@
       renderCurrentCrossSection();
     });
     xsBarPercent.addEventListener("change", syncBarModeControls);
+    if (xsBarDensity) xsBarDensity.addEventListener("change", syncBarModeControls);
     [xsBarLog, xsBarAdjacent, xsBarLegend, xsBarNull, xsBarInterval, xsBarGrid, xsBarHighColor, xsBarLowColor, xsBarNullColor]
       .forEach((el) => el.addEventListener("change", renderBars));
     xsCrossDownload.addEventListener("click", () => downloadPlot(xsOutlines, "cross_section", xsCrossFormat, xsCrossScale, 1800, 1400));
@@ -1101,6 +1140,8 @@
       }).observe(box);
     });
     if (xsSpDownload) xsSpDownload.addEventListener("click", downloadSpermCSV);
+    if (xsSpDensity) xsSpDensity.addEventListener("change", () => { state.spDensity = xsSpDensity.checked; renderSperm(); });
+    if (xsGmDensity) xsGmDensity.addEventListener("change", () => { state.gmDensity = xsGmDensity.checked; renderGammaMu(); });
   }
   function downloadSpermCSV() {
     const sp = state.spermData; if (!sp) return;

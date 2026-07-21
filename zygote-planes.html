@@ -119,6 +119,9 @@
             <div class="mini-title">Sperm concordance <span class="mini-sub" id="xs-sp-sub"></span></div>
             <button class="plot-download" id="xs-sp-download" type="button" title="Download this grid as CSV" aria-label="Download grid as CSV">↓</button>
           </div>
+          <div class="xs-otoggles">
+            <label class="xs-tg"><input type="checkbox" id="xs-sp-density" checked><span>density (count ÷ side volume)</span></label>
+          </div>
           <div class="xs-gm-note" id="xs-sp-note"></div>
           <div class="xs-gm-legend" aria-hidden="true">
             <span class="xs-gm-key"><i class="gm-sw g-O">Ω</i> sperm on the side with MORE transcripts (omega)</span>
@@ -162,6 +165,7 @@
             <button class="plot-download" id="xs-bar-download" type="button" title="Download high-resolution per-side chart" aria-label="Download high-resolution per-side chart">↓</button>
           </div>
           <div class="xs-otoggles">
+            <label class="xs-tg" title="Plot each side's transcript DENSITY (count ÷ that side's volume) as adjacent bars — comparable even when the plane splits the zygote unevenly"><input type="checkbox" id="xs-bar-density"><span>density (÷ side volume)</span></label>
             <label class="xs-tg"><input type="checkbox" id="xs-bar-percent" checked><span>percent of zygote</span></label>
             <label class="xs-tg"><input type="checkbox" id="xs-bar-log"><span>log y axis</span></label>
             <label class="xs-tg"><input type="checkbox" id="xs-bar-adjacent"><span>side-by-side bars</span></label>
@@ -195,6 +199,7 @@
                 <option value="null">Random plane + side — negative control</option>
               </select></label>
             <button class="xs-gm-btn" id="xs-gm-reroll" type="button" title="Draw a new random negative control">Re-roll</button>
+            <label class="xs-tg" title="γ/μ by transcript DENSITY (count ÷ each side's volume) rather than raw count — comparable even when a plane splits the zygote into very uneven halves"><input type="checkbox" id="xs-gm-density" checked><span>density</span></label>
             <span class="xs-gm-stats" id="xs-gm-stats"></span>
           </div>
           <div class="xs-gm-note" id="xs-gm-note"></div>

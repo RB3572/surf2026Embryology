@@ -145,6 +145,34 @@ window.VCore = (function () {
 
   // Deep-link to the partner MERFISH atlas (merfish.rishib.com) for one embryo id, e.g.
   // "20260425_zygote_p2_2" -> https://merfish.rishib.com/?embryo=Zygote%2F20260425_zygote_p2_2.html
+  // Robust minimum distance between the two pronuclei, computed from the DISPLAYED mesh vertices
+  // (marching-cubes surfaces) rather than the raw label voxels — so the drawn line always TOUCHES
+  // both pronuclei. Returns { line:[a,b] in plot space, distUm } or null. Vert counts are small
+  // (≤~1250 per pronucleus) so the exact closest-vertex-pair brute force is fast.
+  function pronMinDist(scene) {
+    const pl = scene && scene.pron_labels;
+    if (!pl || pl.length < 2 || !scene.region_meshes) return null;
+    const ma = scene.region_meshes[String(pl[0])], mb = scene.region_meshes[String(pl[1])];
+    if (!ma || !mb || !ma.verts || !mb.verts || !ma.verts.length || !mb.verts.length) return null;
+    const va = ma.verts, vb = mb.verts;
+    let best = Infinity, ai = 0, bi = 0;
+    for (let i = 0; i < va.length; i += 3) {
+      const ax = va[i], ay = va[i + 1], az = va[i + 2];
+      for (let j = 0; j < vb.length; j += 3) {
+        const dx = ax - vb[j], dy = ay - vb[j + 1], dz = az - vb[j + 2];
+        const d = dx * dx + dy * dy + dz * dz;
+        if (d < best) { best = d; ai = i; bi = j; }
+      }
+    }
+    const a = [va[ai], va[ai + 1], va[ai + 2]], b = [vb[bi], vb[bi + 1], vb[bi + 2]];
+    const zs = scene.z_scale || 7;
+    // plot → µm: x,y × XY (0.15 µm/px); z is stored as frame·z_scale and 1 frame = 1 µm ⇒ µm = plot / z_scale
+    const um = (p) => [p[0] * XY, p[1] * XY, p[2] / zs];
+    const ua = um(a), ub = um(b);
+    const distUm = Math.round(Math.hypot(ua[0] - ub[0], ua[1] - ub[1], ua[2] - ub[2]) * 100) / 100;
+    return { line: [a, b], distUm };
+  }
+
   function atlasLink(id) {
     const stage = /oocyte/i.test(id) ? "Oocyte"
       : /zygote/i.test(id) ? "Zygote"
@@ -246,5 +274,5 @@ window.VCore = (function () {
   })();
 
   return { loadGz, buildTabs, markActiveTab, sceneLayout, plotConfig, bodyTraces,
-           wireWindow, XY, umToPlot, plotToUm, atlasLink, addWindowExtras };
+           wireWindow, XY, umToPlot, plotToUm, atlasLink, addWindowExtras, pronMinDist };
 })();

@@ -148,6 +148,7 @@
     try {
       const scene = await V.loadGz(`data/pronuclei/${id}.json.gz`);
       if (state.currentId !== id) return;
+      scene._md = V.pronMinDist(scene) || null;   // min-distance line from the DISPLAYED meshes (always touches)
       state.scene = scene;
       if (vcExtras) vcExtras.setAtlas(id);
       controlsEl.hidden = false; placeholder.hidden = true; drawer.hidden = false; rdrawer.hidden = false;
@@ -181,11 +182,12 @@
         pron ? `Pronucleus (seg ${lbl})` : `Segment ${lbl}`);
       if (t) traces.push(t);
     }
-    const [a, b] = s.line_plot;
-    traces.push({ type: "scatter3d", mode: "lines+markers", name: `min dist ${s.distance_um} µm`,
+    const md = s._md || { line: s.line_plot, distUm: s.distance_um };
+    const [a, b] = md.line;
+    traces.push({ type: "scatter3d", mode: "lines+markers", name: `min dist ${md.distUm} µm`,
       x: [a[0], b[0]], y: [a[1], b[1]], z: [a[2], b[2]],
       line: { color: LINE_C, width: 7 }, marker: { size: 4, color: LINE_C },
-      hovertemplate: `min distance ${s.distance_um} µm<extra></extra>`, legendrank: 100 });
+      hovertemplate: `min distance ${md.distUm} µm<extra></extra>`, legendrank: 100 });
     if (state.showDots) {
       const sel = gene(), g = geneHasDots(sel) ? sel : topEmbryoGene();
       const tx = g ? s.transcripts[g] : null;
@@ -205,7 +207,7 @@
     const s = state.scene;
     const gc = (state.genesAgg.embryos.find((e) => e.id === s.id) || { genes: {} }).genes[gene()];
     pnReadout.innerHTML =
-      `<div class="pn-big"><span>${s.distance_um}</span> µm <span class="pn-lbl">pronuclei distance</span></div>` +
+      `<div class="pn-big"><span>${(s._md ? s._md.distUm : s.distance_um)}</span> µm <span class="pn-lbl">pronuclei distance</span></div>` +
       `<div class="pn-big"><span>${s.total_transcripts.toLocaleString()}</span> <span class="pn-lbl">total transcripts</span></div>` +
       `<div class="pn-resid"><b>${gene()}</b> here: ${gc != null ? gc.toLocaleString() + " transcripts" : "not in this zygote's panel"}</div>` +
       `<div class="pn-resid">pronuclei auto-detected as segments <b>${s.pron_labels[0]}</b> &amp; <b>${s.pron_labels[1]}</b></div>`;

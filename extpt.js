@@ -171,6 +171,7 @@
       const path = meta.stage === "zygote" ? `data/pronuclei/${id}.json.gz` : `data/extpt/${id}.json.gz`;
       const scene = await V.loadGz(path);
       if (state.currentId !== id) return;
+      scene._md = V.pronMinDist(scene) || null;   // zygotes: min-distance line from the displayed meshes
       state.scene = scene;
       if (vcExtras) vcExtras.setAtlas(id);
       controlsEl.hidden = false; placeholder.hidden = true; drawer.hidden = false; rdrawer.hidden = false;
@@ -205,12 +206,13 @@
         pron ? `Pronucleus (seg ${lbl})` : `Segment ${lbl}`);
       if (t) traces.push(t);
     }
-    if (isZyg && s.line_plot) {
-      const [a, b] = s.line_plot;
-      traces.push({ type: "scatter3d", mode: "lines+markers", name: `min dist ${s.distance_um} µm`,
+    const md = s._md || (s.line_plot ? { line: s.line_plot, distUm: s.distance_um } : null);
+    if (isZyg && md) {
+      const [a, b] = md.line;
+      traces.push({ type: "scatter3d", mode: "lines+markers", name: `min dist ${md.distUm} µm`,
         x: [a[0], b[0]], y: [a[1], b[1]], z: [a[2], b[2]],
         line: { color: LINE_C, width: 7 }, marker: { size: 4, color: LINE_C },
-        hovertemplate: `min distance ${s.distance_um} µm<extra></extra>`, legendrank: 100 });
+        hovertemplate: `min distance ${md.distUm} µm<extra></extra>`, legendrank: 100 });
     }
     if (state.showDots) {
       const sel = gene(), g = geneHasDots(sel) ? sel : topEmbryoGene();
@@ -234,7 +236,7 @@
     const pt = ptOf(s.id);
     pnReadout.innerHTML =
       `<div class="pn-big"><span style="color:${STAGE_COLOR[meta.stage] || "#111"}">${STAGE_NAME[meta.stage] || "—"}</span> <span class="pn-lbl">stage</span></div>` +
-      (isZyg ? `<div class="pn-big"><span>${s.distance_um}</span> µm <span class="pn-lbl">pronuclei distance</span></div>` : "") +
+      (isZyg ? `<div class="pn-big"><span>${(s._md ? s._md.distUm : s.distance_um)}</span> µm <span class="pn-lbl">pronuclei distance</span></div>` : "") +
       `<div class="pn-big"><span>${(s.total_transcripts || 0).toLocaleString()}</span> <span class="pn-lbl">total transcripts</span></div>` +
       `<div class="pn-resid">pseudotime here: <b>${pt != null ? pt.toFixed(2) : "–"}</b> <span class="pn-lbl">(0–3 across the three stages)</span></div>` +
       `<div class="pn-resid"><b>${gene()}</b> here: ${gc != null ? gc.toLocaleString() + " transcripts" : "not in this embryo's panel"}</div>` +

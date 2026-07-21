@@ -19,11 +19,32 @@
         : `<tr><td class="ad-empty" colspan="${head.length}">no data yet</td></tr>`}</tbody>`;
   };
 
+  let filterUser = "";   // "" = all users; otherwise a single login name
+
+  function populateFilter(users) {
+    const sel = $("#ad-user-filter");
+    const names = users.map((u) => u.usr).filter(Boolean);
+    if (filterUser && !names.includes(filterUser)) names.unshift(filterUser);   // keep an out-of-range choice
+    sel.innerHTML = `<option value="">All users</option>` +
+      names.map((n) => `<option value="${esc(n)}"${n === filterUser ? " selected" : ""}>${esc(n)}</option>`).join("");
+    sel.value = filterUser;
+  }
+  function renderFilterBar() {
+    const bar = $("#ad-filterbar");
+    if (!filterUser) { bar.hidden = true; bar.innerHTML = ""; return; }
+    bar.hidden = false;
+    bar.innerHTML = `<span>Filtered to <b>${esc(filterUser)}</b> — projects, genes, downloads and activity below are for this login only.</span>` +
+      `<button type="button" class="ad-clear" id="ad-clear">Show all users ✕</button>`;
+    $("#ad-clear").addEventListener("click", () => setFilter(""));
+  }
+  function setFilter(u) { if (u === filterUser) return; filterUser = u; $("#ad-user-filter").value = u; load(); }
+
   async function load() {
     $("#ad-status").textContent = "loading…";
     let d;
     try {
-      const r = await fetch("/api/admin", { credentials: "same-origin", cache: "no-store" });
+      const url = "/api/admin" + (filterUser ? "?user=" + encodeURIComponent(filterUser) : "");
+      const r = await fetch(url, { credentials: "same-origin", cache: "no-store" });
       d = await r.json();
     } catch (e) { $("#ad-status").textContent = "request failed: " + e.message; return; }
 
@@ -38,10 +59,13 @@
       $("#ad-status").textContent = "connected · live";
     }
 
+    populateFilter(d.users || []);
+    renderFilterBar();
+
     const t = d.totals || {};
     $("#ad-kpis").innerHTML = [
-      ["People", (d.users || []).length],
-      ["Total events", t.events || 0],
+      ["People", filterUser ? 1 : (d.users || []).length],
+      [filterUser ? "Their events" : "Total events", t.events || 0],
       ["Downloads", (d.downloads || []).length],
       ["Genes tracked", (d.genes || []).length],
     ].map(([k, v]) => `<div class="ad-kpi"><div class="ad-kpi-n">${esc(v)}</div><div class="ad-kpi-k">${esc(k)}</div></div>`).join("");
@@ -50,6 +74,11 @@
       (d.users || []).map((u) => [
         `<b>${esc(u.usr || "—")}</b>`, u.views || 0, u.downloads || 0, u.projects || 0,
         u.active_days || 0, u.events || 0, `${esc(fmtTs(u.last_seen))} <span class="ad-dim">(${ago(u.last_seen)})</span>`]));
+    $("#ad-users").classList.add("ad-clickable");   // click a person to filter to them
+    $("#ad-users").querySelectorAll("tbody tr").forEach((tr) => {
+      const n = (tr.querySelector(".ad-first") || {}).textContent;
+      tr.classList.toggle("ad-active", !!filterUser && n === filterUser);
+    });
 
     table($("#ad-projects"), ["Project", "Views", "Events", "People"],
       (d.projects || []).map((p) => [esc(p.project || "—"), p.views || 0, p.events || 0, p.users || 0]));
@@ -70,6 +99,12 @@
       }));
   }
 
+  $("#ad-user-filter").addEventListener("change", (e) => setFilter(e.target.value));
+  $("#ad-users").addEventListener("click", (e) => {
+    const tr = e.target.closest("tbody tr"); if (!tr) return;
+    const name = (tr.querySelector(".ad-first") || {}).textContent;
+    if (name && name !== "—") setFilter(name === filterUser ? "" : name);   // click the active row again to clear
+  });
   $("#ad-refresh").addEventListener("click", load);
   load();
 })();

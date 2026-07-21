@@ -45,3 +45,20 @@ body { background: var(--bg); color: var(--ink);
 .ad-act-view { color: #1d4ed8; background: #eaf0ff; }
 .ad-act-gene { color: #7c3aed; background: #f3ecff; }
 .ad-act-download { color: #b45309; background: #fff2df; }
+
+/* user filter (header dropdown + banner + clickable people rows) */
+.ad-filter { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); }
+.ad-filter select { font: inherit; font-size: 13px; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 8px; padding: 5px 26px 5px 9px; cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a91a2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center; }
+.ad-filter select:focus { outline: none; border-color: var(--ink-2); }
+.ad-filterbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 13px;
+  background: #eef6ff; border: 1px solid #cfe2ff; color: #1c3d5a; border-radius: 10px; padding: 9px 14px; }
+.ad-filterbar b { color: #0b2540; }
+.ad-clear { margin-left: auto; font: inherit; font-weight: 600; font-size: 12px; color: #1c3d5a;
+  background: #fff; border: 1px solid #cfe2ff; border-radius: 8px; padding: 5px 11px; cursor: pointer; }
+.ad-clear:hover { border-color: #1c3d5a; }
+.ad-table.ad-clickable tbody tr { cursor: pointer; }
+.ad-table.ad-clickable tbody tr:hover { background: var(--bg); }
+.ad-table.ad-clickable tbody tr.ad-active { background: #eef6ff; box-shadow: inset 3px 0 0 #2563eb; }

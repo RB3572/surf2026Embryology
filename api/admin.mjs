@@ -34,6 +34,10 @@ export default async function handler(req, res) {
       res.status(200).json({ ok: true, empty: true, users: [], projects: [], recent: [], genes: [], downloads: [] });
       return;
     }
+    // Optional ?user=<login name> filter. The `users` overview is ALWAYS the full list (it feeds the
+    // picker); everything else is scoped to the chosen user. `(${u}::text IS NULL OR usr = ${u})`
+    // matches everyone when no filter is set. `u` is parameterized, so it is injection-safe.
+    const u = (req.query && typeof req.query.user === "string" && req.query.user.trim()) || null;
     const [users, projects, recent, genes, downloads, totals] = await Promise.all([
       sql`SELECT usr,
             COUNT(*)::int AS events,
@@ -47,15 +51,20 @@ export default async function handler(req, res) {
             COUNT(*)::int AS events,
             COUNT(*) FILTER (WHERE action='view')::int AS views,
             COUNT(DISTINCT usr)::int AS users
-          FROM events GROUP BY project ORDER BY events DESC`,
-      sql`SELECT ts, usr, project, action, detail, path FROM events ORDER BY ts DESC LIMIT 800`,
+          FROM events WHERE (${u}::text IS NULL OR usr = ${u})
+          GROUP BY project ORDER BY events DESC`,
+      sql`SELECT ts, usr, project, action, detail, path FROM events
+          WHERE (${u}::text IS NULL OR usr = ${u}) ORDER BY ts DESC LIMIT 800`,
       sql`SELECT detail->>'gene' AS gene, COUNT(*)::int AS n, COUNT(DISTINCT usr)::int AS users
           FROM events WHERE action='gene' AND detail->>'gene' IS NOT NULL AND detail->>'gene' <> ''
+            AND (${u}::text IS NULL OR usr = ${u})
           GROUP BY gene ORDER BY n DESC LIMIT 120`,
-      sql`SELECT ts, usr, project, detail FROM events WHERE action='download' ORDER BY ts DESC LIMIT 200`,
-      sql`SELECT COUNT(*)::int AS events, COUNT(DISTINCT usr)::int AS users FROM events`,
+      sql`SELECT ts, usr, project, detail FROM events
+          WHERE action='download' AND (${u}::text IS NULL OR usr = ${u}) ORDER BY ts DESC LIMIT 200`,
+      sql`SELECT COUNT(*)::int AS events, COUNT(DISTINCT usr)::int AS users
+          FROM events WHERE (${u}::text IS NULL OR usr = ${u})`,
     ]);
-    res.status(200).json({ ok: true, totals: totals[0], users, projects, recent, genes, downloads });
+    res.status(200).json({ ok: true, filterUser: u, totals: totals[0], users, projects, recent, genes, downloads });
   } catch (e) {
     res.status(200).json({ ok: false, err: String((e && e.message) || e).slice(0, 300),
       users: [], projects: [], recent: [], genes: [], downloads: [] });

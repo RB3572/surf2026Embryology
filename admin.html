@@ -11,12 +11,16 @@
     <a class="ad-home" href="index.html" title="All projects" aria-label="All projects">‹</a>
     <div class="ad-brand"><b>Admin</b> · Usage analytics</div>
     <div class="ad-actions">
+      <label class="ad-filter">User
+        <select id="ad-user-filter" title="Show analytics for a single login only"><option value="">All users</option></select>
+      </label>
       <span class="ad-status" id="ad-status">loading…</span>
       <button class="ad-btn" id="ad-refresh" type="button">Refresh</button>
     </div>
   </header>
 
   <main class="ad-main" id="ad-main">
+    <div class="ad-filterbar" id="ad-filterbar" hidden></div>
     <section class="ad-kpis" id="ad-kpis"></section>
 
     <section class="ad-block">

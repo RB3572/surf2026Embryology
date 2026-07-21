@@ -38,8 +38,9 @@
         <div class="pn-readout" id="pn-readout"></div>
         <div class="pn-note">One pseudotime axis spans three stages — <b>zygote → early-2-cell →
           late-2-cell</b>. Zygotes are ordered by the pronuclei-distance clock; 2-cell embryos have
-          no pronuclei, so within their stage they are ordered by total transcript count (a maturation
-          proxy). For zygotes the 3-D view shows the two pronuclei + min-distance line.</div>
+          no pronuclei, so within their stage they are ordered by the <b>2-cell order</b> menu below
+          (total transcripts, or a ZGA marker gene). For zygotes the 3-D view shows the two pronuclei
+          + min-distance line.</div>
         <div class="pn-legend">
           <span class="seg-chip"><span class="seg-dot" style="background:#0891b2"></span>Zygote</span>
           <span class="seg-chip"><span class="seg-dot" style="background:#7c3aed"></span>Early 2-cell</span>
@@ -133,6 +134,11 @@
           <select id="norm-sel" title="Raw transcript count, or normalized by the embryo's total transcripts (a fraction — controls for embryo-to-embryo size differences across stages).">
             <option value="count">Count</option>
             <option value="total">÷ total count (fraction)</option>
+          </select>
+        </label>
+        <label class="pn-reg-label">2-cell order
+          <select id="subclock-sel" title="How to order the early- and late-2-cell embryos along pseudotime (they have no pronuclei clock). 'Total transcripts' is a size proxy; a ZGA marker gene orders them by that gene's expression (more = later). Any gene can be chosen from 'All genes'.">
+            <option value="total">Total transcripts</option>
           </select>
         </label>
         <label class="pn-pt-toggle" title="Swap the x and y axes on every graph below (the fit is unchanged — only the view is transposed).">

@@ -34,7 +34,10 @@
   const scatterPlot = $("#scatter-plot");
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
   const rankNEl = $("#rank-n"), rankPosEl = $("#rank-pos"), rankNegEl = $("#rank-neg");
-  const normSel = $("#norm-sel"), flipToggle = $("#flip-toggle");
+  const normSel = $("#norm-sel"), flipToggle = $("#flip-toggle"), subclockSel = $("#subclock-sel");
+  // ZGA marker genes that RISE after ZGA (mean 2-cell ≫ zygote) with good 2-cell coverage — data-derived
+  // presets for ordering the 2-cell embryos along pseudotime.
+  const ZGA_PRESETS = ["MuERV-L", "Zscan4a", "Zfp352", "Obox8", "Kdm4dl", "Mt1"];
   const setAdd = $("#set-add"), setChipsEl = $("#set-chips"), setPresetsEl = $("#set-presets"),
         setRequireAllEl = $("#set-requireall"), setClearEl = $("#set-clear"),
         setScatter = $("#set-scatter"), setFit = $("#set-fit");
@@ -44,7 +47,7 @@
                   currentId: null, scene: null, fit: null, drawerOpen: false, showDots: false,
                   regType: "linear", dotSize: 1.5, pseudotime: false,
                   region: "all", norm: "count", flip: false, segData: null,
-                  geneSet: [], setRequireAll: false, graphTab: "gene" };
+                  geneSet: [], setRequireAll: false, graphTab: "gene", subClock: "total" };
   const PLOT_OF = { gene: geneScatter, total: scatterPlot, set: setScatter };
   const shown = (el) => !!(el && el.offsetParent);   // in the active (non-hidden) panel & laid out
   let vcExtras = null;   // dot-size + atlas-link row (VCore.addWindowExtras)
@@ -77,13 +80,15 @@
       // normalization (count / ÷total) + flip
       normSel.addEventListener("change", () => { state.norm = normSel.value; renderAllScatters(); });
       flipToggle.addEventListener("change", () => { state.flip = flipToggle.checked; renderAllScatters(); });
+      // 2-cell sub-clock (total transcripts / a marker gene) → recomputes pseudotime everywhere
+      subclockSel.addEventListener("change", () => { state.subClock = subclockSel.value; refreshPseudotime(); });
       // gene-set config
       setAdd.addEventListener("change", () => { addSetGene(setAdd.value); setAdd.value = ""; });
       setPresetsEl.addEventListener("click", (e) => { const b = e.target.closest(".pn-set-preset"); if (b) addPreset(parseInt(b.dataset.i, 10)); });
       setChipsEl.addEventListener("click", (e) => { const x = e.target.closest(".pn-set-x"); if (x) removeSetGene(x.dataset.g); });
       setClearEl.addEventListener("click", clearSet);
       setRequireAllEl.addEventListener("change", () => { state.setRequireAll = setRequireAllEl.checked; renderSetScatter(); });
-      populateSetAdd(); renderSetPresets();
+      populateSetAdd(); renderSetPresets(); populateSubclock();
       (topCorr(10, +1)).forEach((g) => { if (!state.geneSet.includes(g)) state.geneSet.push(g); });   // seed with the top +correlated
       renderSetChips();
       updRegNote();
@@ -93,12 +98,19 @@
   // ---------- gene ↔ distance correlations ----------
   // Extended pseudotime: within each stage-block, order embryos and spread them across [idx+0.06,
   // idx+0.94]. Zygotes are ordered by the pronuclei-distance clock (larger gap = earlier); 2-cell
-  // embryos, which have no pronuclei clock, are ordered by total transcript count as a maturation
-  // proxy (a rank spread, so the total-vs-pt graph's within-stage slope is that ordering by design).
+  // embryos, which have no pronuclei clock, are ordered by the chosen sub-clock — total transcript
+  // count (a size/maturation proxy) or a marker gene's count (more = later; absent = earliest).
+  const subclockGene = () => (state.subClock === "total" ? null : state.subClock);
+  const subLabel = () => (state.subClock === "total" ? "total count" : state.subClock);
   function computePseudotime() {
+    const sg = subclockGene();
     const groups = { zygote: [], e2c: [], l2c: [] };
     state.points.forEach((p) => { if (groups[p.stage]) groups[p.stage].push(p); });
-    const key = (p) => (p.stage === "zygote" ? -(p.distance || 0) : (p.total || 0));  // ascending = earlier→later
+    const key = (p) => {                                  // ascending = earlier → later
+      if (p.stage === "zygote") return -(p.distance || 0);
+      if (!sg) return p.total || 0;
+      const e = state.gaById[p.id]; return (e && e.genes[sg]) || 0;   // marker-gene count (0 if absent)
+    };
     for (const st in groups) {
       const arr = groups[st].slice().sort((a, b) => key(a) - key(b));
       const n = arr.length;
@@ -107,6 +119,20 @@
         const e = state.gaById[p.id]; if (e) e.pt = p.pt;
       });
     }
+  }
+  // Recompute pt and everything that depends on it (the ranking correlates gene count vs pt).
+  function refreshPseudotime() {
+    computePseudotime(); computeGeneCorr(); renderRanks(); highlightRank(); renderActive();
+    if (state.scene) renderReadout(state.byId[state.currentId] || {});
+  }
+  function populateSubclock() {
+    const genes = allGenes().slice().sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base", numeric: true }));
+    const zga = ZGA_PRESETS.filter((g) => genes.includes(g));
+    subclockSel.innerHTML =
+      `<option value="total">Total transcripts</option>` +
+      `<optgroup label="ZGA markers (rise after ZGA)">` + zga.map((g) => `<option value="${g}">${g}</option>`).join("") + `</optgroup>` +
+      `<optgroup label="All genes">` + genes.map((g) => `<option value="${g}">${g}</option>`).join("") + `</optgroup>`;
+    subclockSel.value = state.subClock;
   }
   const ptOf = (id) => (state.byId[id] || {}).pt;
   function geneSeries(g) {
@@ -585,7 +611,7 @@
     });
   }
   function updRegNote() { const m = MODELS[state.regType] || MODELS.linear; if (regNoteEl) regNoteEl.textContent = m.bio; }
-  const EXT_X_TITLE = "extended pseudotime  ·  zygote → early-2C → late-2C  (larger = later)";
+  const EXT_X_TITLE = () => `extended pseudotime  ·  zygote → early-2C → late-2C  ·  2-cell by ${subLabel()}`;
   const RENDER = { gene: () => renderGeneScatter(), total: () => renderScatter(), set: () => renderSetScatter() };
   function renderActive() { (RENDER[state.graphTab] || RENDER.gene)(); }
   function renderAllScatters() { renderActive(); }        // only the visible graph needs (re)drawing
@@ -605,7 +631,7 @@
     const Y = pts.map((p) => normVal(totalIn(p.id), p.id));
     state.fit = fitModel(state.regType, X, Y);
     scatter(scatterPlot, X, Y, pts.map((p) => p.id), pts.map((p) => p.label), state.fit,
-      EXT_X_TITLE, yLabel("total transcripts"), yUnitNow(), state.currentId, "", yFmtNow());
+      EXT_X_TITLE(), yLabel("total transcripts"), yUnitNow(), state.currentId, "", yFmtNow());
     const f = state.fit;
     pnFit.innerHTML = `· <b>${f.n}</b> embryos · ${statsHtml(X, Y, f)}`;
   }
@@ -626,7 +652,7 @@
     }
     const model = fitModel(state.regType, xs, ys);
     scatter(geneScatter, xs, ys, ids, labels, model,
-      EXT_X_TITLE, yLabel(`${g} count`), yUnitNow(), state.currentId, "", yFmtNow());
+      EXT_X_TITLE(), yLabel(`${g} count`), yUnitNow(), state.currentId, "", yFmtNow());
     geneFit.innerHTML = `· <b>${g}</b> · n=${xs.length} · ${statsHtml(xs, ys, model)}`;
   }
   // Gene-set scatter: per embryo, SUM the set genes' counts vs extended pseudotime.
@@ -663,7 +689,7 @@
     }
     const model = fitModel(state.regType, s.xs, s.ys);
     scatter(setScatter, s.xs, s.ys, s.ids, s.labels, model,
-      EXT_X_TITLE, yLabel("Σ set count"), yUnitNow(), state.currentId, "", yFmtNow());
+      EXT_X_TITLE(), yLabel("Σ set count"), yUnitNow(), state.currentId, "", yFmtNow());
     setFit.innerHTML = `· <b>${nSet}</b> gene${nSet === 1 ? "" : "s"} · <b>${s.xs.length}</b> embryos · ${state.setRequireAll ? "all present" : "≥1 present"} · ${statsHtml(s.xs, s.ys, model)}`;
   }
 

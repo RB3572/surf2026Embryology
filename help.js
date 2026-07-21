@@ -203,11 +203,15 @@
         the zygote block, embryos are ordered by the <b>pronuclei-distance clock</b> (larger gap = earlier). Points are
         coloured by stage; the fitted model runs across all three.</p>
         <h3>Is there a clock for the 2-cell embryos?</h3>
-        <p>Not a geometric one — once the cell divides there are no pronuclei to measure. So within the early- and
-        late-2-cell blocks we order embryos by <b>total transcript count</b> as a maturation proxy (the transcriptome
-        grows as zygotic genome activation ramps up). Treat this as a <i>soft</i> ordering: the honest signal is the
-        <b>cross-stage trajectory</b> (how the three bands step up or down), not the fine ordering inside a 2-cell block.
-        Because that block is ordered by total count, the "All transcripts" graph is diagonal within it by construction.</p>
+        <p>Not a geometric one — once the cell divides there are no pronuclei to measure. So you choose how to order them
+        with the <b>2-cell order</b> menu:</p>
+        <ul><li><b>Total transcripts</b> (default) — a size / maturation proxy (the transcriptome grows as ZGA ramps up).</li>
+        <li><b>A ZGA marker gene</b> — order by a single gene's count (more = later). The presets are genes that rise
+        after ZGA in this data (MuERV-L, Zscan4a, Zfp352, Obox8, …); or pick any gene from <i>All genes</i>. An embryo that
+        lacks the marker in its panel sorts to the earliest end, so favour a well-covered marker.</li></ul>
+        <p>Either way this is a <i>soft</i> within-stage ordering — the honest signal is the <b>cross-stage trajectory</b>
+        (how the three bands step up or down). Whatever you order by, that quantity's own graph is diagonal within the
+        2-cell blocks by construction (e.g. ordering by total count makes the "All transcripts" graph diagonal there).</p>
         <h3>Same machinery as Pronuclei</h3>
         <p>Per-gene, all-transcripts and gene-set graphs; the full regression-model menu; complete statistics (R²,
         equation, Pearson r, and a null-tested p-value — see the <b>?</b> by the model menu); tabs, corner-resize and

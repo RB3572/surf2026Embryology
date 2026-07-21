@@ -128,7 +128,11 @@
         graph (the fit is unchanged).</li></ul>
         <h3>Gene sets</h3>
         <p>The bottom graph sums a <b>set</b> of genes' counts per zygote and plots that against distance. Build a set by hand or
-        from a <b>preset</b> (maternally-deposited, ZGA markers, pronucleus-associated, …); presets <i>add</i> to the current set.
+        from a <b>preset</b>; presets <i>add</i> to the current set. The two highlighted presets are <b>live</b> — <b>Top 10
+        ＋/−correlated</b> pull the current strongest positive / negative distance-correlates straight from the ranking. The rest
+        are curated: <b>functional clusters</b> whose members individually track distance and share a role (Notch/Wnt/Hedgehog,
+        Ras–MAPK, proteostasis, oocyte/pluripotency TFs, "rises toward first cleavage"), plus biology sets from the deck
+        (maternally-deposited, ZGA markers, pronucleus-associated, …).
         By default a zygote is plotted if it contains <i>any</i> set gene (missing genes are simply left out of its sum); tick
         <b>require all genes</b> for a strictly comparable sum over an identical gene list — best for a set drawn from one MERFISH
         panel, since the panels are disjoint.</p>

@@ -78,7 +78,7 @@
       setClearEl.addEventListener("click", clearSet);
       setRequireAllEl.addEventListener("change", () => { state.setRequireAll = setRequireAllEl.checked; renderSetScatter(); });
       populateSetAdd(); renderSetPresets(); applySegAvail();
-      PRESETS[1].genes.forEach((g) => { if (!state.geneSet.includes(g)) state.geneSet.push(g); });   // seed with ZGA markers
+      (topCorr(10, +1)).forEach((g) => { if (!state.geneSet.includes(g)) state.geneSet.push(g); });   // seed with the top +correlated
       renderSetChips();
       updRegNote();
     } catch (err) { showError("Failed to load: " + (err.message || err)); }
@@ -212,10 +212,25 @@
   // per-segment counts from pronuclei_segcounts.json.gz (full-res transcript→label assignment).
   const SEG_IDX = { seg1: 0, pron: 1, polar: 2 };
   const REGION_IN = { all: "", seg1: " · segment 1", pron: " · pronuclei", polar: " · polar bodies" };
-  // Preset gene sets. Each preset ADDS its genes to the current set (deduped). Biology-based sets
-  // (maternal / ZGA / pronucleus-associated) span multiple MERFISH panels, so use them with
-  // "require all genes" OFF; the panel-anchored sets from the deck work either way.
+  // Preset gene sets. Each preset ADDS its genes to the current set (deduped). Two kinds:
+  //  • static { genes } — a fixed list (biology from the deck / known markers).
+  //  • dynamic { fn }   — genes computed live from the distance-correlation ranking (state.geneCorr).
+  // Biology sets span multiple MERFISH panels (use "require all genes" OFF); the data-driven
+  // functional clusters below were chosen because their members individually correlate strongly with
+  // pronuclei distance AND share a function — their summed count often tracks distance too (r noted).
+  const topCorr = (n, sign) =>
+    [...state.geneCorr].sort((a, b) => (sign > 0 ? b.r - a.r : a.r - b.r)).slice(0, n).map((x) => x.gene);
   const PRESETS = [
+    // ── the distance-correlation extremes (live from the right-drawer ranking) ──
+    { name: "Top 10 ＋correlated", fn: () => topCorr(10, +1), title: "The 10 genes whose count most strongly RISES with pronuclei distance (highest Pearson r) — high early, deplete as the zygote ages" },
+    { name: "Top 10 −correlated", fn: () => topCorr(10, -1), title: "The 10 genes whose count most strongly FALLS with distance (most negative Pearson r) — rise as the pronuclei converge" },
+    // ── data-driven functional clusters (strong |r| members + a shared function) ──
+    { name: "Notch / Wnt / Hedgehog", genes: "Gli3 Nrarp Jag2 Fzd5 Notch3 Fzd4 Axin2 Fzd2 Notch2".split(" "), title: "Developmental signalling ligands/receptors — every member r ≈ +0.4…+0.9 with distance (early-high)" },
+    { name: "Ras–MAPK signaling", genes: "Rras2 Raf1 Shc3 Rras Dusp5".split(" "), title: "Ras/MAPK cascade — summed count r ≈ +0.46 with distance (early-high)" },
+    { name: "Proteostasis / proteasome", genes: "Psme3 Atg4d Psmb7 Psen1".split(" "), title: "Protein-degradation machinery — summed count r ≈ +0.69 with distance (early-high)" },
+    { name: "Oocyte & pluripotency TFs", genes: "Pknox2 Lhx8 Esrrb Lin28a".split(" "), title: "Oocyte / pluripotency transcription factors — co-panelled, summed count r ≈ +0.82 with distance (early-high)" },
+    { name: "Rises toward first cleavage", genes: "Cd7 Elf3 Camk2d Taf9b Tnfaip8 Nrp1".split(" "), title: "The strongest NEGATIVE cluster — summed count r ≈ −0.68 (accumulates as the pronuclei converge)" },
+    // ── biology / deck sets ──
     { name: "Maternally deposited", genes: "Nlrp5 Padi6 Nlrp2 Nlrp9c Zp2 Mos Fbxo43 Zar1 Tle6 Dnmt1".split(" ") },
     { name: "ZGA markers", genes: "Zscan4a Zscan4b Zscan4d Zscan4e Zscan4f Duxf1 Duxf3 Obox1 Obox2 Obox3 Obox8 MuERV-L L1td1 Eif1ad12 Kdm4dl Zfp352 Trib3 Gadd45a Pqbp1".split(" ") },
     { name: "Paternal-pronucleus assoc.", genes: "Brdt Brd4 Ddx43 Ddx20 Fthl17f Nanos2 Btbd18 Hspa2".split(" ") },
@@ -225,6 +240,7 @@
     { name: "TGF-β signaling", genes: "Rps13 Ifi35 Tcl1b4 Bambi Vdac2 Zfp622 Sec1 Duxf3 Fkbp1a Psen1 Vps4a Ldhb Mlxipl Tulp3 Lpar6 Smad2 Pin1 Srp72 Zscan4e Obox2".split(" ") },
     { name: "Developmental regulation", genes: "Pqbp1 Gstm5 Clock Cdc42 Mlxipl Psg26 Zscan4a Gdap1".split(" ") },
   ];
+  const presetGenes = (p) => (p.genes || (p.fn ? p.fn() : []));   // resolve static or dynamic list
   let allGenesCache = null;
   const allGenes = () => (allGenesCache ||= [...new Set(state.genesAgg.embryos.flatMap((e) => Object.keys(e.genes)))]);
   const geneInData = (g) => allGenes().includes(g);
@@ -275,8 +291,10 @@
     setAdd.value = "";
   }
   function renderSetPresets() {
-    setPresetsEl.innerHTML = PRESETS.map((p, i) =>
-      `<button type="button" class="pn-set-preset" data-i="${i}" title="Add ${p.genes.length} genes — ${p.genes.join(", ")}">${p.name} +${p.genes.length}</button>`).join("");
+    setPresetsEl.innerHTML = PRESETS.map((p, i) => {
+      const gl = presetGenes(p), tip = (p.title ? p.title + " · " : "") + `adds ${gl.length}: ${gl.join(", ")}`;
+      return `<button type="button" class="pn-set-preset${p.fn ? " pn-set-dyn" : ""}" data-i="${i}" title="${tip}">${p.name} +${gl.length}</button>`;
+    }).join("");
   }
   function renderSetChips() {
     if (!state.geneSet.length) { setChipsEl.innerHTML = `<span class="pn-set-empty">No genes yet — pick a preset above or add genes one at a time.</span>`; return; }
@@ -290,7 +308,7 @@
   function removeSetGene(g) { state.geneSet = state.geneSet.filter((x) => x !== g); renderSetChips(); renderSetScatter(); }
   function addPreset(i) {
     const p = PRESETS[i]; if (!p) return;
-    p.genes.forEach((g) => { if (!state.geneSet.includes(g)) state.geneSet.push(g); });
+    presetGenes(p).forEach((g) => { if (!state.geneSet.includes(g)) state.geneSet.push(g); });
     renderSetChips(); renderSetScatter();
   }
   function clearSet() { state.geneSet = []; renderSetChips(); renderSetScatter(); }

@@ -34,6 +34,8 @@
   const xsOutlines = $("#xs-outlines"), xsBars = $("#xs-bars");
   const xsGm = $("#xs-gm"), xsGmSub = $("#xs-gm-sub"), xsGmNote = $("#xs-gm-note"), xsGmDownload = $("#xs-gm-download");
   const xsGmAnchor = $("#xs-gm-anchor"), xsGmReroll = $("#xs-gm-reroll"), xsGmStats = $("#xs-gm-stats");
+  const xsTabsEl = $("#xs-tabs"), xsPanels = $("#xs-panels");
+  const xsSp = $("#xs-sp"), xsSpSub = $("#xs-sp-sub"), xsSpNote = $("#xs-sp-note"), xsSpDownload = $("#xs-sp-download");
   const xsBody = $("#xs-body"), xsPb = $("#xs-pb"), xsPronuclei = $("#xs-pronuclei");
   const xsCrossLegend = $("#xs-cross-legend"), xsCrossDownload = $("#xs-cross-download");
   const xsCrossHighColor = $("#xs-cross-high-color"), xsCrossLowColor = $("#xs-cross-low-color");
@@ -52,7 +54,7 @@
 
   const state = {
     manifest: [], currentId: null, scene: null, userGene: null, planeIdx: 0,
-    drawerOpen: false, bestTab: "pVol", crossMode: "vol",
+    drawerOpen: false, bestTab: "pVol", crossMode: "vol", xsTab: "sperm", spermData: null,
     crossKey: "pVol", agg: null, pronucleusVisible: {}, dotSize: 1.5,
     gmAnchor: "gene", gmDraw: null, gmDrawKey: null,   // γ/μ grid: real anchor vs random control
     concordRank: "frac", _concord: null,               // right-drawer concordance tab
@@ -396,6 +398,8 @@
     if (state._aggP) return state._aggP;
     if (!state._aggCircP) state._aggCircP = V.loadGz("data/zygote_cross_circ.json.gz")
       .then((a) => { state.aggCirc = a; }).catch(() => {});
+    if (!state._spermP) state._spermP = fetch("data/zygote_sperm.json")   // sperm concordance grid
+      .then((r) => r.json()).then((sp) => { state.spermData = sp; if (state.drawerOpen) renderSperm(); }).catch(() => {});
     state._aggP = V.loadGz("data/zygote_cross.json.gz").then((agg) => {
       state.agg = agg;
       return agg;
@@ -508,7 +512,7 @@
     }));
   }
   function renderCurrentCrossSection() {
-    if (!state.scene) return;
+    if (!state.scene || !xsOutlines.offsetParent) return;   // skip when its tab is hidden
     const s = state.scene, A = curA(), g = gene(), basis = sectionBasis();
     const pb = Number(A.polar_body_label), pns = pronucleusLabels(); syncPronucleusControls(pns);
     const traces = [], limits = [];
@@ -554,7 +558,7 @@
       line: { color: "#111827", width: 1.5, dash: "dash" }, hoverinfo: "skip", showlegend: xsCrossLegend.checked });
     xsCaption.textContent = `· ${s.id} · ${g} · ${state.planeIdx * state.step}°`;
     plotInto(xsOutlines, traces, {
-      dragmode: "pan", margin: { l: 42, r: 10, t: 8, b: 38 }, height: xsOutlines.clientHeight || 330,
+      dragmode: "pan", margin: { l: 42, r: 10, t: 8, b: 38 }, autosize: true,
       xaxis: { title: { text: "Distance from division plane (µm)", font: { size: 10 } }, range: [-lim, lim],
         scaleanchor: "y", scaleratio: 1, gridcolor: "#eef1f5", zeroline: false, tickfont: { size: 9 } },
       yaxis: { title: { text: "Polar-body axis (µm)", font: { size: 10 } }, range: [-lim, lim],
@@ -575,6 +579,7 @@
     return [lo, hi];
   }
   function renderBars() {
+    if (!xsBars.offsetParent) return;                       // skip when its tab is hidden
     const agg = curAGG(); if (!agg) return;
     const ki = bestKeyIndex(), g = gene(), percentMode = xsBarPercent.checked;
     const rows = agg.embryos.map((emb) => {
@@ -655,7 +660,7 @@
       ? Math.max(r.total, r.nullHigh)
       : Math.max(r.high, r.low, r.nullHigh))) * 1.18;
     plotInto(xsBars, traces, {
-      shapes, margin: { l: 56, r: 10, t: xsBarLegend.checked ? 48 : 8, b: 92 }, height: xsBars.clientHeight || 330,
+      shapes, margin: { l: 56, r: 10, t: xsBarLegend.checked ? 48 : 8, b: 92 }, autosize: true,
       showlegend: xsBarLegend.checked,
       legend: { orientation: "h", x: 0, y: 1.02, xanchor: "left", yanchor: "bottom", font: { size: 9 } },
       xaxis: { fixedrange: false, tickmode: "array", tickvals: x, ticktext: rows.map((r) => r.label),
@@ -792,7 +797,7 @@
   // NOTE: injected via innerHTML, so the "<" must be escaped.
   function gmFmtP(p) { return p < 0.001 ? "&lt; 0.001" : "= " + p.toFixed(3); }
   function renderGammaMu() {
-    if (!xsGm) return;
+    if (!xsGm || !xsGm.offsetParent) return;                // skip when its tab is hidden
     const m = gmModel();
     if (!m) return;
     const A = m.anchor, showingNull = m.isNull && m.hasGp;
@@ -871,9 +876,64 @@
       const cov = curAGG().gene_cov[gene()] || 0, tot = curAGG().n_embryos;
       drawerEmb.textContent = `· ${gene()}`;
       xsNote.innerHTML = `Counts use each zygote's <b>${BESTKEY_LABEL[state.crossKey]}</b> plane; <b>${cov}/${tot}</b> retained zygotes contain <b>${gene()}</b>.`;
-      renderCurrentCrossSection(); renderBars(); renderGammaMu();
+      renderCurrentCrossSection(); renderBars(); renderGammaMu(); renderSperm();   // each self-gates on its tab
       requestAnimationFrame(() => { try { Plotly.Plots.resize(xsOutlines); Plotly.Plots.resize(xsBars); } catch (_) {} });
     });
+  }
+  // ---------- bottom-drawer tabs (one graph per tab) ----------
+  const XS_RENDER = { cross: renderCurrentCrossSection, bars: renderBars, gm: renderGammaMu, sperm: renderSperm };
+  function switchXsTab(which) {
+    if (!XS_RENDER[which]) which = "cross";
+    state.xsTab = which;
+    xsTabsEl.querySelectorAll(".xs-gtab").forEach((t) => {
+      const on = t.dataset.tab === which; t.classList.toggle("active", on); t.setAttribute("aria-selected", String(on));
+    });
+    xsPanels.querySelectorAll(".xs-panel").forEach((p) => (p.hidden = p.dataset.tab !== which));
+    if (state.agg || which === "cross") XS_RENDER[which]();
+    requestAnimationFrame(() => { try { Plotly.Plots.resize(xsOutlines); Plotly.Plots.resize(xsBars); } catch (_) {} });
+  }
+
+  // ---------- sperm concordance grid ----------
+  // For each zygote with a located sperm, mark whether the sperm sits on the side of its current
+  // best plane that holds MORE transcripts (Ω omega, green) or FEWER (Σ sigma, purple). Data from
+  // build_zygote_sperm.py (data/zygote_sperm.json); the mark follows the "Compare each zygote at" plane.
+  function binomTwoSided(k, n) {
+    if (!n) return NaN;
+    const lg = (m) => { let s = 0; for (let i = 2; i <= m; i++) s += Math.log(i); return s; };
+    const pmf = (i) => Math.exp(lg(n) - lg(i) - lg(n - i) - n * Math.LN2);
+    const kk = Math.min(k, n - k); let tail = 0;
+    for (let i = 0; i <= kk; i++) tail += pmf(i);
+    return Math.min(1, 2 * tail);
+  }
+  function renderSperm() {
+    if (!xsSp || !xsSp.offsetParent) return;
+    const sp = state.spermData;
+    if (!sp) { xsSp.innerHTML = `<div class="xs-gm-empty">Loading sperm data…</div>`; return; }
+    const mode = state.crossKey;
+    const cross = curAGG(); const known = cross ? new Set(cross.embryos.map((e) => e.id)) : null;
+    // only zygotes that have sperm AND are in the current (real/circularized) cross set
+    const rows = sp.embryos.filter((r) => r.modes && r.modes[mode] && (!known || known.has(r.id)));
+    if (!rows.length) { xsSp.innerHTML = `<div class="xs-gm-empty">No zygotes with a located sperm.</div>`; xsSpSub.textContent = ""; return; }
+    const om = rows.filter((r) => r.modes[mode].mark === "omega").length;
+    const sg = rows.length - om;
+    const p = binomTwoSided(Math.min(om, sg), rows.length);
+    xsSpSub.textContent = `· ${BESTKEY_LABEL[mode]} plane · ${rows.length} zygotes with sperm`;
+    xsSpNote.innerHTML =
+      `Sperm on the <b style="color:#16a34a">greater-transcript</b> side (Ω) in <b>${om}</b> of ${rows.length}; ` +
+      `on the <b style="color:#7c3aed">lesser</b> side (Σ) in <b>${sg}</b>. ` +
+      `Binomial vs 50/50: <b>p ${p < 0.001 ? "< 0.001" : "= " + p.toFixed(3)}</b>.`;
+    // grid: a row-label column + one column per zygote; top row = Ω/Σ marks, below = zygote labels
+    xsSp.style.gridTemplateColumns = `minmax(74px,auto) repeat(${rows.length}, minmax(20px, 1fr))`;
+    const cell = (r) => {
+      const m = r.modes[mode]; const cls = m.mark === "omega" ? "g-O" : "g-S"; const gl = m.mark === "omega" ? "Ω" : "Σ";
+      const frac = m.cntSperm + m.cntOther ? (100 * m.cntSperm / (m.cntSperm + m.cntOther)).toFixed(0) : "–";
+      return `<div class="xs-gm-cell ${cls}" title="${r.label}: sperm on the ${m.mark === "omega" ? "greater" : "lesser"} side — ${frac}% of transcripts on the sperm's side (plane ${m.plane})">${gl}</div>`;
+    };
+    xsSp.innerHTML =
+      `<div class="xs-gm-corner"></div>` +
+      rows.map((r) => `<div class="xs-gm-collabel"><span>${r.label}</span></div>`).join("") +
+      `<div class="xs-gm-rowlabel anchor">Sperm side</div>` +
+      rows.map(cell).join("");
   }
 
   // ---------- wiring ----------
@@ -1030,6 +1090,29 @@
       state.gmDrawKey = null;                       // force a fresh random draw
       renderGammaMu();
     });
+    // bottom-drawer tabs (one graph per tab) + per-graph corner resize + sperm CSV
+    xsTabsEl.addEventListener("click", (e) => { const t = e.target.closest(".xs-gtab"); if (t) switchXsTab(t.dataset.tab); });
+    xsPanels.querySelectorAll(".xs-resizable").forEach((box) => {
+      const plot = box.querySelector(".xs-plot"); if (!plot) return;
+      let raf = 0;
+      new ResizeObserver(() => {
+        if (!box.offsetParent) return;
+        cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { try { Plotly.Plots.resize(plot); } catch (_) {} });
+      }).observe(box);
+    });
+    if (xsSpDownload) xsSpDownload.addEventListener("click", downloadSpermCSV);
+  }
+  function downloadSpermCSV() {
+    const sp = state.spermData; if (!sp) return;
+    const mode = state.crossKey;
+    const cross = curAGG(), known = cross ? new Set(cross.embryos.map((e) => e.id)) : null;
+    const rows = sp.embryos.filter((r) => r.modes && r.modes[mode] && (!known || known.has(r.id)));
+    const lines = [`# sperm_concordance plane=${mode} (Ω=sperm on greater-transcript side, Σ=lesser)`,
+      "zygote,mark,sperm_side_count,other_side_count,plane"];
+    rows.forEach((r) => { const m = r.modes[mode]; lines.push([r.label.replace(/,/g, ""), m.mark, m.cntSperm, m.cntOther, m.plane].join(",")); });
+    const blob = new Blob([lines.join("\n")], { type: "text/csv" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `sperm_concordance_${mode}.csv`;
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
   }
 
   function downloadPlot(div, suffix, formatEl, scaleEl, width, height) {

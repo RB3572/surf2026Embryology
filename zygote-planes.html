@@ -107,8 +107,28 @@
           </select></label>
         <span class="xs-note" id="xs-note"></span>
       </div>
-      <div class="xs-visuals">
-        <div class="xs-block xs-block-main">
+      <div class="xs-graph-tabs" id="xs-tabs" role="tablist" aria-label="Analysis plots">
+        <button type="button" class="xs-gtab active" data-tab="sperm" role="tab" aria-selected="true">Sperm concordance</button>
+        <button type="button" class="xs-gtab" data-tab="cross" role="tab" aria-selected="false">Cross-section</button>
+        <button type="button" class="xs-gtab" data-tab="bars" role="tab" aria-selected="false">Per-side bars</button>
+        <button type="button" class="xs-gtab" data-tab="gm" role="tab" aria-selected="false">γ / μ concordance</button>
+      </div>
+      <div class="xs-panels" id="xs-panels">
+        <div class="xs-panel xs-sp-block" data-tab="sperm" role="tabpanel">
+          <div class="plot-head">
+            <div class="mini-title">Sperm concordance <span class="mini-sub" id="xs-sp-sub"></span></div>
+            <button class="plot-download" id="xs-sp-download" type="button" title="Download this grid as CSV" aria-label="Download grid as CSV">↓</button>
+          </div>
+          <div class="xs-gm-note" id="xs-sp-note"></div>
+          <div class="xs-gm-legend" aria-hidden="true">
+            <span class="xs-gm-key"><i class="gm-sw g-O">Ω</i> sperm on the side with MORE transcripts (omega)</span>
+            <span class="xs-gm-key"><i class="gm-sw g-S">Σ</i> sperm on the side with FEWER transcripts (sigma)</span>
+            <span class="xs-gm-key"><i class="gm-sw g-NA"></i> no located sperm</span>
+          </div>
+          <div class="xs-resizable xs-resizable-grid"><div id="xs-sp" class="xs-gm-grid xs-sp-grid"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="cross" role="tabpanel" hidden>
           <div class="plot-head">
             <div class="mini-title">Current-plane cross-section <span class="mini-sub" id="xs-caption"></span></div>
             <button class="plot-download" id="xs-cross-download" type="button" title="Download high-resolution cross-section" aria-label="Download high-resolution cross-section">↓</button>
@@ -133,9 +153,10 @@
               <label>Format <select id="xs-cross-format"><option value="png">PNG</option><option value="svg">SVG</option></select></label>
             </div>
           </details>
-          <div id="xs-outlines" class="xs-plot xs-plot-outlines"></div>
+          <div class="xs-resizable"><div id="xs-outlines" class="xs-plot xs-plot-outlines"></div></div>
         </div>
-        <div class="xs-block xs-block-side">
+
+        <div class="xs-panel" data-tab="bars" role="tabpanel" hidden>
           <div class="plot-head">
             <div class="mini-title"><span id="xs-bar-title">Per-side percentage</span> <span class="mini-sub" id="xs-bar-sub"></span></div>
             <button class="plot-download" id="xs-bar-download" type="button" title="Download high-resolution per-side chart" aria-label="Download high-resolution per-side chart">↓</button>
@@ -159,30 +180,31 @@
               <label>Format <select id="xs-bar-format"><option value="png">PNG</option><option value="svg">SVG</option></select></label>
             </div>
           </details>
-          <div id="xs-bars" class="xs-plot"></div>
+          <div class="xs-resizable"><div id="xs-bars" class="xs-plot"></div></div>
         </div>
-      </div>
-      <div class="xs-gm-block">
-        <div class="plot-head">
-          <div class="mini-title"><span class="xs-greek-title">&gamma; / &mu;</span> concordance <span class="mini-sub" id="xs-gm-sub"></span></div>
-          <button class="plot-download" id="xs-gm-download" type="button" title="Download this grid as CSV" aria-label="Download grid as CSV">↓</button>
+
+        <div class="xs-panel" data-tab="gm" role="tabpanel" hidden>
+          <div class="plot-head">
+            <div class="mini-title"><span class="xs-greek-title">&gamma; / &mu;</span> concordance <span class="mini-sub" id="xs-gm-sub"></span></div>
+            <button class="plot-download" id="xs-gm-download" type="button" title="Download this grid as CSV" aria-label="Download grid as CSV">↓</button>
+          </div>
+          <div class="xs-gm-controls">
+            <label class="ctl"><span class="ctl-label">Anchor</span>
+              <select id="xs-gm-anchor">
+                <option value="gene">Selected gene (real)</option>
+                <option value="null">Random plane + side — negative control</option>
+              </select></label>
+            <button class="xs-gm-btn" id="xs-gm-reroll" type="button" title="Draw a new random negative control">Re-roll</button>
+            <span class="xs-gm-stats" id="xs-gm-stats"></span>
+          </div>
+          <div class="xs-gm-note" id="xs-gm-note"></div>
+          <div class="xs-gm-legend" aria-hidden="true">
+            <span class="xs-gm-key"><i class="gm-sw g-G">γ</i> shares the anchor's γ half</span>
+            <span class="xs-gm-key"><i class="gm-sw g-M">μ</i> flipped to the μ half</span>
+            <span class="xs-gm-key"><i class="gm-sw g-NA"></i> gene absent</span>
+          </div>
+          <div class="xs-resizable xs-resizable-grid"><div id="xs-gm" class="xs-gm-grid"></div></div>
         </div>
-        <div class="xs-gm-controls">
-          <label class="ctl"><span class="ctl-label">Anchor</span>
-            <select id="xs-gm-anchor">
-              <option value="gene">Selected gene (real)</option>
-              <option value="null">Random plane + side — negative control</option>
-            </select></label>
-          <button class="xs-gm-btn" id="xs-gm-reroll" type="button" title="Draw a new random negative control">Re-roll</button>
-          <span class="xs-gm-stats" id="xs-gm-stats"></span>
-        </div>
-        <div class="xs-gm-note" id="xs-gm-note"></div>
-        <div class="xs-gm-legend" aria-hidden="true">
-          <span class="xs-gm-key"><i class="gm-sw g-G">γ</i> shares the anchor's γ half</span>
-          <span class="xs-gm-key"><i class="gm-sw g-M">μ</i> flipped to the μ half</span>
-          <span class="xs-gm-key"><i class="gm-sw g-NA"></i> gene absent</span>
-        </div>
-        <div id="xs-gm" class="xs-gm-grid"></div>
       </div>
     </div>
   </section>

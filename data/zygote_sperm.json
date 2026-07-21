@@ -1,0 +1,1046 @@
+{
+ "modes": [
+  "pVol",
+  "pCnt",
+  "diffVol",
+  "diffCnt"
+ ],
+ "embryos": [
+  {
+   "id": "20251226_zygote_p1_1",
+   "label": "P1 \u00b7 1",
+   "sperm_plot": [
+    1437.0,
+    1095.0,
+    1246.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 9,
+     "spermSide": -1,
+     "cntSperm": 75598,
+     "cntOther": 82927,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 14,
+     "spermSide": -1,
+     "cntSperm": 73993,
+     "cntOther": 84532,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 11,
+     "spermSide": -1,
+     "cntSperm": 74213,
+     "cntOther": 84312,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 13,
+     "spermSide": -1,
+     "cntSperm": 73644,
+     "cntOther": 84881,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20251226_zygote_p1_10",
+   "label": "P1 \u00b7 10",
+   "sperm_plot": [
+    1507.0,
+    1437.0,
+    819.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 8,
+     "spermSide": 1,
+     "cntSperm": 71377,
+     "cntOther": 56317,
+     "mark": "omega"
+    },
+    "pCnt": {
+     "plane": 10,
+     "spermSide": 1,
+     "cntSperm": 72709,
+     "cntOther": 54985,
+     "mark": "omega"
+    },
+    "diffVol": {
+     "plane": 9,
+     "spermSide": 1,
+     "cntSperm": 72253,
+     "cntOther": 55441,
+     "mark": "omega"
+    },
+    "diffCnt": {
+     "plane": 11,
+     "spermSide": -1,
+     "cntSperm": 54908,
+     "cntOther": 72786,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20251226_zygote_p1_11",
+   "label": "P1 \u00b7 11",
+   "sperm_plot": [
+    1492.0,
+    1022.0,
+    812.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 10,
+     "spermSide": 1,
+     "cntSperm": 76883,
+     "cntOther": 59310,
+     "mark": "omega"
+    },
+    "pCnt": {
+     "plane": 10,
+     "spermSide": 1,
+     "cntSperm": 76883,
+     "cntOther": 59310,
+     "mark": "omega"
+    },
+    "diffVol": {
+     "plane": 10,
+     "spermSide": 1,
+     "cntSperm": 76883,
+     "cntOther": 59310,
+     "mark": "omega"
+    },
+    "diffCnt": {
+     "plane": 10,
+     "spermSide": 1,
+     "cntSperm": 76883,
+     "cntOther": 59310,
+     "mark": "omega"
+    }
+   }
+  },
+  {
+   "id": "20251226_zygote_p1_7",
+   "label": "P1 \u00b7 7",
+   "sperm_plot": [
+    1592.0,
+    1240.0,
+    882.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 10,
+     "spermSide": -1,
+     "cntSperm": 85733,
+     "cntOther": 95605,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 5,
+     "spermSide": -1,
+     "cntSperm": 85407,
+     "cntOther": 95931,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 9,
+     "spermSide": -1,
+     "cntSperm": 84806,
+     "cntOther": 96532,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 8,
+     "spermSide": -1,
+     "cntSperm": 84328,
+     "cntOther": 97010,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20251226_zygote_p1_8",
+   "label": "P1 \u00b7 8",
+   "sperm_plot": [
+    1573.0,
+    1243.0,
+    798.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 9,
+     "spermSide": -1,
+     "cntSperm": 54819,
+     "cntOther": 85181,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 9,
+     "spermSide": -1,
+     "cntSperm": 54819,
+     "cntOther": 85181,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 9,
+     "spermSide": -1,
+     "cntSperm": 54819,
+     "cntOther": 85181,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 9,
+     "spermSide": -1,
+     "cntSperm": 54819,
+     "cntOther": 85181,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_0_2",
+   "label": "P1 \u00b7 0_2",
+   "sperm_plot": [
+    1377.0,
+    661.0,
+    623.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 10,
+     "spermSide": 1,
+     "cntSperm": 7263,
+     "cntOther": 5420,
+     "mark": "omega"
+    },
+    "pCnt": {
+     "plane": 8,
+     "spermSide": -1,
+     "cntSperm": 5325,
+     "cntOther": 7358,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 9,
+     "spermSide": -1,
+     "cntSperm": 5348,
+     "cntOther": 7335,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 8,
+     "spermSide": -1,
+     "cntSperm": 5325,
+     "cntOther": 7358,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_1",
+   "label": "P1 \u00b7 1",
+   "sperm_plot": [
+    1095.0,
+    1052.0,
+    504.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 2,
+     "spermSide": 1,
+     "cntSperm": 3899,
+     "cntOther": 3372,
+     "mark": "omega"
+    },
+    "pCnt": {
+     "plane": 2,
+     "spermSide": 1,
+     "cntSperm": 3899,
+     "cntOther": 3372,
+     "mark": "omega"
+    },
+    "diffVol": {
+     "plane": 2,
+     "spermSide": 1,
+     "cntSperm": 3899,
+     "cntOther": 3372,
+     "mark": "omega"
+    },
+    "diffCnt": {
+     "plane": 2,
+     "spermSide": 1,
+     "cntSperm": 3899,
+     "cntOther": 3372,
+     "mark": "omega"
+    }
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_12",
+   "label": "P1 \u00b7 12",
+   "sperm_plot": [
+    989.0,
+    1149.0,
+    777.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 4,
+     "spermSide": -1,
+     "cntSperm": 3051,
+     "cntOther": 3724,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 4,
+     "spermSide": -1,
+     "cntSperm": 3051,
+     "cntOther": 3724,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 16,
+     "spermSide": 1,
+     "cntSperm": 3048,
+     "cntOther": 3727,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 0,
+     "spermSide": -1,
+     "cntSperm": 2974,
+     "cntOther": 3801,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_2",
+   "label": "P1 \u00b7 2",
+   "sperm_plot": [
+    965.0,
+    1082.0,
+    728.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 7,
+     "spermSide": -1,
+     "cntSperm": 25702,
+     "cntOther": 27861,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 7,
+     "spermSide": -1,
+     "cntSperm": 25702,
+     "cntOther": 27861,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 3,
+     "spermSide": -1,
+     "cntSperm": 25625,
+     "cntOther": 27938,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 10,
+     "spermSide": -1,
+     "cntSperm": 25921,
+     "cntOther": 27642,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_3",
+   "label": "P1 \u00b7 3",
+   "sperm_plot": [
+    1743.0,
+    1079.0,
+    672.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 6,
+     "spermSide": -1,
+     "cntSperm": 1924,
+     "cntOther": 2662,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 8,
+     "spermSide": -1,
+     "cntSperm": 1900,
+     "cntOther": 2686,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 6,
+     "spermSide": -1,
+     "cntSperm": 1924,
+     "cntOther": 2662,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 8,
+     "spermSide": -1,
+     "cntSperm": 1900,
+     "cntOther": 2686,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_4",
+   "label": "P1 \u00b7 4",
+   "sperm_plot": [
+    1174.0,
+    1128.0,
+    728.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 8,
+     "spermSide": -1,
+     "cntSperm": 2696,
+     "cntOther": 2830,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 9,
+     "spermSide": -1,
+     "cntSperm": 2646,
+     "cntOther": 2880,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 8,
+     "spermSide": -1,
+     "cntSperm": 2696,
+     "cntOther": 2830,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 9,
+     "spermSide": -1,
+     "cntSperm": 2646,
+     "cntOther": 2880,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_5",
+   "label": "P1 \u00b7 5",
+   "sperm_plot": [
+    1588.0,
+    758.0,
+    497.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 9,
+     "spermSide": 1,
+     "cntSperm": 1774,
+     "cntOther": 2414,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 9,
+     "spermSide": 1,
+     "cntSperm": 1774,
+     "cntOther": 2414,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 14,
+     "spermSide": -1,
+     "cntSperm": 2488,
+     "cntOther": 1700,
+     "mark": "omega"
+    },
+    "diffCnt": {
+     "plane": 14,
+     "spermSide": -1,
+     "cntSperm": 2488,
+     "cntOther": 1700,
+     "mark": "omega"
+    }
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_6_1",
+   "label": "P1 \u00b7 6_1",
+   "sperm_plot": [
+    1322.0,
+    1240.0,
+    546.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 16,
+     "spermSide": -1,
+     "cntSperm": 4286,
+     "cntOther": 4441,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 3,
+     "spermSide": 1,
+     "cntSperm": 4072,
+     "cntOther": 4655,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 17,
+     "spermSide": -1,
+     "cntSperm": 4238,
+     "cntOther": 4489,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 3,
+     "spermSide": 1,
+     "cntSperm": 4072,
+     "cntOther": 4655,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_7_1",
+   "label": "P1 \u00b7 7_1",
+   "sperm_plot": [
+    1525.0,
+    1340.0,
+    504.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 4,
+     "spermSide": 1,
+     "cntSperm": 5486,
+     "cntOther": 4456,
+     "mark": "omega"
+    },
+    "pCnt": {
+     "plane": 4,
+     "spermSide": 1,
+     "cntSperm": 5486,
+     "cntOther": 4456,
+     "mark": "omega"
+    },
+    "diffVol": {
+     "plane": 3,
+     "spermSide": 1,
+     "cntSperm": 5472,
+     "cntOther": 4470,
+     "mark": "omega"
+    },
+    "diffCnt": {
+     "plane": 3,
+     "spermSide": 1,
+     "cntSperm": 5472,
+     "cntOther": 4470,
+     "mark": "omega"
+    }
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_1",
+   "label": "P2 \u00b7 1",
+   "sperm_plot": [
+    1111.0,
+    1039.0,
+    1057.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 14,
+     "spermSide": -1,
+     "cntSperm": 63671,
+     "cntOther": 83505,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 14,
+     "spermSide": -1,
+     "cntSperm": 63671,
+     "cntOther": 83505,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 14,
+     "spermSide": -1,
+     "cntSperm": 63671,
+     "cntOther": 83505,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 15,
+     "spermSide": -1,
+     "cntSperm": 63393,
+     "cntOther": 83783,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_13",
+   "label": "P2 \u00b7 13",
+   "sperm_plot": [
+    918.0,
+    911.0,
+    994.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 2,
+     "spermSide": -1,
+     "cntSperm": 172054,
+     "cntOther": 186378,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 15,
+     "spermSide": 1,
+     "cntSperm": 167320,
+     "cntOther": 191112,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 16,
+     "spermSide": 1,
+     "cntSperm": 166664,
+     "cntOther": 191768,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 15,
+     "spermSide": 1,
+     "cntSperm": 167320,
+     "cntOther": 191112,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_16",
+   "label": "P2 \u00b7 16",
+   "sperm_plot": [
+    1334.0,
+    894.0,
+    1001.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 11,
+     "spermSide": -1,
+     "cntSperm": 126180,
+     "cntOther": 142710,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 11,
+     "spermSide": -1,
+     "cntSperm": 126180,
+     "cntOther": 142710,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 17,
+     "spermSide": -1,
+     "cntSperm": 122936,
+     "cntOther": 145954,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 1,
+     "spermSide": 1,
+     "cntSperm": 121032,
+     "cntOther": 147858,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_17",
+   "label": "P2 \u00b7 17",
+   "sperm_plot": [
+    1178.0,
+    762.0,
+    1022.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 17,
+     "spermSide": 1,
+     "cntSperm": 228724,
+     "cntOther": 217608,
+     "mark": "omega"
+    },
+    "pCnt": {
+     "plane": 4,
+     "spermSide": -1,
+     "cntSperm": 228850,
+     "cntOther": 217482,
+     "mark": "omega"
+    },
+    "diffVol": {
+     "plane": 11,
+     "spermSide": 1,
+     "cntSperm": 226068,
+     "cntOther": 220264,
+     "mark": "omega"
+    },
+    "diffCnt": {
+     "plane": 4,
+     "spermSide": -1,
+     "cntSperm": 228850,
+     "cntOther": 217482,
+     "mark": "omega"
+    }
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_18_1",
+   "label": "P2 \u00b7 18_1",
+   "sperm_plot": [
+    1269.0,
+    1235.0,
+    980.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 9,
+     "spermSide": 1,
+     "cntSperm": 41126,
+     "cntOther": 20170,
+     "mark": "omega"
+    },
+    "pCnt": {
+     "plane": 10,
+     "spermSide": 1,
+     "cntSperm": 41402,
+     "cntOther": 19894,
+     "mark": "omega"
+    },
+    "diffVol": {
+     "plane": 9,
+     "spermSide": 1,
+     "cntSperm": 41126,
+     "cntOther": 20170,
+     "mark": "omega"
+    },
+    "diffCnt": {
+     "plane": 10,
+     "spermSide": 1,
+     "cntSperm": 41402,
+     "cntOther": 19894,
+     "mark": "omega"
+    }
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_20",
+   "label": "P2 \u00b7 20",
+   "sperm_plot": [
+    1078.0,
+    883.0,
+    1204.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 1,
+     "spermSide": -1,
+     "cntSperm": 34498,
+     "cntOther": 60906,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 4,
+     "spermSide": -1,
+     "cntSperm": 31478,
+     "cntOther": 63926,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 4,
+     "spermSide": -1,
+     "cntSperm": 31478,
+     "cntOther": 63926,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 4,
+     "spermSide": -1,
+     "cntSperm": 31478,
+     "cntOther": 63926,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_23",
+   "label": "P2 \u00b7 23",
+   "sperm_plot": [
+    1234.0,
+    1294.0,
+    1106.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 10,
+     "spermSide": -1,
+     "cntSperm": 118564,
+     "cntOther": 167450,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 9,
+     "spermSide": -1,
+     "cntSperm": 116858,
+     "cntOther": 169156,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 10,
+     "spermSide": -1,
+     "cntSperm": 118564,
+     "cntOther": 167450,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 8,
+     "spermSide": -1,
+     "cntSperm": 116908,
+     "cntOther": 169106,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_26",
+   "label": "P2 \u00b7 26",
+   "sperm_plot": [
+    1154.0,
+    904.0,
+    959.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 12,
+     "spermSide": 1,
+     "cntSperm": 180150,
+     "cntOther": 150988,
+     "mark": "omega"
+    },
+    "pCnt": {
+     "plane": 12,
+     "spermSide": 1,
+     "cntSperm": 180150,
+     "cntOther": 150988,
+     "mark": "omega"
+    },
+    "diffVol": {
+     "plane": 9,
+     "spermSide": 1,
+     "cntSperm": 180944,
+     "cntOther": 150194,
+     "mark": "omega"
+    },
+    "diffCnt": {
+     "plane": 8,
+     "spermSide": -1,
+     "cntSperm": 149806,
+     "cntOther": 181332,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_4",
+   "label": "P2 \u00b7 4",
+   "sperm_plot": [
+    1140.0,
+    1160.0,
+    1218.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 12,
+     "spermSide": -1,
+     "cntSperm": 89242,
+     "cntOther": 120386,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 8,
+     "spermSide": -1,
+     "cntSperm": 89880,
+     "cntOther": 119748,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 14,
+     "spermSide": -1,
+     "cntSperm": 89536,
+     "cntOther": 120092,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 12,
+     "spermSide": -1,
+     "cntSperm": 89242,
+     "cntOther": 120386,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_5",
+   "label": "P2 \u00b7 5",
+   "sperm_plot": [
+    1331.0,
+    1195.0,
+    910.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 14,
+     "spermSide": -1,
+     "cntSperm": 189788,
+     "cntOther": 202742,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 2,
+     "spermSide": 1,
+     "cntSperm": 191058,
+     "cntOther": 201472,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 12,
+     "spermSide": -1,
+     "cntSperm": 189710,
+     "cntOther": 202820,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 12,
+     "spermSide": -1,
+     "cntSperm": 189710,
+     "cntOther": 202820,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_7_1",
+   "label": "P2 \u00b7 7_1",
+   "sperm_plot": [
+    1560.0,
+    985.0,
+    1127.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 12,
+     "spermSide": -1,
+     "cntSperm": 240174,
+     "cntOther": 249238,
+     "mark": "sigma"
+    },
+    "pCnt": {
+     "plane": 9,
+     "spermSide": -1,
+     "cntSperm": 229188,
+     "cntOther": 260224,
+     "mark": "sigma"
+    },
+    "diffVol": {
+     "plane": 7,
+     "spermSide": -1,
+     "cntSperm": 229620,
+     "cntOther": 259792,
+     "mark": "sigma"
+    },
+    "diffCnt": {
+     "plane": 8,
+     "spermSide": -1,
+     "cntSperm": 228700,
+     "cntOther": 260712,
+     "mark": "sigma"
+    }
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_8_1",
+   "label": "P2 \u00b7 8_1",
+   "sperm_plot": [
+    1525.0,
+    740.0,
+    959.0
+   ],
+   "modes": {
+    "pVol": {
+     "plane": 17,
+     "spermSide": 1,
+     "cntSperm": 85310,
+     "cntOther": 75736,
+     "mark": "omega"
+    },
+    "pCnt": {
+     "plane": 1,
+     "spermSide": -1,
+     "cntSperm": 85376,
+     "cntOther": 75670,
+     "mark": "omega"
+    },
+    "diffVol": {
+     "plane": 1,
+     "spermSide": -1,
+     "cntSperm": 85376,
+     "cntOther": 75670,
+     "mark": "omega"
+    },
+    "diffCnt": {
+     "plane": 0,
+     "spermSide": -1,
+     "cntSperm": 85434,
+     "cntOther": 75612,
+     "mark": "omega"
+    }
+   }
+  }
+ ],
+ "summary": {
+  "pVol": {
+   "omega": 9,
+   "sigma": 17,
+   "n": 26
+  },
+  "pCnt": {
+   "omega": 8,
+   "sigma": 18,
+   "n": 26
+  },
+  "diffVol": {
+   "omega": 9,
+   "sigma": 17,
+   "n": 26
+  },
+  "diffCnt": {
+   "omega": 7,
+   "sigma": 19,
+   "n": 26
+  }
+ }
+}

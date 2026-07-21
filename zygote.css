@@ -81,6 +81,29 @@
     var(--surface);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), 0 1px 2px rgba(15, 23, 42, .05);
 }
+
+/* bottom-drawer tabs (one graph per tab) + per-graph corner resize */
+.xs-graph-tabs { flex: 0 0 auto; display: flex; gap: 2px; padding: 0 16px; border-bottom: 1px solid var(--line); }
+.xs-gtab { font-family: var(--sans); font-size: 12.5px; font-weight: 600; color: var(--ink-2);
+  padding: 7px 13px; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent;
+  margin-bottom: -1px; white-space: nowrap; }
+.xs-gtab:hover { color: var(--ink); }
+.xs-gtab.active { color: var(--ink); border-bottom-color: var(--zygote, #f97316); }
+.xs-panels { flex: 1 1 auto; overflow: auto; padding: 8px 14px 10px; min-height: 0; }
+.xs-panel { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+.xs-panel[hidden] { display: none; }
+.xs-resizable { position: relative; width: 100%; max-width: 100%; height: 340px; min-height: 180px; min-width: 240px;
+  resize: both; overflow: hidden; }
+.xs-resizable-grid { overflow: auto; }
+.xs-resizable > .xs-plot { flex: none; width: 100%; height: 100%; min-height: 0; }
+.xs-resizable::after { content: ""; position: absolute; right: 3px; bottom: 3px; width: 11px; height: 11px;
+  pointer-events: none; opacity: .55;
+  background: linear-gradient(135deg, transparent 0 50%, var(--ink-soft) 50% 60%, transparent 60% 72%, var(--ink-soft) 72% 82%, transparent 82%); }
+/* sperm concordance marks: Ω omega (more transcripts) green, Σ sigma (fewer) purple */
+.g-O { background: #16a34a; }
+.g-S { background: #7c3aed; }
+.xs-sp-grid { align-content: start; }
+
 .xs-hint { float: right; font-family: var(--sans); font-size: 10px; font-weight: 500;
   color: var(--muted); letter-spacing: .2px; text-transform: none; }
 /* outline controls: mean toggle, only-this-embryo toggle, significance colour key */
@@ -200,3 +223,8 @@
 .rconcord-controls .ctl { display: flex; align-items: center; gap: 8px; }
 .rconcord-controls .ctl-label { font-size: 11px; font-weight: 600; color: var(--ink-2); white-space: nowrap; }
 .rconcord-controls select { flex: 1; }
+
+.xs-gm-empty { padding: 14px 6px; font-size: 12px; color: var(--ink-2); font-style: italic; }
+.g-O, .g-S { color: #fff; }
+.xs-resizable-grid { height: 300px; }
+.xs-resizable-grid > .xs-gm-grid { max-height: none; height: 100%; border: none; }

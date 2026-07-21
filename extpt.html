@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Extended Pseudotime Analysis · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="extpt.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="help.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#14b8a6;box-shadow:0 0 0 4px color-mix(in srgb,#14b8a6 18%,transparent)"></span>
+      <span class="brand-name">Extended&nbsp;Pseudotime&nbsp;Analysis</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Embryos"></nav>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">This embryo</span>
+        <button class="help-btn" data-help="extpt" style="margin-left:auto" aria-label="What is this analysis?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="controls-row" style="margin-bottom:6px">
+          <label class="ctl"><span class="ctl-label">Gene</span>
+            <select id="gene-select" aria-label="Gene"></select></label>
+        </div>
+        <label class="pn-toggle"><input type="checkbox" id="dots-show" />
+          <span class="pn-t-main"><span class="pn-t-dot"></span>Show the selected gene's transcripts as dots</span>
+          <span class="pn-t-desc">plots that gene's molecules inside the embryo</span></label>
+        <div class="pn-readout" id="pn-readout"></div>
+        <div class="pn-note">One pseudotime axis spans three stages — <b>zygote → early-2-cell →
+          late-2-cell</b>. Zygotes are ordered by the pronuclei-distance clock; 2-cell embryos have
+          no pronuclei, so within their stage they are ordered by total transcript count (a maturation
+          proxy). For zygotes the 3-D view shows the two pronuclei + min-distance line.</div>
+        <div class="pn-legend">
+          <span class="seg-chip"><span class="seg-dot" style="background:#0891b2"></span>Zygote</span>
+          <span class="seg-chip"><span class="seg-dot" style="background:#7c3aed"></span>Early 2-cell</span>
+          <span class="seg-chip"><span class="seg-dot" style="background:#f97316"></span>Late 2-cell</span>
+        </div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Select an embryo</div>
+        <div class="ph-sub">Choose an embryo above (zygote, early- or late-2-cell) to view it in 3-D.
+          The bottom drawer plots transcript count against an extended pseudotime that runs across all
+          three stages.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- Right drawer: genes ranked by correlation with extended pseudotime -->
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Gene ⟷ pseudotime</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title" style="position:relative">Genes correlated with pseudotime<button class="help-btn help-corner" data-help="extpt" aria-label="What is this?">?</button></div>
+        <div class="rdrawer-desc">Pearson correlation between a gene's transcript count and the
+          extended pseudotime (zygote → early- → late-2-cell), across the embryos that contain the gene.
+          Click a gene to plot it.</div>
+        <div class="pn-rank-ctl">
+          <label class="ctl"><span class="ctl-label">Top</span>
+            <select id="rank-n"><option value="10">10</option><option value="20">20</option>
+              <option value="30">30</option><option value="50">50</option></select></label>
+          <span class="pn-rank-min">genes in ≥ <b>5</b> embryos</span>
+        </div>
+      </div>
+      <div class="pn-ranks">
+        <div class="pn-rank-sec">
+          <div class="pn-rank-title pos">Most positive — rises toward late-2-cell (later pseudotime)</div>
+          <div id="rank-pos" class="best-list"></div>
+        </div>
+        <div class="pn-rank-sec">
+          <div class="pn-rank-title neg">Most negative — falls from zygote onward (higher early)</div>
+          <div id="rank-neg" class="best-list"></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Bottom drawer: selected-gene scatter, all-transcripts scatter, and a gene-set scatter -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Transcripts vs extended pseudotime</span>
+      <span class="drawer-hint">count across zygote → early-2C → late-2C · pick a normalization &amp; model · one point per embryo</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="pn-reg-ctl">
+        <label class="pn-reg-label">Regression
+          <select id="reg-type" aria-label="Regression model">
+            <optgroup label="Curve fits">
+              <option value="linear">Linear</option>
+              <option value="quadratic">Quadratic (polynomial)</option>
+              <option value="exp">Exponential</option>
+              <option value="log">Logarithmic</option>
+              <option value="power">Power law</option>
+              <option value="logistic">Logistic (sigmoid)</option>
+            </optgroup>
+            <optgroup label="Count models (GLM)">
+              <option value="poisson">Poisson</option>
+              <option value="negbin">Negative binomial</option>
+              <option value="binomial">Binomial (logit)</option>
+            </optgroup>
+            <optgroup label="Non-parametric">
+              <option value="loess">LOESS smoother</option>
+            </optgroup>
+          </select>
+        </label>
+        <label class="pn-reg-label">Count axis
+          <select id="norm-sel" title="Raw transcript count, or normalized by the embryo's total transcripts (a fraction — controls for embryo-to-embryo size differences across stages).">
+            <option value="count">Count</option>
+            <option value="total">÷ total count (fraction)</option>
+          </select>
+        </label>
+        <label class="pn-pt-toggle" title="Swap the x and y axes on every graph below (the fit is unchanged — only the view is transposed).">
+          <input type="checkbox" id="flip-toggle"><span>Flip x / y</span></label>
+        <button class="help-btn pn-stats-help" data-help="pronuclei-stats" aria-label="How the statistics are computed" title="How R², the equation, Pearson r and the p-value are computed">?</button>
+        <span class="pn-reg-note" id="reg-note"></span>
+      </div>
+      <div class="pn-graph-tabs" id="graph-tabs" role="tablist" aria-label="Graphs">
+        <button type="button" class="pn-gtab active" data-graph="gene" role="tab" aria-selected="true">Selected gene</button>
+        <button type="button" class="pn-gtab" data-graph="total" role="tab" aria-selected="false">All transcripts</button>
+        <button type="button" class="pn-gtab" data-graph="set" role="tab" aria-selected="false">Gene set</button>
+      </div>
+      <div class="pn-panels" id="graph-panels">
+        <div class="pn-panel" data-graph="gene" role="tabpanel">
+          <div class="mini-title">Selected gene <span class="mini-sub" id="gene-fit"></span></div>
+          <div class="pn-resizable" data-plot="gene-scatter" title="Drag the bottom-right corner to resize"><div id="gene-scatter" class="scatter-plot"></div></div>
+        </div>
+        <div class="pn-panel" data-graph="total" role="tabpanel" hidden>
+          <div class="mini-title">All transcripts <span class="mini-sub" id="pn-fit"></span></div>
+          <div class="pn-resizable" data-plot="scatter-plot" title="Drag the bottom-right corner to resize"><div id="scatter-plot" class="scatter-plot"></div></div>
+        </div>
+        <div class="pn-panel pn-setblock" data-graph="set" role="tabpanel" hidden>
+          <div class="pn-set-cfg">
+            <div class="pn-set-row">
+              <span class="pn-set-lbl">Presets <span class="pn-set-hint">(add to the set)</span></span>
+              <div class="pn-set-presets" id="set-presets"></div>
+            </div>
+            <div class="pn-set-row">
+              <label class="ctl pn-set-addl"><span class="ctl-label">Add gene</span><select id="set-add" aria-label="Add a gene to the set"></select></label>
+              <label class="pn-pt-toggle pn-set-allto" title="On: only plot zygotes that contain EVERY gene in the set, so the sum is over an identical gene list. Off: sum whichever set genes are present in each zygote, and drop a zygote only if it contains none of them.">
+                <input type="checkbox" id="set-requireall"><span>require all genes</span></label>
+              <button type="button" class="pn-set-clear" id="set-clear" title="Remove every gene from the set">Clear</button>
+            </div>
+            <div class="pn-set-chips" id="set-chips"></div>
+          </div>
+          <div class="mini-title">Gene set — summed count vs pseudotime <span class="mini-sub" id="set-fit"></span></div>
+          <div class="pn-resizable" data-plot="set-scatter" title="Drag the bottom-right corner to resize"><div id="set-scatter" class="scatter-plot"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="viewer-core.js"></script>
+  <script src="extpt.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

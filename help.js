@@ -194,6 +194,26 @@
         association; a curved model can have a high R² yet a near-zero Pearson r (a U-shape) — so read the R², the r, <i>and</i> the
         shape together, not any one alone.</div>` },
 
+    "extpt": { eyebrow: "Extended Pseudotime · the idea", title: "One clock across three stages",
+      html: `<p class="lede">The pronuclei give zygotes a ruler for developmental time. This project extends that ruler
+        past the first division — laying <b>zygote → early-2-cell → late-2-cell</b> along a single pseudotime axis so you
+        can watch a gene's transcripts rise and fall across the whole maternal-to-zygotic transition.</p>
+        <h3>The axis</h3>
+        <p>Three stage blocks in developmental order (zygote 0–1, early-2C 1–2, late-2C 2–3), coloured and banded. Within
+        the zygote block, embryos are ordered by the <b>pronuclei-distance clock</b> (larger gap = earlier). Points are
+        coloured by stage; the fitted model runs across all three.</p>
+        <h3>Is there a clock for the 2-cell embryos?</h3>
+        <p>Not a geometric one — once the cell divides there are no pronuclei to measure. So within the early- and
+        late-2-cell blocks we order embryos by <b>total transcript count</b> as a maturation proxy (the transcriptome
+        grows as zygotic genome activation ramps up). Treat this as a <i>soft</i> ordering: the honest signal is the
+        <b>cross-stage trajectory</b> (how the three bands step up or down), not the fine ordering inside a 2-cell block.
+        Because that block is ordered by total count, the "All transcripts" graph is diagonal within it by construction.</p>
+        <h3>Same machinery as Pronuclei</h3>
+        <p>Per-gene, all-transcripts and gene-set graphs; the full regression-model menu; complete statistics (R²,
+        equation, Pearson r, and a null-tested p-value — see the <b>?</b> by the model menu); tabs, corner-resize and
+        high-res download. The right drawer ranks genes by their correlation with pseudotime across all three stages
+        (405 genes appear in every stage, so trajectories are data-rich).</p>` },
+
     "segments": { eyebrow: "Segment Enrichment · the idea", title: "People on campus",
       html: `<p class="lede">At any moment some campus buildings are packed and others nearly empty. If you know which building
         someone is in, you often know what they're doing. Molecules are the same: <b>where</b> a transcript sits often predicts

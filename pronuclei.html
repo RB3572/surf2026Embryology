@@ -151,30 +151,37 @@
         <button class="help-btn pn-stats-help" data-help="pronuclei-stats" aria-label="How the statistics are computed" title="How R², the equation, Pearson r and the p-value are computed">?</button>
         <span class="pn-reg-note" id="reg-note"></span>
       </div>
-      <div class="pn-block">
-        <div class="mini-title">Selected gene <span class="mini-sub" id="gene-fit"></span></div>
-        <div id="gene-scatter" class="scatter-plot"></div>
+      <div class="pn-graph-tabs" id="graph-tabs" role="tablist" aria-label="Graphs">
+        <button type="button" class="pn-gtab active" data-graph="gene" role="tab" aria-selected="true">Selected gene</button>
+        <button type="button" class="pn-gtab" data-graph="total" role="tab" aria-selected="false">All transcripts</button>
+        <button type="button" class="pn-gtab" data-graph="set" role="tab" aria-selected="false">Gene set</button>
       </div>
-      <div class="pn-block">
-        <div class="mini-title">All transcripts <span class="mini-sub" id="pn-fit"></span></div>
-        <div id="scatter-plot" class="scatter-plot"></div>
-      </div>
-      <div class="pn-block pn-setblock">
-        <div class="mini-title">Gene set — summed count vs distance <span class="mini-sub" id="set-fit"></span></div>
-        <div class="pn-set-cfg">
-          <div class="pn-set-row">
-            <span class="pn-set-lbl">Presets <span class="pn-set-hint">(add to the set)</span></span>
-            <div class="pn-set-presets" id="set-presets"></div>
-          </div>
-          <div class="pn-set-row">
-            <label class="ctl pn-set-addl"><span class="ctl-label">Add gene</span><select id="set-add" aria-label="Add a gene to the set"></select></label>
-            <label class="pn-pt-toggle pn-set-allto" title="On: only plot zygotes that contain EVERY gene in the set, so the sum is over an identical gene list. Off: sum whichever set genes are present in each zygote, and drop a zygote only if it contains none of them.">
-              <input type="checkbox" id="set-requireall"><span>require all genes</span></label>
-            <button type="button" class="pn-set-clear" id="set-clear" title="Remove every gene from the set">Clear</button>
-          </div>
-          <div class="pn-set-chips" id="set-chips"></div>
+      <div class="pn-panels" id="graph-panels">
+        <div class="pn-panel" data-graph="gene" role="tabpanel">
+          <div class="mini-title">Selected gene <span class="mini-sub" id="gene-fit"></span></div>
+          <div class="pn-resizable" data-plot="gene-scatter" title="Drag the bottom-right corner to resize"><div id="gene-scatter" class="scatter-plot"></div></div>
         </div>
-        <div id="set-scatter" class="scatter-plot"></div>
+        <div class="pn-panel" data-graph="total" role="tabpanel" hidden>
+          <div class="mini-title">All transcripts <span class="mini-sub" id="pn-fit"></span></div>
+          <div class="pn-resizable" data-plot="scatter-plot" title="Drag the bottom-right corner to resize"><div id="scatter-plot" class="scatter-plot"></div></div>
+        </div>
+        <div class="pn-panel pn-setblock" data-graph="set" role="tabpanel" hidden>
+          <div class="pn-set-cfg">
+            <div class="pn-set-row">
+              <span class="pn-set-lbl">Presets <span class="pn-set-hint">(add to the set)</span></span>
+              <div class="pn-set-presets" id="set-presets"></div>
+            </div>
+            <div class="pn-set-row">
+              <label class="ctl pn-set-addl"><span class="ctl-label">Add gene</span><select id="set-add" aria-label="Add a gene to the set"></select></label>
+              <label class="pn-pt-toggle pn-set-allto" title="On: only plot zygotes that contain EVERY gene in the set, so the sum is over an identical gene list. Off: sum whichever set genes are present in each zygote, and drop a zygote only if it contains none of them.">
+                <input type="checkbox" id="set-requireall"><span>require all genes</span></label>
+              <button type="button" class="pn-set-clear" id="set-clear" title="Remove every gene from the set">Clear</button>
+            </div>
+            <div class="pn-set-chips" id="set-chips"></div>
+          </div>
+          <div class="mini-title">Gene set — summed count vs distance <span class="mini-sub" id="set-fit"></span></div>
+          <div class="pn-resizable" data-plot="set-scatter" title="Drag the bottom-right corner to resize"><div id="set-scatter" class="scatter-plot"></div></div>
+        </div>
       </div>
     </div>
   </section>

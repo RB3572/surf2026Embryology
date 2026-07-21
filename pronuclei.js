@@ -35,12 +35,15 @@
   const setAdd = $("#set-add"), setChipsEl = $("#set-chips"), setPresetsEl = $("#set-presets"),
         setRequireAllEl = $("#set-requireall"), setClearEl = $("#set-clear"),
         setScatter = $("#set-scatter"), setFit = $("#set-fit");
+  const graphTabsEl = $("#graph-tabs"), graphPanels = $("#graph-panels");
 
   const state = { points: [], byId: {}, genesAgg: null, gaById: {}, geneCorr: [], userGene: null, rankN: 10,
                   currentId: null, scene: null, fit: null, drawerOpen: false, showDots: false,
                   regType: "linear", dotSize: 1.5, pseudotime: false,
                   region: "all", norm: "count", flip: false, segData: null,
-                  geneSet: [], setRequireAll: false };
+                  geneSet: [], setRequireAll: false, graphTab: "gene" };
+  const PLOT_OF = { gene: geneScatter, total: scatterPlot, set: setScatter };
+  const shown = (el) => !!(el && el.offsetParent);   // in the active (non-hidden) panel & laid out
   let vcExtras = null;   // dot-size + atlas-link row (VCore.addWindowExtras)
 
   (async function init() {
@@ -60,7 +63,7 @@
         label: e.label, sub: e.date_short,
         title: `${e.label} · dist ${e.distance} µm · ${e.total.toLocaleString()} transcripts`,
       }));
-      wireDrawer(); wireRdrawer(); renderRanks();
+      wireDrawer(); wireRdrawer(); wireGraphTabs(); renderRanks();
       ptToggle.addEventListener("change", () => { state.pseudotime = ptToggle.checked; renderAllScatters(); });
       vcExtras = V.addWindowExtras($("#controls-body"), { defaultSize: state.dotSize, onDotSize: (s) => { state.dotSize = s; if (state.scene) render(); } });
       geneSelect.addEventListener("change", () => selectGene(geneSelect.value));
@@ -115,7 +118,8 @@
   const gene = () => geneSelect.value;
   function selectGene(g) {
     state.userGene = g; geneSelect.value = g;
-    renderGeneScatter(); highlightRank();
+    if (state.drawerOpen) switchGraph("gene"); else renderGeneScatter();   // show the gene's own graph
+    highlightRank();
     if (state.scene) { renderReadout(state.byId[state.currentId] || {}); if (state.showDots) render(); }
   }
   // The gene dropdown is the UNION across all zygotes (disjoint MERFISH panels), so the
@@ -538,7 +542,7 @@
       text: [cur.lab], hovertemplate: hover });
     const countIsX = flip;                          // count axis gets rangemode:tozero; distance floats
     plotInto(div, traces, {
-      margin: { l: 64, r: 12, t: 6, b: 40 }, height: div.clientHeight || 220,
+      margin: { l: 64, r: 12, t: 6, b: 40 }, autosize: true,   // fills its resizable container (see .pn-resizable)
       xaxis: { title: { text: hTitle, font: { size: 11 } }, tickfont: { size: 10 }, gridcolor: "#eef1f5", zeroline: false, rangemode: countIsX ? "tozero" : "normal" },
       yaxis: { title: { text: vTitle, font: { size: 10 } }, tickfont: { size: 9 }, gridcolor: "#eef1f5", rangemode: countIsX ? "normal" : "tozero" },
       paper_bgcolor: "transparent", plot_bgcolor: "transparent",
@@ -551,8 +555,21 @@
   const ptx = (dists, maxD) => (state.pseudotime ? dists.map((d) => maxD - d) : dists);
   const PT_X_TITLE = "pseudotime  ·  max distance − pronuclei distance (larger = later)";
   const X_TITLE = () => (state.pseudotime ? PT_X_TITLE : "min pronuclei distance (µm)  ·  smaller = later in development");
-  function renderAllScatters() { renderScatter(); renderGeneScatter(); renderSetScatter(); }
+  const RENDER = { gene: () => renderGeneScatter(), total: () => renderScatter(), set: () => renderSetScatter() };
+  function renderActive() { (RENDER[state.graphTab] || RENDER.gene)(); }
+  function renderAllScatters() { renderActive(); }        // only the visible graph needs (re)drawing
+  function switchGraph(which) {
+    if (!PLOT_OF[which]) which = "gene";
+    state.graphTab = which;
+    graphTabsEl.querySelectorAll(".pn-gtab").forEach((t) => {
+      const on = t.dataset.graph === which; t.classList.toggle("active", on); t.setAttribute("aria-selected", String(on));
+    });
+    graphPanels.querySelectorAll(".pn-panel").forEach((p) => (p.hidden = p.dataset.graph !== which));
+    renderActive();
+    requestAnimationFrame(() => { try { Plotly.Plots.resize(PLOT_OF[which]); } catch (_) {} });
+  }
   function renderScatter() {
+    if (!shown(scatterPlot)) return;                       // skip the graphs on hidden tabs
     const pts = state.points.filter((p) => hasSeg(p.id));   // region≠all drops embryos without per-segment data
     const dists = pts.map((p) => p.distance);
     const Y = pts.map((p) => normVal(totalIn(p.id), p.id));
@@ -564,6 +581,7 @@
     pnFit.innerHTML = `· <b>${f.n}</b> zygotes · ${statsHtml(X, Y, f)}`;
   }
   function renderGeneScatter() {
+    if (!shown(geneScatter)) return;
     const g = gene();
     const xs = [], ys = [], ids = [], labels = [];   // region-aware series for the selected gene
     for (const e of state.genesAgg.embryos) {
@@ -600,6 +618,7 @@
     return out;
   }
   function renderSetScatter() {
+    if (!shown(setScatter)) return;
     const nSet = state.geneSet.length;
     if (nSet === 0) {
       Plotly.purge(setScatter); setScatter.classList.remove("js-plotly-plot");
@@ -646,7 +665,21 @@
   }
 
   // ---------- drawers ----------
-  const resizeScatters = () => { try { Plotly.Plots.resize(scatterPlot); Plotly.Plots.resize(geneScatter); Plotly.Plots.resize(setScatter); } catch (_) {} };
+  const resizeScatters = () => { try { Plotly.Plots.resize(PLOT_OF[state.graphTab]); } catch (_) {} };
+  function wireGraphTabs() {
+    graphTabsEl.addEventListener("click", (e) => { const t = e.target.closest(".pn-gtab"); if (t) switchGraph(t.dataset.graph); });
+    // per-graph corner resize (native `resize:both`) → re-fit Plotly; the height the user drags persists
+    graphPanels.querySelectorAll(".pn-resizable").forEach((box) => {
+      const key = "pn.size." + box.dataset.plot, plot = $("#" + box.dataset.plot);
+      try { const s = JSON.parse(localStorage.getItem(key) || "null"); if (s && s.h) box.style.height = s.h + "px"; } catch (_) {}
+      let raf = 0, sv = 0;
+      new ResizeObserver(() => {
+        if (!box.offsetParent) return;                 // ignore hidden tabs
+        cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { try { Plotly.Plots.resize(plot); } catch (_) {} });
+        clearTimeout(sv); sv = setTimeout(() => { try { localStorage.setItem(key, JSON.stringify({ h: Math.round(box.clientHeight) })); } catch (_) {} }, 300);
+      }).observe(box);
+    });
+  }
   function openDrawer(open) {
     state.drawerOpen = open;
     drawer.dataset.open = open ? "true" : "false";

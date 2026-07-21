@@ -427,7 +427,7 @@
     Plotly.react(plotHost, traces, sceneLayout(s), {
       responsive: true, displaylogo: false,
       modeBarButtonsToRemove: ["tableRotation", "resetCameraLastSave3d", "hoverClosest3d"],
-      toImageButtonOptions: { format: "png", scale: 2 },
+      toImageButtonOptions: { format: "png", scale: 4 },
     });
     updateReadout(s, gene, t ? t.x.length : 0);
   }

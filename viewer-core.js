@@ -62,7 +62,7 @@ window.VCore = (function () {
   const plotConfig = {
     responsive: true, displaylogo: false,
     modeBarButtonsToRemove: ["tableRotation", "resetCameraLastSave3d", "hoverClosest3d"],
-    toImageButtonOptions: { format: "png", scale: 2 },
+    toImageButtonOptions: { format: "png", scale: 4 },
   };
 
   // Translucent segmentation-body meshes.
@@ -171,6 +171,79 @@ window.VCore = (function () {
     range.addEventListener("input", () => { out.textContent = range.value; if (opts.onDotSize) opts.onDotSize(+range.value); });
     return { size: () => +range.value, setAtlas: (id) => { if (id) link.href = atlasLink(id); } };
   }
+
+  // ---- global: a high-resolution PNG download button on EVERY Plotly figure ----
+  // Every analysis page loads viewer-core.js, so this one block gives all figures — the 3-D scenes
+  // and every 2-D drawer chart alike — a one-click high-res (4×) export, with no per-page wiring.
+  // A MutationObserver catches plots as they are created/re-created (Plotly adds `.js-plotly-plot`).
+  (function figureDownloads() {
+    if (typeof document === "undefined" || window.__vcFigDl) return;
+    window.__vcFigDl = true;
+    const SCALE = 4;                                       // 4× the on-screen pixels → crisp/print res
+    const ICON = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"' +
+      ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M12 3v11"/><path d="M7.5 10 12 14.5 16.5 10"/><path d="M5 20h14"/></svg>';
+    const style = document.createElement("style");
+    style.textContent =
+      ".vc-figdl{position:absolute;top:8px;left:8px;z-index:6;display:inline-flex;align-items:center;" +
+      "justify-content:center;width:27px;height:27px;padding:0;border-radius:7px;border:1px solid rgba(20,25,35,.14);" +
+      "background:rgba(255,255,255,.8);color:#334155;cursor:pointer;opacity:.5;line-height:0;" +
+      "transition:opacity .12s,background .12s,box-shadow .12s;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}" +
+      ".vc-figdl:hover{opacity:1;background:#fff;box-shadow:0 2px 8px rgba(20,25,35,.16)}" +
+      ".vc-figdl:active{transform:translateY(1px)}" +
+      ".js-plotly-plot:hover>.vc-figdl{opacity:.92}" +
+      ".vc-figdl.busy{opacity:.7;cursor:progress}" +
+      "@media print{.vc-figdl{display:none}}";
+    (document.head || document.documentElement).appendChild(style);
+
+    const slug = (s) => (s || "figure").toLowerCase().replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "").slice(0, 60) || "figure";
+    const filenameFor = (gd) =>
+      slug((document.title || "figure").split("·")[0]) + "-" + slug(gd.id || "figure");
+
+    function download(gd, btn) {
+      if (!window.Plotly || !Plotly.downloadImage) return;
+      btn.classList.add("busy");
+      const fl = gd._fullLayout || {};
+      const w = Math.max(fl.width || gd.clientWidth || 900, 320);
+      const h = Math.max(fl.height || gd.clientHeight || 600, 240);
+      Promise.resolve(Plotly.downloadImage(gd, { format: "png", scale: SCALE, width: w, height: h, filename: filenameFor(gd) }))
+        .catch(() => {})
+        .then(() => setTimeout(() => btn.classList.remove("busy"), 400));
+    }
+    function addBtn(gd) {
+      if (!gd || !gd.classList || !gd.classList.contains("js-plotly-plot")) return;
+      if (gd.querySelector(":scope > .vc-figdl")) return;   // already has one (survives re-render/purge)
+      if (getComputedStyle(gd).position === "static") gd.style.position = "relative";
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.className = "vc-figdl";
+      btn.title = "Download this figure — high-resolution PNG";
+      btn.setAttribute("aria-label", "Download this figure as a high-resolution PNG");
+      btn.innerHTML = ICON;
+      btn.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); download(gd, btn); });
+      gd.appendChild(btn);
+    }
+    const scan = (root) => {
+      if (!root || root.nodeType !== 1) return;
+      if (root.classList && root.classList.contains("js-plotly-plot")) addBtn(root);
+      if (root.querySelectorAll) root.querySelectorAll(".js-plotly-plot").forEach(addBtn);
+    };
+    function start() {
+      scan(document.body);
+      new MutationObserver((muts) => {
+        for (const m of muts) {
+          if (m.type === "attributes") {
+            if (m.target.classList && m.target.classList.contains("js-plotly-plot")) addBtn(m.target);
+          } else if (m.addedNodes) {
+            m.addedNodes.forEach(scan);
+            if (m.target && m.target.classList && m.target.classList.contains("js-plotly-plot")) addBtn(m.target);
+          }
+        }
+      }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+    else start();
+  })();
 
   return { loadGz, buildTabs, markActiveTab, sceneLayout, plotConfig, bodyTraces,
            wireWindow, XY, umToPlot, plotToUm, atlasLink, addWindowExtras };

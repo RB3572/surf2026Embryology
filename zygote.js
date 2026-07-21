@@ -35,6 +35,9 @@
   const xsGm = $("#xs-gm"), xsGmSub = $("#xs-gm-sub"), xsGmNote = $("#xs-gm-note"), xsGmDownload = $("#xs-gm-download");
   const xsGmAnchor = $("#xs-gm-anchor"), xsGmReroll = $("#xs-gm-reroll"), xsGmStats = $("#xs-gm-stats");
   const xsTabsEl = $("#xs-tabs"), xsPanels = $("#xs-panels");
+  const xsAlign = $("#xs-align"), xsAlignSub = $("#xs-align-sub"), xsAlignDownload = $("#xs-align-download");
+  const xsAlignCells = $("#xs-align-cells"), xsAlignMean = $("#xs-align-mean"), xsAlignOnly = $("#xs-align-only");
+  const xsAlignPlane = $("#xs-align-plane"), xsAlignLegend = $("#xs-align-legend");
   const xsSp = $("#xs-sp"), xsSpSub = $("#xs-sp-sub"), xsSpNote = $("#xs-sp-note"), xsSpDownload = $("#xs-sp-download");
   const xsSpDensity = $("#xs-sp-density"), xsGmDensity = $("#xs-gm-density"), xsGmSperm = $("#xs-gm-sperm");
   const xsBody = $("#xs-body"), xsPb = $("#xs-pb"), xsPronuclei = $("#xs-pronuclei");
@@ -570,6 +573,75 @@
       paper_bgcolor: "transparent", plot_bgcolor: "transparent", uirevision: `${s.id}-${state.planeIdx}`,
     }, XS_CFG);
   }
+  // ---------- cross-embryo ALIGNED outlines, coloured by significance (p-value) ----------
+  // Every zygote's cell-body cross-section (aggregate `outline`, in u,v ⊥ the polar-body axis),
+  // rotated so its best plane (current mode) is vertical and flipped so the selected gene's higher
+  // side is on +x, coloured by viridis(sigT(p)) — dark = significant split, yellow = n.s.
+  const sigT = (p) => Math.max(0, Math.min(1, (Math.log10(Math.max(p, 1e-12)) + 3) / 3));
+  function meanOutline(aligned) {
+    const K = 120, sum = new Float64Array(K), cnt = new Int32Array(K);
+    aligned.forEach((o) => {
+      const rBin = new Float64Array(K), has = new Uint8Array(K);
+      o.pts.forEach(([x, y]) => {
+        const b = Math.min(K - 1, Math.max(0, ((Math.atan2(y, x) + Math.PI) / (2 * Math.PI) * K) | 0)), r = Math.hypot(x, y);
+        if (r > rBin[b]) { rBin[b] = r; has[b] = 1; }
+      });
+      for (let b = 0; b < K; b++) if (has[b]) { sum[b] += rBin[b]; cnt[b]++; }
+    });
+    const out = [];
+    for (let b = 0; b < K; b++) if (cnt[b]) { const r = sum[b] / cnt[b], a = (b + 0.5) / K * 2 * Math.PI - Math.PI; out.push([r * Math.cos(a), r * Math.sin(a)]); }
+    if (out.length < 3) return null; out.push(out[0]); return out;
+  }
+  function renderAlignedOutlines() {
+    if (!xsAlign || !xsAlign.offsetParent) return;               // skip when its tab is hidden
+    const agg = curAGG(); if (!agg) return;
+    const ki = bestKeyIndex(), g = gene(), step = state.step || 10, key = state.crossKey;
+    const onlyCur = xsAlignOnly && xsAlignOnly.checked;
+    const showCells = (xsAlignCells ? xsAlignCells.checked : true) && !onlyCur;
+    const showMean = (xsAlignMean ? xsAlignMean.checked : true) && !onlyCur;
+    const showLegend = xsAlignLegend ? xsAlignLegend.checked : true;
+    const showPlane = xsAlignPlane ? xsAlignPlane.checked : true;
+    const aligned = [];
+    agg.embryos.forEach((e) => {
+      if (!e.outline || !e.outline.length) return;
+      const th = e.best[ki] * step * Math.PI / 180, c = Math.cos(th), s = Math.sin(th);
+      const gRow = e.g[g], flip = gRow ? gRow[1 + ki] * 2 < gRow[0] : false;   // higher gene side → +x
+      const pts = e.outline.map(([u, v]) => { let nx = u * c + v * s; const ny = -u * s + v * c; if (flip) nx = -nx; return [nx, ny]; });
+      pts.push(pts[0]);
+      aligned.push({ pts, p: (e.sig && e.sig[key] != null) ? e.sig[key] : 1, id: e.id, label: e.label, isCur: e.id === state.currentId });
+    });
+    if (!aligned.length) {
+      Plotly.purge(xsAlign); xsAlign.classList.remove("js-plotly-plot");
+      xsAlign.innerHTML = `<div class="xs-empty"><div>No aligned outlines for this selection.</div></div>`;
+      if (xsAlignSub) xsAlignSub.textContent = `· ${g}`; return;
+    }
+    const traces = []; let lim = 20;
+    const bump = (o) => o.pts.forEach(([x, y]) => { const m = Math.max(Math.abs(x), Math.abs(y)); if (m > lim) lim = m; });
+    if (showCells) aligned.forEach((o) => { if (o.isCur) return; bump(o);
+      traces.push({ type: "scatter", mode: "lines", x: o.pts.map((q) => q[0]), y: o.pts.map((q) => q[1]),
+        line: { color: viridis(sigT(o.p)), width: 1, shape: "spline" }, opacity: 0.5, hoverinfo: "skip", showlegend: false }); });
+    if (showMean) { const mo = meanOutline(aligned); if (mo) traces.push({ type: "scatter", mode: "lines",
+      x: mo.map((q) => q[0]), y: mo.map((q) => q[1]), name: "mean outline",
+      line: { color: "#0f172a", width: 2.6, shape: "spline" }, hoverinfo: "skip", showlegend: showLegend }); }
+    const cur = aligned.find((o) => o.isCur);
+    if (cur) { bump(cur);
+      traces.push({ type: "scatter", mode: "lines", x: cur.pts.map((q) => q[0]), y: cur.pts.map((q) => q[1]),
+        line: { color: "#fff", width: 5, shape: "spline" }, hoverinfo: "skip", showlegend: false });
+      traces.push({ type: "scatter", mode: "lines", x: cur.pts.map((q) => q[0]), y: cur.pts.map((q) => q[1]),
+        name: `${cur.label} (this embryo)`, line: { color: viridis(sigT(cur.p)), width: 2.6, shape: "spline" }, hoverinfo: "skip", showlegend: showLegend }); }
+    lim *= 1.08;
+    if (showPlane) traces.push({ type: "scatter", mode: "lines", x: [0, 0], y: [-lim, lim], name: "Division plane",
+      line: { color: "#111827", width: 1.4, dash: "dash" }, hoverinfo: "skip", showlegend: showLegend });
+    if (xsAlignSub) xsAlignSub.textContent = `· ${g} · ${aligned.length} zygotes · ${BESTKEY_LABEL[key]} plane`;
+    plotInto(xsAlign, traces, {
+      dragmode: "pan", margin: { l: 42, r: 10, t: 8, b: 38 }, autosize: true, showlegend: showLegend,
+      xaxis: { title: { text: "Distance from division plane (µm)", font: { size: 10 } }, range: [-lim, lim],
+        scaleanchor: "y", scaleratio: 1, gridcolor: "#eef1f5", zeroline: false, tickfont: { size: 9 } },
+      yaxis: { range: [-lim, lim], gridcolor: "#eef1f5", zeroline: false, tickfont: { size: 9 } },
+      legend: { orientation: "h", x: 0, y: 1.02, xanchor: "left", yanchor: "bottom", font: { size: 9 } },
+      paper_bgcolor: "transparent", plot_bgcolor: "transparent",
+    }, XS_CFG);
+  }
   function binomial95(n) {
     if (!n) return [0, 0];
     const mode = Math.floor(n / 2), weights = new Float64Array(n + 1); weights[mode] = 1;
@@ -927,12 +999,12 @@
       const cov = curAGG().gene_cov[gene()] || 0, tot = curAGG().n_embryos;
       drawerEmb.textContent = `· ${gene()}`;
       xsNote.innerHTML = `Counts use each zygote's <b>${BESTKEY_LABEL[state.crossKey]}</b> plane; <b>${cov}/${tot}</b> retained zygotes contain <b>${gene()}</b>.`;
-      renderCurrentCrossSection(); renderBars(); renderGammaMu(); renderSperm();   // each self-gates on its tab
+      renderCurrentCrossSection(); renderAlignedOutlines(); renderBars(); renderGammaMu(); renderSperm();   // each self-gates on its tab
       requestAnimationFrame(() => { try { Plotly.Plots.resize(xsOutlines); Plotly.Plots.resize(xsBars); } catch (_) {} });
     });
   }
   // ---------- bottom-drawer tabs (one graph per tab) ----------
-  const XS_RENDER = { cross: renderCurrentCrossSection, bars: renderBars, gm: renderGammaMu, sperm: renderSperm };
+  const XS_RENDER = { cross: renderCurrentCrossSection, align: renderAlignedOutlines, bars: renderBars, gm: renderGammaMu, sperm: renderSperm };
   function switchXsTab(which) {
     if (!XS_RENDER[which]) which = "cross";
     state.xsTab = which;
@@ -1134,6 +1206,13 @@
     xsCrossDotSize.addEventListener("input", () => {
       xsCrossDotSizeValue.value = xsCrossDotSize.value;
       renderCurrentCrossSection();
+    });
+    [xsAlignCells, xsAlignMean, xsAlignOnly, xsAlignPlane, xsAlignLegend]
+      .forEach((el) => el && el.addEventListener("change", renderAlignedOutlines));
+    if (xsAlignDownload) xsAlignDownload.addEventListener("click", () => {
+      if (xsAlign.classList.contains("js-plotly-plot"))
+        Plotly.downloadImage(xsAlign, { format: "png", scale: 4, width: 1800, height: 1400,
+          filename: `aligned_outlines_${(gene() || "gene").replace(/[^a-z0-9]+/gi, "_")}` });
     });
     xsBarPercent.addEventListener("change", syncBarModeControls);
     if (xsBarDensity) xsBarDensity.addEventListener("change", syncBarModeControls);

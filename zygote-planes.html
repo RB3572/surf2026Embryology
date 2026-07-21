@@ -110,6 +110,7 @@
       <div class="xs-graph-tabs" id="xs-tabs" role="tablist" aria-label="Analysis plots">
         <button type="button" class="xs-gtab active" data-tab="sperm" role="tab" aria-selected="true">Sperm concordance</button>
         <button type="button" class="xs-gtab" data-tab="cross" role="tab" aria-selected="false">Cross-section</button>
+        <button type="button" class="xs-gtab" data-tab="align" role="tab" aria-selected="false">Aligned outlines</button>
         <button type="button" class="xs-gtab" data-tab="bars" role="tab" aria-selected="false">Per-side bars</button>
         <button type="button" class="xs-gtab" data-tab="gm" role="tab" aria-selected="false">γ / μ concordance</button>
       </div>
@@ -157,6 +158,26 @@
             </div>
           </details>
           <div class="xs-resizable"><div id="xs-outlines" class="xs-plot xs-plot-outlines"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="align" role="tabpanel" hidden>
+          <div class="plot-head">
+            <div class="mini-title">Cross-embryo aligned outlines <span class="mini-sub" id="xs-align-sub"></span></div>
+            <button class="plot-download" id="xs-align-download" type="button" title="Download high-resolution aligned outlines" aria-label="Download high-resolution aligned outlines">↓</button>
+          </div>
+          <div class="xs-otoggles">
+            <label class="xs-tg"><input type="checkbox" id="xs-align-cells" checked><span>cell outlines</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-align-mean" checked><span>mean outline</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-align-only"><span>only this embryo</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-align-plane" checked><span>division plane</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-align-legend" checked><span>legend</span></label>
+            <span class="xs-sigkey" id="xs-align-key"><span class="xs-sk-lab">p ≤ .001</span><span class="xs-sk-bar"></span><span class="xs-sk-lab">n.s. (p ≥ 1)</span></span>
+            <span class="xs-sk-cur"><span class="xs-sw-cur"></span> this embryo</span>
+          </div>
+          <div class="xs-align-note" id="xs-align-note">Every zygote's cell-body cross-section, rotated so its selected best plane
+            is vertical and flipped so the selected gene's higher side is on the right; each coloured by how significantly that
+            zygote splits (dark = significant). Perpendicular to the polar-body axis, so it does not contain the polar body.</div>
+          <div class="xs-resizable"><div id="xs-align" class="xs-plot xs-plot-outlines"></div></div>
         </div>
 
         <div class="xs-panel" data-tab="bars" role="tabpanel" hidden>

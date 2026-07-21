@@ -228,3 +228,5 @@
 .g-O, .g-S { color: #fff; }
 .xs-resizable-grid { height: 300px; }
 .xs-resizable-grid > .xs-gm-grid { max-height: none; height: 100%; border: none; }
+.xs-align-note { font-size: 11px; color: var(--ink-2); line-height: 1.45; padding: 0 4px 6px; }
+.xs-align-note b { color: var(--ink); }

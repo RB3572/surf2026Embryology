@@ -82,6 +82,23 @@
         <div class="help-callout">The <b>p-value</b> asks: could a split this lopsided happen by chance if each
         molecule flipped a fair coin for its side? Low p = unlikely to be luck.</div>` },
 
+    "sperm-division": { eyebrow: "Sperm Division Plane · the method", title: "One plane, fixed by the sperm",
+      html: `<p class="lede">Same question as Division Planes — is a gene's transcriptome lopsided across a plane? — but
+        here we don't sweep 18 candidate planes. We test the <b>single</b> plane the geometry hands us: the one that
+        passes through the <b>sperm</b>, the <b>polar-body centre of mass</b>, and the <b>cell centre of mass</b>.</p>
+        <h3>How the plane is built</h3>
+        <ul><li>The <b>cell COM</b> is the centre of mass of segment 1 (the cytoplasm) — the fixed dot the plane must pass through.</li>
+        <li>Three points define a plane. The sperm and the polar-body COM give it its <b>tilt</b>; its normal is
+        <code>(pb − cell) × (sperm − cell)</code>.</li>
+        <li>Because that normal is perpendicular to the polar-body axis, this is exactly the division-plane orientation
+        that <b>points at the sperm</b> — so every read-out below is identical to Division Planes, just at this one plane.</li></ul>
+        <h3>How to read the 3-D view</h3>
+        <ul><li><span class="tag">blue</span> / <span class="tag">red</span> dots — the gene's transcripts on side A / side B of the sperm plane.</li>
+        <li><span class="tag">green</span> dots — molecules outside the cytoplasm (polar body, pronuclei); not counted.</li>
+        <li>The <b>orange</b> line runs cell&nbsp;COM → sperm, the <b>purple</b> line cell&nbsp;COM → polar body; the teal square is the plane they define.</li></ul>
+        <div class="help-callout">The sperm lies <i>in</i> this plane by construction, so it has no side — there is no
+        sperm-concordance read-out here (unlike Division Planes, where the plane is free of the sperm).</div>` },
+
     "division-crossembryo": { eyebrow: "Division Planes · bottom drawer", title: "Do all zygotes lean the same way?",
       html: `<p class="lede">One zygote leaning to one side could be luck. The real question is whether <b>many</b> zygotes
         lean the <b>same</b> way once you line them up.</p>

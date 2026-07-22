@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sperm Division Plane · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="sperm-division.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="help.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#0d9488;box-shadow:0 0 0 4px color-mix(in srgb,#0d9488 18%,transparent)"></span>
+      <span class="brand-name">Sperm&nbsp;Division&nbsp;Plane</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Zygotes"></nav>
+  </header>
+
+  <main class="stage">
+    <!-- Floating control window (draggable + resizable) -->
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">Controls</span>
+        <button class="help-btn" data-help="sperm-division" style="margin-left:auto" aria-label="What is this analysis?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="controls-row">
+          <label class="ctl" style="flex:1">
+            <span class="ctl-label">Gene</span>
+            <select id="gene-select" aria-label="Gene"></select>
+          </label>
+          <select id="plane-select" aria-label="Division plane" hidden></select>
+        </div>
+        <div class="controls-row zt-toggles">
+          <label class="zt"><input type="checkbox" id="axis-show" checked /><span class="zt-axis">Polar-body axis</span></label>
+          <label class="zt"><input type="checkbox" id="plane-show" checked /><span class="zt-plane">Sperm plane</span></label>
+          <label class="zt" hidden><input type="checkbox" id="all-show" /><span class="zt-all">All planes (p-value)</span></label>
+          <label class="zt"><input type="checkbox" id="sperm-show" checked /><span class="zt-sperm">Sperm &amp; construction</span></label>
+        </div>
+        <div class="controls-row zt-circ-row">
+          <label class="zt zt-circ" title="Inflate each cytoplasm (segment 1) to a smooth sphere of its average radius, carrying transcripts inside, and recompute every analysis on that rounded cell.">
+            <input type="checkbox" id="circ-show" /><span>Circularize</span></label><button class="help-btn" data-help="circularize" aria-label="What is circularize?" onpointerdown="event.stopPropagation()">?</button>
+        </div>
+        <div class="pcolor">
+          <div class="pcolor-top">
+            <span class="ctl-label">Normalization</span>
+            <select id="pcolor-mode" aria-label="Side-difference normalization">
+              <option value="vol">by side volume (density)</option>
+              <option value="cnt">by total count</option>
+            </select>
+          </div>
+        </div>
+        <div class="zchart-panel">
+          <div class="mini-title">Transcripts across plane <span class="mini-sub" id="chart-sub"></span></div>
+          <div id="chart" class="zchart"></div>
+          <div class="chart-readout" id="chart-readout"></div>
+        </div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Select a zygote</div>
+        <div class="ph-sub">Choose a zygote above to view its body, the single
+          division plane through the sperm, the polar-body centre of mass and the
+          cell centre of mass, and a gene's transcripts split across that plane.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- Bottom drawer: publication-ready plots for the selected gene and plane -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Analysis plots <span class="drawer-gene" id="drawer-emb"></span></span>
+      <span class="drawer-hint">sperm-plane cross-section + selected-gene counts across all zygotes</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="xs-controls" hidden>
+        <select id="xs-plane">
+          <option value="pVol" selected>Sperm plane</option>
+        </select>
+        <span class="xs-note" id="xs-note"></span>
+      </div>
+      <div class="xs-graph-tabs" id="xs-tabs" role="tablist" aria-label="Analysis plots">
+        <button type="button" class="xs-gtab active" data-tab="cross" role="tab" aria-selected="true">Cross-section</button>
+        <button type="button" class="xs-gtab" data-tab="align" role="tab" aria-selected="false">Aligned outlines</button>
+        <button type="button" class="xs-gtab" data-tab="bars" role="tab" aria-selected="false">Per-side bars</button>
+        <button type="button" class="xs-gtab" data-tab="gm" role="tab" aria-selected="false">γ / μ concordance</button>
+      </div>
+      <div class="xs-panels" id="xs-panels">
+        <div class="xs-panel" data-tab="cross" role="tabpanel">
+          <div class="plot-head">
+            <div class="mini-title">Current-plane cross-section <span class="mini-sub" id="xs-caption"></span></div>
+            <button class="plot-download" id="xs-cross-download" type="button" title="Download high-resolution cross-section" aria-label="Download high-resolution cross-section">↓</button>
+          </div>
+          <div class="xs-otoggles">
+            <label class="xs-tg"><input type="checkbox" id="xs-body" checked><span>cell outline</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-pb" checked><span>polar body</span></label>
+            <span id="xs-pronuclei" class="xs-dynamic-toggles"></span>
+            <label class="xs-tg"><input type="checkbox" id="xs-cross-legend" checked><span>legend</span></label>
+          </div>
+          <details class="plot-settings" id="xs-cross-settings">
+            <summary>Export settings</summary>
+            <div class="settings-grid">
+              <label>Side A <input type="color" id="xs-cross-high-color" value="#2166ac"></label>
+              <label>Side B <input type="color" id="xs-cross-low-color" value="#b2182b"></label>
+              <label>Anatomy fill <input type="color" id="xs-cross-fill-color" value="#93c5fd"></label>
+              <label>Cell outline <input type="color" id="xs-cross-body-color" value="#1e293b"></label>
+              <label>Polar-body outline <input type="color" id="xs-cross-pb-color" value="#1e3a5f"></label>
+              <label>Pronuclei outline <input type="color" id="xs-cross-pn-color" value="#334155"></label>
+              <label class="range-setting">Transcript size <input type="range" id="xs-cross-dot-size" min="1" max="12" step="0.5" value="3"><output id="xs-cross-dot-size-value">3</output></label>
+              <label>Resolution <select id="xs-cross-scale"><option value="2">2×</option><option value="4" selected>4×</option></select></label>
+              <label>Format <select id="xs-cross-format"><option value="png">PNG</option><option value="svg">SVG</option></select></label>
+            </div>
+          </details>
+          <div class="xs-resizable"><div id="xs-outlines" class="xs-plot xs-plot-outlines"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="align" role="tabpanel" hidden>
+          <div class="plot-head">
+            <div class="mini-title">Cross-embryo aligned outlines <span class="mini-sub" id="xs-align-sub"></span></div>
+            <button class="plot-download" id="xs-align-download" type="button" title="Download high-resolution aligned outlines" aria-label="Download high-resolution aligned outlines">↓</button>
+          </div>
+          <div class="xs-otoggles">
+            <label class="xs-tg"><input type="checkbox" id="xs-align-cells" checked><span>cell outlines</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-align-mean" checked><span>mean outline</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-align-only"><span>only this embryo</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-align-plane" checked><span>division plane</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-align-legend" checked><span>legend</span></label>
+            <span class="xs-sigkey" id="xs-align-key"><span class="xs-sk-lab">p ≤ .001</span><span class="xs-sk-bar"></span><span class="xs-sk-lab">n.s. (p ≥ 1)</span></span>
+            <span class="xs-sk-cur"><span class="xs-sw-cur"></span> this embryo</span>
+          </div>
+          <div class="xs-align-note" id="xs-align-note">Every zygote's cell-body cross-section, rotated so its sperm plane
+            is vertical and flipped so the selected gene's higher side is on the right; each coloured by how significantly that
+            zygote splits (dark = significant). Perpendicular to the polar-body axis, so it does not contain the polar body.</div>
+          <div class="xs-resizable"><div id="xs-align" class="xs-plot xs-plot-outlines"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="bars" role="tabpanel" hidden>
+          <div class="plot-head">
+            <div class="mini-title"><span id="xs-bar-title">Per-side percentage</span> <span class="mini-sub" id="xs-bar-sub"></span></div>
+            <button class="plot-download" id="xs-bar-download" type="button" title="Download high-resolution per-side chart" aria-label="Download high-resolution per-side chart">↓</button>
+          </div>
+          <div class="xs-otoggles">
+            <label class="xs-tg" title="Plot each side's transcript DENSITY (count ÷ that side's volume) as adjacent bars — comparable even when the plane splits the zygote unevenly"><input type="checkbox" id="xs-bar-density"><span>density (÷ side volume)</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-bar-percent" checked><span>percent of zygote</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-bar-log"><span>log y axis</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-bar-adjacent"><span>side-by-side bars</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-bar-legend" checked><span>legend</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-bar-null" checked><span>null mean</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-bar-interval" checked><span>95% null interval</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-bar-grid" checked><span>grid</span></label>
+          </div>
+          <details class="plot-settings" id="xs-bar-settings">
+            <summary>Export settings</summary>
+            <div class="settings-grid">
+              <label>Higher half <input type="color" id="xs-bar-high-color" value="#2166ac"></label>
+              <label>Lower half <input type="color" id="xs-bar-low-color" value="#b2182b"></label>
+              <label>Null <input type="color" id="xs-bar-null-color" value="#7f858c"></label>
+              <label>Resolution <select id="xs-bar-scale"><option value="2">2×</option><option value="4" selected>4×</option></select></label>
+              <label>Format <select id="xs-bar-format"><option value="png">PNG</option><option value="svg">SVG</option></select></label>
+            </div>
+          </details>
+          <div class="xs-resizable"><div id="xs-bars" class="xs-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="gm" role="tabpanel" hidden>
+          <div class="plot-head">
+            <div class="mini-title"><span class="xs-greek-title">&gamma; / &mu;</span> concordance <span class="mini-sub" id="xs-gm-sub"></span></div>
+            <button class="plot-download" id="xs-gm-download" type="button" title="Download this grid as CSV" aria-label="Download grid as CSV">↓</button>
+          </div>
+          <div class="xs-gm-controls">
+            <label class="ctl"><span class="ctl-label">Anchor</span>
+              <select id="xs-gm-anchor">
+                <option value="gene">Selected gene (real)</option>
+                <option value="null">Random plane + side — negative control</option>
+              </select></label>
+            <button class="xs-gm-btn" id="xs-gm-reroll" type="button" title="Draw a new random negative control">Re-roll</button>
+            <label class="xs-tg" title="γ/μ by transcript DENSITY (count ÷ each side's volume) rather than raw count — comparable even when a plane splits the zygote into very uneven halves"><input type="checkbox" id="xs-gm-density" checked><span>density</span></label>
+            <span class="xs-gm-stats" id="xs-gm-stats"></span>
+          </div>
+          <div class="xs-gm-note" id="xs-gm-note"></div>
+          <div class="xs-gm-legend" aria-hidden="true">
+            <span class="xs-gm-key"><i class="gm-sw g-G">γ</i> shares the anchor's γ half</span>
+            <span class="xs-gm-key"><i class="gm-sw g-M">μ</i> flipped to the μ half</span>
+            <span class="xs-gm-key"><i class="gm-sw g-NA"></i> gene absent</span>
+          </div>
+          <div class="xs-resizable xs-resizable-grid"><div id="xs-gm" class="xs-gm-grid"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Right drawer: best planes -->
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Gene ranking</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Gene ranking · sperm plane</div>
+        <div class="rdrawer-desc">Each gene's normalized side-difference across the
+          sperm plane vs the coin-flip null, with permutation p-value.</div>
+      </div>
+      <div class="rtabs" id="rtabs">
+        <button class="rtab active" data-best="pVol">p · vol</button>
+        <button class="rtab" data-best="pCnt">p · count</button>
+        <button class="rtab" data-best="diffVol">Δ · vol</button>
+        <button class="rtab" data-best="diffCnt">Δ · count</button>
+        <button class="rtab" data-best="concord">Concordance</button>
+      </div>
+      <div class="rconcord-controls" id="rconcord-controls" hidden>
+        <label class="ctl"><span class="ctl-label">Rank by</span>
+          <select id="rconcord-rank">
+            <option value="frac">Concordance fraction</option>
+            <option value="p">p value</option>
+          </select></label>
+      </div>
+      <div class="best-list" id="best-list"></div>
+    </div>
+  </aside>
+
+  <script src="viewer-core.js"></script>
+  <script src="sperm-division.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

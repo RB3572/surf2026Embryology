@@ -1,0 +1,257 @@
+{
+ "embryos": [
+  {
+   "id": "20251226_zygote_p1_1",
+   "label": "Z-P1-fov1",
+   "date_short": "Dec 26",
+   "n_genes": 109,
+   "n_transcripts": 158525,
+   "size_kb": 1963,
+   "polar_body_label": 2,
+   "wpVol": 0.20425,
+   "wpCnt": 0.25528
+  },
+  {
+   "id": "20251226_zygote_p1_10",
+   "label": "Z-P1-fov10",
+   "date_short": "Dec 26",
+   "n_genes": 107,
+   "n_transcripts": 127694,
+   "size_kb": 1641,
+   "polar_body_label": 3,
+   "wpVol": 0.004,
+   "wpCnt": 0.00387
+  },
+  {
+   "id": "20251226_zygote_p1_11",
+   "label": "Z-P1-fov11",
+   "date_short": "Dec 26",
+   "n_genes": 110,
+   "n_transcripts": 136193,
+   "size_kb": 1752,
+   "polar_body_label": 2,
+   "wpVol": 0.01307,
+   "wpCnt": 0.01446
+  },
+  {
+   "id": "20251226_zygote_p1_7",
+   "label": "Z-P1-fov7",
+   "date_short": "Dec 26",
+   "n_genes": 109,
+   "n_transcripts": 181338,
+   "size_kb": 2223,
+   "polar_body_label": 2,
+   "wpVol": 0.22045,
+   "wpCnt": 0.21125
+  },
+  {
+   "id": "20251226_zygote_p1_8",
+   "label": "Z-P1-fov8",
+   "date_short": "Dec 26",
+   "n_genes": 107,
+   "n_transcripts": 140000,
+   "size_kb": 1795,
+   "polar_body_label": 2,
+   "wpVol": 0.00549,
+   "wpCnt": 0.00487
+  },
+  {
+   "id": "20260407_zygote_p1_0_2",
+   "label": "Z-P1-fov0_2",
+   "date_short": "Apr 7",
+   "n_genes": 100,
+   "n_transcripts": 12683,
+   "size_kb": 492,
+   "polar_body_label": 4,
+   "wpVol": 0.09848,
+   "wpCnt": 0.08924
+  },
+  {
+   "id": "20260407_zygote_p1_1",
+   "label": "Z-P1-fov1",
+   "date_short": "Apr 7",
+   "n_genes": 93,
+   "n_transcripts": 7271,
+   "size_kb": 439,
+   "polar_body_label": 4,
+   "wpVol": 0.5476,
+   "wpCnt": 0.59495
+  },
+  {
+   "id": "20260407_zygote_p1_12",
+   "label": "Z-P1-fov12",
+   "date_short": "Apr 7",
+   "n_genes": 103,
+   "n_transcripts": 6775,
+   "size_kb": 482,
+   "polar_body_label": 4,
+   "wpVol": 0.54246,
+   "wpCnt": 0.57288
+  },
+  {
+   "id": "20260407_zygote_p1_2",
+   "label": "Z-P1-fov2",
+   "date_short": "Apr 7",
+   "n_genes": 99,
+   "n_transcripts": 53563,
+   "size_kb": 921,
+   "polar_body_label": 4,
+   "wpVol": 0.10249,
+   "wpCnt": 0.09204
+  },
+  {
+   "id": "20260407_zygote_p1_3",
+   "label": "Z-P1-fov3",
+   "date_short": "Apr 7",
+   "n_genes": 102,
+   "n_transcripts": 4586,
+   "size_kb": 362,
+   "polar_body_label": 4,
+   "wpVol": 0.46448,
+   "wpCnt": 0.55403
+  },
+  {
+   "id": "20260407_zygote_p1_4",
+   "label": "Z-P1-fov4",
+   "date_short": "Apr 7",
+   "n_genes": 104,
+   "n_transcripts": 5526,
+   "size_kb": 492,
+   "polar_body_label": 4,
+   "wpVol": 0.61674,
+   "wpCnt": 0.71985
+  },
+  {
+   "id": "20260407_zygote_p1_6_1",
+   "label": "Z-P1-fov6_1",
+   "date_short": "Apr 7",
+   "n_genes": 94,
+   "n_transcripts": 8727,
+   "size_kb": 475,
+   "polar_body_label": 4,
+   "wpVol": 1.29335,
+   "wpCnt": 1.31733
+  },
+  {
+   "id": "20260425_zygote_p2_1",
+   "label": "Z-P2-fov1",
+   "date_short": "Apr 25",
+   "n_genes": 122,
+   "n_transcripts": 147176,
+   "size_kb": 1770,
+   "polar_body_label": 4,
+   "wpVol": 0.42987,
+   "wpCnt": 0.1922
+  },
+  {
+   "id": "20260425_zygote_p2_13",
+   "label": "Z-P2-fov13",
+   "date_short": "Apr 25",
+   "n_genes": 87,
+   "n_transcripts": 358432,
+   "size_kb": 3233,
+   "polar_body_label": 4,
+   "wpVol": 1.13656,
+   "wpCnt": 0.04614
+  },
+  {
+   "id": "20260425_zygote_p2_16",
+   "label": "Z-P2-fov16",
+   "date_short": "Apr 25",
+   "n_genes": 76,
+   "n_transcripts": 268890,
+   "size_kb": 2492,
+   "polar_body_label": 4,
+   "wpVol": 0.04199,
+   "wpCnt": 0.02607
+  },
+  {
+   "id": "20260425_zygote_p2_17",
+   "label": "Z-P2-fov17",
+   "date_short": "Apr 25",
+   "n_genes": 123,
+   "n_transcripts": 446332,
+   "size_kb": 4131,
+   "polar_body_label": 4,
+   "wpVol": 0.14951,
+   "wpCnt": 0.21574
+  },
+  {
+   "id": "20260425_zygote_p2_18_1",
+   "label": "Z-P2-fov18_1",
+   "date_short": "Apr 25",
+   "n_genes": 123,
+   "n_transcripts": 61296,
+   "size_kb": 774,
+   "polar_body_label": 4,
+   "wpVol": 0.27035,
+   "wpCnt": 0.2681
+  },
+  {
+   "id": "20260425_zygote_p2_20",
+   "label": "Z-P2-fov20",
+   "date_short": "Apr 25",
+   "n_genes": 104,
+   "n_transcripts": 95404,
+   "size_kb": 1060,
+   "polar_body_label": 4,
+   "wpVol": 0.13605,
+   "wpCnt": 0.09979
+  },
+  {
+   "id": "20260425_zygote_p2_23",
+   "label": "Z-P2-fov23",
+   "date_short": "Apr 25",
+   "n_genes": 118,
+   "n_transcripts": 286014,
+   "size_kb": 2773,
+   "polar_body_label": 4,
+   "wpVol": 0.00844,
+   "wpCnt": 0.01085
+  },
+  {
+   "id": "20260425_zygote_p2_4",
+   "label": "Z-P2-fov4",
+   "date_short": "Apr 25",
+   "n_genes": 120,
+   "n_transcripts": 209628,
+   "size_kb": 2049,
+   "polar_body_label": 4,
+   "wpVol": 0.00868,
+   "wpCnt": 0.01186
+  },
+  {
+   "id": "20260425_zygote_p2_5",
+   "label": "Z-P2-fov5",
+   "date_short": "Apr 25",
+   "n_genes": 125,
+   "n_transcripts": 392530,
+   "size_kb": 3686,
+   "polar_body_label": 4,
+   "wpVol": 0.55438,
+   "wpCnt": 0.2046
+  },
+  {
+   "id": "20260425_zygote_p2_7_1",
+   "label": "Z-P2-fov7_1",
+   "date_short": "Apr 25",
+   "n_genes": 133,
+   "n_transcripts": 489412,
+   "size_kb": 4429,
+   "polar_body_label": 4,
+   "wpVol": 0.21731,
+   "wpCnt": 0.10963
+  },
+  {
+   "id": "20260425_zygote_p2_8_1",
+   "label": "Z-P2-fov8_1",
+   "date_short": "Apr 25",
+   "n_genes": 122,
+   "n_transcripts": 161046,
+   "size_kb": 1848,
+   "polar_body_label": 4,
+   "wpVol": 0.18792,
+   "wpCnt": 0.19699
+  }
+ ]
+}

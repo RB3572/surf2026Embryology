@@ -59,6 +59,29 @@
     <text x="176" y="150" font-size="10" fill="${GREY}">← more transcripts?</text>
     <text x="150" y="20" font-size="11" fill="${INK}">which one is α?</text>
   </svg>`;
+  const figDiffuse = `<svg class="help-fig" viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="160" cy="92" r="78" fill="#eef5fb" stroke="#d3e1ef"/>
+    <circle cx="160" cy="92" r="52" fill="none" stroke="${GREY}" stroke-width="1.4" stroke-dasharray="5 4"/>
+    <circle cx="151" cy="92" r="11" fill="#fdeede" stroke="#f2d7b3"/>
+    <circle cx="171" cy="90" r="11" fill="#fdeede" stroke="#f2d7b3"/>
+    ${[[160,92],[150,82],[171,100],[158,76],[176,84],[145,98],[137,104],[186,102],[161,116],[131,80],[191,78],[150,62],[198,112],[124,110],[112,92],[209,94],[161,50],[122,62],[205,64],[139,128],[184,128]]
+      .map((p)=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.3" fill="${BLUE}" opacity="0.85"/>`).join("")}
+    <text x="108" y="26" font-size="10.5" fill="${GREY}">observed reach (dashed)</text>
+  </svg>`;
+  const figDiffCurve = `<svg class="help-fig" viewBox="0 0 320 178" xmlns="http://www.w3.org/2000/svg">
+    <line x1="42" y1="16" x2="42" y2="142" stroke="${INK}" stroke-width="1.4"/>
+    <line x1="42" y1="142" x2="302" y2="142" stroke="${INK}" stroke-width="1.4"/>
+    <text x="16" y="98" font-size="9" fill="${GREY}" transform="rotate(-90 16 98)">distance to nucleus</text>
+    <text x="150" y="166" font-size="9" fill="${GREY}">time  (set by the mRNA's size)</text>
+    <path d="M42 120 Q112 84 176 64 Q246 50 302 48 L302 66 Q246 70 176 86 Q112 108 42 144 Z" fill="rgba(37,99,235,0.13)"/>
+    <path d="M42 132 Q112 96 176 74 Q246 58 302 55" fill="none" stroke="${BLUE}" stroke-width="2.4"/>
+    <line x1="42" y1="57" x2="302" y2="57" stroke="${GREY}" stroke-width="1.4" stroke-dasharray="6 4"/>
+    <text x="250" y="50" font-size="9" fill="${GREY}">observed mean</text>
+    <circle cx="243" cy="58" r="5.5" fill="${GREEN}" stroke="#fff" stroke-width="1.5"/>
+    <text x="176" y="112" font-size="9.5" fill="${GREEN}">match → diffusion time</text>
+    <line x1="132" y1="16" x2="132" y2="142" stroke="${INK}" stroke-width="1.3"/>
+    <text x="114" y="13" font-size="9" fill="${INK}">now</text>
+  </svg>`;
 
   const HELP = {
     "division-planes": { eyebrow: "Division Planes · the method", title: "The World Cup problem",
@@ -100,27 +123,108 @@
         sperm-concordance read-out here (unlike Division Planes, where the plane is free of the sperm).</div>` },
 
     "diffusion": { eyebrow: "Gene Diffusion Rates · the model", title: "Could it just be diffusion?",
-      html: `<p class="lede">Every mRNA is born at the nucleus and spreads out. The simplest explanation for where a
-        gene ends up is <b>passive diffusion</b> — no motors, no anchoring, just random Brownian motion. This project
-        builds that null model and asks: <b>how long</b> would pure diffusion take to reach each gene's observed spread?</p>
-        <h3>The model</h3>
-        <ul><li>Start <b>n</b> particles (n = the gene's transcript count) at the nucleus — its <b>centre</b> or its
-        <b>surface</b> (toggle). The nucleus is the two pronuclei.</li>
-        <li>Let them diffuse by fine-grained Brownian motion (small sub-voxel steps, so it faithfully approximates
-        continuous diffusion), reflecting off the cell surface, until the cloud is <b>statistically indistinguishable</b>
-        from that gene's real transcript distribution — by default a Kolmogorov–Smirnov test (it stops the instant the two
-        distance distributions match, so it doesn't overshoot). You can instead match just the mean reach, the spread, or
-        the 90th-percentile.</li>
-        <li>The clock is set by the mRNA's <b>size</b>: we look up each gene's mature mRNA length and set its diffusion
-        coefficient <code>D = D_ref·(L_ref/L)^(1/3)</code> (bigger mRNP → slower), from a 4000-particle ensemble.</li></ul>
-        <h3>Reading it</h3>
-        <ul><li>Press <b>Start</b> to watch the cloud diffuse; it stops automatically when it matches the observed
-        distribution, and the <b>time</b> is the read-out (minutes / hours).</li>
-        <li>The right drawer ranks every gene by that time (longest first) with the embryo average on top; the bottom
-        drawer plots each zygote's mean time against pronuclei distance, total transcripts, or the gene's count.</li></ul>
-        <div class="help-callout">A null model, not a measurement. Genes that would need an <b>implausibly long</b>
-        diffusion time to reach where they actually are may be <b>actively transported or anchored</b>; the absolute
-        scale depends on the assumed diffusion coefficient (D_ref), which is a modelling choice you can recalibrate.</div>` },
+      html: `<p class="lede">Every mRNA is born at the nucleus and spreads out. The simplest possible explanation for
+        where a gene ends up is <b>passive diffusion</b> — no motors, no anchoring, just random Brownian jostling. This
+        project builds that null model <i>explicitly</i> and asks one question: <b>how long</b> would pure diffusion need
+        to reach each gene's <i>observed</i> spread? A short, plausible time means diffusion alone can account for the
+        pattern; an absurdly long one is a hint that something <b>active</b> — directed transport or anchoring — is helping.</p>
+        ${figDiffuse}<div class="help-cap">Each of a gene's transcripts starts at the nucleus (the two pronuclei) and
+        random-walks outward, bouncing off the cell surface, until the cloud is as spread-out as the real one.</div>
+
+        <h3>1 · The random walk</h3>
+        <p>We place <b>n</b> particles (n = the gene's measured transcript count) at the nucleus and step them through a
+        <b>Brownian random walk</b>: on every tick each particle takes a tiny step in a random direction. The steps are
+        deliberately small — sub-voxel, about <code>0.3&nbsp;µm</code> — so the discrete walk faithfully approximates
+        <i>continuous</i> diffusion. A step that would carry a particle through the cell membrane is rejected and retried:
+        a <b>reflecting boundary</b> that keeps molecules inside the cytoplasm (segment&nbsp;1), exactly as they are
+        confined in the real cell. This is the particle-level version of the diffusion equation
+        <code>∂c/∂t = D∇²c</code> with a no-flux wall.</p>
+        <p>The engine underneath is the <b>mean-squared displacement</b>: after a time <b>t</b> a freely-diffusing particle
+        has wandered <code>⟨x²⟩ = 2·D·t</code> along each axis. Spread grows with the <i>square root</i> of time — which is
+        why diffusion is fast across a micron but punishingly slow across tens of microns, so the final approach to the
+        cortex takes disproportionately long.</p>
+
+        <h3>2 · The clock is the mRNA's size</h3>
+        <p>What turns "number of random steps" into real minutes is the <b>diffusion coefficient D</b>, and D depends on how
+        big the molecule is. By <b>Stokes–Einstein</b>, <code>D = kT / 6πηr</code> — a larger particle (radius r) diffuses
+        more slowly. Modelling each mRNA–protein complex as a compact globule whose volume scales with its length, the
+        radius grows as <code>L^(1/3)</code>, giving</p>
+        <div class="help-eq">D(L) = D_ref · (L_ref / L)<sup>1/3</sup></div>
+        <p>with <code>D_ref = 0.05&nbsp;µm²/s</code> at a reference length <code>L_ref = 2500&nbsp;nt</code>. We look up every
+        gene's <b>mature mRNA length</b> — the summed exons of its canonical transcript, from the Ensembl database — to set
+        its own D. <b>Bigger transcript → slower → longer diffusion time.</b> The minutes / hours you read out is this
+        real-time clock.</p>
+
+        <h3>3 · One simulation serves every gene</h3>
+        <p>Here is the trick that makes this tractable. Because D only <b>rescales time</b> — it never changes the <i>path</i>
+        a random walk takes — we simulate each zygote's geometry <b>once</b>, with unit steps, and record at every frame how
+        far the cloud has spread in raw units (its accumulated per-axis MSD, call it <b>τ</b>, in µm²). Converting that to
+        real seconds for any gene is then a single division:</p>
+        <div class="help-eq">t = τ / (2 · D<sub>gene</sub>)</div>
+        <p>So a whole library of genes with different sizes all read off the <b>same</b> spreading movie — each simply stops
+        at a different real time. Frame&nbsp;0 is the starting state (all particles at the nucleus). The <b>Start from</b>
+        toggle lets them begin at the nucleus <b>centre</b> or its <b>surface</b> (surface seeds them a step further out),
+        and the ensemble pools <b>4000 particles</b> so the spreading curve is smooth.</p>
+
+        <h3>4 · When has it "reached" the real spread?</h3>
+        <p>We stop the walk the instant the simulated cloud becomes <b>statistically indistinguishable</b> from the gene's
+        actual transcripts. The <b>Match the observed distribution by</b> menu chooses the yardstick:</p>
+        <ul><li><b>Full distribution match</b> (default) — a two-sample <b>Kolmogorov–Smirnov</b> test comparing the two sets
+        of distance-to-nucleus values. We stop at the first frame where the KS gap falls below its 5% critical value
+        <code>1.358·√((n₁+n₂)/(n₁·n₂))</code>, i.e. the two distributions can no longer be told apart. Stopping on a genuine
+        <i>match</i> (rather than the closest-ever frame) fixes two failures at once: it never <b>overshoots</b> past the
+        target, and it doesn't get pinned at the last frame for well-mixed maternal genes whose real spread already equals
+        diffusion's end-state.</li>
+        <li><b>Mean distance</b>, <b>Spread (std)</b>, <b>90th-percentile reach</b> — simpler one-number targets: the walk
+        stops when the simulated cloud first reaches the observed value of that single statistic.</li></ul>
+
+        <h3>Reading the 3-D view</h3>
+        <ul><li><span class="tag">blue</span> dots — the <b>simulated</b> diffusing mRNA (subsampled to the gene's n).</li>
+        <li><span class="tag">grey</span> dots — the gene's <b>observed</b> transcripts, the target, shown when <i>show
+        observed transcripts</i> is ticked.</li>
+        <li>The translucent shell is the <b>cytoplasm</b> (segment&nbsp;1) the particles bounce inside; the two orange blobs
+        are the <b>pronuclei</b> (the nucleus). The shell's colour and opacity are adjustable in the floating window.</li>
+        <li>Press <b>Start</b> to watch the cloud spread; it <b>auto-stops</b> at the match frame. The progress bar and the
+        distance-over-time plot both track where the animation currently sits.</li></ul>
+
+        <h3>The distance-over-time plot (floating window)</h3>
+        ${figDiffCurve}<div class="help-cap">The cloud's distance-to-nucleus as it grows, on the gene's real-time axis; it stops when it reaches the observed mean.</div>
+        <p>This mini-plot is the whole model in one picture. The <b>blue curve</b> is the simulated cloud's mean distance to
+        the nucleus over time, wrapped in a shaded <b>10–90% band</b> (where the inner and outer molecules are). The
+        <b>dashed line</b> is the gene's observed mean reach — the target. The <b>green dot</b> marks where they meet, and
+        that x-value is the reported diffusion time. The dark <b>vertical line</b> is the live position of the 3-D
+        animation, so you can watch it march toward the green dot as it plays.</p>
+
+        <h3>The right drawer — per-gene times</h3>
+        <p>Every gene in this embryo ranked by diffusion time, <b>longest first</b>, as a bar chart, with the <b>embryo
+        average</b> pinned on top. The long bars are the genes diffusion struggles to explain in a reasonable time. Click
+        any gene to load it into the 3-D view and every other panel.</p>
+
+        <h3>The bottom drawer — two cross-embryo charts</h3>
+        <ul><li><b>Mean time vs property</b> — one dot per zygote: its <b>mean gene diffusion time</b> (x) against a chosen
+        property — minimum pronuclei distance, total transcript number, or the selected gene's count. The <b>Model fit</b>
+        menu overlays any regression (linear, exponential, logistic, count-GLMs, LOESS…) with full statistics — the same
+        fitting toolkit as the Pronuclei project — so you can ask, e.g., whether "older" zygotes (a smaller pronuclei gap)
+        diffuse faster.</li>
+        <li><b>Gene time vs embryo age</b> — a grid of every gene in this embryo, each tile coloured by the <b>ratio</b> of
+        its diffusion time to the embryo's <b>age</b>. Set the age from the dropdown: the embryo's own <b>mean diffusion
+        time</b>, or its <b>pronuclei-distance pseudotime</b> (smaller gap = older, rescaled onto the cohort's
+        diffusion-time range so the two share a clock). A marker shows whether each gene's time is <b>↓ under</b>,
+        <b>= at</b>, or <b>↑ over</b> the age; the deeper the colour, the further <i>under</i> the age it sits — diffusion
+        alone would have more than covered its spread in the time available, flagging it as a candidate for active
+        transport. Grey tiles are older than the age. Click a tile to select that gene.</li></ul>
+
+        <h3>The read-out numbers</h3>
+        <p>Under the gene menu, top to bottom: the big number is the <b>diffusion time</b>; then the gene's <b>transcript
+        count</b> and its <b>observed mean reach</b> (µm from the nucleus); then its <b>mRNA length</b> (nt) and the
+        resulting <b>D</b> (µm²/s) that set its clock.</p>
+
+        <div class="help-callout">This is a <b>null model, not a measurement</b>. Its job is to draw a baseline — "here is
+        what plain diffusion predicts" — so that the interesting genes are the ones that <b>disagree</b> with it. Two honest
+        caveats: the <b>absolute</b> time scale rides entirely on the assumed <code>D_ref</code> (a modelling choice you can
+        recalibrate — so compare genes to one another rather than trusting the raw hours), and transcripts are modelled as
+        inert globules, whereas real mRNAs travel inside RNP granules through a crowded, structured, and partly flowing
+        cytoplasm.</div>` },
 
     "division-crossembryo": { eyebrow: "Division Planes · bottom drawer", title: "Do all zygotes lean the same way?",
       html: `<p class="lede">One zygote leaning to one side could be luck. The real question is whether <b>many</b> zygotes

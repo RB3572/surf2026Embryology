@@ -50,3 +50,8 @@
 .help-callout { background: #f7f9fc; border: 1px solid #e6ebf2; border-left: 3px solid var(--accent, #2563eb);
   border-radius: 8px; padding: 10px 14px; margin: 12px 0; font-size: 13px; color: #354052; }
 .help-callout b { color: #1f2937; }
+.help-eq { font-family: var(--mono, ui-monospace); font-size: 14px; color: #10131a; text-align: center;
+  background: #f4f7fb; border: 1px solid #e3e9f1; border-radius: 8px; padding: 11px 14px; margin: 10px auto 12px; }
+.help-eq sup, .help-eq sub { font-size: 10.5px; }
+.help-body code { font-family: var(--mono, ui-monospace); font-size: 12.5px; background: #eef1f5;
+  border-radius: 4px; padding: 1px 5px; color: #33405a; }

@@ -9,7 +9,7 @@
   const el = (tag, cls) => { const e = document.createElement(tag); if (cls) e.className = cls; return e; };
   const V = window.VCore;
   const XY = 0.15;
-  const AXIS_C = "#111827", PLANE_C = "#f97316";
+  const AXIS_C = "#111827", PLANE_C = "#f97316", SPERM_C = "#f59e0b";
   const BLUE = "#2166ac", RED = "#b2182b", GREEN = "#16a34a";
 
   // Plotly.react corrupts if the div was cleared with innerHTML="" while it was
@@ -24,6 +24,7 @@
   const placeholder = $("#placeholder"), loadingEl = $("#loading"), loadingTxt = $("#loading-text");
   const geneSelect = $("#gene-select"), planeSelect = $("#plane-select");
   const axisShow = $("#axis-show"), planeShow = $("#plane-show"), allShow = $("#all-show");
+  const spermShow = $("#sperm-show");
   const circShow = $("#circ-show");
   const chartEl = $("#chart"), chartSub = $("#chart-sub"), chartReadout = $("#chart-readout");
   const drawer = $("#drawer"), drawerHandle = $("#drawer-handle"), drawerBody = $("#drawer-body");
@@ -234,6 +235,14 @@
           `Plane ${kk * state.step}° · p=${fmtP(pOf(kk))}`, rank++, false));
       }
     }
+    // sperm location (this zygote only, if it has a located sperm — from data/zygote_sperm.json)
+    if (spermShow.checked) {
+      const sp = state.spermData && (state.spermData.embryos || []).find((e) => e.id === s.id);
+      if (sp && sp.sperm_plot) traces.push({ type: "scatter3d", mode: "markers", name: "Sperm",
+        x: [sp.sperm_plot[0]], y: [sp.sperm_plot[1]], z: [sp.sperm_plot[2]],
+        marker: { size: 8, color: SPERM_C, symbol: "diamond", line: { width: 1.5, color: "#fff" } },
+        hovertemplate: "Sperm<extra></extra>", legendrank: 40002 });
+    }
     Plotly.react(plotHost, traces, V.sceneLayout(s.extents, s.id), V.plotConfig);
   }
 
@@ -399,13 +408,21 @@
   // ---------- cross-embryo bottom drawer (all zygotes) ----------
   // Loads the aggregate (every embryo's aligned cross-section outline + per-gene
   // side counts at the 4 best planes) once, lazily.
+  // Per-embryo sperm locations (data/zygote_sperm.json) — powers the floating-window "Sperm
+  // location" toggle in the 3-D view AND the sperm-concordance grid. Loaded once, eagerly.
+  function ensureSperm() {
+    if (state._spermP) return state._spermP;
+    state._spermP = fetch("data/zygote_sperm.json").then((r) => r.json())
+      .then((sp) => { state.spermData = sp; if (spermShow.checked && state.scene) render(); if (state.drawerOpen) renderSperm(); })
+      .catch(() => {});
+    return state._spermP;
+  }
   function ensureAgg() {
     if (state.agg) return Promise.resolve(state.agg);
     if (state._aggP) return state._aggP;
     if (!state._aggCircP) state._aggCircP = V.loadGz("data/zygote_cross_circ.json.gz")
       .then((a) => { state.aggCirc = a; }).catch(() => {});
-    if (!state._spermP) state._spermP = fetch("data/zygote_sperm.json")   // sperm concordance grid
-      .then((r) => r.json()).then((sp) => { state.spermData = sp; if (state.drawerOpen) renderSperm(); }).catch(() => {});
+    ensureSperm();
     state._aggP = V.loadGz("data/zygote_cross.json.gz").then((agg) => {
       state.agg = agg;
       return agg;
@@ -681,8 +698,14 @@
       if (density) {
         const p = emb.best[ki], vA = emb.vp[p], vB = Math.max(emb.vt - emb.vp[p], 1);
         const dA = a / vA * DSCALE, dB = b / vB * DSCALE, hi = Math.max(dA, dB), lo = Math.min(dA, dB);
+        // Null = a UNIFORM distribution → equal density on both sides = total count ÷ total volume.
+        // Each side's density still fluctuates by chance: count ~ Binomial(n, volume-fraction), so the
+        // 95% interval of that side's density is ±1.96·SE ÷ its volume (wider on the smaller side).
+        const T = vA + vB, uniform = totalCount / T * DSCALE;
+        const vHi = dA >= dB ? vA : vB, vLo = dA >= dB ? vB : vA;
+        const se = (v) => 1.96 * Math.sqrt(totalCount * (v / T) * (1 - v / T)) / v * DSCALE;
         return { label: emb.label, high: hi, low: lo, total: hi + lo, highCount, lowCount, totalCount,
-          nullMean: 0, nullLow: 0, nullHigh: 0 };
+          nullMean: uniform, nullLow: uniform, nullHigh: uniform, errHi: se(vHi), errLo: se(vLo) };
       }
       const scale = percentMode ? 100 / totalCount : 1;
       const [nullLowCount, nullHighCount] = binomial95(totalCount);
@@ -721,7 +744,7 @@
             y0: r.high, y1: r.total, fillcolor: xsBarLowColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } }
         );
       }
-      if (!density && xsBarNull.checked) shapes.push({ type: "rect", xref: "x", yref: "y", layer: "above",
+      if (xsBarNull.checked) shapes.push({ type: "rect", xref: "x", yref: "y", layer: "above",
         x0: cx - 0.34, x1: cx + 0.34, y0: baseline, y1: r.nullMean,
         fillcolor: hexAlpha(xsBarNullColor.value, 0.30), line: { color: "#5f666d", width: 0.55 } });
     });
@@ -732,7 +755,8 @@
         { type: "scatter", mode: "markers", name: density ? "Lower-density half" : "Lower-count half", legendrank: 20, x: [null], y: [null],
           marker: { symbol: "square", size: 11, color: xsBarLowColor.value }, hoverinfo: "skip" }
       );
-      if (!density && xsBarNull.checked) traces.push({ type: "scatter", mode: "markers", name: percentMode ? "50% null expectation" : "Null mean", legendrank: 30,
+      if (xsBarNull.checked) traces.push({ type: "scatter", mode: "markers", legendrank: 30,
+        name: density ? "Uniform-density null" : percentMode ? "50% null expectation" : "Null mean",
         x: [null], y: [null], marker: { symbol: "square", size: 11, color: hexAlpha(xsBarNullColor.value, 0.6) }, hoverinfo: "skip" });
     }
     if (!density && xsBarInterval.checked) traces.push({ type: "scatter", mode: "markers", name: "95% null interval", x,
@@ -741,6 +765,15 @@
       error_y: { type: "data", symmetric: false, array: rows.map((r) => r.nullHigh - r.nullMean),
         arrayminus: rows.map((r) => r.nullMean - r.nullLow), color: "#111827", thickness: 0.8, width: 2.5 },
       hovertemplate: "%{x}<br>95% null interval<extra></extra>" });
+    // density: a 95% interval per side (centred on the uniform-density null), at each side-bar's centre
+    if (density && xsBarInterval.checked) {
+      const errBar = (dx, key, showLeg) => ({ type: "scatter", mode: "markers", name: "95% null interval",
+        legendrank: 40, showlegend: showLeg, x: rows.map((_, i) => i + BAR_X0 + dx), y: rows.map((r) => r.nullMean),
+        marker: { size: 1, color: "rgba(0,0,0,0)" },
+        error_y: { type: "data", symmetric: true, array: rows.map((r) => r[key]), color: "#111827", thickness: 0.8, width: 2.2 },
+        hovertemplate: "%{x}<br>95% null interval<extra></extra>" });
+      traces.push(errBar(-0.135, "errHi", xsBarLegend.checked), errBar(0.135, "errLo", false));
+    }
     traces.push({ type: "scatter", mode: "markers", showlegend: false, x,
       y: rows.map((r) => stacked ? r.total : Math.max(r.high, r.low)),
       customdata: rows.map((r) => [r.label, r.high, r.low, r.total, r.nullMean, r.nullLow, r.nullHigh,
@@ -748,7 +781,7 @@
       marker: { size: 24, color: "rgba(0,0,0,0)" },
       hovertemplate: density
         ? "%{customdata[0]}<br>higher-density half %{customdata[1]:.1f}<br>lower-density half %{customdata[2]:.1f}" +
-          " ×10⁻⁴/µm³<br>counts %{customdata[7]} / %{customdata[8]}<extra></extra>"
+          " ×10⁻⁴/µm³<br>uniform-density null %{customdata[4]:.1f}<br>counts %{customdata[7]} / %{customdata[8]}<extra></extra>"
         : percentMode
           ? "%{customdata[0]}<br>higher half %{customdata[1]:.1f}% (%{customdata[7]} transcripts)" +
             "<br>lower half %{customdata[2]:.1f}% (%{customdata[8]} transcripts)" +
@@ -759,7 +792,7 @@
     xsBarSub.textContent = `· ${g} · ${rows.length} zygotes${density ? " · count ÷ side volume" : ""}`;
     const maxY = percentMode ? 100 : Math.max(...rows.map((r) => stacked
       ? Math.max(r.total, r.nullHigh)
-      : Math.max(r.high, r.low, r.nullHigh))) * 1.18;
+      : Math.max(r.high, r.low, r.nullHigh, (r.nullMean || 0) + (r.errHi || 0)))) * 1.18;
     plotInto(xsBars, traces, {
       shapes, margin: { l: 56, r: 10, t: xsBarLegend.checked ? 48 : 8, b: 92 }, autosize: true,
       showlegend: xsBarLegend.checked,
@@ -1089,6 +1122,7 @@
       if (state.drawerOpen) renderCurrentCrossSection();
     });
     [axisShow, planeShow, allShow].forEach((c) => c.addEventListener("change", () => render()));
+    spermShow.addEventListener("change", () => { if (spermShow.checked) ensureSperm(); render(); });
     // circularize ("blow up the balloon"): switch every plot + analysis to the precomputed
     // spherical (seg-1) version and re-render the 3-D view, chart, best-planes, and drawer.
     circShow.addEventListener("change", () => {

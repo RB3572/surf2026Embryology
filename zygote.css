@@ -20,6 +20,7 @@
 .zt input { width: 14px; height: 14px; }
 .zt-axis { --c: #111827; } .zt-axis input { accent-color: #111827; }
 .zt-plane { --c: #f97316; } .zt-plane input { accent-color: #f97316; }
+.zt-sperm { --c: #f59e0b; } .zt-sperm input { accent-color: #f59e0b; }
 .zt-all input { accent-color: #3b528b; }
 .zt-circ-row { border-top: 1px solid var(--line-2); padding-top: 8px; margin-top: 2px; }
 .zt-circ { --c: #db2777; font-weight: 700; } .zt-circ input { accent-color: #db2777; }

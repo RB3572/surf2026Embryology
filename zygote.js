@@ -37,7 +37,7 @@
   const xsTabsEl = $("#xs-tabs"), xsPanels = $("#xs-panels");
   const xsAlign = $("#xs-align"), xsAlignSub = $("#xs-align-sub"), xsAlignDownload = $("#xs-align-download");
   const xsAlignCells = $("#xs-align-cells"), xsAlignMean = $("#xs-align-mean"), xsAlignOnly = $("#xs-align-only");
-  const xsAlignPlane = $("#xs-align-plane"), xsAlignLegend = $("#xs-align-legend");
+  const xsAlignPlane = $("#xs-align-plane"), xsAlignLegend = $("#xs-align-legend"), xsAlignSperm = $("#xs-align-sperm");
   const xsSp = $("#xs-sp"), xsSpSub = $("#xs-sp-sub"), xsSpNote = $("#xs-sp-note"), xsSpDownload = $("#xs-sp-download");
   const xsSpDensity = $("#xs-sp-density"), xsGmDensity = $("#xs-gm-density"), xsGmSperm = $("#xs-gm-sperm");
   const xsBody = $("#xs-body"), xsPb = $("#xs-pb"), xsPronuclei = $("#xs-pronuclei");
@@ -601,14 +601,18 @@
     const showMean = (xsAlignMean ? xsAlignMean.checked : true) && !onlyCur;
     const showLegend = xsAlignLegend ? xsAlignLegend.checked : true;
     const showPlane = xsAlignPlane ? xsAlignPlane.checked : true;
+    const showSperm = xsAlignSperm && xsAlignSperm.checked;
+    const spById = {}; if (state.spermData) state.spermData.embryos.forEach((r) => (spById[r.id] = r));
     const aligned = [];
     agg.embryos.forEach((e) => {
       if (!e.outline || !e.outline.length) return;
       const th = e.best[ki] * step * Math.PI / 180, c = Math.cos(th), s = Math.sin(th);
       const gRow = e.g[g], flip = gRow ? gRow[1 + ki] * 2 < gRow[0] : false;   // higher gene side → +x
-      const pts = e.outline.map(([u, v]) => { let nx = u * c + v * s; const ny = -u * s + v * c; if (flip) nx = -nx; return [nx, ny]; });
-      pts.push(pts[0]);
-      aligned.push({ pts, p: (e.sig && e.sig[key] != null) ? e.sig[key] : 1, id: e.id, label: e.label, isCur: e.id === state.currentId });
+      const xf = ([u, v]) => { let nx = u * c + v * s; const ny = -u * s + v * c; if (flip) nx = -nx; return [nx, ny]; };
+      const pts = e.outline.map(xf); pts.push(pts[0]);
+      const sp = spById[e.id];                                                   // sperm in the SAME aligned frame
+      const sperm = (showSperm && sp && sp.uv) ? xf(sp.uv) : null;
+      aligned.push({ pts, sperm, p: (e.sig && e.sig[key] != null) ? e.sig[key] : 1, id: e.id, label: e.label, isCur: e.id === state.currentId });
     });
     if (!aligned.length) {
       Plotly.purge(xsAlign); xsAlign.classList.remove("js-plotly-plot");
@@ -629,6 +633,15 @@
         line: { color: "#fff", width: 5, shape: "spline" }, hoverinfo: "skip", showlegend: false });
       traces.push({ type: "scatter", mode: "lines", x: cur.pts.map((q) => q[0]), y: cur.pts.map((q) => q[1]),
         name: `${cur.label} (this embryo)`, line: { color: viridis(sigT(cur.p)), width: 2.6, shape: "spline" }, hoverinfo: "skip", showlegend: showLegend }); }
+    // sperm locations — one diamond per embryo with a located sperm, coloured like its outline
+    if (showSperm) {
+      const sm = aligned.filter((o) => o.sperm && (!onlyCur || o.isCur));
+      sm.forEach((o) => bump({ pts: [o.sperm] }));
+      if (sm.length) traces.push({ type: "scatter", mode: "markers", name: `sperm (${sm.length})`,
+        x: sm.map((o) => o.sperm[0]), y: sm.map((o) => o.sperm[1]),
+        marker: { symbol: "diamond", size: 9, color: sm.map((o) => viridis(sigT(o.p))), line: { color: "#fff", width: 1.3 } },
+        text: sm.map((o) => o.label), hovertemplate: "sperm · %{text}<extra></extra>", showlegend: showLegend });
+    }
     lim *= 1.08;
     if (showPlane) traces.push({ type: "scatter", mode: "lines", x: [0, 0], y: [-lim, lim], name: "Division plane",
       line: { color: "#111827", width: 1.4, dash: "dash" }, hoverinfo: "skip", showlegend: showLegend });
@@ -1207,7 +1220,7 @@
       xsCrossDotSizeValue.value = xsCrossDotSize.value;
       renderCurrentCrossSection();
     });
-    [xsAlignCells, xsAlignMean, xsAlignOnly, xsAlignPlane, xsAlignLegend]
+    [xsAlignCells, xsAlignMean, xsAlignOnly, xsAlignPlane, xsAlignLegend, xsAlignSperm]
       .forEach((el) => el && el.addEventListener("change", renderAlignedOutlines));
     if (xsAlignDownload) xsAlignDownload.addEventListener("click", () => {
       if (xsAlign.classList.contains("js-plotly-plot"))

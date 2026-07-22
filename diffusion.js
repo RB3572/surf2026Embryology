@@ -18,9 +18,11 @@
   const dfReadout = $("#df-readout"), dfNote = $("#df-note");
   const playBtn = $("#df-play"), stopBtn = $("#df-stop"), resetBtn = $("#df-reset");
   const progFill = $("#df-progress-fill"), icSeg = $("#df-ic");
+  const dfTimeplot = $("#df-timeplot"), dfTimeplotSub = $("#df-timeplot-sub");
   const obsToggle = $("#df-observed"), cellToggle = $("#df-cell");
   const drawer = $("#drawer"), drawerHandle = $("#drawer-handle"), dfScatter = $("#df-scatter");
   const dfYaxis = $("#df-yaxis"), dfScatterNote = $("#df-scatter-note"), dfScatterSub = $("#df-scatter-sub");
+  const dfModel = $("#df-model"), dfFitStats = $("#df-fit-stats");
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle"), dfList = $("#df-list"), dfEmbAvg = $("#df-embavg");
 
   const state = {
@@ -94,7 +96,7 @@
       if (vcExtras) vcExtras.setAtlas(id);
       controlsEl.hidden = false; placeholder.hidden = true; drawer.hidden = false; rdrawer.hidden = false;
       state.frame = 0; pickSample(); computeStop();
-      drawFrame(); renderReadout(); renderList();
+      drawFrame(); renderReadout(); renderList(); renderTimePlot();
       if (state.drawerOpen) renderScatter();
     } catch (err) { showError(err.message || String(err)); }
     finally { hideLoading(); }
@@ -139,7 +141,7 @@
   function staticTraces() {
     const s = state.scene, r = state.rec, traces = [];
     if (cellToggle.checked) {
-      const t1 = segMesh(1, CELL_C, 0.06, "Cell (cytoplasm)", 10); if (t1) traces.push(t1);
+      const t1 = segMesh(1, CELL_C, 0.16, "Cell (cytoplasm)", 10); if (t1) traces.push(t1);
       const pl = (s.pron_labels || []);
       pl.forEach((lbl, i) => { const t = segMesh(lbl, PRON_C, 0.28, `Nucleus · pronucleus ${i + 1}`, 20 + i); if (t) traces.push(t); });
     }
@@ -181,14 +183,14 @@
     if (state.playing || !icRec()) return;
     if (state.frame >= state.stopFrame) state.frame = 0;
     state.playing = true; playBtn.classList.add("playing"); playBtn.textContent = "❚❚ Playing";
-    drawFrame(); state.lastT = 0; state.raf = requestAnimationFrame(tick);
+    drawFrame(); updateTimeMarker(); state.lastT = 0; state.raf = requestAnimationFrame(tick);
   }
   function tick(ts) {
     if (!state.playing) return;
     if (ts - state.lastT >= 1000 / FPS) {
       state.lastT = ts;
       if (state.frame >= state.stopFrame) { finishAnim(); return; }
-      state.frame++; updateParticles();
+      state.frame++; updateParticles(); updateTimeMarker();
     }
     state.raf = requestAnimationFrame(tick);
   }
@@ -207,6 +209,59 @@
       `<div class="df-big"><b>${t.v}</b> ${t.u} <span class="df-muted">· diffusion time${done ? " ✓ matched" : ""}</span></div>` +
       `<div class="df-sub"><b>${g}</b> · ${gr.n.toLocaleString()} transcripts · observed mean reach <b>${gr.obs_mean} µm</b></div>` +
       `<div class="df-sub df-muted">mRNA ${mrna ? mrna.toLocaleString() + " nt" : "length n/a (panel median)"} · D = ${D ? D.toFixed(4) : "—"} µm²/s</div>`;
+  }
+
+  // ---------- distance-to-nucleus over time (floating-window mini plot) ----------
+  // The cloud's distance-to-nucleus distribution (10–90% band + mean) as it evolves, on the
+  // gene's real-time axis (τ/2D). Target = observed mean; green dot = the match; the dark
+  // vertical line tracks where the 3-D animation currently is.
+  function comOriginUm() {
+    const zs = state.scene.z_scale, op = (state.rec.ic.com || {}).origin_plot;
+    return op ? [op[0] * XY, op[1] * XY, op[2] / zs] : [0, 0, 0];
+  }
+  function simBands(ic) {
+    const r = state.rec && state.rec.ic[ic]; if (!r || !r.traj) return null;
+    if (r._bands) return r._bands;
+    const zs = state.scene.z_scale, o = comOriginUm(), p10 = [], p50 = [], p90 = [];
+    for (let f = 0; f < r.traj.length; f++) {
+      const d = r.traj[f].map((p) => Math.hypot(p[0] * XY - o[0], p[1] * XY - o[1], p[2] / zs - o[2])).sort((a, b) => a - b);
+      const q = (t) => d[Math.min(d.length - 1, Math.floor(t * d.length))];
+      p10.push(q(0.1)); p90.push(q(0.9)); p50.push(d.reduce((a, b) => a + b, 0) / d.length);
+    }
+    r._bands = { p10, p50, p90 }; return r._bands;
+  }
+  function renderTimePlot() {
+    if (!state.rec || !state.scene || !dfTimeplot) return;
+    const b = simBands(state.ic), gr = geneRec(state.gene), D = D_of(state.gene);
+    if (!b || !gr || !D) { try { Plotly.purge(dfTimeplot); } catch (_) {} return; }
+    const tf = state.rec.ic[state.ic].tau_frames;
+    const secMax = tf[tf.length - 1] / (2 * D);
+    const u = secMax / 60 < 90 ? { div: 60, lab: "minutes" } : { div: 3600, lab: "hours" };
+    dfTimeplot._unit = u.div;
+    const x = tf.map((t) => t / (2 * D) / u.div), stopF = state.stopFrame, obs = gr.obs_mean;
+    const ymax = Math.max(Math.max(...b.p90), obs) * 1.05, C = "#0284c7";
+    dfTimeplotSub.textContent = `· ${state.gene}`;
+    const traces = [
+      { x, y: b.p10, mode: "lines", line: { width: 0 }, hoverinfo: "skip", showlegend: false },
+      { x, y: b.p90, mode: "lines", line: { width: 0 }, fill: "tonexty", fillcolor: "rgba(2,132,199,.13)", hoverinfo: "skip", showlegend: false },
+      { x, y: b.p50, mode: "lines", line: { color: C, width: 2 }, hovertemplate: "%{x:.1f} · mean %{y:.0f} µm<extra></extra>", showlegend: false },
+      { x: [0, x[x.length - 1]], y: [obs, obs], mode: "lines", line: { color: "#64748b", width: 1.4, dash: "dash" }, hoverinfo: "skip", showlegend: false },
+      { x: [x[stopF]], y: [b.p50[stopF]], mode: "markers", marker: { size: 8, color: "#16a34a", line: { width: 1.5, color: "#fff" } }, hovertemplate: `matched · %{x:.1f} ${u.lab}<extra></extra>`, showlegend: false },
+      { x: [x[state.frame], x[state.frame]], y: [0, ymax], mode: "lines", line: { color: "#0f172a", width: 1.4 }, hoverinfo: "skip", showlegend: false },
+    ];
+    Plotly.react(dfTimeplot, traces, {
+      margin: { l: 36, r: 8, t: 4, b: 28 }, height: 150,
+      xaxis: { title: { text: u.lab, font: { size: 9 } }, tickfont: { size: 8.5 }, gridcolor: "#eef1f5", zeroline: false, fixedrange: true },
+      yaxis: { title: { text: "µm", font: { size: 9 } }, tickfont: { size: 8.5 }, gridcolor: "#eef1f5", zeroline: false, rangemode: "tozero", fixedrange: true },
+      paper_bgcolor: "transparent", plot_bgcolor: "transparent", showlegend: false, font: { color: "#1a2233" },
+    }, { displayModeBar: false, responsive: true });
+  }
+  function updateTimeMarker() {
+    const r = state.rec && state.rec.ic[state.ic];
+    if (!r || !dfTimeplot || !dfTimeplot.data || !dfTimeplot._unit) return;
+    const D = D_of(state.gene); if (!D) return;
+    const t = r.tau_frames[state.frame] / (2 * D) / dfTimeplot._unit;
+    try { Plotly.restyle(dfTimeplot, { x: [[t, t]] }, [dfTimeplot.data.length - 1]); } catch (_) {}
   }
 
   // ---------- right drawer: per-gene times ----------
@@ -247,14 +302,24 @@
     const which = dfYaxis.value;
     dfScatterSub.textContent = `· ${which === "gene_count" ? state.gene + " count" : Y_LABEL[which]}`;
     dfScatterNote.textContent = `${xs.length} zygotes · x = mean gene diffusion time (min) · ${state.ic === "com" ? "from nucleus centre" : "from nucleus surface"} · match by ${state.metric}`;
-    const trace = { type: "scatter", mode: "markers", x: xs, y: ys, text: txt,
+    const traces = [{ type: "scatter", mode: "markers", name: "zygotes", x: xs, y: ys, text: txt,
       marker: { size: sz, color: cols, line: { width: 1, color: "#fff" } },
-      hovertemplate: "%{text}<br>mean time %{x:.0f} min<br>" + Y_LABEL[which] + " %{y}<extra></extra>" };
+      hovertemplate: "%{text}<br>mean time %{x:.0f} min<br>" + Y_LABEL[which] + " %{y}<extra></extra>" }];
+    // fit the chosen regression model (same family as the Pronuclei project) and draw the curve
+    const R = window.Regressions;
+    if (R && xs.length >= 3) {
+      const fit = R.fitModel(dfModel.value, xs, ys);
+      const lo = Math.min(...xs), hi = Math.max(...xs), cx = [], cy = [];
+      for (let i = 0; i < 90; i++) { const x = lo + (hi - lo) * i / 89, p = fit.predict(x); if (isFinite(p)) { cx.push(x); cy.push(p); } }
+      traces.push({ type: "scatter", mode: "lines", name: fit.label, x: cx, y: cy,
+        line: { color: ACCENT, width: 2.4, shape: "spline" }, hoverinfo: "skip" });
+      dfFitStats.innerHTML = R.statsHtml(xs, ys, fit, { xName: "mean diffusion time", yName: Y_LABEL[which] });
+    } else if (dfFitStats) dfFitStats.textContent = "";
     const layout = { margin: { l: 60, r: 12, t: 8, b: 44 }, paper_bgcolor: "transparent", plot_bgcolor: "transparent",
       font: { color: "#1a2233", size: 12 }, hovermode: "closest", showlegend: false,
       xaxis: { title: "mean diffusion time (min)", gridcolor: "#eef1f5", zeroline: false },
       yaxis: { title: Y_LABEL[which], gridcolor: "#eef1f5", zeroline: false } };
-    Plotly.react(dfScatter, [trace], layout, { responsive: true, displaylogo: false, displayModeBar: "hover",
+    Plotly.react(dfScatter, traces, layout, { responsive: true, displaylogo: false, displayModeBar: "hover",
       modeBarButtonsToRemove: ["select2d", "lasso2d", "autoScale2d", "toggleSpikelines"] });
     dfScatter.dataset.drawn = "1";
   }
@@ -263,12 +328,12 @@
   function onGeneChange(g) {
     if (!g || g === state.gene) return; state.gene = g; geneSelect.value = g;
     stopAnim(); state.frame = 0; pickSample(); computeStop();
-    drawFrame(); renderReadout(); renderList();
+    drawFrame(); renderReadout(); renderList(); renderTimePlot();
     if (state.drawerOpen && dfYaxis.value === "gene_count") renderScatter();
   }
   function onMetricOrIc() {
     stopAnim(); state.frame = 0; populateGenes(); pickSample(); computeStop();
-    drawFrame(); renderReadout(); renderList(); if (state.drawerOpen) renderScatter();
+    drawFrame(); renderReadout(); renderList(); renderTimePlot(); if (state.drawerOpen) renderScatter();
     V.buildTabs(tabsEl, state.points, selectEmbryo, (e) => ({ label: e.label, sub: e.date_short,
       title: `${e.label} · mean diffusion time ${fmtEmbAvg(e.id)}` }));
     V.markActiveTab(tabsEl, state.currentId);
@@ -281,13 +346,14 @@
       state.ic = b.dataset.ic; onMetricOrIc(); });
     playBtn.addEventListener("click", () => (state.playing ? stopAnim() : play()));
     stopBtn.addEventListener("click", stopAnim);
-    resetBtn.addEventListener("click", () => { stopAnim(); state.frame = 0; drawFrame(); renderReadout(); });
+    resetBtn.addEventListener("click", () => { stopAnim(); state.frame = 0; drawFrame(); renderReadout(); updateTimeMarker(); });
     [obsToggle, cellToggle].forEach((c) => c.addEventListener("change", () => { if (state.scene) drawFrame(); }));
     const corners = [...controlsEl.querySelectorAll(".rz")];
     try { V.wireWindow(controlsEl, $("#controls-header"), corners, "df.win"); } catch (_) {}
   }
   function wireDrawer() {
     dfYaxis.addEventListener("change", renderScatter);
+    dfModel.addEventListener("change", renderScatter);
     let start = null, moved = false;
     drawerHandle.addEventListener("pointerdown", (e) => { if (e.button && e.button !== 0) return; start = { x: e.clientX, y: e.clientY }; moved = false; try { drawerHandle.setPointerCapture(e.pointerId); } catch (_) {} });
     drawerHandle.addEventListener("pointermove", (e) => { if (!start) return;

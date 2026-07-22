@@ -44,6 +44,11 @@
           <div class="df-progress" id="df-progress"><div class="df-progress-fill" id="df-progress-fill"></div></div>
         </div>
 
+        <div class="df-timeplot-panel">
+          <div class="df-mini-title">Distance-to-nucleus over time <span class="df-mini-sub" id="df-timeplot-sub"></span></div>
+          <div class="df-timeplot" id="df-timeplot"></div>
+        </div>
+
         <div class="df-opt">
           <span class="ctl-label">Start from</span>
           <div class="df-seg" id="df-ic" role="tablist">
@@ -105,8 +110,22 @@
             <option value="total_tx">Total transcript number</option>
             <option value="gene_count">Selected gene's transcript count</option>
           </select></label>
+        <label class="ctl"><span class="ctl-label">Model fit</span>
+          <select id="df-model">
+            <option value="linear">Linear</option>
+            <option value="quadratic">Quadratic (polynomial)</option>
+            <option value="exp">Exponential</option>
+            <option value="log">Logarithmic</option>
+            <option value="power">Power law</option>
+            <option value="logistic">Logistic (sigmoid)</option>
+            <option value="poisson">Poisson (GLM)</option>
+            <option value="negbin">Negative binomial (GLM)</option>
+            <option value="binomial">Binomial (GLM, logit)</option>
+            <option value="loess">LOESS smoother</option>
+          </select></label>
         <span class="df-scatter-note" id="df-scatter-note"></span>
       </div>
+      <div class="df-fit-stats" id="df-fit-stats"></div>
       <div class="df-resizable"><div id="df-scatter" class="df-plot"></div></div>
     </div>
   </section>
@@ -130,6 +149,7 @@
   </aside>
 
   <script src="viewer-core.js"></script>
+  <script src="regressions.js"></script>
   <script src="diffusion.js"></script>
   <script src="help.js"></script>
   <script src="/analytics.js" defer></script>

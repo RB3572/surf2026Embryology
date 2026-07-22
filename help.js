@@ -106,15 +106,16 @@
         <h3>The model</h3>
         <ul><li>Start <b>n</b> particles (n = the gene's transcript count) at the nucleus — its <b>centre</b> or its
         <b>surface</b> (toggle). The nucleus is the two pronuclei.</li>
-        <li>Let them diffuse by Brownian motion, reflecting off the cell surface, until their spread <b>matches the
-        observed</b> distribution of that gene's real transcripts (choose how "matches" is measured — mean reach, spread,
-        90th-percentile, or the full-distribution KS statistic).</li>
+        <li>Let them diffuse by fine-grained Brownian motion (small sub-voxel steps, so it faithfully approximates
+        continuous diffusion), reflecting off the cell surface, until the cloud is <b>statistically indistinguishable</b>
+        from that gene's real transcript distribution — by default a Kolmogorov–Smirnov test (it stops the instant the two
+        distance distributions match, so it doesn't overshoot). You can instead match just the mean reach, the spread, or
+        the 90th-percentile.</li>
         <li>The clock is set by the mRNA's <b>size</b>: we look up each gene's mature mRNA length and set its diffusion
-        coefficient <code>D = D_ref·(L_ref/L)^(1/3)</code> (bigger mRNP → slower). The stopping time is averaged over
-        100 trials.</li></ul>
+        coefficient <code>D = D_ref·(L_ref/L)^(1/3)</code> (bigger mRNP → slower), from a 4000-particle ensemble.</li></ul>
         <h3>Reading it</h3>
-        <ul><li>Press <b>Start</b> to watch the cloud diffuse; it stops automatically when it matches the observed spread,
-        and the <b>time</b> is the read-out (minutes / hours).</li>
+        <ul><li>Press <b>Start</b> to watch the cloud diffuse; it stops automatically when it matches the observed
+        distribution, and the <b>time</b> is the read-out (minutes / hours).</li>
         <li>The right drawer ranks every gene by that time (longest first) with the embryo average on top; the bottom
         drawer plots each zygote's mean time against pronuclei distance, total transcripts, or the gene's count.</li></ul>
         <div class="help-callout">A null model, not a measurement. Genes that would need an <b>implausibly long</b>

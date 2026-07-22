@@ -9,7 +9,7 @@
   const V = window.VCore;
   const XY = 0.15, ACCENT = "#0284c7";
   const CELL_C = "#c9d3df", PRON_C = "#f59e0b", PART_C = "#0284c7", OBS_C = "#94a3b8";
-  const FPS = 26;
+  const FPS = 15;   // deliberate playback so the fine-grained diffusion is watchable
 
   const tabsEl = $("#tabs"), countEl = $("#embryo-count");
   const controlsEl = $("#controls"), plotHost = $("#plot-host");
@@ -25,7 +25,7 @@
 
   const state = {
     data: null, genesD: null, meta: null, points: [], byId: {}, currentId: null,
-    scene: null, rec: null, ic: "com", metric: "mean", gene: null,
+    scene: null, rec: null, ic: "com", metric: "ks", gene: null,
     playing: false, frame: 0, stopFrame: 0, sampleIdx: null, raf: 0, lastT: 0,
     dotSize: 2.5, drawerOpen: false,
   };

@@ -55,10 +55,10 @@
           <label class="ctl" style="flex:1">
             <span class="ctl-label">Match the observed distribution by</span>
             <select id="metric-select" aria-label="Distribution-match metric">
+              <option value="ks" selected>Full distribution match (recommended)</option>
               <option value="mean">Mean distance to nucleus</option>
               <option value="spread">Spread (std) of distance</option>
               <option value="p90">90th-percentile reach</option>
-              <option value="ks">KS statistic (full distribution)</option>
             </select>
           </label>
         </div>

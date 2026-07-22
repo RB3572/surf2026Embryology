@@ -99,6 +99,18 @@
         .then(function (h) { var g = document.querySelector(".lp-grid"); if (h && g) g.insertAdjacentHTML("afterbegin", h); })
         .catch(function () {});
     }
+    // Hide project cards this login can't open (server enforces it too — see middleware.js).
+    fetch("/api/access", { cache: "no-store" })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d || d.me == null) return;              // null / absent = every project allowed
+        var allowed = {}; d.me.forEach(function (k) { allowed[k] = 1; });
+        document.querySelectorAll(".lp-grid a.lp-card").forEach(function (a) {
+          var key = (a.getAttribute("href") || "").replace(/^\//, "").replace(/\.html?$/, "");
+          if (key && key !== "index" && key !== "admin" && !allowed[key]) a.remove();
+        });
+      })
+      .catch(function () {});
   </script>
 </body>
 </html>

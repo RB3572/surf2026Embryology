@@ -62,3 +62,10 @@ body { background: var(--bg); color: var(--ink);
 .ad-table.ad-clickable tbody tr { cursor: pointer; }
 .ad-table.ad-clickable tbody tr:hover { background: var(--bg); }
 .ad-table.ad-clickable tbody tr.ad-active { background: #eef6ff; box-shadow: inset 3px 0 0 #2563eb; }
+
+/* project-access matrix */
+#ad-access th { text-align: center; font-weight: 600; }
+#ad-access th.ad-first { text-align: left; }
+.ad-table td.ad-acc { text-align: center; }
+.ad-table td.ad-acc input { cursor: pointer; width: 15px; height: 15px; }
+.ad-access-note { font-size: 11.5px; color: var(--ink-2); margin-top: 9px; }

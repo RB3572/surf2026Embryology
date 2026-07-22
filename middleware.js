@@ -9,6 +9,8 @@
 // analytics. `role: "admin"` unlocks the admin console; every /admin* path is 404 (not 403)
 // for everyone else, so its existence is never even revealed.
 
+import { neon } from "@neondatabase/serverless";
+
 const COOKIE = "surf_gate";
 const MAX_AGE = 60 * 60 * 24 * 30; // remember a login for 30 days
 
@@ -17,6 +19,33 @@ const ACCOUNTS = [
   { pw: "AdminPass",      token: "adm_owner_5c1e9a2f7b3d8064c2a7f1", user: "Admin",     role: "admin" },
 ];
 const BY_TOKEN = new Map(ACCOUNTS.map((a) => [a.token, a]));
+
+// ---- per-user project access (managed from the admin console; see api/access.mjs) ----
+// A non-admin user restricted to a project list is redirected to the landing for any other
+// project page. The list is read from Neon and cached; a DB failure fails OPEN (allow) so a
+// database hiccup can never lock authenticated users out of the whole site.
+const CONN = process.env.DATABASE_URL || process.env.POSTGRES_URL ||
+             process.env.DATABASE_URL_UNPOOLED || process.env.POSTGRES_URL_NON_POOLING;
+const accessSql = CONN ? neon(CONN) : null;
+const PROJECT_OF = {
+  "pronuclei.html": "pronuclei", "extpt.html": "extpt", "segments.html": "segments",
+  "zygote-planes.html": "zygote-planes", "sperm-division.html": "sperm-division",
+  "pronuclei-assignments.html": "pronuclei-assignments", "sperm-pca.html": "sperm-pca",
+  "axes.html": "axes", "alphabeta.html": "alphabeta",
+};
+let _accMap = null, _accAt = 0;
+async function allowedProjects(user) {          // → array of allowed keys, or null = all projects
+  const now = Date.now();
+  if (accessSql && (!_accMap || now - _accAt > 60000)) {
+    try {
+      const rows = await accessSql`SELECT usr, projects FROM access`;
+      const m = {}; rows.forEach((r) => (m[r.usr] = r.projects));
+      _accMap = m; _accAt = now;
+    } catch (_) { if (!_accMap) _accMap = {}; }  // keep last-known; empty = everyone sees all
+  } else if (!accessSql && !_accMap) { _accMap = {}; }
+  const v = _accMap && _accMap[user];
+  return Array.isArray(v) ? v : null;
+}
 
 export const config = {
   matcher: "/((?!_vercel).*)", // gate every path except Vercel's own internals
@@ -55,11 +84,25 @@ export default async function middleware(request) {
     });
   }
 
-  // Authenticated → serve the requested file. (The admin console card is revealed on the
+  // Authenticated → project-access check, then serve. (The admin console card is revealed on the
   // landing client-side from the gated /admin.card.html fragment — see index.html — because an
   // edge self-fetch to inject it deadlocks on a custom domain. The fragment + page stay 404 for
   // everyone else, so the console is still invisible to non-admins.)
-  if (account) return;
+  if (account) {
+    if (account.role !== "admin") {
+      const proj = PROJECT_OF[p.replace(/^\//, "")];
+      if (proj) {
+        try {
+          const allowed = await allowedProjects(account.user);
+          if (allowed && !allowed.includes(proj)) {
+            const to = new URL("/", url); to.searchParams.set("denied", proj);
+            return Response.redirect(to.toString(), 303);
+          }
+        } catch (_) { /* fail-open: serve */ }
+      }
+    }
+    return;
+  }
 
   // login form submitted
   if (request.method === "POST") {

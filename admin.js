@@ -99,6 +99,40 @@
       }));
   }
 
+  // ---- project access matrix ----
+  async function loadAccess() {
+    const el = $("#ad-access"), note = $("#ad-access-note");
+    let d;
+    try { d = await (await fetch("/api/access?matrix=1", { credentials: "same-origin", cache: "no-store" })).json(); }
+    catch (e) { note.textContent = "failed to load: " + e.message; return; }
+    if (!d.ok) { el.innerHTML = ""; note.textContent = "access config unavailable — " + (d.err || "database error"); return; }
+    const projs = d.projects || [];
+    const head = `<thead><tr><th class="ad-first">Login</th>${projs.map((p) => `<th title="${esc(p.label)}">${esc(p.label)}</th>`).join("")}</tr></thead>`;
+    const body = (d.users || []).map((u) => {
+      const isAdmin = u.role === "admin", all = u.projects == null;
+      const set = new Set(u.projects || []);
+      const cells = projs.map((p) => {
+        const on = isAdmin || all || set.has(p.key);
+        return `<td class="ad-acc"><input type="checkbox" data-usr="${esc(u.usr)}" data-proj="${p.key}"${on ? " checked" : ""}${isAdmin ? " disabled" : ""}></td>`;
+      }).join("");
+      return `<tr><td class="ad-first"><b>${esc(u.usr)}</b>${isAdmin ? ' <span class="ad-dim">(admin · all)</span>' : all ? ' <span class="ad-dim">(all)</span>' : ""}</td>${cells}</tr>`;
+    }).join("");
+    el.innerHTML = head + `<tbody>${body}</tbody>`;
+    note.textContent = "Uncheck a project to hide it from that login (they are redirected to the landing). Admins always have full access.";
+    el.querySelectorAll("input[type=checkbox]").forEach((cb) => cb.addEventListener("change", onAccessToggle));
+  }
+  async function onAccessToggle(e) {
+    const usr = e.target.dataset.usr;
+    const checked = [...$("#ad-access").querySelectorAll(`input[data-usr="${CSS.escape(usr)}"]`)].filter((c) => c.checked).map((c) => c.dataset.proj);
+    $("#ad-access-note").textContent = "saving…";
+    try {
+      const d = await (await fetch("/api/access", { method: "POST", credentials: "same-origin",
+        headers: { "content-type": "application/json" }, body: JSON.stringify({ usr, projects: checked }) })).json();
+      $("#ad-access-note").textContent = d.ok ? `Saved — ${usr} now has ${checked.length} project(s).` : "save failed: " + (d.err || "unknown");
+    } catch (err) { $("#ad-access-note").textContent = "save failed: " + err.message; }
+  }
+  loadAccess();
+
   $("#ad-user-filter").addEventListener("change", (e) => setFilter(e.target.value));
   $("#ad-users").addEventListener("click", (e) => {
     const tr = e.target.closest("tbody tr"); if (!tr) return;

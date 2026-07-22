@@ -1,5 +1,9 @@
 /* Gene Diffusion Rates — additions on top of style.css */
 
+/* this project's floating window carries a lot (time plot, cell controls…) — cap the WINDOW so
+   its body scrolls within the viewport instead of running off the bottom */
+.controls { max-height: calc(100vh - 84px); }
+
 /* ---- floating controls ---- */
 .df-readout { display: flex; flex-direction: column; gap: 3px; padding: 8px 0; border-top: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); margin-top: 4px; }
 .df-big { font-size: 12px; color: var(--ink-soft); line-height: 1.2; }
@@ -33,6 +37,12 @@
 .df-seg-btn.active { background: var(--surface); color: #0284c7; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
 .df-tg { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; color: var(--ink-2); cursor: pointer; padding-top: 6px; }
 .df-tg input { width: 14px; height: 14px; }
+.df-cellctls { display: flex; flex-direction: column; gap: 5px; padding: 5px 0 2px 22px; }
+.df-cellctl { display: flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 600; color: var(--ink-2); }
+.df-cellctl > span { min-width: 64px; }
+.df-cellctl input[type="color"] { width: 30px; height: 20px; padding: 0; border: 1px solid var(--line); border-radius: 5px; background: none; cursor: pointer; }
+.df-cellctl input[type="range"] { flex: 1; min-width: 0; }
+.df-cellctl output { font-family: var(--mono); font-size: 10.5px; font-weight: 500; color: var(--ink-soft); min-width: 26px; text-align: right; }
 .df-note { font-size: 11.5px; color: var(--ink-soft); line-height: 1.45; padding-top: 8px; border-top: 1px solid var(--line-2); margin-top: 6px; }
 .df-note b { color: var(--ink-2); }
 

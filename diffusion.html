@@ -69,6 +69,12 @@
         </div>
         <label class="df-tg"><input type="checkbox" id="df-observed"><span>show observed transcripts (target)</span></label>
         <label class="df-tg"><input type="checkbox" id="df-cell" checked><span>cell &amp; nucleus surfaces</span></label>
+        <div class="df-cellctls" id="df-cellctls">
+          <label class="df-cellctl"><span>cell colour</span><input type="color" id="df-cell-color" value="#c9d3df"></label>
+          <label class="df-cellctl"><span>cell opacity</span>
+            <input type="range" id="df-cell-opacity" min="0" max="0.6" step="0.02" value="0.16">
+            <output id="df-cell-opacity-val">0.16</output></label>
+        </div>
 
         <div class="df-note" id="df-note">A passive-diffusion <b>null model</b>: mRNA born at the nucleus spreads
           by Brownian motion until it matches the gene's observed spread. The clock is set by the mRNA's size

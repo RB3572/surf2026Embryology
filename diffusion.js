@@ -20,6 +20,7 @@
   const progFill = $("#df-progress-fill"), icSeg = $("#df-ic");
   const dfTimeplot = $("#df-timeplot"), dfTimeplotSub = $("#df-timeplot-sub");
   const obsToggle = $("#df-observed"), cellToggle = $("#df-cell");
+  const cellColorInp = $("#df-cell-color"), cellOpacityInp = $("#df-cell-opacity"), cellOpacityVal = $("#df-cell-opacity-val");
   const drawer = $("#drawer"), drawerHandle = $("#drawer-handle"), dfScatter = $("#df-scatter");
   const dfYaxis = $("#df-yaxis"), dfScatterNote = $("#df-scatter-note"), dfScatterSub = $("#df-scatter-sub");
   const dfModel = $("#df-model"), dfFitStats = $("#df-fit-stats");
@@ -29,7 +30,7 @@
     data: null, genesD: null, meta: null, points: [], byId: {}, currentId: null,
     scene: null, rec: null, ic: "com", metric: "ks", gene: null,
     playing: false, frame: 0, stopFrame: 0, sampleIdx: null, raf: 0, lastT: 0,
-    dotSize: 2.5, drawerOpen: false,
+    dotSize: 2.5, drawerOpen: false, cellColor: "#c9d3df", cellOpacity: 0.16,
   };
   let vcExtras = null;
 
@@ -141,7 +142,7 @@
   function staticTraces() {
     const s = state.scene, r = state.rec, traces = [];
     if (cellToggle.checked) {
-      const t1 = segMesh(1, CELL_C, 0.16, "Cell (cytoplasm)", 10); if (t1) traces.push(t1);
+      const t1 = segMesh(1, state.cellColor, state.cellOpacity, "Cell (cytoplasm)", 10); if (t1) traces.push(t1);
       const pl = (s.pron_labels || []);
       pl.forEach((lbl, i) => { const t = segMesh(lbl, PRON_C, 0.28, `Nucleus · pronucleus ${i + 1}`, 20 + i); if (t) traces.push(t); });
     }
@@ -348,6 +349,11 @@
     stopBtn.addEventListener("click", stopAnim);
     resetBtn.addEventListener("click", () => { stopAnim(); state.frame = 0; drawFrame(); renderReadout(); updateTimeMarker(); });
     [obsToggle, cellToggle].forEach((c) => c.addEventListener("change", () => { if (state.scene) drawFrame(); }));
+    cellColorInp.addEventListener("input", () => { state.cellColor = cellColorInp.value; if (state.scene && cellToggle.checked) drawFrame(); });
+    cellOpacityInp.addEventListener("input", () => {
+      state.cellOpacity = +cellOpacityInp.value; cellOpacityVal.value = (+cellOpacityInp.value).toFixed(2);
+      if (state.scene && cellToggle.checked) drawFrame();
+    });
     const corners = [...controlsEl.querySelectorAll(".rz")];
     try { V.wireWindow(controlsEl, $("#controls-header"), corners, "df.win"); } catch (_) {}
   }

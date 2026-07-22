@@ -181,9 +181,11 @@
         btn.style.setProperty("--stage", `var(${STAGE_VAR[stage] || "--accent"})`);
         btn.title = `${e.title}  ·  ${e.n_transcripts.toLocaleString()} transcripts` +
                     `  ·  record ${e.merfish_index}`;
+        const yr = V.idYear ? V.idYear(e.id) : "";
         btn.innerHTML =
           `<span class="tab-label">${e.label}</span>` +
-          `<span class="tab-date">${e.date_short || ""}</span>`;
+          `<span class="tab-date">${e.date_short || ""}</span>` +
+          (yr ? `<span class="tab-year">${yr}</span>` : "");
         btn.addEventListener("click", () => selectEmbryo(e.id));
         g.appendChild(btn);
       }

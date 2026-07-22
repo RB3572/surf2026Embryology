@@ -2,9 +2,9 @@
  "embryos": [
   {
    "id": "20251226_zygote_p1_1",
-   "label": "p1 1",
+   "label": "Z-P1-fov1",
    "date_short": "Dec 26",
-   "distance": 39.58,
+   "distance": 38.98,
    "total": 158525,
    "pron_labels": [
     4,
@@ -14,9 +14,9 @@
   },
   {
    "id": "20251226_zygote_p1_10",
-   "label": "p1 10",
+   "label": "Z-P1-fov10",
    "date_short": "Dec 26",
-   "distance": 4.31,
+   "distance": 3.89,
    "total": 127694,
    "pron_labels": [
     5,
@@ -26,9 +26,9 @@
   },
   {
    "id": "20251226_zygote_p1_2_2",
-   "label": "p1 2 2",
+   "label": "Z-P1-fov2_2",
    "date_short": "Dec 26",
-   "distance": 3.96,
+   "distance": 2.73,
    "total": 162294,
    "pron_labels": [
     3,
@@ -38,9 +38,9 @@
   },
   {
    "id": "20251226_zygote_p1_4",
-   "label": "p1 4",
+   "label": "Z-P1-fov4",
    "date_short": "Dec 26",
-   "distance": 0.21,
+   "distance": 0.3,
    "total": 42297,
    "pron_labels": [
     4,
@@ -50,9 +50,9 @@
   },
   {
    "id": "20251226_zygote_p1_7",
-   "label": "p1 7",
+   "label": "Z-P1-fov7",
    "date_short": "Dec 26",
-   "distance": 18.83,
+   "distance": 17.64,
    "total": 181338,
    "pron_labels": [
     4,
@@ -62,9 +62,9 @@
   },
   {
    "id": "20251226_zygote_p1_8",
-   "label": "p1 8",
+   "label": "Z-P1-fov8",
    "date_short": "Dec 26",
-   "distance": 30.06,
+   "distance": 28.01,
    "total": 140000,
    "pron_labels": [
     4,
@@ -74,9 +74,9 @@
   },
   {
    "id": "20260407_zygote_p1_0_1",
-   "label": "p1 0 1",
+   "label": "Z-P1-fov0_1",
    "date_short": "Apr 7",
-   "distance": 3.02,
+   "distance": 2.66,
    "total": 13780,
    "pron_labels": [
     3,
@@ -86,9 +86,9 @@
   },
   {
    "id": "20260407_zygote_p1_0_2",
-   "label": "p1 0 2",
+   "label": "Z-P1-fov0_2",
    "date_short": "Apr 7",
-   "distance": 7.77,
+   "distance": 6.62,
    "total": 12683,
    "pron_labels": [
     3,
@@ -98,9 +98,9 @@
   },
   {
    "id": "20260407_zygote_p1_1",
-   "label": "p1 1",
+   "label": "Z-P1-fov1",
    "date_short": "Apr 7",
-   "distance": 4.56,
+   "distance": 3.86,
    "total": 7271,
    "pron_labels": [
     3,
@@ -110,9 +110,9 @@
   },
   {
    "id": "20260407_zygote_p1_10",
-   "label": "p1 10",
+   "label": "Z-P1-fov10",
    "date_short": "Apr 7",
-   "distance": 2.09,
+   "distance": 1.24,
    "total": 21238,
    "pron_labels": [
     3,
@@ -122,9 +122,9 @@
   },
   {
    "id": "20260407_zygote_p1_11",
-   "label": "p1 11",
+   "label": "Z-P1-fov11",
    "date_short": "Apr 7",
-   "distance": 0.96,
+   "distance": 0.3,
    "total": 11653,
    "pron_labels": [
     3,
@@ -134,9 +134,9 @@
   },
   {
    "id": "20260407_zygote_p1_12",
-   "label": "p1 12",
+   "label": "Z-P1-fov12",
    "date_short": "Apr 7",
-   "distance": 1.46,
+   "distance": 1.35,
    "total": 6775,
    "pron_labels": [
     3,
@@ -146,9 +146,9 @@
   },
   {
    "id": "20260407_zygote_p1_2",
-   "label": "p1 2",
+   "label": "Z-P1-fov2",
    "date_short": "Apr 7",
-   "distance": 13.11,
+   "distance": 12.25,
    "total": 53563,
    "pron_labels": [
     3,
@@ -158,9 +158,9 @@
   },
   {
    "id": "20260407_zygote_p1_3",
-   "label": "p1 3",
+   "label": "Z-P1-fov3",
    "date_short": "Apr 7",
-   "distance": 9.82,
+   "distance": 9.14,
    "total": 4586,
    "pron_labels": [
     2,
@@ -170,9 +170,9 @@
   },
   {
    "id": "20260407_zygote_p1_4",
-   "label": "p1 4",
+   "label": "Z-P1-fov4",
    "date_short": "Apr 7",
-   "distance": 0.54,
+   "distance": 0.42,
    "total": 5526,
    "pron_labels": [
     2,
@@ -182,9 +182,9 @@
   },
   {
    "id": "20260407_zygote_p1_5",
-   "label": "p1 5",
+   "label": "Z-P1-fov5",
    "date_short": "Apr 7",
-   "distance": 5.74,
+   "distance": 5.48,
    "total": 4188,
    "pron_labels": [
     3,
@@ -194,7 +194,7 @@
   },
   {
    "id": "20260407_zygote_p1_6_0",
-   "label": "p1 6 0",
+   "label": "Z-P1-fov6_0",
    "date_short": "Apr 7",
    "distance": 1.59,
    "total": 11073,
@@ -206,9 +206,9 @@
   },
   {
    "id": "20260407_zygote_p1_6_1",
-   "label": "p1 6 1",
+   "label": "Z-P1-fov6_1",
    "date_short": "Apr 7",
-   "distance": 1.31,
+   "distance": 1.08,
    "total": 8727,
    "pron_labels": [
     3,
@@ -218,9 +218,9 @@
   },
   {
    "id": "20260407_zygote_p1_7_0",
-   "label": "p1 7 0",
+   "label": "Z-P1-fov7_0",
    "date_short": "Apr 7",
-   "distance": 2.21,
+   "distance": 1.9,
    "total": 11359,
    "pron_labels": [
     2,
@@ -230,9 +230,9 @@
   },
   {
    "id": "20260407_zygote_p1_7_1",
-   "label": "p1 7 1",
+   "label": "Z-P1-fov7_1",
    "date_short": "Apr 7",
-   "distance": 0.44,
+   "distance": 0.3,
    "total": 9942,
    "pron_labels": [
     3,
@@ -242,9 +242,9 @@
   },
   {
    "id": "20260407_zygote_p1_8_0",
-   "label": "p1 8 0",
+   "label": "Z-P1-fov8_0",
    "date_short": "Apr 7",
-   "distance": 1.19,
+   "distance": 0.3,
    "total": 5984,
    "pron_labels": [
     3,
@@ -254,9 +254,9 @@
   },
   {
    "id": "20260407_zygote_p1_8_1",
-   "label": "p1 8 1",
+   "label": "Z-P1-fov8_1",
    "date_short": "Apr 7",
-   "distance": 0.32,
+   "distance": 0.3,
    "total": 4192,
    "pron_labels": [
     3,
@@ -266,7 +266,7 @@
   },
   {
    "id": "20260409_zygote_p2_9",
-   "label": "p2 9",
+   "label": "Z-P2-fov9",
    "date_short": "Apr 9",
    "distance": 2.32,
    "total": 2661,
@@ -278,9 +278,9 @@
   },
   {
    "id": "20260425_zygote_p2_0",
-   "label": "p2 0",
+   "label": "Z-P2-fov0",
    "date_short": "Apr 25",
-   "distance": 28.72,
+   "distance": 27.89,
    "total": 32782,
    "pron_labels": [
     2,
@@ -290,9 +290,9 @@
   },
   {
    "id": "20260425_zygote_p2_1",
-   "label": "p2 1",
+   "label": "Z-P2-fov1",
    "date_short": "Apr 25",
-   "distance": 23.64,
+   "distance": 22.4,
    "total": 147176,
    "pron_labels": [
     3,
@@ -302,9 +302,9 @@
   },
   {
    "id": "20260425_zygote_p2_10",
-   "label": "p2 10",
+   "label": "Z-P2-fov10",
    "date_short": "Apr 25",
-   "distance": 0.0,
+   "distance": 0.3,
    "total": 274612,
    "pron_labels": [
     3,
@@ -314,9 +314,9 @@
   },
   {
    "id": "20260425_zygote_p2_12",
-   "label": "p2 12",
+   "label": "Z-P2-fov12",
    "date_short": "Apr 25",
-   "distance": 19.97,
+   "distance": 19.76,
    "total": 315532,
    "pron_labels": [
     3,
@@ -326,9 +326,9 @@
   },
   {
    "id": "20260425_zygote_p2_13",
-   "label": "p2 13",
+   "label": "Z-P2-fov13",
    "date_short": "Apr 25",
-   "distance": 25.57,
+   "distance": 25.05,
    "total": 358432,
    "pron_labels": [
     3,
@@ -338,9 +338,9 @@
   },
   {
    "id": "20260425_zygote_p2_14",
-   "label": "p2 14",
+   "label": "Z-P2-fov14",
    "date_short": "Apr 25",
-   "distance": 2.18,
+   "distance": 2.06,
    "total": 338834,
    "pron_labels": [
     3,
@@ -350,9 +350,9 @@
   },
   {
    "id": "20260425_zygote_p2_16",
-   "label": "p2 16",
+   "label": "Z-P2-fov16",
    "date_short": "Apr 25",
-   "distance": 23.64,
+   "distance": 22.99,
    "total": 268890,
    "pron_labels": [
     3,
@@ -362,9 +362,9 @@
   },
   {
    "id": "20260425_zygote_p2_17",
-   "label": "p2 17",
+   "label": "Z-P2-fov17",
    "date_short": "Apr 25",
-   "distance": 32.36,
+   "distance": 31.31,
    "total": 446332,
    "pron_labels": [
     2,
@@ -374,9 +374,9 @@
   },
   {
    "id": "20260425_zygote_p2_18_0",
-   "label": "p2 18 0",
+   "label": "Z-P2-fov18_0",
    "date_short": "Apr 25",
-   "distance": 47.37,
+   "distance": 46.59,
    "total": 66506,
    "pron_labels": [
     2,
@@ -386,9 +386,9 @@
   },
   {
    "id": "20260425_zygote_p2_18_1",
-   "label": "p2 18 1",
+   "label": "Z-P2-fov18_1",
    "date_short": "Apr 25",
-   "distance": 17.66,
+   "distance": 16.77,
    "total": 61296,
    "pron_labels": [
     3,
@@ -398,9 +398,9 @@
   },
   {
    "id": "20260425_zygote_p2_19_1",
-   "label": "p2 19 1",
+   "label": "Z-P2-fov19_1",
    "date_short": "Apr 25",
-   "distance": 33.34,
+   "distance": 32.7,
    "total": 154458,
    "pron_labels": [
     3,
@@ -410,9 +410,9 @@
   },
   {
    "id": "20260425_zygote_p2_2",
-   "label": "p2 2",
+   "label": "Z-P2-fov2",
    "date_short": "Apr 25",
-   "distance": 4.07,
+   "distance": 2.1,
    "total": 250646,
    "pron_labels": [
     3,
@@ -422,9 +422,9 @@
   },
   {
    "id": "20260425_zygote_p2_20",
-   "label": "p2 20",
+   "label": "Z-P2-fov20",
    "date_short": "Apr 25",
-   "distance": 0.0,
+   "distance": 0.3,
    "total": 95404,
    "pron_labels": [
     2,
@@ -434,9 +434,9 @@
   },
   {
    "id": "20260425_zygote_p2_21",
-   "label": "p2 21",
+   "label": "Z-P2-fov21",
    "date_short": "Apr 25",
-   "distance": 2.92,
+   "distance": 2.41,
    "total": 186592,
    "pron_labels": [
     3,
@@ -446,9 +446,9 @@
   },
   {
    "id": "20260425_zygote_p2_22_0",
-   "label": "p2 22 0",
+   "label": "Z-P2-fov22_0",
    "date_short": "Apr 25",
-   "distance": 0.68,
+   "distance": 0.67,
    "total": 215774,
    "pron_labels": [
     3,
@@ -458,9 +458,9 @@
   },
   {
    "id": "20260425_zygote_p2_22_1",
-   "label": "p2 22 1",
+   "label": "Z-P2-fov22_1",
    "date_short": "Apr 25",
-   "distance": 28.11,
+   "distance": 27.75,
    "total": 135479,
    "pron_labels": [
     3,
@@ -470,9 +470,9 @@
   },
   {
    "id": "20260425_zygote_p2_23",
-   "label": "p2 23",
+   "label": "Z-P2-fov23",
    "date_short": "Apr 25",
-   "distance": 11.93,
+   "distance": 10.98,
    "total": 286014,
    "pron_labels": [
     3,
@@ -482,9 +482,9 @@
   },
   {
    "id": "20260425_zygote_p2_25_0",
-   "label": "p2 25 0",
+   "label": "Z-P2-fov25_0",
    "date_short": "Apr 25",
-   "distance": 0.15,
+   "distance": 0.3,
    "total": 158882,
    "pron_labels": [
     2,
@@ -494,9 +494,9 @@
   },
   {
    "id": "20260425_zygote_p2_26",
-   "label": "p2 26",
+   "label": "Z-P2-fov26",
    "date_short": "Apr 25",
-   "distance": 0.0,
+   "distance": 0.3,
    "total": 331138,
    "pron_labels": [
     3,
@@ -506,9 +506,9 @@
   },
   {
    "id": "20260425_zygote_p2_4",
-   "label": "p2 4",
+   "label": "Z-P2-fov4",
    "date_short": "Apr 25",
-   "distance": 1.7,
+   "distance": 1.34,
    "total": 209628,
    "pron_labels": [
     2,
@@ -518,9 +518,9 @@
   },
   {
    "id": "20260425_zygote_p2_5",
-   "label": "p2 5",
+   "label": "Z-P2-fov5",
    "date_short": "Apr 25",
-   "distance": 3.56,
+   "distance": 3.35,
    "total": 392530,
    "pron_labels": [
     3,
@@ -530,9 +530,9 @@
   },
   {
    "id": "20260425_zygote_p2_6",
-   "label": "p2 6",
+   "label": "Z-P2-fov6",
    "date_short": "Apr 25",
-   "distance": 19.07,
+   "distance": 18.14,
    "total": 258438,
    "pron_labels": [
     3,
@@ -542,9 +542,9 @@
   },
   {
    "id": "20260425_zygote_p2_7_0",
-   "label": "p2 7 0",
+   "label": "Z-P2-fov7_0",
    "date_short": "Apr 25",
-   "distance": 11.54,
+   "distance": 10.78,
    "total": 400188,
    "pron_labels": [
     3,
@@ -554,9 +554,9 @@
   },
   {
    "id": "20260425_zygote_p2_7_1",
-   "label": "p2 7 1",
+   "label": "Z-P2-fov7_1",
    "date_short": "Apr 25",
-   "distance": 8.16,
+   "distance": 7.51,
    "total": 489412,
    "pron_labels": [
     3,
@@ -566,9 +566,9 @@
   },
   {
    "id": "20260425_zygote_p2_8_0",
-   "label": "p2 8 0",
+   "label": "Z-P2-fov8_0",
    "date_short": "Apr 25",
-   "distance": 6.11,
+   "distance": 5.24,
    "total": 171743,
    "pron_labels": [
     3,
@@ -578,9 +578,9 @@
   },
   {
    "id": "20260425_zygote_p2_8_1",
-   "label": "p2 8 1",
+   "label": "Z-P2-fov8_1",
    "date_short": "Apr 25",
-   "distance": 26.89,
+   "distance": 25.63,
    "total": 161046,
    "pron_labels": [
     2,
@@ -590,9 +590,9 @@
   },
   {
    "id": "20260425_zygote_p2_9_0",
-   "label": "p2 9 0",
+   "label": "Z-P2-fov9_0",
    "date_short": "Apr 25",
-   "distance": 26.01,
+   "distance": 24.82,
    "total": 18570,
    "pron_labels": [
     2,
@@ -602,9 +602,9 @@
   },
   {
    "id": "20260425_zygote_p2_9_1",
-   "label": "p2 9 1",
+   "label": "Z-P2-fov9_1",
    "date_short": "Apr 25",
-   "distance": 28.99,
+   "distance": 27.3,
    "total": 66852,
    "pron_labels": [
     2,

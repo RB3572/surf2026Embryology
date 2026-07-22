@@ -21,14 +21,35 @@ window.VCore = (function () {
   }
 
   // Embryo nav tabs. `spec(m)` -> { label, sub, title }.
+  // the acquisition year is encoded in the embryo id (YYYYMMDD, after any "Type__" prefix)
+  function idYear(id) {
+    const m = String(id || "").split("__").pop().match(/^(\d{4})\d{4}/);
+    return m ? m[1] : "";
+  }
+  // canonical display name (TYPE-PROBESET-fovN), matching embryo_naming.py / the Division Planes project
+  const _STAGE_PREFIX = { o: "O", oocyte: "O", z: "Z", zygote: "Z", e2c: "e2c", early: "e2c",
+    early2cell: "e2c", l2c: "l2c", late: "l2c", late2cell: "l2c" };
+  function embryoLabel(id, stage) {
+    const raw = String(id == null ? "" : id).split("__").pop();
+    let m, idStage, probe, fov;
+    if ((m = raw.match(/^\d{8}_(oocyte|zygote|e2c|l2c|early2cell|late2cell)_p(\d+)_(.+)$/i))) { idStage = m[1]; probe = m[2]; fov = m[3]; }
+    else if ((m = raw.match(/^\d{8}_(l2c)_blastomere_p(\d+)_(.+)$/i))) { idStage = m[1]; probe = m[2]; fov = m[3]; }
+    else if ((m = raw.match(/^\d{8}_sample(\d+)_(zygote)(\d+(?:_\d+)?)$/i))) { probe = m[1]; idStage = m[2]; fov = m[3]; }
+    else return id;
+    const norm = (stage || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    const prefix = _STAGE_PREFIX[norm] || _STAGE_PREFIX[idStage.toLowerCase()];
+    return `${prefix}-P${probe}-fov${fov}`;
+  }
   function buildTabs(tabsEl, embryos, onSelect, spec) {
     tabsEl.innerHTML = "";
     embryos.forEach((m) => {
       const s = spec(m);
       const b = document.createElement("button");
       b.className = "tab"; b.dataset.id = m.id; b.title = s.title || s.label;
+      const yr = idYear(m.id);
       b.innerHTML = `<span class="tab-label">${s.label}</span>` +
-                    `<span class="tab-date">${s.sub || ""}</span>`;
+                    `<span class="tab-date">${s.sub || ""}</span>` +
+                    (yr ? `<span class="tab-year">${yr}</span>` : "");
       b.addEventListener("click", () => onSelect(m.id));
       tabsEl.appendChild(b);
     });
@@ -274,5 +295,6 @@ window.VCore = (function () {
   })();
 
   return { loadGz, buildTabs, markActiveTab, sceneLayout, plotConfig, bodyTraces,
-           wireWindow, XY, umToPlot, plotToUm, atlasLink, addWindowExtras, pronMinDist };
+           wireWindow, XY, umToPlot, plotToUm, atlasLink, addWindowExtras, pronMinDist,
+           embryoLabel, idYear };
 })();

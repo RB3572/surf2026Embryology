@@ -8,6 +8,18 @@
   const $ = (s) => document.querySelector(s);
   const el = (tag, cls) => { const e = document.createElement(tag); if (cls) e.className = cls; return e; };
   const STAGES = ["early", "late"];
+
+  // canonical display name (TYPE-PROBESET-fovN), matching the Division Planes project / embryo_naming.py
+  const _STAGE_PREFIX = { oocyte: "O", zygote: "Z", e2c: "e2c", l2c: "l2c", early2cell: "e2c", late2cell: "l2c" };
+  const embryoLabel = (id) => {
+    const raw = String(id == null ? "" : id).split("__").pop();
+    let m;
+    if ((m = raw.match(/^\d{8}_(oocyte|zygote|e2c|l2c|early2cell|late2cell)_p(\d+)_(.+)$/i)) ||
+        (m = raw.match(/^\d{8}_(l2c)_blastomere_p(\d+)_(.+)$/i)))
+      return `${_STAGE_PREFIX[m[1].toLowerCase()]}-P${m[2]}-fov${m[3]}`;
+    return id;
+  };
+  const idYear = (id) => { const m = String(id || "").split("__").pop().match(/^(\d{4})\d{4}/); return m ? m[1] : ""; };
   const state = { data: null, flips: { early: [], late: [] } };
 
   const flipCall = (c) => (c === "A" ? "B" : c === "B" ? "A" : c);            // T / NA unchanged
@@ -30,7 +42,7 @@
 
   function tooltip(r, m, disp) {
     const raw = r.raw;
-    let s = `${r.id}\n${m.label}: ${disp === "NA" ? "unavailable" : disp === "T" ? "tie" : "α = blastomere " + disp}`;
+    let s = `${embryoLabel(r.id)}\n${m.label}: ${disp === "NA" ? "unavailable" : disp === "T" ? "tie" : "α = blastomere " + disp}`;
     if (m.id === "total") s += `\nblastomere A (1+3) = ${raw.nA.toLocaleString()} transcripts\nblastomere B (2+4) = ${raw.nB.toLocaleString()}`;
     if (m.id === "sperm") s += raw.spermSeg != null ? `\nsperm in segment ${raw.spermSeg}` : `\nno labelled sperm in this embryo`;
     const sc = raw.scores && raw.scores[m.id];
@@ -71,7 +83,7 @@
       const calls = methods.map((m, mi) => shown(r.calls[m.id], flips[mi]));
       const c = consensus(calls);
       const cell = el("div", `ab-cell ab-cons c-${c === "—" ? "NA" : c}`);
-      cell.textContent = c; cell.title = `${r.id}\nconsensus α = ${c}`;
+      cell.textContent = c; cell.title = `${embryoLabel(r.id)}\nconsensus α = ${c}`;
       frag.appendChild(cell);
     });
 
@@ -79,7 +91,8 @@
     frag.appendChild(el("div", "ab-corner"));
     rows.forEach((r) => {
       const cl = el("div", "ab-collabel"); const sp = document.createElement("span");
-      sp.textContent = r.id; cl.appendChild(sp); frag.appendChild(cl);
+      const yr = idYear(r.id);
+      sp.textContent = embryoLabel(r.id) + (yr ? " · " + yr : ""); cl.appendChild(sp); frag.appendChild(cl);
     });
     grid.appendChild(frag);
   }

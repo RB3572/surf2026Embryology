@@ -99,6 +99,28 @@
         <div class="help-callout">The sperm lies <i>in</i> this plane by construction, so it has no side — there is no
         sperm-concordance read-out here (unlike Division Planes, where the plane is free of the sperm).</div>` },
 
+    "diffusion": { eyebrow: "Gene Diffusion Rates · the model", title: "Could it just be diffusion?",
+      html: `<p class="lede">Every mRNA is born at the nucleus and spreads out. The simplest explanation for where a
+        gene ends up is <b>passive diffusion</b> — no motors, no anchoring, just random Brownian motion. This project
+        builds that null model and asks: <b>how long</b> would pure diffusion take to reach each gene's observed spread?</p>
+        <h3>The model</h3>
+        <ul><li>Start <b>n</b> particles (n = the gene's transcript count) at the nucleus — its <b>centre</b> or its
+        <b>surface</b> (toggle). The nucleus is the two pronuclei.</li>
+        <li>Let them diffuse by Brownian motion, reflecting off the cell surface, until their spread <b>matches the
+        observed</b> distribution of that gene's real transcripts (choose how "matches" is measured — mean reach, spread,
+        90th-percentile, or the full-distribution KS statistic).</li>
+        <li>The clock is set by the mRNA's <b>size</b>: we look up each gene's mature mRNA length and set its diffusion
+        coefficient <code>D = D_ref·(L_ref/L)^(1/3)</code> (bigger mRNP → slower). The stopping time is averaged over
+        100 trials.</li></ul>
+        <h3>Reading it</h3>
+        <ul><li>Press <b>Start</b> to watch the cloud diffuse; it stops automatically when it matches the observed spread,
+        and the <b>time</b> is the read-out (minutes / hours).</li>
+        <li>The right drawer ranks every gene by that time (longest first) with the embryo average on top; the bottom
+        drawer plots each zygote's mean time against pronuclei distance, total transcripts, or the gene's count.</li></ul>
+        <div class="help-callout">A null model, not a measurement. Genes that would need an <b>implausibly long</b>
+        diffusion time to reach where they actually are may be <b>actively transported or anchored</b>; the absolute
+        scale depends on the assumed diffusion coefficient (D_ref), which is a modelling choice you can recalibrate.</div>` },
+
     "division-crossembryo": { eyebrow: "Division Planes · bottom drawer", title: "Do all zygotes lean the same way?",
       html: `<p class="lede">One zygote leaning to one side could be luck. The real question is whether <b>many</b> zygotes
         lean the <b>same</b> way once you line them up.</p>

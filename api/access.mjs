@@ -23,6 +23,7 @@ export const PROJECTS = [
   { key: "zygote-planes", label: "Zygote Division Planes" },
   { key: "sperm-division", label: "Sperm Division Plane" },
   { key: "pronuclei-assignments", label: "Pronuclei Assignments" },
+  { key: "diffusion", label: "Gene Diffusion Rates" },
   { key: "sperm-pca", label: "Sperm Prediction (PCA)" },
   { key: "axes", label: "Fertilization Geometry" },
   { key: "alphabeta", label: "Sperm α/β · 2-cell" },

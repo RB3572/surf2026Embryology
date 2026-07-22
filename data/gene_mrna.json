@@ -1,0 +1,4253 @@
+{
+ "genes": {
+  "1700013H16Rik": {
+   "gene": "1700013H16Rik",
+   "transcript": "ENSMUST00000067940",
+   "biotype": "protein_coding",
+   "mrna_nt": 1685,
+   "cds_nt": 8678,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000054727"
+  },
+  "1700084M14Rik": {
+   "gene": "1700084M14Rik",
+   "transcript": "ENSMUST00000078832",
+   "biotype": "protein_coding",
+   "mrna_nt": 559,
+   "cds_nt": 380,
+   "utr_nt": 179,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000057805"
+  },
+  "4930451I11Rik": {
+   "gene": "4930451I11Rik",
+   "transcript": "ENSMUST00000061695",
+   "biotype": "protein_coding",
+   "mrna_nt": 491,
+   "cds_nt": 884,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000045989"
+  },
+  "A430033K04Rik": {
+   "gene": "A430033K04Rik",
+   "transcript": "ENSMUST00000069862",
+   "biotype": "protein_coding",
+   "mrna_nt": 3093,
+   "cds_nt": 24948,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000056014"
+  },
+  "Actr5": {
+   "gene": "Actr5",
+   "transcript": "ENSMUST00000045644",
+   "biotype": "protein_coding",
+   "mrna_nt": 2641,
+   "cds_nt": 13749,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000037761"
+  },
+  "Acvr2b": {
+   "gene": "Acvr2b",
+   "transcript": "ENSMUST00000215746",
+   "biotype": "protein_coding",
+   "mrna_nt": 10734,
+   "cds_nt": 30916,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000061393"
+  },
+  "Adcy2": {
+   "gene": "Adcy2",
+   "transcript": "ENSMUST00000022013",
+   "biotype": "protein_coding",
+   "mrna_nt": 4367,
+   "cds_nt": 378576,
+   "utr_nt": 0,
+   "n_exons": 25,
+   "ensembl_gene": "ENSMUSG00000021536"
+  },
+  "Adm2": {
+   "gene": "Adm2",
+   "transcript": "ENSMUST00000066991",
+   "biotype": "protein_coding",
+   "mrna_nt": 1744,
+   "cds_nt": 1024,
+   "utr_nt": 720,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000054136"
+  },
+  "Aim2": {
+   "gene": "Aim2",
+   "transcript": "ENSMUST00000166137",
+   "biotype": "protein_coding",
+   "mrna_nt": 2079,
+   "cds_nt": 9665,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000037860"
+  },
+  "Akr1b8": {
+   "gene": "Akr1b8",
+   "transcript": "ENSMUST00000038406",
+   "biotype": "protein_coding",
+   "mrna_nt": 1369,
+   "cds_nt": 13938,
+   "utr_nt": 0,
+   "n_exons": 10,
+   "ensembl_gene": "ENSMUSG00000029762"
+  },
+  "Akr1c21": {
+   "gene": "Akr1c21",
+   "transcript": "ENSMUST00000021628",
+   "biotype": "protein_coding",
+   "mrna_nt": 1207,
+   "cds_nt": 12232,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000021207"
+  },
+  "Aldh2": {
+   "gene": "Aldh2",
+   "transcript": "ENSMUST00000031411",
+   "biotype": "protein_coding",
+   "mrna_nt": 4069,
+   "cds_nt": 25491,
+   "utr_nt": 0,
+   "n_exons": 13,
+   "ensembl_gene": "ENSMUSG00000029455"
+  },
+  "Amhr2": {
+   "gene": "Amhr2",
+   "transcript": "ENSMUST00000023809",
+   "biotype": "protein_coding",
+   "mrna_nt": 1980,
+   "cds_nt": 9033,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000023047"
+  },
+  "Ampd3": {
+   "gene": "Ampd3",
+   "transcript": "ENSMUST00000170374",
+   "biotype": "protein_coding",
+   "mrna_nt": 4074,
+   "cds_nt": 33107,
+   "utr_nt": 0,
+   "n_exons": 15,
+   "ensembl_gene": "ENSMUSG00000005686"
+  },
+  "Apoa1": {
+   "gene": "Apoa1",
+   "transcript": "ENSMUST00000034588",
+   "biotype": "protein_coding",
+   "mrna_nt": 1483,
+   "cds_nt": 1446,
+   "utr_nt": 37,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000032083"
+  },
+  "Apol7b": {
+   "gene": "Apol7b",
+   "transcript": "ENSMUST00000089469",
+   "biotype": "protein_coding",
+   "mrna_nt": 2227,
+   "cds_nt": 4565,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000068252"
+  },
+  "Apom": {
+   "gene": "Apom",
+   "transcript": "ENSMUST00000025249",
+   "biotype": "protein_coding",
+   "mrna_nt": 1013,
+   "cds_nt": 2614,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000024391"
+  },
+  "Apoo": {
+   "gene": "Apoo",
+   "transcript": "ENSMUST00000113898",
+   "biotype": "protein_coding",
+   "mrna_nt": 914,
+   "cds_nt": 45342,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000079508"
+  },
+  "Arg2": {
+   "gene": "Arg2",
+   "transcript": "ENSMUST00000021550",
+   "biotype": "protein_coding",
+   "mrna_nt": 1455,
+   "cds_nt": 25162,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000021125"
+  },
+  "Arl4d": {
+   "gene": "Arl4d",
+   "transcript": "ENSMUST00000039388",
+   "biotype": "protein_coding",
+   "mrna_nt": 1382,
+   "cds_nt": 606,
+   "utr_nt": 776,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000034936"
+  },
+  "Arpc1b": {
+   "gene": "Arpc1b",
+   "transcript": "ENSMUST00000563205",
+   "biotype": "protein_coding",
+   "mrna_nt": 1585,
+   "cds_nt": 6198,
+   "utr_nt": 0,
+   "n_exons": 10,
+   "ensembl_gene": "ENSMUSG00000029622"
+  },
+  "Arx": {
+   "gene": "Arx",
+   "transcript": "ENSMUST00000046565",
+   "biotype": "protein_coding",
+   "mrna_nt": 2881,
+   "cds_nt": 10676,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000035277"
+  },
+  "Atg4d": {
+   "gene": "Atg4d",
+   "transcript": "ENSMUST00000065005",
+   "biotype": "protein_coding",
+   "mrna_nt": 6044,
+   "cds_nt": 7954,
+   "utr_nt": 0,
+   "n_exons": 10,
+   "ensembl_gene": "ENSMUSG00000002820"
+  },
+  "Atp1b2": {
+   "gene": "Atp1b2",
+   "transcript": "ENSMUST00000047889",
+   "biotype": "protein_coding",
+   "mrna_nt": 3001,
+   "cds_nt": 4125,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000041329"
+  },
+  "Axin2": {
+   "gene": "Axin2",
+   "transcript": "ENSMUST00000550144",
+   "biotype": "protein_coding",
+   "mrna_nt": 4427,
+   "cds_nt": 26108,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000000142"
+  },
+  "Bag3": {
+   "gene": "Bag3",
+   "transcript": "ENSMUST00000033136",
+   "biotype": "protein_coding",
+   "mrna_nt": 2619,
+   "cds_nt": 22538,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000030847"
+  },
+  "Bambi": {
+   "gene": "Bambi",
+   "transcript": "ENSMUST00000025075",
+   "biotype": "protein_coding",
+   "mrna_nt": 5126,
+   "cds_nt": 4191,
+   "utr_nt": 935,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000024232"
+  },
+  "Bex1": {
+   "gene": "Bex1",
+   "transcript": "ENSMUST00000413187",
+   "biotype": "protein_coding",
+   "mrna_nt": 948,
+   "cds_nt": 387,
+   "utr_nt": 561,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000050071"
+  },
+  "Bglap": {
+   "gene": "Bglap",
+   "transcript": "ENSMUST00000076048",
+   "biotype": "protein_coding",
+   "mrna_nt": 440,
+   "cds_nt": 781,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000074483"
+  },
+  "Bglap2": {
+   "gene": "Bglap2",
+   "transcript": "ENSMUST00000098956",
+   "biotype": "protein_coding",
+   "mrna_nt": 525,
+   "cds_nt": 781,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000074486"
+  },
+  "Bmp5": {
+   "gene": "Bmp5",
+   "transcript": "ENSMUST00000012281",
+   "biotype": "protein_coding",
+   "mrna_nt": 3830,
+   "cds_nt": 122490,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000032179"
+  },
+  "Bmp7": {
+   "gene": "Bmp7",
+   "transcript": "ENSMUST00000009143",
+   "biotype": "protein_coding",
+   "mrna_nt": 3966,
+   "cds_nt": 69933,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000008999"
+  },
+  "Bmpr1b": {
+   "gene": "Bmpr1b",
+   "transcript": "ENSMUST00000106230",
+   "biotype": "protein_coding",
+   "mrna_nt": 5516,
+   "cds_nt": 39885,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000052430"
+  },
+  "Bmyc": {
+   "gene": "Bmyc",
+   "transcript": "ENSMUST00000061483",
+   "biotype": "protein_coding",
+   "mrna_nt": 983,
+   "cds_nt": 513,
+   "utr_nt": 470,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000049086"
+  },
+  "Brd1": {
+   "gene": "Brd1",
+   "transcript": "ENSMUST00000109381",
+   "biotype": "protein_coding",
+   "mrna_nt": 5239,
+   "cds_nt": 42394,
+   "utr_nt": 0,
+   "n_exons": 13,
+   "ensembl_gene": "ENSMUSG00000022387"
+  },
+  "Brd4": {
+   "gene": "Brd4",
+   "transcript": "ENSMUST00000542250",
+   "biotype": "protein_coding",
+   "mrna_nt": 7205,
+   "cds_nt": 31950,
+   "utr_nt": 0,
+   "n_exons": 20,
+   "ensembl_gene": "ENSMUSG00000024002"
+  },
+  "Brdt": {
+   "gene": "Brdt",
+   "transcript": "ENSMUST00000031215",
+   "biotype": "protein_coding",
+   "mrna_nt": 4748,
+   "cds_nt": 43456,
+   "utr_nt": 0,
+   "n_exons": 19,
+   "ensembl_gene": "ENSMUSG00000029279"
+  },
+  "Btbd18": {
+   "gene": "Btbd18",
+   "transcript": "ENSMUST00000133437",
+   "biotype": "protein_coding",
+   "mrna_nt": 3585,
+   "cds_nt": 6715,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000086598"
+  },
+  "C2cd4a": {
+   "gene": "C2cd4a",
+   "transcript": "ENSMUST00000054500",
+   "biotype": "protein_coding",
+   "mrna_nt": 2168,
+   "cds_nt": 1005,
+   "utr_nt": 1163,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000047990"
+  },
+  "Calm5": {
+   "gene": "Calm5",
+   "transcript": "ENSMUST00000184271",
+   "biotype": "protein_coding",
+   "mrna_nt": 423,
+   "cds_nt": 463,
+   "utr_nt": 0,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000099269"
+  },
+  "Calu": {
+   "gene": "Calu",
+   "transcript": "ENSMUST00000031779",
+   "biotype": "protein_coding",
+   "mrna_nt": 3266,
+   "cds_nt": 18027,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000029767"
+  },
+  "Camk2d": {
+   "gene": "Camk2d",
+   "transcript": "ENSMUST00000425062",
+   "biotype": "protein_coding",
+   "mrna_nt": 7359,
+   "cds_nt": 244112,
+   "utr_nt": 0,
+   "n_exons": 18,
+   "ensembl_gene": "ENSMUSG00000053819"
+  },
+  "Car2": {
+   "gene": "Car2",
+   "transcript": "ENSMUST00000029078",
+   "biotype": "protein_coding",
+   "mrna_nt": 1949,
+   "cds_nt": 13338,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000027562"
+  },
+  "Carm1": {
+   "gene": "Carm1",
+   "transcript": "ENSMUST00000115394",
+   "biotype": "protein_coding",
+   "mrna_nt": 3483,
+   "cds_nt": 41181,
+   "utr_nt": 0,
+   "n_exons": 15,
+   "ensembl_gene": "ENSMUSG00000032185"
+  },
+  "Casp8": {
+   "gene": "Casp8",
+   "transcript": "ENSMUST00000027189",
+   "biotype": "protein_coding",
+   "mrna_nt": 2741,
+   "cds_nt": 22812,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000026029"
+  },
+  "Ccdc169": {
+   "gene": "Ccdc169",
+   "transcript": "ENSMUST00000061099",
+   "biotype": "protein_coding",
+   "mrna_nt": 919,
+   "cds_nt": 31275,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000048655"
+  },
+  "Cd1d1": {
+   "gene": "Cd1d1",
+   "transcript": "ENSMUST00000029717",
+   "biotype": "protein_coding",
+   "mrna_nt": 1955,
+   "cds_nt": 2673,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000028076"
+  },
+  "Cd68": {
+   "gene": "Cd68",
+   "transcript": "ENSMUST00000567908",
+   "biotype": "protein_coding",
+   "mrna_nt": 1198,
+   "cds_nt": 1692,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000018774"
+  },
+  "Cd7": {
+   "gene": "Cd7",
+   "transcript": "ENSMUST00000026159",
+   "biotype": "protein_coding",
+   "mrna_nt": 1030,
+   "cds_nt": 2323,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000025163"
+  },
+  "Cdc42": {
+   "gene": "Cdc42",
+   "transcript": "ENSMUST00000051477",
+   "biotype": "protein_coding",
+   "mrna_nt": 2161,
+   "cds_nt": 14977,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000006699"
+  },
+  "Cdc5lrt1": {
+   "gene": "Cdc5lrt1",
+   "transcript": "ENSMUST00000219147",
+   "biotype": "protein_coding",
+   "mrna_nt": 2409,
+   "cds_nt": 2409,
+   "utr_nt": 0,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000112216"
+  },
+  "Cdh8": {
+   "gene": "Cdh8",
+   "transcript": "ENSMUST00000128860",
+   "biotype": "protein_coding",
+   "mrna_nt": 4639,
+   "cds_nt": 370413,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000036510"
+  },
+  "Cdkn2c": {
+   "gene": "Cdkn2c",
+   "transcript": "ENSMUST00000063531",
+   "biotype": "protein_coding",
+   "mrna_nt": 2696,
+   "cds_nt": 3898,
+   "utr_nt": 0,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000028551"
+  },
+  "Cdv3": {
+   "gene": "Cdv3",
+   "transcript": "ENSMUST00000072249",
+   "biotype": "protein_coding",
+   "mrna_nt": 4089,
+   "cds_nt": 9355,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000032803"
+  },
+  "Ceacam10": {
+   "gene": "Ceacam10",
+   "transcript": "ENSMUST00000038069",
+   "biotype": "protein_coding",
+   "mrna_nt": 1081,
+   "cds_nt": 7201,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000054169"
+  },
+  "Cebpa": {
+   "gene": "Cebpa",
+   "transcript": "ENSMUST00000042985",
+   "biotype": "protein_coding",
+   "mrna_nt": 2626,
+   "cds_nt": 1080,
+   "utr_nt": 1546,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000034957"
+  },
+  "Cebpb": {
+   "gene": "Cebpb",
+   "transcript": "ENSMUST00000070642",
+   "biotype": "protein_coding",
+   "mrna_nt": 1504,
+   "cds_nt": 891,
+   "utr_nt": 613,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000056501"
+  },
+  "Chd8": {
+   "gene": "Chd8",
+   "transcript": "ENSMUST00000200169",
+   "biotype": "protein_coding",
+   "mrna_nt": 8597,
+   "cds_nt": 38981,
+   "utr_nt": 0,
+   "n_exons": 38,
+   "ensembl_gene": "ENSMUSG00000053754"
+  },
+  "Clip2": {
+   "gene": "Clip2",
+   "transcript": "ENSMUST00000036999",
+   "biotype": "protein_coding",
+   "mrna_nt": 4903,
+   "cds_nt": 44390,
+   "utr_nt": 0,
+   "n_exons": 16,
+   "ensembl_gene": "ENSMUSG00000063146"
+  },
+  "Clock": {
+   "gene": "Clock",
+   "transcript": "ENSMUST00000202651",
+   "biotype": "protein_coding",
+   "mrna_nt": 9911,
+   "cds_nt": 50148,
+   "utr_nt": 0,
+   "n_exons": 23,
+   "ensembl_gene": "ENSMUSG00000029238"
+  },
+  "Cox7b": {
+   "gene": "Cox7b",
+   "transcript": "ENSMUST00000033582",
+   "biotype": "protein_coding",
+   "mrna_nt": 1014,
+   "cds_nt": 5993,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000031231"
+  },
+  "Cpa1": {
+   "gene": "Cpa1",
+   "transcript": "ENSMUST00000031806",
+   "biotype": "protein_coding",
+   "mrna_nt": 1583,
+   "cds_nt": 5823,
+   "utr_nt": 0,
+   "n_exons": 10,
+   "ensembl_gene": "ENSMUSG00000054446"
+  },
+  "Cst3": {
+   "gene": "Cst3",
+   "transcript": "ENSMUST00000028938",
+   "biotype": "protein_coding",
+   "mrna_nt": 925,
+   "cds_nt": 3418,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000027447"
+  },
+  "Cst7": {
+   "gene": "Cst7",
+   "transcript": "ENSMUST00000089200",
+   "biotype": "protein_coding",
+   "mrna_nt": 1037,
+   "cds_nt": 7979,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000068129"
+  },
+  "Ctnnb1": {
+   "gene": "Ctnnb1",
+   "transcript": "ENSMUST00000007130",
+   "biotype": "protein_coding",
+   "mrna_nt": 3642,
+   "cds_nt": 9297,
+   "utr_nt": 0,
+   "n_exons": 15,
+   "ensembl_gene": "ENSMUSG00000006932"
+  },
+  "Cubn": {
+   "gene": "Cubn",
+   "transcript": "ENSMUST00000091436",
+   "biotype": "protein_coding",
+   "mrna_nt": 11262,
+   "cds_nt": 215086,
+   "utr_nt": 0,
+   "n_exons": 67,
+   "ensembl_gene": "ENSMUSG00000026726"
+  },
+  "D7Ertd443e": {
+   "gene": "D7Ertd443e",
+   "transcript": "ENSMUST00000172947",
+   "biotype": "protein_coding",
+   "mrna_nt": 3042,
+   "cds_nt": 98140,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000030994"
+  },
+  "Dbi": {
+   "gene": "Dbi",
+   "transcript": "ENSMUST00000151708",
+   "biotype": "protein_coding",
+   "mrna_nt": 611,
+   "cds_nt": 7455,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000026385"
+  },
+  "Dcps": {
+   "gene": "Dcps",
+   "transcript": "ENSMUST00000034539",
+   "biotype": "protein_coding",
+   "mrna_nt": 1277,
+   "cds_nt": 51397,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000032040"
+  },
+  "Ddb1": {
+   "gene": "Ddb1",
+   "transcript": "ENSMUST00000025649",
+   "biotype": "protein_coding",
+   "mrna_nt": 4459,
+   "cds_nt": 23457,
+   "utr_nt": 0,
+   "n_exons": 27,
+   "ensembl_gene": "ENSMUSG00000024740"
+  },
+  "Ddx20": {
+   "gene": "Ddx20",
+   "transcript": "ENSMUST00000090680",
+   "biotype": "protein_coding",
+   "mrna_nt": 3103,
+   "cds_nt": 8878,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000027905"
+  },
+  "Ddx43": {
+   "gene": "Ddx43",
+   "transcript": "ENSMUST00000113367",
+   "biotype": "protein_coding",
+   "mrna_nt": 2210,
+   "cds_nt": 25932,
+   "utr_nt": 0,
+   "n_exons": 17,
+   "ensembl_gene": "ENSMUSG00000070291"
+  },
+  "Dnaja4": {
+   "gene": "Dnaja4",
+   "transcript": "ENSMUST00000070070",
+   "biotype": "protein_coding",
+   "mrna_nt": 3158,
+   "cds_nt": 14948,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000032285"
+  },
+  "Dnal4": {
+   "gene": "Dnal4",
+   "transcript": "ENSMUST00000023055",
+   "biotype": "protein_coding",
+   "mrna_nt": 1479,
+   "cds_nt": 2524,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000022420"
+  },
+  "Dnmt1": {
+   "gene": "Dnmt1",
+   "transcript": "ENSMUST00000004202",
+   "biotype": "protein_coding",
+   "mrna_nt": 5927,
+   "cds_nt": 45267,
+   "utr_nt": 0,
+   "n_exons": 39,
+   "ensembl_gene": "ENSMUSG00000004099"
+  },
+  "Dpy30": {
+   "gene": "Dpy30",
+   "transcript": "ENSMUST00000233581",
+   "biotype": "protein_coding",
+   "mrna_nt": 734,
+   "cds_nt": 16328,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000024067"
+  },
+  "Dsg2": {
+   "gene": "Dsg2",
+   "transcript": "ENSMUST00000059787",
+   "biotype": "protein_coding",
+   "mrna_nt": 5823,
+   "cds_nt": 44051,
+   "utr_nt": 0,
+   "n_exons": 15,
+   "ensembl_gene": "ENSMUSG00000044393"
+  },
+  "Dtx2": {
+   "gene": "Dtx2",
+   "transcript": "ENSMUST00000111142",
+   "biotype": "protein_coding",
+   "mrna_nt": 2664,
+   "cds_nt": 22399,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000004947"
+  },
+  "Duoxa2": {
+   "gene": "Duoxa2",
+   "transcript": "ENSMUST00000028656",
+   "biotype": "protein_coding",
+   "mrna_nt": 1593,
+   "cds_nt": 3357,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000027225"
+  },
+  "Dusp5": {
+   "gene": "Dusp5",
+   "transcript": "ENSMUST00000038287",
+   "biotype": "protein_coding",
+   "mrna_nt": 2481,
+   "cds_nt": 12005,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000034765"
+  },
+  "Dusp7": {
+   "gene": "Dusp7",
+   "transcript": "ENSMUST00000172306",
+   "biotype": "protein_coding",
+   "mrna_nt": 3901,
+   "cds_nt": 5149,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000053716"
+  },
+  "Duxf1": {
+   "gene": "Duxf1",
+   "transcript": "ENSMUST00000204003",
+   "biotype": "protein_coding",
+   "mrna_nt": 1959,
+   "cds_nt": 1959,
+   "utr_nt": 0,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000058537"
+  },
+  "Duxf3": {
+   "gene": "Duxf3",
+   "transcript": "ENSMUST00000176875",
+   "biotype": "protein_coding",
+   "mrna_nt": 2025,
+   "cds_nt": 2025,
+   "utr_nt": 0,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000075046"
+  },
+  "Dynap": {
+   "gene": "Dynap",
+   "transcript": "ENSMUST00000025390",
+   "biotype": "protein_coding",
+   "mrna_nt": 1225,
+   "cds_nt": 3415,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000024512"
+  },
+  "Egfr": {
+   "gene": "Egfr",
+   "transcript": "ENSMUST00000020329",
+   "biotype": "protein_coding",
+   "mrna_nt": 10221,
+   "cds_nt": 159373,
+   "utr_nt": 0,
+   "n_exons": 28,
+   "ensembl_gene": "ENSMUSG00000020122"
+  },
+  "Egr1": {
+   "gene": "Egr1",
+   "transcript": "ENSMUST00000064795",
+   "biotype": "protein_coding",
+   "mrna_nt": 4496,
+   "cds_nt": 2280,
+   "utr_nt": 2216,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000038418"
+  },
+  "Eid2": {
+   "gene": "Eid2",
+   "transcript": "ENSMUST00000059596",
+   "biotype": "protein_coding",
+   "mrna_nt": 1392,
+   "cds_nt": 711,
+   "utr_nt": 681,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000046058"
+  },
+  "Eid2b": {
+   "gene": "Eid2b",
+   "transcript": "ENSMUST00000094651",
+   "biotype": "protein_coding",
+   "mrna_nt": 1751,
+   "cds_nt": 456,
+   "utr_nt": 1295,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000070705"
+  },
+  "Eif1ad12": {
+   "gene": "Eif1ad12",
+   "transcript": "ENSMUST00000220499",
+   "biotype": "protein_coding",
+   "mrna_nt": 1782,
+   "cds_nt": 435,
+   "utr_nt": 1347,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000113805"
+  },
+  "Elf1": {
+   "gene": "Elf1",
+   "transcript": "ENSMUST00000110835",
+   "biotype": "protein_coding",
+   "mrna_nt": 4053,
+   "cds_nt": 44420,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000036461"
+  },
+  "Elf3": {
+   "gene": "Elf3",
+   "transcript": "ENSMUST00000185752",
+   "biotype": "protein_coding",
+   "mrna_nt": 2036,
+   "cds_nt": 3509,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000003051"
+  },
+  "Elovl7": {
+   "gene": "Elovl7",
+   "transcript": "ENSMUST00000022207",
+   "biotype": "protein_coding",
+   "mrna_nt": 5436,
+   "cds_nt": 25947,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000021696"
+  },
+  "Enpep": {
+   "gene": "Enpep",
+   "transcript": "ENSMUST00000029658",
+   "biotype": "protein_coding",
+   "mrna_nt": 4181,
+   "cds_nt": 62203,
+   "utr_nt": 0,
+   "n_exons": 20,
+   "ensembl_gene": "ENSMUSG00000028024"
+  },
+  "Entpd1": {
+   "gene": "Entpd1",
+   "transcript": "ENSMUST00000112231",
+   "biotype": "protein_coding",
+   "mrna_nt": 5760,
+   "cds_nt": 79145,
+   "utr_nt": 0,
+   "n_exons": 10,
+   "ensembl_gene": "ENSMUSG00000048120"
+  },
+  "Ep300": {
+   "gene": "Ep300",
+   "transcript": "ENSMUST00000068387",
+   "biotype": "protein_coding",
+   "mrna_nt": 10552,
+   "cds_nt": 64354,
+   "utr_nt": 0,
+   "n_exons": 31,
+   "ensembl_gene": "ENSMUSG00000055024"
+  },
+  "Erc2": {
+   "gene": "Erc2",
+   "transcript": "ENSMUST00000464421",
+   "biotype": "protein_coding",
+   "mrna_nt": 3367,
+   "cds_nt": 664449,
+   "utr_nt": 0,
+   "n_exons": 16,
+   "ensembl_gene": "ENSMUSG00000040640"
+  },
+  "Esrrb": {
+   "gene": "Esrrb",
+   "transcript": "ENSMUST00000110204",
+   "biotype": "protein_coding",
+   "mrna_nt": 4206,
+   "cds_nt": 97151,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000021255"
+  },
+  "Esx1": {
+   "gene": "Esx1",
+   "transcript": "ENSMUST00000113066",
+   "biotype": "protein_coding",
+   "mrna_nt": 1692,
+   "cds_nt": 4028,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000023443"
+  },
+  "Ets2": {
+   "gene": "Ets2",
+   "transcript": "ENSMUST00000023612",
+   "biotype": "protein_coding",
+   "mrna_nt": 3985,
+   "cds_nt": 12895,
+   "utr_nt": 0,
+   "n_exons": 10,
+   "ensembl_gene": "ENSMUSG00000022895"
+  },
+  "Exoc8": {
+   "gene": "Exoc8",
+   "transcript": "ENSMUST00000098312",
+   "biotype": "protein_coding",
+   "mrna_nt": 4598,
+   "cds_nt": 2151,
+   "utr_nt": 2447,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000074030"
+  },
+  "Exosc6": {
+   "gene": "Exosc6",
+   "transcript": "ENSMUST00000210390",
+   "biotype": "protein_coding",
+   "mrna_nt": 1326,
+   "cds_nt": 822,
+   "utr_nt": 504,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000109941"
+  },
+  "Faf1": {
+   "gene": "Faf1",
+   "transcript": "ENSMUST00000102724",
+   "biotype": "protein_coding",
+   "mrna_nt": 5737,
+   "cds_nt": 284855,
+   "utr_nt": 0,
+   "n_exons": 19,
+   "ensembl_gene": "ENSMUSG00000010517"
+  },
+  "Fam110c": {
+   "gene": "Fam110c",
+   "transcript": "ENSMUST00000041133",
+   "biotype": "protein_coding",
+   "mrna_nt": 4652,
+   "cds_nt": 1266,
+   "utr_nt": 3386,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000036136"
+  },
+  "Fam83d": {
+   "gene": "Fam83d",
+   "transcript": "ENSMUST00000029183",
+   "biotype": "protein_coding",
+   "mrna_nt": 2266,
+   "cds_nt": 18037,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000027654"
+  },
+  "Fbxo43": {
+   "gene": "Fbxo43",
+   "transcript": "ENSMUST00000058643",
+   "biotype": "protein_coding",
+   "mrna_nt": 4035,
+   "cds_nt": 11416,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000048230"
+  },
+  "Fcgr1": {
+   "gene": "Fcgr1",
+   "transcript": "ENSMUST00000029748",
+   "biotype": "protein_coding",
+   "mrna_nt": 2642,
+   "cds_nt": 9687,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000015947"
+  },
+  "Fgf4": {
+   "gene": "Fgf4",
+   "transcript": "ENSMUST00000060336",
+   "biotype": "protein_coding",
+   "mrna_nt": 3146,
+   "cds_nt": 1437,
+   "utr_nt": 1709,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000050917"
+  },
+  "Fgf8": {
+   "gene": "Fgf8",
+   "transcript": "ENSMUST00000026241",
+   "biotype": "protein_coding",
+   "mrna_nt": 1230,
+   "cds_nt": 5695,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000025219"
+  },
+  "Fhl2": {
+   "gene": "Fhl2",
+   "transcript": "ENSMUST00000185893",
+   "biotype": "protein_coding",
+   "mrna_nt": 1818,
+   "cds_nt": 29718,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000008136"
+  },
+  "Fhl5": {
+   "gene": "Fhl5",
+   "transcript": "ENSMUST00000029922",
+   "biotype": "protein_coding",
+   "mrna_nt": 7624,
+   "cds_nt": 14798,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000028259"
+  },
+  "Fkbp1a": {
+   "gene": "Fkbp1a",
+   "transcript": "ENSMUST00000422850",
+   "biotype": "protein_coding",
+   "mrna_nt": 1800,
+   "cds_nt": 16879,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000032966"
+  },
+  "Fmn2": {
+   "gene": "Fmn2",
+   "transcript": "ENSMUST00000030039",
+   "biotype": "protein_coding",
+   "mrna_nt": 6479,
+   "cds_nt": 319200,
+   "utr_nt": 0,
+   "n_exons": 18,
+   "ensembl_gene": "ENSMUSG00000028354"
+  },
+  "Fmnl2": {
+   "gene": "Fmnl2",
+   "transcript": "ENSMUST00000090952",
+   "biotype": "protein_coding",
+   "mrna_nt": 5529,
+   "cds_nt": 273807,
+   "utr_nt": 0,
+   "n_exons": 26,
+   "ensembl_gene": "ENSMUSG00000036053"
+  },
+  "Fmr1": {
+   "gene": "Fmr1",
+   "transcript": "ENSMUST00000114655",
+   "biotype": "protein_coding",
+   "mrna_nt": 4483,
+   "cds_nt": 36859,
+   "utr_nt": 0,
+   "n_exons": 17,
+   "ensembl_gene": "ENSMUSG00000000838"
+  },
+  "Foxd3": {
+   "gene": "Foxd3",
+   "transcript": "ENSMUST00000087285",
+   "biotype": "protein_coding",
+   "mrna_nt": 2324,
+   "cds_nt": 1410,
+   "utr_nt": 914,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000067261"
+  },
+  "Foxo1": {
+   "gene": "Foxo1",
+   "transcript": "ENSMUST00000053764",
+   "biotype": "protein_coding",
+   "mrna_nt": 8665,
+   "cds_nt": 77575,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000044167"
+  },
+  "Fst": {
+   "gene": "Fst",
+   "transcript": "ENSMUST00000022287",
+   "biotype": "protein_coding",
+   "mrna_nt": 1887,
+   "cds_nt": 5164,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000021765"
+  },
+  "Fthl17f": {
+   "gene": "Fthl17f",
+   "transcript": "ENSMUST00000097029",
+   "biotype": "protein_coding",
+   "mrna_nt": 847,
+   "cds_nt": 531,
+   "utr_nt": 316,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000072249"
+  },
+  "Fzd2": {
+   "gene": "Fzd2",
+   "transcript": "ENSMUST00000057893",
+   "biotype": "protein_coding",
+   "mrna_nt": 3663,
+   "cds_nt": 1713,
+   "utr_nt": 1950,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000050288"
+  },
+  "Fzd4": {
+   "gene": "Fzd4",
+   "transcript": "ENSMUST00000058755",
+   "biotype": "protein_coding",
+   "mrna_nt": 6720,
+   "cds_nt": 3674,
+   "utr_nt": 3046,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000049791"
+  },
+  "Fzd5": {
+   "gene": "Fzd5",
+   "transcript": "ENSMUST00000063982",
+   "biotype": "protein_coding",
+   "mrna_nt": 6939,
+   "cds_nt": 1758,
+   "utr_nt": 5181,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000045005"
+  },
+  "G6pdx": {
+   "gene": "G6pdx",
+   "transcript": "ENSMUST00000004327",
+   "biotype": "protein_coding",
+   "mrna_nt": 5903,
+   "cds_nt": 17965,
+   "utr_nt": 0,
+   "n_exons": 13,
+   "ensembl_gene": "ENSMUSG00000031400"
+  },
+  "Gadd45a": {
+   "gene": "Gadd45a",
+   "transcript": "ENSMUST00000043098",
+   "biotype": "protein_coding",
+   "mrna_nt": 1233,
+   "cds_nt": 1586,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000036390"
+  },
+  "Galk1": {
+   "gene": "Galk1",
+   "transcript": "ENSMUST00000021114",
+   "biotype": "protein_coding",
+   "mrna_nt": 1439,
+   "cds_nt": 4036,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000020766"
+  },
+  "Gapdh": {
+   "gene": "Gapdh",
+   "transcript": "ENSMUST00000118875",
+   "biotype": "protein_coding",
+   "mrna_nt": 1420,
+   "cds_nt": 3262,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000057666"
+  },
+  "Gata2": {
+   "gene": "Gata2",
+   "transcript": "ENSMUST00000015197",
+   "biotype": "protein_coding",
+   "mrna_nt": 3580,
+   "cds_nt": 5934,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000015053"
+  },
+  "Gata3": {
+   "gene": "Gata3",
+   "transcript": "ENSMUST00000102976",
+   "biotype": "protein_coding",
+   "mrna_nt": 3255,
+   "cds_nt": 19220,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000015619"
+  },
+  "Gata4": {
+   "gene": "Gata4",
+   "transcript": "ENSMUST00000118022",
+   "biotype": "protein_coding",
+   "mrna_nt": 4250,
+   "cds_nt": 40774,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000021944"
+  },
+  "Gcm1": {
+   "gene": "Gcm1",
+   "transcript": "ENSMUST00000024104",
+   "biotype": "protein_coding",
+   "mrna_nt": 3210,
+   "cds_nt": 11173,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000023333"
+  },
+  "Gdap1": {
+   "gene": "Gdap1",
+   "transcript": "ENSMUST00000026879",
+   "biotype": "protein_coding",
+   "mrna_nt": 4051,
+   "cds_nt": 16038,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000025777"
+  },
+  "Gja4": {
+   "gene": "Gja4",
+   "transcript": "ENSMUST00000053753",
+   "biotype": "protein_coding",
+   "mrna_nt": 1704,
+   "cds_nt": 1002,
+   "utr_nt": 702,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000050234"
+  },
+  "Gjb5": {
+   "gene": "Gjb5",
+   "transcript": "ENSMUST00000046498",
+   "biotype": "protein_coding",
+   "mrna_nt": 1748,
+   "cds_nt": 816,
+   "utr_nt": 932,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000042357"
+  },
+  "Gli3": {
+   "gene": "Gli3",
+   "transcript": "ENSMUST00000110510",
+   "biotype": "protein_coding",
+   "mrna_nt": 8926,
+   "cds_nt": 248741,
+   "utr_nt": 0,
+   "n_exons": 15,
+   "ensembl_gene": "ENSMUSG00000021318"
+  },
+  "Glrx": {
+   "gene": "Glrx",
+   "transcript": "ENSMUST00000022082",
+   "biotype": "protein_coding",
+   "mrna_nt": 1358,
+   "cds_nt": 7318,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000021591"
+  },
+  "Gm11544": {
+   "gene": "Gm11544",
+   "transcript": "ENSMUST00000120215",
+   "biotype": "transcribed_unprocessed_pseudogene",
+   "mrna_nt": 382,
+   "cds_nt": 0,
+   "utr_nt": 382,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000081586"
+  },
+  "Gm11839": {
+   "gene": "Gm11839",
+   "transcript": "ENSMUST00000120647",
+   "biotype": "processed_pseudogene",
+   "mrna_nt": 1953,
+   "cds_nt": 0,
+   "utr_nt": 1953,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000083246"
+  },
+  "Gm12612": {
+   "gene": "Gm12612",
+   "transcript": "ENSMUST00000140182",
+   "biotype": "processed_pseudogene",
+   "mrna_nt": 1986,
+   "cds_nt": 0,
+   "utr_nt": 1986,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000093978"
+  },
+  "Gm12619": {
+   "gene": "Gm12619",
+   "transcript": "ENSMUST00000117369",
+   "biotype": "unprocessed_pseudogene",
+   "mrna_nt": 385,
+   "cds_nt": 0,
+   "utr_nt": 385,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000084335"
+  },
+  "Gm12620": {
+   "gene": "Gm12620",
+   "transcript": "ENSMUST00000119791",
+   "biotype": "processed_pseudogene",
+   "mrna_nt": 1986,
+   "cds_nt": 0,
+   "utr_nt": 1986,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000094566"
+  },
+  "Gm12621": {
+   "gene": "Gm12621",
+   "transcript": "ENSMUST00000177760",
+   "biotype": "unprocessed_pseudogene",
+   "mrna_nt": 382,
+   "cds_nt": 0,
+   "utr_nt": 382,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000096363"
+  },
+  "Gm12626": {
+   "gene": "Gm12626",
+   "transcript": "ENSMUST00000117339",
+   "biotype": "processed_pseudogene",
+   "mrna_nt": 1983,
+   "cds_nt": 0,
+   "utr_nt": 1983,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000094278"
+  },
+  "Gm14276": {
+   "gene": "Gm14276",
+   "transcript": "ENSMUST00000117941",
+   "biotype": "processed_pseudogene",
+   "mrna_nt": 720,
+   "cds_nt": 0,
+   "utr_nt": 720,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000082163"
+  },
+  "Gm14521": {
+   "gene": "Gm14521",
+   "transcript": "ENSMUST00000119545",
+   "biotype": "processed_pseudogene",
+   "mrna_nt": 350,
+   "cds_nt": 0,
+   "utr_nt": 350,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000083486"
+  },
+  "Gm15107": {
+   "gene": "Gm15107",
+   "transcript": "ENSMUST00000112796",
+   "biotype": "protein_coding",
+   "mrna_nt": 2028,
+   "cds_nt": 43309,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000072930"
+  },
+  "Gm1995": {
+   "gene": "Gm1995",
+   "transcript": "ENSMUST00000220838",
+   "biotype": "processed_pseudogene",
+   "mrna_nt": 2602,
+   "cds_nt": 0,
+   "utr_nt": 2602,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000113011"
+  },
+  "Gm4850": {
+   "gene": "Gm4850",
+   "transcript": "ENSMUST00000185684",
+   "biotype": "unprocessed_pseudogene",
+   "mrna_nt": 559,
+   "cds_nt": 0,
+   "utr_nt": 559,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000100205"
+  },
+  "Gm6189": {
+   "gene": "Gm6189",
+   "transcript": "ENSMUST00000164487",
+   "biotype": "processed_pseudogene",
+   "mrna_nt": 2082,
+   "cds_nt": 0,
+   "utr_nt": 2082,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000090637"
+  },
+  "Gnb4": {
+   "gene": "Gnb4",
+   "transcript": "ENSMUST00000155737",
+   "biotype": "protein_coding",
+   "mrna_nt": 8574,
+   "cds_nt": 16982,
+   "utr_nt": 0,
+   "n_exons": 10,
+   "ensembl_gene": "ENSMUSG00000027669"
+  },
+  "Gng3": {
+   "gene": "Gng3",
+   "transcript": "ENSMUST00000096259",
+   "biotype": "protein_coding",
+   "mrna_nt": 1747,
+   "cds_nt": 510,
+   "utr_nt": 1237,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000071658"
+  },
+  "Gnrh1": {
+   "gene": "Gnrh1",
+   "transcript": "ENSMUST00000223951",
+   "biotype": "protein_coding",
+   "mrna_nt": 1501,
+   "cds_nt": 2946,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000015812"
+  },
+  "Gpr161": {
+   "gene": "Gpr161",
+   "transcript": "ENSMUST00000473491",
+   "biotype": "protein_coding",
+   "mrna_nt": 7663,
+   "cds_nt": 15480,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000040836"
+  },
+  "Gpsm1": {
+   "gene": "Gpsm1",
+   "transcript": "ENSMUST00000066936",
+   "biotype": "protein_coding",
+   "mrna_nt": 3470,
+   "cds_nt": 31361,
+   "utr_nt": 0,
+   "n_exons": 14,
+   "ensembl_gene": "ENSMUSG00000026930"
+  },
+  "Gsn": {
+   "gene": "Gsn",
+   "transcript": "ENSMUST00000201185",
+   "biotype": "protein_coding",
+   "mrna_nt": 2622,
+   "cds_nt": 23753,
+   "utr_nt": 0,
+   "n_exons": 18,
+   "ensembl_gene": "ENSMUSG00000026879"
+  },
+  "Gsta2": {
+   "gene": "Gsta2",
+   "transcript": "ENSMUST00000034902",
+   "biotype": "protein_coding",
+   "mrna_nt": 910,
+   "cds_nt": 10790,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000057933"
+  },
+  "Gsta4": {
+   "gene": "Gsta4",
+   "transcript": "ENSMUST00000034903",
+   "biotype": "protein_coding",
+   "mrna_nt": 2109,
+   "cds_nt": 10890,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000032348"
+  },
+  "Gstm5": {
+   "gene": "Gstm5",
+   "transcript": "ENSMUST00000004134",
+   "biotype": "protein_coding",
+   "mrna_nt": 945,
+   "cds_nt": 2596,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000004032"
+  },
+  "Guca1a": {
+   "gene": "Guca1a",
+   "transcript": "ENSMUST00000059348",
+   "biotype": "protein_coding",
+   "mrna_nt": 873,
+   "cds_nt": 5763,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000023982"
+  },
+  "Hand1": {
+   "gene": "Hand1",
+   "transcript": "ENSMUST00000036917",
+   "biotype": "protein_coding",
+   "mrna_nt": 1906,
+   "cds_nt": 2188,
+   "utr_nt": 0,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000037335"
+  },
+  "Hes1": {
+   "gene": "Hes1",
+   "transcript": "ENSMUST00000023171",
+   "biotype": "protein_coding",
+   "mrna_nt": 1528,
+   "cds_nt": 1838,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000022528"
+  },
+  "Hesx1": {
+   "gene": "Hesx1",
+   "transcript": "ENSMUST00000035433",
+   "biotype": "protein_coding",
+   "mrna_nt": 1141,
+   "cds_nt": 1385,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000040726"
+  },
+  "Hhex": {
+   "gene": "Hhex",
+   "transcript": "ENSMUST00000025944",
+   "biotype": "protein_coding",
+   "mrna_nt": 1802,
+   "cds_nt": 4936,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000024986"
+  },
+  "Hint2": {
+   "gene": "Hint2",
+   "transcript": "ENSMUST00000030192",
+   "biotype": "protein_coding",
+   "mrna_nt": 937,
+   "cds_nt": 2120,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000028470"
+  },
+  "Hk2": {
+   "gene": "Hk2",
+   "transcript": "ENSMUST00000000642",
+   "biotype": "protein_coding",
+   "mrna_nt": 7796,
+   "cds_nt": 46671,
+   "utr_nt": 0,
+   "n_exons": 18,
+   "ensembl_gene": "ENSMUSG00000000628"
+  },
+  "Hook1": {
+   "gene": "Hook1",
+   "transcript": "ENSMUST00000030306",
+   "biotype": "protein_coding",
+   "mrna_nt": 5522,
+   "cds_nt": 54844,
+   "utr_nt": 0,
+   "n_exons": 22,
+   "ensembl_gene": "ENSMUSG00000028572"
+  },
+  "Hspa2": {
+   "gene": "Hspa2",
+   "transcript": "ENSMUST00000080449",
+   "biotype": "protein_coding",
+   "mrna_nt": 2788,
+   "cds_nt": 1902,
+   "utr_nt": 886,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000059970"
+  },
+  "Hspa5": {
+   "gene": "Hspa5",
+   "transcript": "ENSMUST00000100171",
+   "biotype": "protein_coding",
+   "mrna_nt": 4953,
+   "cds_nt": 3792,
+   "utr_nt": 1161,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000026864"
+  },
+  "Hspb8": {
+   "gene": "Hspb8",
+   "transcript": "ENSMUST00000036991",
+   "biotype": "protein_coding",
+   "mrna_nt": 2118,
+   "cds_nt": 13149,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000041548"
+  },
+  "Hspe1": {
+   "gene": "Hspe1",
+   "transcript": "ENSMUST00000075242",
+   "biotype": "protein_coding",
+   "mrna_nt": 774,
+   "cds_nt": 2711,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000073676"
+  },
+  "Id1": {
+   "gene": "Id1",
+   "transcript": "ENSMUST00000038368",
+   "biotype": "protein_coding",
+   "mrna_nt": 1154,
+   "cds_nt": 673,
+   "utr_nt": 481,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000042745"
+  },
+  "Id4": {
+   "gene": "Id4",
+   "transcript": "ENSMUST00000021810",
+   "biotype": "protein_coding",
+   "mrna_nt": 3995,
+   "cds_nt": 832,
+   "utr_nt": 3163,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000021379"
+  },
+  "Ifi35": {
+   "gene": "Ifi35",
+   "transcript": "ENSMUST00000010502",
+   "biotype": "protein_coding",
+   "mrna_nt": 1362,
+   "cds_nt": 9791,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000010358"
+  },
+  "Ighg3": {
+   "gene": "Ighg3",
+   "transcript": "ENSMUST00000223179",
+   "biotype": "IG_C_gene",
+   "mrna_nt": 2414,
+   "cds_nt": 3794,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000076615"
+  },
+  "Il1a": {
+   "gene": "Il1a",
+   "transcript": "ENSMUST00000028882",
+   "biotype": "protein_coding",
+   "mrna_nt": 3419,
+   "cds_nt": 8391,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000027399"
+  },
+  "Il31": {
+   "gene": "Il31",
+   "transcript": "ENSMUST00000031389",
+   "biotype": "protein_coding",
+   "mrna_nt": 806,
+   "cds_nt": 1631,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000029437"
+  },
+  "Immt": {
+   "gene": "Immt",
+   "transcript": "ENSMUST00000114151",
+   "biotype": "protein_coding",
+   "mrna_nt": 4208,
+   "cds_nt": 43460,
+   "utr_nt": 0,
+   "n_exons": 13,
+   "ensembl_gene": "ENSMUSG00000052337"
+  },
+  "Impact": {
+   "gene": "Impact",
+   "transcript": "ENSMUST00000025290",
+   "biotype": "protein_coding",
+   "mrna_nt": 3768,
+   "cds_nt": 18222,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000024423"
+  },
+  "Inha": {
+   "gene": "Inha",
+   "transcript": "ENSMUST00000037330",
+   "biotype": "protein_coding",
+   "mrna_nt": 5157,
+   "cds_nt": 2916,
+   "utr_nt": 2241,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000032968"
+  },
+  "Inka1": {
+   "gene": "Inka1",
+   "transcript": "ENSMUST00000048568",
+   "biotype": "protein_coding",
+   "mrna_nt": 1268,
+   "cds_nt": 1481,
+   "utr_nt": 0,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000042106"
+  },
+  "Irf1": {
+   "gene": "Irf1",
+   "transcript": "ENSMUST00000108920",
+   "biotype": "protein_coding",
+   "mrna_nt": 2136,
+   "cds_nt": 5158,
+   "utr_nt": 0,
+   "n_exons": 10,
+   "ensembl_gene": "ENSMUSG00000018899"
+  },
+  "Itgb3": {
+   "gene": "Itgb3",
+   "transcript": "ENSMUST00000021028",
+   "biotype": "protein_coding",
+   "mrna_nt": 5784,
+   "cds_nt": 59057,
+   "utr_nt": 0,
+   "n_exons": 15,
+   "ensembl_gene": "ENSMUSG00000020689"
+  },
+  "Jag2": {
+   "gene": "Jag2",
+   "transcript": "ENSMUST00000075827",
+   "biotype": "protein_coding",
+   "mrna_nt": 5165,
+   "cds_nt": 20596,
+   "utr_nt": 0,
+   "n_exons": 26,
+   "ensembl_gene": "ENSMUSG00000002799"
+  },
+  "Katnal2": {
+   "gene": "Katnal2",
+   "transcript": "ENSMUST00000126153",
+   "biotype": "protein_coding",
+   "mrna_nt": 4040,
+   "cds_nt": 69839,
+   "utr_nt": 0,
+   "n_exons": 16,
+   "ensembl_gene": "ENSMUSG00000025420"
+  },
+  "Kdm4dl": {
+   "gene": "Kdm4dl",
+   "transcript": "ENSMUST00000184843",
+   "biotype": "unprocessed_pseudogene",
+   "mrna_nt": 1187,
+   "cds_nt": 0,
+   "utr_nt": 1187,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000098832"
+  },
+  "Kifc2": {
+   "gene": "Kifc2",
+   "transcript": "ENSMUST00000004294",
+   "biotype": "protein_coding",
+   "mrna_nt": 3570,
+   "cds_nt": 6792,
+   "utr_nt": 0,
+   "n_exons": 18,
+   "ensembl_gene": "ENSMUSG00000004187"
+  },
+  "Klf2": {
+   "gene": "Klf2",
+   "transcript": "ENSMUST00000067912",
+   "biotype": "protein_coding",
+   "mrna_nt": 1998,
+   "cds_nt": 1842,
+   "utr_nt": 156,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000055148"
+  },
+  "Klf4": {
+   "gene": "Klf4",
+   "transcript": "ENSMUST00000107619",
+   "biotype": "protein_coding",
+   "mrna_nt": 3033,
+   "cds_nt": 3747,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000003032"
+  },
+  "Klf6": {
+   "gene": "Klf6",
+   "transcript": "ENSMUST00000000080",
+   "biotype": "protein_coding",
+   "mrna_nt": 4225,
+   "cds_nt": 5645,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000000078"
+  },
+  "Krt12": {
+   "gene": "Krt12",
+   "transcript": "ENSMUST00000017741",
+   "biotype": "protein_coding",
+   "mrna_nt": 1853,
+   "cds_nt": 6206,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000020912"
+  },
+  "Krt18": {
+   "gene": "Krt18",
+   "transcript": "ENSMUST00000023803",
+   "biotype": "protein_coding",
+   "mrna_nt": 1437,
+   "cds_nt": 3683,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000023043"
+  },
+  "Krt8": {
+   "gene": "Krt8",
+   "transcript": "ENSMUST00000023952",
+   "biotype": "protein_coding",
+   "mrna_nt": 1958,
+   "cds_nt": 7300,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000049382"
+  },
+  "L1td1": {
+   "gene": "L1td1",
+   "transcript": "ENSMUST00000154279",
+   "biotype": "protein_coding",
+   "mrna_nt": 2945,
+   "cds_nt": 4914,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000087166"
+  },
+  "Lama1": {
+   "gene": "Lama1",
+   "transcript": "ENSMUST00000035471",
+   "biotype": "protein_coding",
+   "mrna_nt": 9557,
+   "cds_nt": 125115,
+   "utr_nt": 0,
+   "n_exons": 63,
+   "ensembl_gene": "ENSMUSG00000032796"
+  },
+  "Lats1": {
+   "gene": "Lats1",
+   "transcript": "ENSMUST00000165952",
+   "biotype": "protein_coding",
+   "mrna_nt": 7433,
+   "cds_nt": 21544,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000040021"
+  },
+  "Ldhb": {
+   "gene": "Ldhb",
+   "transcript": "ENSMUST00000032373",
+   "biotype": "protein_coding",
+   "mrna_nt": 1529,
+   "cds_nt": 15104,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000030246"
+  },
+  "Lefty2": {
+   "gene": "Lefty2",
+   "transcript": "ENSMUST00000085797",
+   "biotype": "protein_coding",
+   "mrna_nt": 2511,
+   "cds_nt": 4630,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000066652"
+  },
+  "Lhx8": {
+   "gene": "Lhx8",
+   "transcript": "ENSMUST00000205251",
+   "biotype": "protein_coding",
+   "mrna_nt": 1731,
+   "cds_nt": 21497,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000096225"
+  },
+  "Lifr": {
+   "gene": "Lifr",
+   "transcript": "ENSMUST00000067190",
+   "biotype": "protein_coding",
+   "mrna_nt": 9948,
+   "cds_nt": 36761,
+   "utr_nt": 0,
+   "n_exons": 20,
+   "ensembl_gene": "ENSMUSG00000054263"
+  },
+  "Lin28a": {
+   "gene": "Lin28a",
+   "transcript": "ENSMUST00000051674",
+   "biotype": "protein_coding",
+   "mrna_nt": 3526,
+   "cds_nt": 12637,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000050966"
+  },
+  "Lpar6": {
+   "gene": "Lpar6",
+   "transcript": "ENSMUST00000044405",
+   "biotype": "protein_coding",
+   "mrna_nt": 5400,
+   "cds_nt": 1035,
+   "utr_nt": 4365,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000033446"
+  },
+  "Lrp1b": {
+   "gene": "Lrp1b",
+   "transcript": "ENSMUST00000052550",
+   "biotype": "protein_coding",
+   "mrna_nt": 16294,
+   "cds_nt": 2055883,
+   "utr_nt": 0,
+   "n_exons": 91,
+   "ensembl_gene": "ENSMUSG00000049252"
+  },
+  "Lrp2": {
+   "gene": "Lrp2",
+   "transcript": "ENSMUST00000080953",
+   "biotype": "protein_coding",
+   "mrna_nt": 15462,
+   "cds_nt": 160249,
+   "utr_nt": 0,
+   "n_exons": 79,
+   "ensembl_gene": "ENSMUSG00000027070"
+  },
+  "Ltbp1": {
+   "gene": "Ltbp1",
+   "transcript": "ENSMUST00000112516",
+   "biotype": "protein_coding",
+   "mrna_nt": 5571,
+   "cds_nt": 211572,
+   "utr_nt": 0,
+   "n_exons": 30,
+   "ensembl_gene": "ENSMUSG00000001870"
+  },
+  "Maged2": {
+   "gene": "Maged2",
+   "transcript": "ENSMUST00000026302",
+   "biotype": "protein_coding",
+   "mrna_nt": 2283,
+   "cds_nt": 5999,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000025268"
+  },
+  "Map7d1": {
+   "gene": "Map7d1",
+   "transcript": "ENSMUST00000061143",
+   "biotype": "protein_coding",
+   "mrna_nt": 6501,
+   "cds_nt": 23307,
+   "utr_nt": 0,
+   "n_exons": 17,
+   "ensembl_gene": "ENSMUSG00000028849"
+  },
+  "Mcat": {
+   "gene": "Mcat",
+   "transcript": "ENSMUST00000061882",
+   "biotype": "protein_coding",
+   "mrna_nt": 1925,
+   "cds_nt": 8168,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000048755"
+  },
+  "Mgll": {
+   "gene": "Mgll",
+   "transcript": "ENSMUST00000113585",
+   "biotype": "protein_coding",
+   "mrna_nt": 3676,
+   "cds_nt": 100056,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000033174"
+  },
+  "Mitd1": {
+   "gene": "Mitd1",
+   "transcript": "ENSMUST00000027257",
+   "biotype": "protein_coding",
+   "mrna_nt": 1236,
+   "cds_nt": 11043,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000026088"
+  },
+  "Mlxipl": {
+   "gene": "Mlxipl",
+   "transcript": "ENSMUST00000005507",
+   "biotype": "protein_coding",
+   "mrna_nt": 3639,
+   "cds_nt": 30438,
+   "utr_nt": 0,
+   "n_exons": 17,
+   "ensembl_gene": "ENSMUSG00000005373"
+  },
+  "Mogs": {
+   "gene": "Mogs",
+   "transcript": "ENSMUST00000032114",
+   "biotype": "protein_coding",
+   "mrna_nt": 2785,
+   "cds_nt": 3128,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000030036"
+  },
+  "Mos": {
+   "gene": "Mos",
+   "transcript": "ENSMUST00000105158",
+   "biotype": "protein_coding",
+   "mrna_nt": 1449,
+   "cds_nt": 1032,
+   "utr_nt": 417,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000078365"
+  },
+  "Mrps5": {
+   "gene": "Mrps5",
+   "transcript": "ENSMUST00000028852",
+   "biotype": "protein_coding",
+   "mrna_nt": 4488,
+   "cds_nt": 16426,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000027374"
+  },
+  "Ms4a1": {
+   "gene": "Ms4a1",
+   "transcript": "ENSMUST00000169159",
+   "biotype": "protein_coding",
+   "mrna_nt": 3075,
+   "cds_nt": 7157,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000024673"
+  },
+  "Msi2": {
+   "gene": "Msi2",
+   "transcript": "ENSMUST00000092794",
+   "biotype": "protein_coding",
+   "mrna_nt": 2064,
+   "cds_nt": 371007,
+   "utr_nt": 0,
+   "n_exons": 14,
+   "ensembl_gene": "ENSMUSG00000069769"
+  },
+  "Msx1": {
+   "gene": "Msx1",
+   "transcript": "ENSMUST00000063116",
+   "biotype": "protein_coding",
+   "mrna_nt": 1936,
+   "cds_nt": 3076,
+   "utr_nt": 0,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000048450"
+  },
+  "Mt1": {
+   "gene": "Mt1",
+   "transcript": "ENSMUST00000212291",
+   "biotype": "protein_coding",
+   "mrna_nt": 762,
+   "cds_nt": 883,
+   "utr_nt": 0,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000031765"
+  },
+  "Mta2": {
+   "gene": "Mta2",
+   "transcript": "ENSMUST00000096240",
+   "biotype": "protein_coding",
+   "mrna_nt": 3263,
+   "cds_nt": 9301,
+   "utr_nt": 0,
+   "n_exons": 18,
+   "ensembl_gene": "ENSMUSG00000071646"
+  },
+  "Mtmr14": {
+   "gene": "Mtmr14",
+   "transcript": "ENSMUST00000113146",
+   "biotype": "protein_coding",
+   "mrna_nt": 2729,
+   "cds_nt": 42821,
+   "utr_nt": 0,
+   "n_exons": 19,
+   "ensembl_gene": "ENSMUSG00000030269"
+  },
+  "Mtor": {
+   "gene": "Mtor",
+   "transcript": "ENSMUST00000103221",
+   "biotype": "protein_coding",
+   "mrna_nt": 8596,
+   "cds_nt": 104590,
+   "utr_nt": 0,
+   "n_exons": 58,
+   "ensembl_gene": "ENSMUSG00000028991"
+  },
+  "MuERV-L": null,
+  "Muc15": {
+   "gene": "Muc15",
+   "transcript": "ENSMUST00000111016",
+   "biotype": "protein_coding",
+   "mrna_nt": 3421,
+   "cds_nt": 6287,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000050808"
+  },
+  "Mx1": {
+   "gene": "Mx1",
+   "transcript": "ENSMUST00000113768",
+   "biotype": "protein_coding",
+   "mrna_nt": 2695,
+   "cds_nt": 12617,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000000386"
+  },
+  "Myc": {
+   "gene": "Myc",
+   "transcript": "ENSMUST00000022971",
+   "biotype": "protein_coding",
+   "mrna_nt": 2375,
+   "cds_nt": 3987,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000022346"
+  },
+  "Myh9": {
+   "gene": "Myh9",
+   "transcript": "ENSMUST00000016771",
+   "biotype": "protein_coding",
+   "mrna_nt": 7439,
+   "cds_nt": 51314,
+   "utr_nt": 0,
+   "n_exons": 41,
+   "ensembl_gene": "ENSMUSG00000022443"
+  },
+  "Mymx": {
+   "gene": "Mymx",
+   "transcript": "ENSMUST00000169137",
+   "biotype": "protein_coding",
+   "mrna_nt": 1557,
+   "cds_nt": 424,
+   "utr_nt": 1133,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000079471"
+  },
+  "Myo5a": {
+   "gene": "Myo5a",
+   "transcript": "ENSMUST00000136731",
+   "biotype": "protein_coding",
+   "mrna_nt": 11653,
+   "cds_nt": 146361,
+   "utr_nt": 0,
+   "n_exons": 40,
+   "ensembl_gene": "ENSMUSG00000034593"
+  },
+  "Myo5b": {
+   "gene": "Myo5b",
+   "transcript": "ENSMUST00000074157",
+   "biotype": "protein_coding",
+   "mrna_nt": 9747,
+   "cds_nt": 327669,
+   "utr_nt": 0,
+   "n_exons": 39,
+   "ensembl_gene": "ENSMUSG00000025885"
+  },
+  "Myo7a": {
+   "gene": "Myo7a",
+   "transcript": "ENSMUST00000107127",
+   "biotype": "protein_coding",
+   "mrna_nt": 8593,
+   "cds_nt": 66107,
+   "utr_nt": 0,
+   "n_exons": 49,
+   "ensembl_gene": "ENSMUSG00000030761"
+  },
+  "Myorg": {
+   "gene": "Myorg",
+   "transcript": "ENSMUST00000054920",
+   "biotype": "protein_coding",
+   "mrna_nt": 5513,
+   "cds_nt": 2151,
+   "utr_nt": 3362,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000046312"
+  },
+  "Nanos2": {
+   "gene": "Nanos2",
+   "transcript": "ENSMUST00000063563",
+   "biotype": "protein_coding",
+   "mrna_nt": 1563,
+   "cds_nt": 411,
+   "utr_nt": 1152,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000051965"
+  },
+  "Ndufb7": {
+   "gene": "Ndufb7",
+   "transcript": "ENSMUST00000036996",
+   "biotype": "protein_coding",
+   "mrna_nt": 623,
+   "cds_nt": 4747,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000033938"
+  },
+  "Nfya": {
+   "gene": "Nfya",
+   "transcript": "ENSMUST00000162460",
+   "biotype": "protein_coding",
+   "mrna_nt": 3710,
+   "cds_nt": 11224,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000023994"
+  },
+  "Nhlrc3": {
+   "gene": "Nhlrc3",
+   "transcript": "ENSMUST00000056749",
+   "biotype": "protein_coding",
+   "mrna_nt": 5047,
+   "cds_nt": 10747,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000042997"
+  },
+  "Nhsl1": {
+   "gene": "Nhsl1",
+   "transcript": "ENSMUST00000207038",
+   "biotype": "protein_coding",
+   "mrna_nt": 4854,
+   "cds_nt": 212989,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000039835"
+  },
+  "Ninj2": {
+   "gene": "Ninj2",
+   "transcript": "ENSMUST00000112711",
+   "biotype": "protein_coding",
+   "mrna_nt": 1098,
+   "cds_nt": 105384,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000041377"
+  },
+  "Nlrp2": {
+   "gene": "Nlrp2",
+   "transcript": "ENSMUST00000045022",
+   "biotype": "protein_coding",
+   "mrna_nt": 3404,
+   "cds_nt": 39078,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000035177"
+  },
+  "Nlrp5": {
+   "gene": "Nlrp5",
+   "transcript": "ENSMUST00000015866",
+   "biotype": "protein_coding",
+   "mrna_nt": 3520,
+   "cds_nt": 37704,
+   "utr_nt": 0,
+   "n_exons": 16,
+   "ensembl_gene": "ENSMUSG00000015721"
+  },
+  "Nlrp9c": {
+   "gene": "Nlrp9c",
+   "transcript": "ENSMUST00000085944",
+   "biotype": "protein_coding",
+   "mrna_nt": 3216,
+   "cds_nt": 29352,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000040614"
+  },
+  "Nodal": {
+   "gene": "Nodal",
+   "transcript": "ENSMUST00000049339",
+   "biotype": "protein_coding",
+   "mrna_nt": 2095,
+   "cds_nt": 6337,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000037171"
+  },
+  "Nono": {
+   "gene": "Nono",
+   "transcript": "ENSMUST00000033673",
+   "biotype": "protein_coding",
+   "mrna_nt": 2827,
+   "cds_nt": 10511,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000031311"
+  },
+  "Notch2": {
+   "gene": "Notch2",
+   "transcript": "ENSMUST00000079812",
+   "biotype": "protein_coding",
+   "mrna_nt": 10554,
+   "cds_nt": 133746,
+   "utr_nt": 0,
+   "n_exons": 34,
+   "ensembl_gene": "ENSMUSG00000027878"
+  },
+  "Notch3": {
+   "gene": "Notch3",
+   "transcript": "ENSMUST00000087723",
+   "biotype": "protein_coding",
+   "mrna_nt": 8083,
+   "cds_nt": 44974,
+   "utr_nt": 0,
+   "n_exons": 33,
+   "ensembl_gene": "ENSMUSG00000038146"
+  },
+  "Npc1l1": {
+   "gene": "Npc1l1",
+   "transcript": "ENSMUST00000004505",
+   "biotype": "protein_coding",
+   "mrna_nt": 4566,
+   "cds_nt": 18666,
+   "utr_nt": 0,
+   "n_exons": 19,
+   "ensembl_gene": "ENSMUSG00000020447"
+  },
+  "Nppb": {
+   "gene": "Nppb",
+   "transcript": "ENSMUST00000103231",
+   "biotype": "protein_coding",
+   "mrna_nt": 781,
+   "cds_nt": 1003,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000029019"
+  },
+  "Nr1d1": {
+   "gene": "Nr1d1",
+   "transcript": "ENSMUST00000064941",
+   "biotype": "protein_coding",
+   "mrna_nt": 2721,
+   "cds_nt": 6529,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000020889"
+  },
+  "Nr5a2": {
+   "gene": "Nr5a2",
+   "transcript": "ENSMUST00000168126",
+   "biotype": "protein_coding",
+   "mrna_nt": 5157,
+   "cds_nt": 103341,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000026398"
+  },
+  "Nrarp": {
+   "gene": "Nrarp",
+   "transcript": "ENSMUST00000104999",
+   "biotype": "protein_coding",
+   "mrna_nt": 2582,
+   "cds_nt": 345,
+   "utr_nt": 2237,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000078202"
+  },
+  "Nrg2": {
+   "gene": "Nrg2",
+   "transcript": "ENSMUST00000239409",
+   "biotype": "protein_coding",
+   "mrna_nt": 2017,
+   "cds_nt": 50627,
+   "utr_nt": 0,
+   "n_exons": 10,
+   "ensembl_gene": "ENSMUSG00000060275"
+  },
+  "Nrp1": {
+   "gene": "Nrp1",
+   "transcript": "ENSMUST00000026917",
+   "biotype": "protein_coding",
+   "mrna_nt": 5135,
+   "cds_nt": 143255,
+   "utr_nt": 0,
+   "n_exons": 17,
+   "ensembl_gene": "ENSMUSG00000025810"
+  },
+  "Nsf": {
+   "gene": "Nsf",
+   "transcript": "ENSMUST00000103075",
+   "biotype": "protein_coding",
+   "mrna_nt": 3836,
+   "cds_nt": 130744,
+   "utr_nt": 0,
+   "n_exons": 21,
+   "ensembl_gene": "ENSMUSG00000034187"
+  },
+  "Ntf3": {
+   "gene": "Ntf3",
+   "transcript": "ENSMUST00000204542",
+   "biotype": "protein_coding",
+   "mrna_nt": 1366,
+   "cds_nt": 63022,
+   "utr_nt": 0,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000049107"
+  },
+  "Numb": {
+   "gene": "Numb",
+   "transcript": "ENSMUST00000117217",
+   "biotype": "protein_coding",
+   "mrna_nt": 3549,
+   "cds_nt": 46905,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000021224"
+  },
+  "Nup153": {
+   "gene": "Nup153",
+   "transcript": "ENSMUST00000021803",
+   "biotype": "protein_coding",
+   "mrna_nt": 9093,
+   "cds_nt": 46316,
+   "utr_nt": 0,
+   "n_exons": 22,
+   "ensembl_gene": "ENSMUSG00000021374"
+  },
+  "Nup62cl": {
+   "gene": "Nup62cl",
+   "transcript": "ENSMUST00000101212",
+   "biotype": "protein_coding",
+   "mrna_nt": 2019,
+   "cds_nt": 31330,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000072944"
+  },
+  "Oas1h": {
+   "gene": "Oas1h",
+   "transcript": "ENSMUST00000072476",
+   "biotype": "protein_coding",
+   "mrna_nt": 1703,
+   "cds_nt": 11493,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000001168"
+  },
+  "Obi1": {
+   "gene": "Obi1",
+   "transcript": "ENSMUST00000022716",
+   "biotype": "protein_coding",
+   "mrna_nt": 3476,
+   "cds_nt": 43846,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000022120"
+  },
+  "Obox1": {
+   "gene": "Obox1",
+   "transcript": "ENSMUST00000067288",
+   "biotype": "protein_coding",
+   "mrna_nt": 1512,
+   "cds_nt": 1187,
+   "utr_nt": 325,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000054310"
+  },
+  "Obox2": {
+   "gene": "Obox2",
+   "transcript": "ENSMUST00000036575",
+   "biotype": "protein_coding",
+   "mrna_nt": 1459,
+   "cds_nt": 1029,
+   "utr_nt": 430,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000074369"
+  },
+  "Obox3": {
+   "gene": "Obox3",
+   "transcript": "ENSMUST00000174443",
+   "biotype": "protein_coding",
+   "mrna_nt": 1979,
+   "cds_nt": 1604,
+   "utr_nt": 375,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000066772"
+  },
+  "Obox8": {
+   "gene": "Obox8",
+   "transcript": "ENSMUST00000184356",
+   "biotype": "protein_coding",
+   "mrna_nt": 1183,
+   "cds_nt": 1609,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000099216"
+  },
+  "Ormdl3": {
+   "gene": "Ormdl3",
+   "transcript": "ENSMUST00000052919",
+   "biotype": "protein_coding",
+   "mrna_nt": 2185,
+   "cds_nt": 1404,
+   "utr_nt": 781,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000038150"
+  },
+  "Otx1": {
+   "gene": "Otx1",
+   "transcript": "ENSMUST00000006071",
+   "biotype": "protein_coding",
+   "mrna_nt": 2789,
+   "cds_nt": 3237,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000005917"
+  },
+  "Padi6": {
+   "gene": "Padi6",
+   "transcript": "ENSMUST00000038749",
+   "biotype": "protein_coding",
+   "mrna_nt": 2333,
+   "cds_nt": 15005,
+   "utr_nt": 0,
+   "n_exons": 16,
+   "ensembl_gene": "ENSMUSG00000040935"
+  },
+  "Pard3": {
+   "gene": "Pard3",
+   "transcript": "ENSMUST00000026921",
+   "biotype": "protein_coding",
+   "mrna_nt": 6184,
+   "cds_nt": 546152,
+   "utr_nt": 0,
+   "n_exons": 24,
+   "ensembl_gene": "ENSMUSG00000025812"
+  },
+  "Pard6a": {
+   "gene": "Pard6a",
+   "transcript": "ENSMUST00000098444",
+   "biotype": "protein_coding",
+   "mrna_nt": 1276,
+   "cds_nt": 2060,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000005699"
+  },
+  "Parp12": {
+   "gene": "Parp12",
+   "transcript": "ENSMUST00000038398",
+   "biotype": "protein_coding",
+   "mrna_nt": 3523,
+   "cds_nt": 30845,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000038507"
+  },
+  "Pawr": {
+   "gene": "Pawr",
+   "transcript": "ENSMUST00000095313",
+   "biotype": "protein_coding",
+   "mrna_nt": 1864,
+   "cds_nt": 80938,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000035873"
+  },
+  "Pax6": {
+   "gene": "Pax6",
+   "transcript": "ENSMUST00000111087",
+   "biotype": "protein_coding",
+   "mrna_nt": 5813,
+   "cds_nt": 16058,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000027168"
+  },
+  "Pcp4": {
+   "gene": "Pcp4",
+   "transcript": "ENSMUST00000395968",
+   "biotype": "protein_coding",
+   "mrna_nt": 822,
+   "cds_nt": 57736,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000090223"
+  },
+  "Pcyt1b": {
+   "gene": "Pcyt1b",
+   "transcript": "ENSMUST00000045898",
+   "biotype": "protein_coding",
+   "mrna_nt": 4888,
+   "cds_nt": 71072,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000035246"
+  },
+  "Pdha2": {
+   "gene": "Pdha2",
+   "transcript": "ENSMUST00000057860",
+   "biotype": "protein_coding",
+   "mrna_nt": 2352,
+   "cds_nt": 1176,
+   "utr_nt": 1176,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000047674"
+  },
+  "Pgap1": {
+   "gene": "Pgap1",
+   "transcript": "ENSMUST00000097739",
+   "biotype": "protein_coding",
+   "mrna_nt": 10644,
+   "cds_nt": 76875,
+   "utr_nt": 0,
+   "n_exons": 27,
+   "ensembl_gene": "ENSMUSG00000073678"
+  },
+  "Pgk1": {
+   "gene": "Pgk1",
+   "transcript": "ENSMUST00000081593",
+   "biotype": "protein_coding",
+   "mrna_nt": 1825,
+   "cds_nt": 16029,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000062070"
+  },
+  "Pgm5": {
+   "gene": "Pgm5",
+   "transcript": "ENSMUST00000047666",
+   "biotype": "protein_coding",
+   "mrna_nt": 3249,
+   "cds_nt": 177305,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000041731"
+  },
+  "Pheta1": {
+   "gene": "Pheta1",
+   "transcript": "ENSMUST00000056654",
+   "biotype": "protein_coding",
+   "mrna_nt": 2458,
+   "cds_nt": 801,
+   "utr_nt": 1657,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000044134"
+  },
+  "Phf5a": {
+   "gene": "Phf5a",
+   "transcript": "ENSMUST00000023117",
+   "biotype": "protein_coding",
+   "mrna_nt": 1688,
+   "cds_nt": 6062,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000061360"
+  },
+  "Pi4k2b": {
+   "gene": "Pi4k2b",
+   "transcript": "ENSMUST00000031081",
+   "biotype": "protein_coding",
+   "mrna_nt": 3145,
+   "cds_nt": 26038,
+   "utr_nt": 0,
+   "n_exons": 10,
+   "ensembl_gene": "ENSMUSG00000029186"
+  },
+  "Pin1": {
+   "gene": "Pin1",
+   "transcript": "ENSMUST00000034689",
+   "biotype": "protein_coding",
+   "mrna_nt": 7645,
+   "cds_nt": 11145,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000032171"
+  },
+  "Pkd1": {
+   "gene": "Pkd1",
+   "transcript": "ENSMUST00000035565",
+   "biotype": "protein_coding",
+   "mrna_nt": 14164,
+   "cds_nt": 45277,
+   "utr_nt": 0,
+   "n_exons": 46,
+   "ensembl_gene": "ENSMUSG00000032855"
+  },
+  "Pknox2": {
+   "gene": "Pknox2",
+   "transcript": "ENSMUST00000039674",
+   "biotype": "protein_coding",
+   "mrna_nt": 4362,
+   "cds_nt": 75640,
+   "utr_nt": 0,
+   "n_exons": 13,
+   "ensembl_gene": "ENSMUSG00000035934"
+  },
+  "Pkp2": {
+   "gene": "Pkp2",
+   "transcript": "ENSMUST00000039408",
+   "biotype": "protein_coding",
+   "mrna_nt": 2953,
+   "cds_nt": 58865,
+   "utr_nt": 0,
+   "n_exons": 13,
+   "ensembl_gene": "ENSMUSG00000041957"
+  },
+  "Plat": {
+   "gene": "Plat",
+   "transcript": "ENSMUST00000033941",
+   "biotype": "protein_coding",
+   "mrna_nt": 2590,
+   "cds_nt": 15002,
+   "utr_nt": 0,
+   "n_exons": 14,
+   "ensembl_gene": "ENSMUSG00000031538"
+  },
+  "Plxnc1": {
+   "gene": "Plxnc1",
+   "transcript": "ENSMUST00000099337",
+   "biotype": "protein_coding",
+   "mrna_nt": 7482,
+   "cds_nt": 151393,
+   "utr_nt": 0,
+   "n_exons": 31,
+   "ensembl_gene": "ENSMUSG00000074785"
+  },
+  "Pmaip1": {
+   "gene": "Pmaip1",
+   "transcript": "ENSMUST00000025399",
+   "biotype": "protein_coding",
+   "mrna_nt": 2732,
+   "cds_nt": 4613,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000024521"
+  },
+  "Ppcs": {
+   "gene": "Ppcs",
+   "transcript": "ENSMUST00000030385",
+   "biotype": "protein_coding",
+   "mrna_nt": 1444,
+   "cds_nt": 3384,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000028636"
+  },
+  "Ppef1": {
+   "gene": "Ppef1",
+   "transcript": "ENSMUST00000071204",
+   "biotype": "protein_coding",
+   "mrna_nt": 2883,
+   "cds_nt": 96349,
+   "utr_nt": 0,
+   "n_exons": 16,
+   "ensembl_gene": "ENSMUSG00000062168"
+  },
+  "Ppic": {
+   "gene": "Ppic",
+   "transcript": "ENSMUST00000025419",
+   "biotype": "protein_coding",
+   "mrna_nt": 1403,
+   "cds_nt": 11020,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000024538"
+  },
+  "Ppp1r8": {
+   "gene": "Ppp1r8",
+   "transcript": "ENSMUST00000030702",
+   "biotype": "protein_coding",
+   "mrna_nt": 2075,
+   "cds_nt": 15260,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000028882"
+  },
+  "Ppp2cb": {
+   "gene": "Ppp2cb",
+   "transcript": "ENSMUST00000009774",
+   "biotype": "protein_coding",
+   "mrna_nt": 1932,
+   "cds_nt": 19278,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000009630"
+  },
+  "Pqbp1": {
+   "gene": "Pqbp1",
+   "transcript": "ENSMUST00000115654",
+   "biotype": "protein_coding",
+   "mrna_nt": 1374,
+   "cds_nt": 3907,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000031157"
+  },
+  "Prkce": {
+   "gene": "Prkce",
+   "transcript": "ENSMUST00000097275",
+   "biotype": "protein_coding",
+   "mrna_nt": 6557,
+   "cds_nt": 486095,
+   "utr_nt": 0,
+   "n_exons": 15,
+   "ensembl_gene": "ENSMUSG00000045038"
+  },
+  "Prkci": {
+   "gene": "Prkci",
+   "transcript": "ENSMUST00000108249",
+   "biotype": "protein_coding",
+   "mrna_nt": 4718,
+   "cds_nt": 54293,
+   "utr_nt": 0,
+   "n_exons": 18,
+   "ensembl_gene": "ENSMUSG00000037643"
+  },
+  "Prl8a2": {
+   "gene": "Prl8a2",
+   "transcript": "ENSMUST00000018403",
+   "biotype": "protein_coding",
+   "mrna_nt": 950,
+   "cds_nt": 8328,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000018259"
+  },
+  "Prom1": {
+   "gene": "Prom1",
+   "transcript": "ENSMUST00000074113",
+   "biotype": "protein_coding",
+   "mrna_nt": 3966,
+   "cds_nt": 99516,
+   "utr_nt": 0,
+   "n_exons": 28,
+   "ensembl_gene": "ENSMUSG00000029086"
+  },
+  "Psen1": {
+   "gene": "Psen1",
+   "transcript": "ENSMUST00000041806",
+   "biotype": "protein_coding",
+   "mrna_nt": 6221,
+   "cds_nt": 34507,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000019969"
+  },
+  "Psen2": {
+   "gene": "Psen2",
+   "transcript": "ENSMUST00000111108",
+   "biotype": "protein_coding",
+   "mrna_nt": 1997,
+   "cds_nt": 18182,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000010609"
+  },
+  "Psg26": {
+   "gene": "Psg26",
+   "transcript": "ENSMUST00000094798",
+   "biotype": "protein_coding",
+   "mrna_nt": 2086,
+   "cds_nt": 8938,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000070799"
+  },
+  "Psmb7": {
+   "gene": "Psmb7",
+   "transcript": "ENSMUST00000028083",
+   "biotype": "protein_coding",
+   "mrna_nt": 1160,
+   "cds_nt": 55726,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000026750"
+  },
+  "Psme3": {
+   "gene": "Psme3",
+   "transcript": "ENSMUST00000019470",
+   "biotype": "protein_coding",
+   "mrna_nt": 4376,
+   "cds_nt": 5426,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000078652"
+  },
+  "Ptges": {
+   "gene": "Ptges",
+   "transcript": "ENSMUST00000102852",
+   "biotype": "protein_coding",
+   "mrna_nt": 3693,
+   "cds_nt": 10642,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000050737"
+  },
+  "Pthlh": {
+   "gene": "Pthlh",
+   "transcript": "ENSMUST00000052296",
+   "biotype": "protein_coding",
+   "mrna_nt": 1603,
+   "cds_nt": 10803,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000048776"
+  },
+  "Ptrh1": {
+   "gene": "Ptrh1",
+   "transcript": "ENSMUST00000066352",
+   "biotype": "protein_coding",
+   "mrna_nt": 975,
+   "cds_nt": 1475,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000053746"
+  },
+  "Pxdn": {
+   "gene": "Pxdn",
+   "transcript": "ENSMUST00000122328",
+   "biotype": "protein_coding",
+   "mrna_nt": 6820,
+   "cds_nt": 77437,
+   "utr_nt": 0,
+   "n_exons": 23,
+   "ensembl_gene": "ENSMUSG00000020674"
+  },
+  "Rab9": {
+   "gene": "Rab9",
+   "transcript": "ENSMUST00000112091",
+   "biotype": "protein_coding",
+   "mrna_nt": 6288,
+   "cds_nt": 606,
+   "utr_nt": 5682,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000079316"
+  },
+  "Raf1": {
+   "gene": "Raf1",
+   "transcript": "ENSMUST00000000451",
+   "biotype": "protein_coding",
+   "mrna_nt": 3575,
+   "cds_nt": 25351,
+   "utr_nt": 0,
+   "n_exons": 17,
+   "ensembl_gene": "ENSMUSG00000000441"
+  },
+  "Raly": {
+   "gene": "Raly",
+   "transcript": "ENSMUST00000109701",
+   "biotype": "protein_coding",
+   "mrna_nt": 1757,
+   "cds_nt": 8675,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000027593"
+  },
+  "Rasl11b": {
+   "gene": "Rasl11b",
+   "transcript": "ENSMUST00000051937",
+   "biotype": "protein_coding",
+   "mrna_nt": 1813,
+   "cds_nt": 3128,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000049907"
+  },
+  "Rbm8a": {
+   "gene": "Rbm8a",
+   "transcript": "ENSMUST00000196456",
+   "biotype": "protein_coding",
+   "mrna_nt": 2651,
+   "cds_nt": 1773,
+   "utr_nt": 878,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000038374"
+  },
+  "Rbp7": {
+   "gene": "Rbp7",
+   "transcript": "ENSMUST00000030848",
+   "biotype": "protein_coding",
+   "mrna_nt": 620,
+   "cds_nt": 5078,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000028996"
+  },
+  "Rgs17": {
+   "gene": "Rgs17",
+   "transcript": "ENSMUST00000131996",
+   "biotype": "protein_coding",
+   "mrna_nt": 8107,
+   "cds_nt": 29685,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000019775"
+  },
+  "RhoA": {
+   "gene": "RhoA",
+   "transcript": "ENSMUST00000007959",
+   "biotype": "protein_coding",
+   "mrna_nt": 2206,
+   "cds_nt": 9236,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000007815"
+  },
+  "Rhou": {
+   "gene": "Rhou",
+   "transcript": "ENSMUST00000045487",
+   "biotype": "protein_coding",
+   "mrna_nt": 3945,
+   "cds_nt": 7371,
+   "utr_nt": 0,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000039960"
+  },
+  "Rinl": {
+   "gene": "Rinl",
+   "transcript": "ENSMUST00000059857",
+   "biotype": "protein_coding",
+   "mrna_nt": 4688,
+   "cds_nt": 7496,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000051735"
+  },
+  "Ripply2": {
+   "gene": "Ripply2",
+   "transcript": "ENSMUST00000058846",
+   "biotype": "protein_coding",
+   "mrna_nt": 1025,
+   "cds_nt": 4265,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000047897"
+  },
+  "Rnaseh2b": {
+   "gene": "Rnaseh2b",
+   "transcript": "ENSMUST00000022499",
+   "biotype": "protein_coding",
+   "mrna_nt": 1515,
+   "cds_nt": 40358,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000021932"
+  },
+  "Rnf128": {
+   "gene": "Rnf128",
+   "transcript": "ENSMUST00000113026",
+   "biotype": "protein_coding",
+   "mrna_nt": 2995,
+   "cds_nt": 61063,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000031438"
+  },
+  "Rps13": {
+   "gene": "Rps13",
+   "transcript": "ENSMUST00000170953",
+   "biotype": "protein_coding",
+   "mrna_nt": 589,
+   "cds_nt": 2558,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000090862"
+  },
+  "Rras": {
+   "gene": "Rras",
+   "transcript": "ENSMUST00000044111",
+   "biotype": "protein_coding",
+   "mrna_nt": 2370,
+   "cds_nt": 3349,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000038387"
+  },
+  "Rras2": {
+   "gene": "Rras2",
+   "transcript": "ENSMUST00000069449",
+   "biotype": "protein_coding",
+   "mrna_nt": 2280,
+   "cds_nt": 69340,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000055723"
+  },
+  "Samd10": {
+   "gene": "Samd10",
+   "transcript": "ENSMUST00000060173",
+   "biotype": "protein_coding",
+   "mrna_nt": 2291,
+   "cds_nt": 2440,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000038605"
+  },
+  "Scd2": {
+   "gene": "Scd2",
+   "transcript": "ENSMUST00000026221",
+   "biotype": "protein_coding",
+   "mrna_nt": 5455,
+   "cds_nt": 8813,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000025203"
+  },
+  "Sdc4": {
+   "gene": "Sdc4",
+   "transcript": "ENSMUST00000017153",
+   "biotype": "protein_coding",
+   "mrna_nt": 2755,
+   "cds_nt": 17079,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000017009"
+  },
+  "Sec1": {
+   "gene": "Sec1",
+   "transcript": "ENSMUST00000404039",
+   "biotype": "protein_coding",
+   "mrna_nt": 8799,
+   "cds_nt": 5825,
+   "utr_nt": 2974,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000040364"
+  },
+  "Selenon": {
+   "gene": "Selenon",
+   "transcript": "ENSMUST00000060435",
+   "biotype": "protein_coding",
+   "mrna_nt": 3790,
+   "cds_nt": 12504,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000050989"
+  },
+  "Sema6c": {
+   "gene": "Sema6c",
+   "transcript": "ENSMUST00000567873",
+   "biotype": "protein_coding",
+   "mrna_nt": 3902,
+   "cds_nt": 8896,
+   "utr_nt": 0,
+   "n_exons": 18,
+   "ensembl_gene": "ENSMUSG00000038777"
+  },
+  "Serpinb9b": {
+   "gene": "Serpinb9b",
+   "transcript": "ENSMUST00000006392",
+   "biotype": "protein_coding",
+   "mrna_nt": 3253,
+   "cds_nt": 10499,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000021403"
+  },
+  "Setd2": {
+   "gene": "Setd2",
+   "transcript": "ENSMUST00000153838",
+   "biotype": "protein_coding",
+   "mrna_nt": 8445,
+   "cds_nt": 85301,
+   "utr_nt": 0,
+   "n_exons": 21,
+   "ensembl_gene": "ENSMUSG00000044791"
+  },
+  "Sf1": {
+   "gene": "Sf1",
+   "transcript": "ENSMUST00000131252",
+   "biotype": "protein_coding",
+   "mrna_nt": 4547,
+   "cds_nt": 11908,
+   "utr_nt": 0,
+   "n_exons": 13,
+   "ensembl_gene": "ENSMUSG00000024949"
+  },
+  "Shc2": {
+   "gene": "Shc2",
+   "transcript": "ENSMUST00000020564",
+   "biotype": "protein_coding",
+   "mrna_nt": 3972,
+   "cds_nt": 16792,
+   "utr_nt": 0,
+   "n_exons": 13,
+   "ensembl_gene": "ENSMUSG00000020312"
+  },
+  "Shc3": {
+   "gene": "Shc3",
+   "transcript": "ENSMUST00000239056",
+   "biotype": "protein_coding",
+   "mrna_nt": 11588,
+   "cds_nt": 136292,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000021448"
+  },
+  "Skil": {
+   "gene": "Skil",
+   "transcript": "ENSMUST00000118470",
+   "biotype": "protein_coding",
+   "mrna_nt": 6987,
+   "cds_nt": 21283,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000027660"
+  },
+  "Slc19a3": {
+   "gene": "Slc19a3",
+   "transcript": "ENSMUST00000045560",
+   "biotype": "protein_coding",
+   "mrna_nt": 3050,
+   "cds_nt": 12560,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000038496"
+  },
+  "Slc20a1": {
+   "gene": "Slc20a1",
+   "transcript": "ENSMUST00000028880",
+   "biotype": "protein_coding",
+   "mrna_nt": 3319,
+   "cds_nt": 11127,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000027397"
+  },
+  "Slc2a1": {
+   "gene": "Slc2a1",
+   "transcript": "ENSMUST00000030398",
+   "biotype": "protein_coding",
+   "mrna_nt": 4445,
+   "cds_nt": 27492,
+   "utr_nt": 0,
+   "n_exons": 10,
+   "ensembl_gene": "ENSMUSG00000028645"
+  },
+  "Slc38a2": {
+   "gene": "Slc38a2",
+   "transcript": "ENSMUST00000023099",
+   "biotype": "protein_coding",
+   "mrna_nt": 4683,
+   "cds_nt": 8604,
+   "utr_nt": 0,
+   "n_exons": 16,
+   "ensembl_gene": "ENSMUSG00000022462"
+  },
+  "Slc39a8": {
+   "gene": "Slc39a8",
+   "transcript": "ENSMUST00000029810",
+   "biotype": "protein_coding",
+   "mrna_nt": 3822,
+   "cds_nt": 60483,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000053897"
+  },
+  "Slc66a1": {
+   "gene": "Slc66a1",
+   "transcript": "ENSMUST00000053862",
+   "biotype": "protein_coding",
+   "mrna_nt": 1532,
+   "cds_nt": 7715,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000028744"
+  },
+  "Smad1": {
+   "gene": "Smad1",
+   "transcript": "ENSMUST00000066091",
+   "biotype": "protein_coding",
+   "mrna_nt": 3121,
+   "cds_nt": 32535,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000031681"
+  },
+  "Smad2": {
+   "gene": "Smad2",
+   "transcript": "ENSMUST00000091831",
+   "biotype": "protein_coding",
+   "mrna_nt": 1645,
+   "cds_nt": 42239,
+   "utr_nt": 0,
+   "n_exons": 10,
+   "ensembl_gene": "ENSMUSG00000024563"
+  },
+  "Smad7": {
+   "gene": "Smad7",
+   "transcript": "ENSMUST00000026999",
+   "biotype": "protein_coding",
+   "mrna_nt": 4504,
+   "cds_nt": 25410,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000025880"
+  },
+  "Smox": {
+   "gene": "Smox",
+   "transcript": "ENSMUST00000028806",
+   "biotype": "protein_coding",
+   "mrna_nt": 3635,
+   "cds_nt": 12871,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000027333"
+  },
+  "Snrpd3": {
+   "gene": "Snrpd3",
+   "transcript": "ENSMUST00000020397",
+   "biotype": "protein_coding",
+   "mrna_nt": 3055,
+   "cds_nt": 15988,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000020180"
+  },
+  "Sox2": {
+   "gene": "Sox2",
+   "transcript": "ENSMUST00000099151",
+   "biotype": "protein_coding",
+   "mrna_nt": 2057,
+   "cds_nt": 960,
+   "utr_nt": 1097,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000074637"
+  },
+  "Sox21": {
+   "gene": "Sox21",
+   "transcript": "ENSMUST00000170662",
+   "biotype": "protein_coding",
+   "mrna_nt": 3799,
+   "cds_nt": 831,
+   "utr_nt": 2968,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000061517"
+  },
+  "Sox4": {
+   "gene": "Sox4",
+   "transcript": "ENSMUST00000067230",
+   "biotype": "protein_coding",
+   "mrna_nt": 4795,
+   "cds_nt": 1323,
+   "utr_nt": 3472,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000076431"
+  },
+  "Sox6": {
+   "gene": "Sox6",
+   "transcript": "ENSMUST00000501339",
+   "biotype": "protein_coding",
+   "mrna_nt": 8554,
+   "cds_nt": 324688,
+   "utr_nt": 0,
+   "n_exons": 15,
+   "ensembl_gene": "ENSMUSG00000051910"
+  },
+  "Sox7": {
+   "gene": "Sox7",
+   "transcript": "ENSMUST00000079652",
+   "biotype": "protein_coding",
+   "mrna_nt": 3586,
+   "cds_nt": 4904,
+   "utr_nt": 0,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000063060"
+  },
+  "Sparc": {
+   "gene": "Sparc",
+   "transcript": "ENSMUST00000018737",
+   "biotype": "protein_coding",
+   "mrna_nt": 2309,
+   "cds_nt": 14400,
+   "utr_nt": 0,
+   "n_exons": 10,
+   "ensembl_gene": "ENSMUSG00000018593"
+  },
+  "Spata7": {
+   "gene": "Spata7",
+   "transcript": "ENSMUST00000048402",
+   "biotype": "protein_coding",
+   "mrna_nt": 2274,
+   "cds_nt": 41356,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000021007"
+  },
+  "Specc1l": {
+   "gene": "Specc1l",
+   "transcript": "ENSMUST00000218766",
+   "biotype": "protein_coding",
+   "mrna_nt": 6406,
+   "cds_nt": 79161,
+   "utr_nt": 0,
+   "n_exons": 16,
+   "ensembl_gene": "ENSMUSG00000033444"
+  },
+  "Spp1": {
+   "gene": "Spp1",
+   "transcript": "ENSMUST00000031243",
+   "biotype": "protein_coding",
+   "mrna_nt": 2229,
+   "cds_nt": 4230,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000029304"
+  },
+  "Spz1": {
+   "gene": "Spz1",
+   "transcript": "ENSMUST00000050658",
+   "biotype": "protein_coding",
+   "mrna_nt": 1537,
+   "cds_nt": 1137,
+   "utr_nt": 400,
+   "n_exons": 1,
+   "ensembl_gene": "ENSMUSG00000046957"
+  },
+  "Srp54": null,
+  "Srp72": {
+   "gene": "Srp72",
+   "transcript": "ENSMUST00000101087",
+   "biotype": "protein_coding",
+   "mrna_nt": 3625,
+   "cds_nt": 23646,
+   "utr_nt": 0,
+   "n_exons": 19,
+   "ensembl_gene": "ENSMUSG00000036323"
+  },
+  "Stac2": {
+   "gene": "Stac2",
+   "transcript": "ENSMUST00000017544",
+   "biotype": "protein_coding",
+   "mrna_nt": 3053,
+   "cds_nt": 15017,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000017400"
+  },
+  "Stat6": {
+   "gene": "Stat6",
+   "transcript": "ENSMUST00000092074",
+   "biotype": "protein_coding",
+   "mrna_nt": 3838,
+   "cds_nt": 13070,
+   "utr_nt": 0,
+   "n_exons": 22,
+   "ensembl_gene": "ENSMUSG00000002147"
+  },
+  "Stim2": {
+   "gene": "Stim2",
+   "transcript": "ENSMUST00000117661",
+   "biotype": "protein_coding",
+   "mrna_nt": 4934,
+   "cds_nt": 119866,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000039156"
+  },
+  "Sytl4": {
+   "gene": "Sytl4",
+   "transcript": "ENSMUST00000033608",
+   "biotype": "protein_coding",
+   "mrna_nt": 3753,
+   "cds_nt": 24333,
+   "utr_nt": 0,
+   "n_exons": 17,
+   "ensembl_gene": "ENSMUSG00000031255"
+  },
+  "Taar2": {
+   "gene": "Taar2",
+   "transcript": "ENSMUST00000079134",
+   "biotype": "protein_coding",
+   "mrna_nt": 1020,
+   "cds_nt": 3012,
+   "utr_nt": 0,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000059763"
+  },
+  "Taf9b": {
+   "gene": "Taf9b",
+   "transcript": "ENSMUST00000055497",
+   "biotype": "protein_coding",
+   "mrna_nt": 2633,
+   "cds_nt": 11136,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000047242"
+  },
+  "Tardbp": {
+   "gene": "Tardbp",
+   "transcript": "ENSMUST00000084125",
+   "biotype": "protein_coding",
+   "mrna_nt": 7491,
+   "cds_nt": 7102,
+   "utr_nt": 389,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000041459"
+  },
+  "Tbx19": {
+   "gene": "Tbx19",
+   "transcript": "ENSMUST00000027859",
+   "biotype": "protein_coding",
+   "mrna_nt": 2682,
+   "cds_nt": 21600,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000026572"
+  },
+  "Tcf7": {
+   "gene": "Tcf7",
+   "transcript": "ENSMUST00000109071",
+   "biotype": "protein_coding",
+   "mrna_nt": 3476,
+   "cds_nt": 29297,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000000782"
+  },
+  "Tcl1b2": {
+   "gene": "Tcl1b2",
+   "transcript": "ENSMUST00000081379",
+   "biotype": "protein_coding",
+   "mrna_nt": 1009,
+   "cds_nt": 7012,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000060863"
+  },
+  "Tcl1b3": {
+   "gene": "Tcl1b3",
+   "transcript": "ENSMUST00000090990",
+   "biotype": "protein_coding",
+   "mrna_nt": 1045,
+   "cds_nt": 3400,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000068940"
+  },
+  "Tcl1b4": {
+   "gene": "Tcl1b4",
+   "transcript": "ENSMUST00000222867",
+   "biotype": "protein_coding",
+   "mrna_nt": 1467,
+   "cds_nt": 3936,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000079007"
+  },
+  "Tcp11l2": {
+   "gene": "Tcp11l2",
+   "transcript": "ENSMUST00000020223",
+   "biotype": "protein_coding",
+   "mrna_nt": 2782,
+   "cds_nt": 28828,
+   "utr_nt": 0,
+   "n_exons": 10,
+   "ensembl_gene": "ENSMUSG00000020034"
+  },
+  "Tead2": {
+   "gene": "Tead2",
+   "transcript": "ENSMUST00000033060",
+   "biotype": "protein_coding",
+   "mrna_nt": 2148,
+   "cds_nt": 15710,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000030796"
+  },
+  "Tes": {
+   "gene": "Tes",
+   "transcript": "ENSMUST00000115467",
+   "biotype": "protein_coding",
+   "mrna_nt": 2445,
+   "cds_nt": 39495,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000029552"
+  },
+  "Tfap2a": {
+   "gene": "Tfap2a",
+   "transcript": "ENSMUST00000224665",
+   "biotype": "protein_coding",
+   "mrna_nt": 3388,
+   "cds_nt": 16606,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000021359"
+  },
+  "Tfcp2l1": {
+   "gene": "Tfcp2l1",
+   "transcript": "ENSMUST00000027629",
+   "biotype": "protein_coding",
+   "mrna_nt": 9317,
+   "cds_nt": 49394,
+   "utr_nt": 0,
+   "n_exons": 15,
+   "ensembl_gene": "ENSMUSG00000026380"
+  },
+  "Tfdp1": {
+   "gene": "Tfdp1",
+   "transcript": "ENSMUST00000209885",
+   "biotype": "protein_coding",
+   "mrna_nt": 2633,
+   "cds_nt": 37562,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000038482"
+  },
+  "Tgfb1": {
+   "gene": "Tgfb1",
+   "transcript": "ENSMUST00000002678",
+   "biotype": "protein_coding",
+   "mrna_nt": 2215,
+   "cds_nt": 17074,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000002603"
+  },
+  "Tgfb2": {
+   "gene": "Tgfb2",
+   "transcript": "ENSMUST00000045288",
+   "biotype": "protein_coding",
+   "mrna_nt": 5228,
+   "cds_nt": 79327,
+   "utr_nt": 0,
+   "n_exons": 7,
+   "ensembl_gene": "ENSMUSG00000039239"
+  },
+  "Tle3": {
+   "gene": "Tle3",
+   "transcript": "ENSMUST00000162583",
+   "biotype": "protein_coding",
+   "mrna_nt": 5218,
+   "cds_nt": 43279,
+   "utr_nt": 0,
+   "n_exons": 20,
+   "ensembl_gene": "ENSMUSG00000032280"
+  },
+  "Tle6": {
+   "gene": "Tle6",
+   "transcript": "ENSMUST00000072020",
+   "biotype": "protein_coding",
+   "mrna_nt": 2016,
+   "cds_nt": 9045,
+   "utr_nt": 0,
+   "n_exons": 14,
+   "ensembl_gene": "ENSMUSG00000034758"
+  },
+  "Tmed6": {
+   "gene": "Tmed6",
+   "transcript": "ENSMUST00000034393",
+   "biotype": "protein_coding",
+   "mrna_nt": 892,
+   "cds_nt": 4018,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000031919"
+  },
+  "Tmem108": {
+   "gene": "Tmem108",
+   "transcript": "ENSMUST00000189066",
+   "biotype": "protein_coding",
+   "mrna_nt": 3781,
+   "cds_nt": 125090,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000042757"
+  },
+  "Tmem37": {
+   "gene": "Tmem37",
+   "transcript": "ENSMUST00000056089",
+   "biotype": "protein_coding",
+   "mrna_nt": 3079,
+   "cds_nt": 6023,
+   "utr_nt": 0,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000050777"
+  },
+  "Tmem81": {
+   "gene": "Tmem81",
+   "transcript": "ENSMUST00000058167",
+   "biotype": "protein_coding",
+   "mrna_nt": 2007,
+   "cds_nt": 780,
+   "utr_nt": 1227,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000048174"
+  },
+  "Tnfaip8": {
+   "gene": "Tnfaip8",
+   "transcript": "ENSMUST00000148989",
+   "biotype": "protein_coding",
+   "mrna_nt": 1002,
+   "cds_nt": 111140,
+   "utr_nt": 0,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000062210"
+  },
+  "Tpp1": {
+   "gene": "Tpp1",
+   "transcript": "ENSMUST00000033184",
+   "biotype": "protein_coding",
+   "mrna_nt": 3558,
+   "cds_nt": 5556,
+   "utr_nt": 0,
+   "n_exons": 13,
+   "ensembl_gene": "ENSMUSG00000030894"
+  },
+  "Tppp3": {
+   "gene": "Tppp3",
+   "transcript": "ENSMUST00000176419",
+   "biotype": "protein_coding",
+   "mrna_nt": 4197,
+   "cds_nt": 792,
+   "utr_nt": 3405,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000014846"
+  },
+  "Trib3": {
+   "gene": "Trib3",
+   "transcript": "ENSMUST00000040312",
+   "biotype": "protein_coding",
+   "mrna_nt": 2091,
+   "cds_nt": 5121,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000032715"
+  },
+  "Trim38": {
+   "gene": "Trim38",
+   "transcript": "ENSMUST00000074067",
+   "biotype": "protein_coding",
+   "mrna_nt": 1480,
+   "cds_nt": 8924,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000064140"
+  },
+  "Trim66": {
+   "gene": "Trim66",
+   "transcript": "ENSMUST00000106741",
+   "biotype": "protein_coding",
+   "mrna_nt": 9190,
+   "cds_nt": 53977,
+   "utr_nt": 0,
+   "n_exons": 20,
+   "ensembl_gene": "ENSMUSG00000031026"
+  },
+  "Trim75": {
+   "gene": "Trim75",
+   "transcript": "ENSMUST00000095295",
+   "biotype": "protein_coding",
+   "mrna_nt": 3273,
+   "cds_nt": 1404,
+   "utr_nt": 1869,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000071089"
+  },
+  "Trnp1": {
+   "gene": "Trnp1",
+   "transcript": "ENSMUST00000125541",
+   "biotype": "protein_coding",
+   "mrna_nt": 1654,
+   "cds_nt": 672,
+   "utr_nt": 982,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000056596"
+  },
+  "Trps1": {
+   "gene": "Trps1",
+   "transcript": "ENSMUST00000184458",
+   "biotype": "protein_coding",
+   "mrna_nt": 9377,
+   "cds_nt": 228995,
+   "utr_nt": 0,
+   "n_exons": 5,
+   "ensembl_gene": "ENSMUSG00000038679"
+  },
+  "Tsen54": {
+   "gene": "Tsen54",
+   "transcript": "ENSMUST00000021134",
+   "biotype": "protein_coding",
+   "mrna_nt": 1979,
+   "cds_nt": 7970,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000020781"
+  },
+  "Tulp3": {
+   "gene": "Tulp3",
+   "transcript": "ENSMUST00000001562",
+   "biotype": "protein_coding",
+   "mrna_nt": 3374,
+   "cds_nt": 32700,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000001521"
+  },
+  "Txnrd2": {
+   "gene": "Txnrd2",
+   "transcript": "ENSMUST00000115606",
+   "biotype": "protein_coding",
+   "mrna_nt": 1938,
+   "cds_nt": 51336,
+   "utr_nt": 0,
+   "n_exons": 18,
+   "ensembl_gene": "ENSMUSG00000075704"
+  },
+  "Uba1y": {
+   "gene": "Uba1y",
+   "transcript": "ENSMUST00000190013",
+   "biotype": "protein_coding",
+   "mrna_nt": 4012,
+   "cds_nt": 22702,
+   "utr_nt": 0,
+   "n_exons": 26,
+   "ensembl_gene": "ENSMUSG00000069053"
+  },
+  "Ubr7": {
+   "gene": "Ubr7",
+   "transcript": "ENSMUST00000046404",
+   "biotype": "protein_coding",
+   "mrna_nt": 3491,
+   "cds_nt": 17758,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000041712"
+  },
+  "Uhrf1": {
+   "gene": "Uhrf1",
+   "transcript": "ENSMUST00000001258",
+   "biotype": "protein_coding",
+   "mrna_nt": 3635,
+   "cds_nt": 17405,
+   "utr_nt": 0,
+   "n_exons": 17,
+   "ensembl_gene": "ENSMUSG00000001228"
+  },
+  "Uhrf2": {
+   "gene": "Uhrf2",
+   "transcript": "ENSMUST00000025739",
+   "biotype": "protein_coding",
+   "mrna_nt": 4191,
+   "cds_nt": 62086,
+   "utr_nt": 0,
+   "n_exons": 16,
+   "ensembl_gene": "ENSMUSG00000024817"
+  },
+  "Unc13c": {
+   "gene": "Unc13c",
+   "transcript": "ENSMUST00000184666",
+   "biotype": "protein_coding",
+   "mrna_nt": 9041,
+   "cds_nt": 452698,
+   "utr_nt": 0,
+   "n_exons": 33,
+   "ensembl_gene": "ENSMUSG00000062151"
+  },
+  "Unc79": {
+   "gene": "Unc79",
+   "transcript": "ENSMUST00000101099",
+   "biotype": "protein_coding",
+   "mrna_nt": 9101,
+   "cds_nt": 234060,
+   "utr_nt": 0,
+   "n_exons": 49,
+   "ensembl_gene": "ENSMUSG00000021198"
+  },
+  "Upp1": {
+   "gene": "Upp1",
+   "transcript": "ENSMUST00000164791",
+   "biotype": "protein_coding",
+   "mrna_nt": 2009,
+   "cds_nt": 10449,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000020407"
+  },
+  "Uqcc6": {
+   "gene": "Uqcc6",
+   "transcript": "ENSMUST00000176200",
+   "biotype": "protein_coding",
+   "mrna_nt": 908,
+   "cds_nt": 2694,
+   "utr_nt": 0,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000063320"
+  },
+  "Usp54": {
+   "gene": "Usp54",
+   "transcript": "ENSMUST00000022356",
+   "biotype": "protein_coding",
+   "mrna_nt": 6946,
+   "cds_nt": 57328,
+   "utr_nt": 0,
+   "n_exons": 21,
+   "ensembl_gene": "ENSMUSG00000034235"
+  },
+  "Usp7": {
+   "gene": "Usp7",
+   "transcript": "ENSMUST00000161046",
+   "biotype": "protein_coding",
+   "mrna_nt": 4554,
+   "cds_nt": 47506,
+   "utr_nt": 0,
+   "n_exons": 31,
+   "ensembl_gene": "ENSMUSG00000022710"
+  },
+  "Vdac2": {
+   "gene": "Vdac2",
+   "transcript": "ENSMUST00000173456",
+   "biotype": "protein_coding",
+   "mrna_nt": 956,
+   "cds_nt": 12352,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000021771"
+  },
+  "Vdac3": {
+   "gene": "Vdac3",
+   "transcript": "ENSMUST00000009036",
+   "biotype": "protein_coding",
+   "mrna_nt": 1419,
+   "cds_nt": 11282,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000008892"
+  },
+  "Vps4a": {
+   "gene": "Vps4a",
+   "transcript": "ENSMUST00000034388",
+   "biotype": "protein_coding",
+   "mrna_nt": 2289,
+   "cds_nt": 13670,
+   "utr_nt": 0,
+   "n_exons": 11,
+   "ensembl_gene": "ENSMUSG00000031913"
+  },
+  "Wac": {
+   "gene": "Wac",
+   "transcript": "ENSMUST00000167020",
+   "biotype": "protein_coding",
+   "mrna_nt": 5557,
+   "cds_nt": 56565,
+   "utr_nt": 0,
+   "n_exons": 14,
+   "ensembl_gene": "ENSMUSG00000024283"
+  },
+  "Wfdc15a": {
+   "gene": "Wfdc15a",
+   "transcript": "ENSMUST00000063251",
+   "biotype": "protein_coding",
+   "mrna_nt": 508,
+   "cds_nt": 378,
+   "utr_nt": 130,
+   "n_exons": 3,
+   "ensembl_gene": "ENSMUSG00000051769"
+  },
+  "Wif1": {
+   "gene": "Wif1",
+   "transcript": "ENSMUST00000020439",
+   "biotype": "protein_coding",
+   "mrna_nt": 2294,
+   "cds_nt": 65537,
+   "utr_nt": 0,
+   "n_exons": 10,
+   "ensembl_gene": "ENSMUSG00000020218"
+  },
+  "Wnt7b": {
+   "gene": "Wnt7b",
+   "transcript": "ENSMUST00000023015",
+   "biotype": "protein_coding",
+   "mrna_nt": 3497,
+   "cds_nt": 44087,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000022382"
+  },
+  "Xbp1": {
+   "gene": "Xbp1",
+   "transcript": "ENSMUST00000427534",
+   "biotype": "protein_coding",
+   "mrna_nt": 1969,
+   "cds_nt": 4248,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000020484"
+  },
+  "Xlr": {
+   "gene": "Xlr",
+   "transcript": "ENSMUST00000114810",
+   "biotype": "protein_coding",
+   "mrna_nt": 1021,
+   "cds_nt": 12181,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000054626"
+  },
+  "Xlr5b": {
+   "gene": "Xlr5b",
+   "transcript": "ENSMUST00000114518",
+   "biotype": "protein_coding",
+   "mrna_nt": 1693,
+   "cds_nt": 6807,
+   "utr_nt": 0,
+   "n_exons": 9,
+   "ensembl_gene": "ENSMUSG00000072479"
+  },
+  "Yap1": {
+   "gene": "Yap1",
+   "transcript": "ENSMUST00000086580",
+   "biotype": "protein_coding",
+   "mrna_nt": 4187,
+   "cds_nt": 69894,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000053110"
+  },
+  "Zar1": {
+   "gene": "Zar1",
+   "transcript": "ENSMUST00000073528",
+   "biotype": "protein_coding",
+   "mrna_nt": 1429,
+   "cds_nt": 3798,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000063935"
+  },
+  "Zbed3": {
+   "gene": "Zbed3",
+   "transcript": "ENSMUST00000045909",
+   "biotype": "protein_coding",
+   "mrna_nt": 2316,
+   "cds_nt": 687,
+   "utr_nt": 1629,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000041995"
+  },
+  "Zfp352": {
+   "gene": "Zfp352",
+   "transcript": "ENSMUST00000107129",
+   "biotype": "protein_coding",
+   "mrna_nt": 2276,
+   "cds_nt": 1656,
+   "utr_nt": 620,
+   "n_exons": 2,
+   "ensembl_gene": "ENSMUSG00000070902"
+  },
+  "Zfp54": {
+   "gene": "Zfp54",
+   "transcript": "ENSMUST00000007884",
+   "biotype": "protein_coding",
+   "mrna_nt": 2815,
+   "cds_nt": 7205,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000023882"
+  },
+  "Zfp622": {
+   "gene": "Zfp622",
+   "transcript": "ENSMUST00000061875",
+   "biotype": "protein_coding",
+   "mrna_nt": 2802,
+   "cds_nt": 12745,
+   "utr_nt": 0,
+   "n_exons": 6,
+   "ensembl_gene": "ENSMUSG00000052253"
+  },
+  "Zp1": {
+   "gene": "Zp1",
+   "transcript": "ENSMUST00000025641",
+   "biotype": "protein_coding",
+   "mrna_nt": 1963,
+   "cds_nt": 6253,
+   "utr_nt": 0,
+   "n_exons": 12,
+   "ensembl_gene": "ENSMUSG00000024734"
+  },
+  "Zp2": {
+   "gene": "Zp2",
+   "transcript": "ENSMUST00000033207",
+   "biotype": "protein_coding",
+   "mrna_nt": 2221,
+   "cds_nt": 12872,
+   "utr_nt": 0,
+   "n_exons": 18,
+   "ensembl_gene": "ENSMUSG00000030911"
+  },
+  "Zp3": {
+   "gene": "Zp3",
+   "transcript": "ENSMUST00000005073",
+   "biotype": "protein_coding",
+   "mrna_nt": 1323,
+   "cds_nt": 8478,
+   "utr_nt": 0,
+   "n_exons": 8,
+   "ensembl_gene": "ENSMUSG00000004948"
+  },
+  "Zpr1": {
+   "gene": "Zpr1",
+   "transcript": "ENSMUST00000156440",
+   "biotype": "protein_coding",
+   "mrna_nt": 2984,
+   "cds_nt": 7976,
+   "utr_nt": 0,
+   "n_exons": 14,
+   "ensembl_gene": "ENSMUSG00000032078"
+  },
+  "Zscan4a": {
+   "gene": "Zscan4a",
+   "transcript": "ENSMUST00000210573",
+   "biotype": "transcribed_unprocessed_pseudogene",
+   "mrna_nt": 2279,
+   "cds_nt": 0,
+   "utr_nt": 2279,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000110097"
+  },
+  "Zscan4b": {
+   "gene": "Zscan4b",
+   "transcript": "ENSMUST00000168158",
+   "biotype": "protein_coding",
+   "mrna_nt": 2803,
+   "cds_nt": 3419,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000095339"
+  },
+  "Zscan4d": {
+   "gene": "Zscan4d",
+   "transcript": "ENSMUST00000067210",
+   "biotype": "protein_coding",
+   "mrna_nt": 2272,
+   "cds_nt": 3428,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000090714"
+  },
+  "Zscan4e": {
+   "gene": "Zscan4e",
+   "transcript": "ENSMUST00000249317",
+   "biotype": "protein_coding",
+   "mrna_nt": 2727,
+   "cds_nt": 3422,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000095936"
+  },
+  "Zscan4f": {
+   "gene": "Zscan4f",
+   "transcript": "ENSMUST00000145237",
+   "biotype": "protein_coding",
+   "mrna_nt": 2252,
+   "cds_nt": 3441,
+   "utr_nt": 0,
+   "n_exons": 4,
+   "ensembl_gene": "ENSMUSG00000070828"
+  }
+ },
+ "meta": {
+  "n_genes": 426,
+  "n_resolved": 424,
+  "median_mrna_nt": 2727,
+  "species": "mus_musculus",
+  "note": "canonical-transcript mature (spliced) mRNA length; null = symbol unresolved"
+ }
+}

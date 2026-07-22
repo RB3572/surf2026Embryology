@@ -31,6 +31,7 @@ const PROJECT_OF = {
   "pronuclei.html": "pronuclei", "extpt.html": "extpt", "segments.html": "segments",
   "zygote-planes.html": "zygote-planes", "sperm-division.html": "sperm-division",
   "pronuclei-assignments.html": "pronuclei-assignments", "sperm-pca.html": "sperm-pca",
+  "diffusion.html": "diffusion",
   "axes.html": "axes", "alphabeta.html": "alphabeta",
 };
 let _accMap = null, _accAt = 0;

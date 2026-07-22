@@ -1,0 +1,52 @@
+/* Gene Diffusion Rates — additions on top of style.css */
+
+/* ---- floating controls ---- */
+.df-readout { display: flex; flex-direction: column; gap: 3px; padding: 8px 0; border-top: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); margin-top: 4px; }
+.df-big { font-size: 12px; color: var(--ink-soft); line-height: 1.2; }
+.df-big b { font-size: 24px; font-weight: 800; color: #0284c7; }
+.df-sub { font-size: 11.5px; color: var(--ink-2); line-height: 1.45; }
+.df-sub b { color: var(--ink); }
+.df-muted { color: var(--ink-soft); }
+
+/* transport (play / stop / reset + progress bar) */
+.df-transport { display: flex; align-items: center; gap: 6px; padding: 8px 0; }
+.df-play, .df-stop, .df-reset { border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  font-size: 12px; font-weight: 700; border-radius: 8px; padding: 6px 10px; cursor: pointer; white-space: nowrap; }
+.df-play { background: #0284c7; color: #fff; border-color: #0284c7; }
+.df-play.playing { background: var(--surface); color: #0284c7; }
+.df-reset { padding: 6px 8px; font-size: 14px; }
+.df-play:hover, .df-stop:hover, .df-reset:hover { filter: brightness(.97); }
+.df-progress { flex: 1; height: 6px; border-radius: 4px; background: color-mix(in srgb, var(--ink-2) 14%, var(--surface)); overflow: hidden; }
+.df-progress-fill { height: 100%; width: 0%; background: #0284c7; transition: width .05s linear; }
+
+/* options: segmented IC toggle + selects */
+.df-opt { padding: 7px 0; border-top: 1px solid var(--line-2); display: flex; flex-direction: column; gap: 5px; }
+.df-seg { display: inline-flex; background: color-mix(in srgb, var(--ink-2) 10%, var(--surface)); border-radius: 9px; padding: 2px; gap: 2px; }
+.df-seg-btn { flex: 1; border: none; background: transparent; color: var(--ink-2); font-size: 11.5px; font-weight: 600;
+  padding: 5px 8px; border-radius: 7px; cursor: pointer; }
+.df-seg-btn.active { background: var(--surface); color: #0284c7; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.df-tg { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; color: var(--ink-2); cursor: pointer; padding-top: 6px; }
+.df-tg input { width: 14px; height: 14px; }
+.df-note { font-size: 11.5px; color: var(--ink-soft); line-height: 1.45; padding-top: 8px; border-top: 1px solid var(--line-2); margin-top: 6px; }
+.df-note b { color: var(--ink-2); }
+
+/* ---- right drawer: gene time list ---- */
+.df-embavg { padding: 8px 12px; margin: 0 12px 6px; border-radius: 10px;
+  background: color-mix(in srgb, #0284c7 9%, var(--surface)); border: 1px solid color-mix(in srgb, #0284c7 22%, transparent); }
+.df-embavg .df-embavg-t { font-size: 22px; font-weight: 800; color: #0284c7; }
+.df-embavg .df-embavg-l { font-size: 11px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .3px; }
+.best-list .df-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px;
+  padding: 6px 12px; border-bottom: 1px solid var(--line-2); cursor: pointer; font-size: 12.5px; }
+.best-list .df-row:hover { background: color-mix(in srgb, var(--ink-2) 6%, transparent); }
+.best-list .df-row.current { background: color-mix(in srgb, #0284c7 12%, transparent); }
+.best-list .df-row .df-g { font-weight: 700; color: var(--ink); }
+.best-list .df-row .df-g small { font-weight: 500; color: var(--ink-soft); font-family: var(--mono); margin-left: 5px; }
+.best-list .df-row .df-t { font-variant-numeric: tabular-nums; font-weight: 700; color: #0284c7; white-space: nowrap; }
+.best-list .df-row .df-bar { grid-column: 1 / -1; height: 3px; border-radius: 2px; background: #0284c7; opacity: .5; }
+
+/* ---- bottom drawer scatter ---- */
+.df-scatter-controls { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 4px 2px 8px; }
+.df-scatter-note { font-size: 12px; color: var(--ink-2); }
+.df-resizable { position: relative; resize: vertical; overflow: hidden; min-height: 260px; height: 46vh; border: 1px solid var(--line-2); border-radius: 10px; }
+.df-plot { width: 100%; height: 100%; }
+.drawer-body { display: flex; flex-direction: column; gap: 6px; padding: 10px 16px 14px; overflow: auto; }

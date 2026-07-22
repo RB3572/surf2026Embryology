@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gene Diffusion Rates · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="diffusion.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="help.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#0284c7;box-shadow:0 0 0 4px color-mix(in srgb,#0284c7 18%,transparent)"></span>
+      <span class="brand-name">Gene&nbsp;Diffusion&nbsp;Rates</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Zygotes"></nav>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">Diffusion model</span>
+        <button class="help-btn" data-help="diffusion" style="margin-left:auto" aria-label="What is this analysis?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="controls-row">
+          <label class="ctl" style="flex:1">
+            <span class="ctl-label">Gene</span>
+            <select id="gene-select" aria-label="Gene"></select>
+          </label>
+        </div>
+
+        <div class="df-readout" id="df-readout"></div>
+
+        <div class="df-transport" id="df-transport">
+          <button class="df-play" id="df-play" type="button" aria-label="Play diffusion">▶ Start</button>
+          <button class="df-stop" id="df-stop" type="button" aria-label="Stop">◼ Stop</button>
+          <button class="df-reset" id="df-reset" type="button" title="Back to the nucleus" aria-label="Reset">↺</button>
+          <div class="df-progress" id="df-progress"><div class="df-progress-fill" id="df-progress-fill"></div></div>
+        </div>
+
+        <div class="df-opt">
+          <span class="ctl-label">Start from</span>
+          <div class="df-seg" id="df-ic" role="tablist">
+            <button type="button" class="df-seg-btn active" data-ic="com" role="tab">Nucleus centre</button>
+            <button type="button" class="df-seg-btn" data-ic="cortex" role="tab">Nucleus surface</button>
+          </div>
+        </div>
+        <div class="df-opt">
+          <label class="ctl" style="flex:1">
+            <span class="ctl-label">Match the observed distribution by</span>
+            <select id="metric-select" aria-label="Distribution-match metric">
+              <option value="mean">Mean distance to nucleus</option>
+              <option value="spread">Spread (std) of distance</option>
+              <option value="p90">90th-percentile reach</option>
+              <option value="ks">KS statistic (full distribution)</option>
+            </select>
+          </label>
+        </div>
+        <label class="df-tg"><input type="checkbox" id="df-observed"><span>show observed transcripts (target)</span></label>
+        <label class="df-tg"><input type="checkbox" id="df-cell" checked><span>cell &amp; nucleus surfaces</span></label>
+
+        <div class="df-note" id="df-note">A passive-diffusion <b>null model</b>: mRNA born at the nucleus spreads
+          by Brownian motion until it matches the gene's observed spread. The clock is set by the mRNA's size
+          (bigger mRNP → slower). Times far from this null hint at active transport or anchoring.</div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Select a zygote</div>
+        <div class="ph-sub">Choose a zygote above, pick a gene, and press Start to watch its mRNA
+          diffuse from the nucleus until it matches the observed distribution. The time it takes is
+          the read-out.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- Bottom drawer: cross-embryo scatter (avg diffusion time vs a chosen metric) -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Average diffusion time across embryos <span class="drawer-gene" id="df-scatter-sub"></span></span>
+      <span class="drawer-hint">each zygote's mean gene diffusion time vs a chosen property</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="df-scatter-controls">
+        <label class="ctl"><span class="ctl-label">Vertical axis</span>
+          <select id="df-yaxis">
+            <option value="min_dist">Minimum pronuclei distance (µm)</option>
+            <option value="total_tx">Total transcript number</option>
+            <option value="gene_count">Selected gene's transcript count</option>
+          </select></label>
+        <span class="df-scatter-note" id="df-scatter-note"></span>
+      </div>
+      <div class="df-resizable"><div id="df-scatter" class="df-plot"></div></div>
+    </div>
+  </section>
+
+  <!-- Right drawer: per-gene diffusion times for the current embryo -->
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Gene times</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Diffusion time per gene</div>
+        <div class="rdrawer-desc" id="df-list-desc">Time for each gene's mRNA to reach its observed
+          distribution in this zygote, longest first.</div>
+      </div>
+      <div class="df-embavg" id="df-embavg"></div>
+      <div class="best-list" id="df-list"></div>
+    </div>
+  </aside>
+
+  <script src="viewer-core.js"></script>
+  <script src="diffusion.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

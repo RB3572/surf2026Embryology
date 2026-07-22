@@ -130,10 +130,12 @@
           </select>
         </label>
         <label class="pn-reg-label">Region
-          <select id="region-sel" title="Which part of the embryo to count transcripts in. Pronuclei are auto-detected (the same segments used for the distance); polar bodies = every labelled segment that is not segment 1 or a pronucleus.">
+          <select id="region-sel" title="Which part of the embryo to count transcripts in. Pronuclei are auto-detected (the same segments used for the distance); polar bodies = every labelled segment that is not segment 1 or a pronucleus. Maternal / paternal pronucleus = the female / male call from the Pronuclei Assignments consensus (only zygotes with an assignment).">
             <option value="all">Whole embryo</option>
             <option value="seg1">Segment 1 · cytoplasm</option>
-            <option value="pron">Pronuclei</option>
+            <option value="pron">Pronuclei (both)</option>
+            <option value="pron_mat">Maternal pronucleus (♀)</option>
+            <option value="pron_pat">Paternal pronucleus (♂)</option>
             <option value="polar">Polar body / bodies</option>
           </select>
         </label>

@@ -216,8 +216,9 @@
   // ---------- region + normalization + gene-set config (bottom drawer) ----------
   // Regions: "all" = whole embryo (uses the per-gene TOTAL aggregate); seg1 / pron / polar use the
   // per-segment counts from pronuclei_segcounts.json.gz (full-res transcript→label assignment).
-  const SEG_IDX = { seg1: 0, pron: 1, polar: 2 };
-  const REGION_IN = { all: "", seg1: " · segment 1", pron: " · pronuclei", polar: " · polar bodies" };
+  const SEG_IDX = { seg1: 0, pron: 1, polar: 2, pron_mat: 3, pron_pat: 4 };
+  const REGION_IN = { all: "", seg1: " · segment 1", pron: " · pronuclei", polar: " · polar bodies",
+                      pron_mat: " · maternal pronucleus", pron_pat: " · paternal pronucleus" };
   // Preset gene sets. Each preset ADDS its genes to the current set (deduped). Two kinds:
   //  • static { genes } — a fixed list (biology from the deck / known markers).
   //  • dynamic { fn }   — genes computed live from the distance-correlation ranking (state.geneCorr).
@@ -253,7 +254,13 @@
 
   const embTotal = (id) => (state.byId[id] || {}).total || 0;
   const segOf = (id) => state.segData && state.segData.embryos[id];
-  const hasSeg = (id) => state.region === "all" || !!segOf(id);   // can this embryo be plotted for the region?
+  const hasSeg = (id) => {                                        // can this embryo be plotted for the region?
+    if (state.region === "all") return true;
+    const sd = segOf(id); if (!sd) return false;
+    // maternal/paternal only exist for zygotes with a Pronuclei Assignments call
+    if (state.region === "pron_mat" || state.region === "pron_pat") return sd.vol[state.region] != null;
+    return true;
+  };
   function volIn(id) {                                            // region volume (µm³)
     const sd = segOf(id); if (!sd) return 0;
     if (state.region === "all") return (sd.vol.seg1 || 0) + (sd.vol.pron || 0) + (sd.vol.polar || 0);

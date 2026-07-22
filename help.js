@@ -218,6 +218,26 @@
         high-res download. The right drawer ranks genes by their correlation with pseudotime across all three stages
         (405 genes appear in every stage, so trajectories are data-rich).</p>` },
 
+    "pronuclei-assignments": { eyebrow: "Pronuclei Assignments · the idea", title: "Which pronucleus is which?",
+      html: `<p class="lede">A fertilised zygote has two pronuclei — one <b>maternal (female)</b>, one <b>paternal
+        (male)</b> — but they look alike. Several independent clues each point to which is which; we let them vote.</p>
+        <h3>The tests</h3>
+        <ul>
+        <li><b>Closer to the polar body</b> is <b>female</b> — the maternal pronucleus forms near the extruded polar
+        body. Measured two ways: <i>centre-of-mass</i> distance and nearest-<i>shell</i> distance (if there are two
+        polar bodies we use the larger).</li>
+        <li><b>The smaller pronucleus is female</b> — the maternal pronucleus is often the smaller of the two.</li>
+        <li><b>Closer to the sperm is male</b> — the paternal pronucleus forms where the sperm entered (only when a
+        sperm was located; otherwise the row is greyed out).</li>
+        </ul>
+        <h3>Consensus</h3>
+        <p>The bottom-drawer grid shows every test as a row and the two pronuclei as columns — <b style="color:#ec4899">♀</b>
+        for the one it calls female, <b style="color:#3b82f6">♂</b> for male. The <b>consensus</b> row takes the
+        majority; an even split is shown as a half-pink-half-blue box. The distance each test measures is drawn as a line
+        in the 3-D view.</p>
+        <div class="help-callout">These are heuristics, not ground truth — the point is to see where the clues
+        <b>agree</b> (a confident call) and where they <b>disagree</b>.</div>` },
+
     "segments": { eyebrow: "Segment Enrichment · the idea", title: "People on campus",
       html: `<p class="lede">At any moment some campus buildings are packed and others nearly empty. If you know which building
         someone is in, you often know what they're doing. Molecules are the same: <b>where</b> a transcript sits often predicts

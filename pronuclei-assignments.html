@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pronuclei Assignments · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="pronuclei-assignments.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="help.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#db2777;box-shadow:0 0 0 4px color-mix(in srgb,#db2777 18%,transparent)"></span>
+      <span class="brand-name">Pronuclei&nbsp;Assignments</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Zygotes"></nav>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">This zygote</span>
+        <button class="help-btn" data-help="pronuclei-assignments" style="margin-left:auto" aria-label="What is this analysis?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="pa-readout" id="pa-readout"></div>
+        <div class="pa-toggles">
+          <label class="pa-tg"><input type="checkbox" id="pa-color" checked><span>colour pronuclei by consensus</span></label>
+          <label class="pa-tg"><input type="checkbox" id="pa-pb" checked><span>polar body</span></label>
+          <label class="pa-tg"><input type="checkbox" id="pa-sperm" checked><span>sperm</span></label>
+          <label class="pa-tg"><input type="checkbox" id="pa-lines" checked><span>assignment distance lines</span></label>
+        </div>
+        <div class="pa-legend">
+          <span class="seg-chip"><span class="seg-dot" style="background:#ec4899"></span>♀ female</span>
+          <span class="seg-chip"><span class="seg-dot" style="background:#3b82f6"></span>♂ male</span>
+          <span class="seg-chip"><span class="seg-dot" style="background:#9aa3b2"></span>polar body</span>
+          <span class="seg-chip"><span class="seg-dot" style="background:#f59e0b"></span>sperm</span>
+        </div>
+        <div class="pa-note">Two pronuclei are auto-detected (as in the Pronuclei project). Several tests
+          each call one pronucleus <b>female</b> and the other <b>male</b>; the bottom drawer shows them as a
+          grid and takes the most-agreed <b>consensus</b>. Distance lines for the tests are drawn in 3-D.</div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Select a zygote</div>
+        <div class="ph-sub">Choose a zygote above to see its two pronuclei, polar body and sperm, and the
+          male/female assignment grid in the bottom drawer.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- Bottom drawer: the male/female assignment concordance grid -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Male / female assignment <span class="drawer-gene" id="pa-emb"></span></span>
+      <span class="drawer-hint">each test calls one pronucleus female (♀ pink) and the other male (♂ blue) · consensus at the bottom</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="pa-grid-wrap"><div id="pa-grid" class="pa-grid"></div></div>
+      <div class="pa-grid-note" id="pa-grid-note"></div>
+    </div>
+  </section>
+
+  <script src="viewer-core.js"></script>
+  <script src="pronuclei-assignments.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

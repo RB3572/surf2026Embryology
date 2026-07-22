@@ -29,6 +29,18 @@
     </section>
 
     <section class="ad-block">
+      <h2>Logins &amp; passwords <span class="ad-sub">the password for each login (share these) · add a new login</span></h2>
+      <div class="ad-tablewrap"><table class="ad-table" id="ad-logins"></table></div>
+      <form class="ad-adduser" id="ad-adduser" autocomplete="off">
+        <input type="text" id="ad-nu-name" placeholder="Login name (e.g. Jane Doe)" aria-label="New login name" required>
+        <input type="text" id="ad-nu-pw" placeholder="Password" aria-label="New password" required>
+        <select id="ad-nu-role" aria-label="Role"><option value="user">User</option><option value="admin">Admin</option></select>
+        <button type="submit" class="ad-btn ad-btn-go">Add login</button>
+        <span class="ad-adduser-note" id="ad-adduser-note"></span>
+      </form>
+    </section>
+
+    <section class="ad-block">
       <h2>Project access <span class="ad-sub">which projects each login can open (admins always see all)</span></h2>
       <div class="ad-tablewrap"><table class="ad-table" id="ad-access"></table></div>
       <div class="ad-access-note" id="ad-access-note"></div>

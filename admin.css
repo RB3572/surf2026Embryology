@@ -69,3 +69,19 @@ body { background: var(--bg); color: var(--ink);
 .ad-table td.ad-acc { text-align: center; }
 .ad-table td.ad-acc input { cursor: pointer; width: 15px; height: 15px; }
 .ad-access-note { font-size: 11.5px; color: var(--ink-2); margin-top: 9px; }
+
+/* logins & passwords */
+.ad-pw { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: var(--ink);
+  background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; user-select: all; }
+.ad-role-admin { font-size: 11px; font-weight: 700; color: #b45309; }
+.ad-rm { font-size: 11.5px; font-weight: 600; color: #b42318; background: var(--surface);
+  border: 1px solid var(--line); border-radius: 6px; padding: 3px 9px; cursor: pointer; }
+.ad-rm:hover { border-color: #b42318; background: #fef2f2; }
+.ad-adduser { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px;
+  padding-top: 12px; border-top: 1px solid var(--line); }
+.ad-adduser input, .ad-adduser select { font-size: 13px; padding: 7px 10px; border: 1px solid var(--line);
+  border-radius: 8px; background: var(--surface); color: var(--ink); }
+.ad-adduser input { min-width: 170px; }
+.ad-btn-go { background: var(--accent); color: #fff; border-color: var(--accent); }
+.ad-btn-go:hover { filter: brightness(1.35); border-color: var(--accent); }
+.ad-adduser-note { font-size: 12px; color: var(--ink-2); flex-basis: 100%; }

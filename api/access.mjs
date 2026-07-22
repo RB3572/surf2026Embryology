@@ -5,14 +5,9 @@
 //
 // Stored in the Neon `access` table (usr TEXT PK, projects TEXT[]). A user with NO row sees every
 // project; a row restricts them to exactly that list. Kathy is seeded to the two pronuclei projects.
-// The token→identity map is kept in sync with middleware.js / api/track.mjs / api/admin.mjs.
+// Identity (base + admin-added logins) comes from the shared accounts module.
 import { neon } from "@neondatabase/serverless";
-
-const BY_TOKEN = new Map([
-  ["s1_kathytam_b7f3a92c8d1e4056a19d", { user: "Kathy Tam", role: "user" }],
-  ["adm_owner_5c1e9a2f7b3d8064c2a7f1", { user: "Admin", role: "admin" }],
-]);
-const USERS = [...BY_TOKEN.values()];
+import { cookieVal, accountByToken, allAccounts } from "../accounts.mjs";
 
 // The canonical project list (key = the page's basename without .html). Keep in sync with the
 // landing cards + middleware PROJECT_OF.
@@ -44,13 +39,8 @@ async function ensureSchema() {
     await sql`INSERT INTO access (usr, projects) VALUES (${u}, ${ps}) ON CONFLICT (usr) DO NOTHING`;
   ready = true;
 }
-function cookieVal(header, name) {
-  for (const c of (header || "").split(/;\s*/)) { const i = c.indexOf("="); if (i > 0 && c.slice(0, i) === name) return c.slice(i + 1); }
-  return null;
-}
-
 export default async function handler(req, res) {
-  const acct = BY_TOKEN.get(cookieVal(req.headers.cookie, "surf_gate"));
+  const acct = await accountByToken(cookieVal(req.headers.cookie, "surf_gate"));
   if (!acct) { res.status(401).json({ ok: false }); return; }
   if (!sql) { res.status(200).json({ ok: false, err: "no-database-url", me: null, projects: PROJECTS }); return; }
   try {
@@ -60,7 +50,8 @@ export default async function handler(req, res) {
       let b = req.body; if (typeof b === "string") { try { b = JSON.parse(b); } catch { b = {}; } }
       const usr = String((b && b.usr) || "");
       const projects = Array.isArray(b && b.projects) ? b.projects.filter((p) => KEYS.has(p)) : [];
-      if (!usr || !USERS.some((u) => u.user === usr)) { res.status(400).json({ ok: false, err: "unknown user" }); return; }
+      const accs = await allAccounts();
+      if (!usr || !accs.some((u) => u.user === usr)) { res.status(400).json({ ok: false, err: "unknown user" }); return; }
       await sql`INSERT INTO access (usr, projects) VALUES (${usr}, ${projects})
                 ON CONFLICT (usr) DO UPDATE SET projects = ${projects}`;
       res.status(200).json({ ok: true }); return;
@@ -69,8 +60,9 @@ export default async function handler(req, res) {
     const map = {}; rows.forEach((r) => (map[r.usr] = r.projects));
     if (req.query && req.query.matrix) {
       if (acct.role !== "admin") { res.status(404).json({ error: "Not Found" }); return; }
+      const accs = await allAccounts();
       res.status(200).json({ ok: true, projects: PROJECTS,
-        users: USERS.map((u) => ({ usr: u.user, role: u.role, projects: map[u.user] == null ? null : map[u.user] })) });
+        users: accs.map((u) => ({ usr: u.user, role: u.role, projects: map[u.user] == null ? null : map[u.user] })) });
       return;
     }
     // default: the caller's own access (null = all projects)

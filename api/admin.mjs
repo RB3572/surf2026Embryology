@@ -2,25 +2,14 @@
 // middleware 404s /api/admin* for non-admins, and this handler re-checks the cookie role
 // (defense in depth) returning 404 — never revealing that the endpoint exists.
 import { neon } from "@neondatabase/serverless";
+import { cookieVal, accountByToken } from "../accounts.mjs";
 
-const BY_TOKEN = new Map([
-  ["s1_kathytam_b7f3a92c8d1e4056a19d", { user: "Kathy Tam", role: "user" }],
-  ["adm_owner_5c1e9a2f7b3d8064c2a7f1", { user: "Admin", role: "admin" }],
-]);
 const CONN = process.env.DATABASE_URL || process.env.POSTGRES_URL ||
              process.env.DATABASE_URL_UNPOOLED || process.env.POSTGRES_URL_NON_POOLING;
 const sql = CONN ? neon(CONN) : null;
 
-function cookieVal(header, name) {
-  for (const c of (header || "").split(/;\s*/)) {
-    const i = c.indexOf("=");
-    if (i > 0 && c.slice(0, i) === name) return c.slice(i + 1);
-  }
-  return null;
-}
-
 export default async function handler(req, res) {
-  const acct = BY_TOKEN.get(cookieVal(req.headers.cookie, "surf_gate"));
+  const acct = await accountByToken(cookieVal(req.headers.cookie, "surf_gate"));
   if (!acct || acct.role !== "admin") { res.status(404).json({ error: "Not Found" }); return; }
   if (!sql) {
     res.status(200).json({ ok: false, err: "no-database-url — check the Neon env vars in Vercel",

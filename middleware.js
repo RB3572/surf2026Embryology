@@ -10,15 +10,9 @@
 // for everyone else, so its existence is never even revealed.
 
 import { neon } from "@neondatabase/serverless";
-
-const COOKIE = "surf_gate";
-const MAX_AGE = 60 * 60 * 24 * 30; // remember a login for 30 days
-
-const ACCOUNTS = [
-  { pw: "Sonichedgehog1", token: "s1_kathytam_b7f3a92c8d1e4056a19d", user: "Kathy Tam", role: "user" },
-  { pw: "AdminPass",      token: "adm_owner_5c1e9a2f7b3d8064c2a7f1", user: "Admin",     role: "admin" },
-];
-const BY_TOKEN = new Map(ACCOUNTS.map((a) => [a.token, a]));
+// Logins live in the shared accounts module (single source of truth across middleware + every
+// /api function). BASE accounts resolve with no DB call, so the gate never depends on the database.
+import { COOKIE, MAX_AGE, cookieVal, accountByToken, accountByPassword } from "./accounts.mjs";
 
 // ---- per-user project access (managed from the admin console; see api/access.mjs) ----
 // A non-admin user restricted to a project list is redirected to the landing for any other
@@ -52,18 +46,10 @@ export const config = {
   matcher: "/((?!_vercel).*)", // gate every path except Vercel's own internals
 };
 
-function cookieValue(cookies, name) {
-  for (const c of cookies.split(/;\s*/)) {
-    const i = c.indexOf("=");
-    if (i > 0 && c.slice(0, i) === name) return c.slice(i + 1);
-  }
-  return null;
-}
-
 export default async function middleware(request) {
   const url = new URL(request.url);
   const cookies = request.headers.get("cookie") || "";
-  const account = BY_TOKEN.get(cookieValue(cookies, COOKIE));
+  const account = await accountByToken(cookieVal(cookies, COOKIE));
 
   // Log out: clear the session cookies and bounce to the gate.
   if (url.pathname === "/logout") {
@@ -109,7 +95,7 @@ export default async function middleware(request) {
   if (request.method === "POST") {
     let pwd = "";
     try { pwd = String((await request.formData()).get("password") || ""); } catch (_) { /* malformed */ }
-    const match = ACCOUNTS.find((a) => a.pw === pwd);
+    const match = await accountByPassword(pwd);
     if (match) {
       const headers = new Headers({ location: url.pathname + url.search, "cache-control": "no-store" });
       headers.append("set-cookie", `${COOKIE}=${match.token}; Path=/; Max-Age=${MAX_AGE}; HttpOnly; Secure; SameSite=Lax`);

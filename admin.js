@@ -131,6 +131,53 @@
       $("#ad-access-note").textContent = d.ok ? `Saved — ${usr} now has ${checked.length} project(s).` : "save failed: " + (d.err || "unknown");
     } catch (err) { $("#ad-access-note").textContent = "save failed: " + err.message; }
   }
+
+  // ---- logins & passwords ----
+  async function loadUsers() {
+    const el = $("#ad-logins"), note = $("#ad-adduser-note");
+    let d;
+    try { d = await (await fetch("/api/users", { credentials: "same-origin", cache: "no-store" })).json(); }
+    catch (e) { el.innerHTML = ""; note.textContent = "failed to load: " + e.message; return; }
+    if (!d.ok) { el.innerHTML = ""; note.textContent = "logins unavailable — " + (d.err || "error"); return; }
+    const rows = (d.accounts || []).map((a) => {
+      const role = a.role === "admin" ? `<span class="ad-role-admin">admin</span>` : `<span class="ad-dim">user</span>`;
+      const last = a.kind === "added"
+        ? `<button type="button" class="ad-rm" data-usr="${esc(a.usr)}" title="Remove this login">Remove</button>`
+        : `<span class="ad-dim">built-in</span>`;
+      return [`<b>${esc(a.usr)}</b>`, role, `<code class="ad-pw">${esc(a.pw)}</code>`, last];
+    });
+    table(el, ["Login", "Role", "Password", ""], rows);
+    el.querySelectorAll(".ad-rm").forEach((b) => b.addEventListener("click", () => removeUser(b.dataset.usr)));
+    if (d.hasDb === false && !note.textContent)
+      note.textContent = "No database configured — added logins won't persist (built-in logins still work).";
+  }
+  async function removeUser(usr) {
+    if (!window.confirm(`Remove the login "${usr}"? They will no longer be able to sign in.`)) return;
+    const note = $("#ad-adduser-note"); note.textContent = "removing…";
+    try {
+      const d = await (await fetch("/api/users?usr=" + encodeURIComponent(usr), { method: "DELETE", credentials: "same-origin" })).json();
+      note.textContent = d.ok ? `Removed “${usr}”.` : "remove failed: " + (d.err || "unknown");
+      if (d.ok) { loadUsers(); loadAccess(); }
+    } catch (e) { note.textContent = "remove failed: " + e.message; }
+  }
+  $("#ad-adduser").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const usr = $("#ad-nu-name").value.trim(), pw = $("#ad-nu-pw").value, role = $("#ad-nu-role").value;
+    const note = $("#ad-adduser-note");
+    if (!usr || !pw) { note.textContent = "enter a login name and a password"; return; }
+    note.textContent = "adding…";
+    try {
+      const d = await (await fetch("/api/users", { method: "POST", credentials: "same-origin",
+        headers: { "content-type": "application/json" }, body: JSON.stringify({ usr, pw, role }) })).json();
+      if (d.ok) {
+        note.textContent = `Added “${usr}” — they can sign in with that password now.`;
+        $("#ad-nu-name").value = ""; $("#ad-nu-pw").value = "";
+        loadUsers(); loadAccess();
+      } else note.textContent = "couldn't add: " + (d.err || "unknown");
+    } catch (err) { note.textContent = "couldn't add: " + err.message; }
+  });
+
+  loadUsers();
   loadAccess();
 
   $("#ad-user-filter").addEventListener("change", (e) => setFilter(e.target.value));

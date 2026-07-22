@@ -109,30 +109,50 @@
       <span class="drawer-chevron" aria-hidden="true"></span>
     </button>
     <div class="drawer-body" id="drawer-body">
-      <div class="df-scatter-controls">
-        <label class="ctl"><span class="ctl-label">Vertical axis</span>
-          <select id="df-yaxis">
-            <option value="min_dist">Minimum pronuclei distance (µm)</option>
-            <option value="total_tx">Total transcript number</option>
-            <option value="gene_count">Selected gene's transcript count</option>
-          </select></label>
-        <label class="ctl"><span class="ctl-label">Model fit</span>
-          <select id="df-model">
-            <option value="linear">Linear</option>
-            <option value="quadratic">Quadratic (polynomial)</option>
-            <option value="exp">Exponential</option>
-            <option value="log">Logarithmic</option>
-            <option value="power">Power law</option>
-            <option value="logistic">Logistic (sigmoid)</option>
-            <option value="poisson">Poisson (GLM)</option>
-            <option value="negbin">Negative binomial (GLM)</option>
-            <option value="binomial">Binomial (GLM, logit)</option>
-            <option value="loess">LOESS smoother</option>
-          </select></label>
-        <span class="df-scatter-note" id="df-scatter-note"></span>
+      <div class="df-drawer-tabs" id="df-drawer-tabs" role="tablist" aria-label="Bottom-drawer charts">
+        <button type="button" class="df-dtab active" data-tab="scatter" role="tab" aria-selected="true">Mean time vs property</button>
+        <button type="button" class="df-dtab" data-tab="age" role="tab" aria-selected="false">Gene time vs embryo age</button>
       </div>
-      <div class="df-fit-stats" id="df-fit-stats"></div>
-      <div class="df-resizable"><div id="df-scatter" class="df-plot"></div></div>
+
+      <div class="df-dpanel" data-tab="scatter">
+        <div class="df-scatter-controls">
+          <label class="ctl"><span class="ctl-label">Vertical axis</span>
+            <select id="df-yaxis">
+              <option value="min_dist">Minimum pronuclei distance (µm)</option>
+              <option value="total_tx">Total transcript number</option>
+              <option value="gene_count">Selected gene's transcript count</option>
+            </select></label>
+          <label class="ctl"><span class="ctl-label">Model fit</span>
+            <select id="df-model">
+              <option value="linear">Linear</option>
+              <option value="quadratic">Quadratic (polynomial)</option>
+              <option value="exp">Exponential</option>
+              <option value="log">Logarithmic</option>
+              <option value="power">Power law</option>
+              <option value="logistic">Logistic (sigmoid)</option>
+              <option value="poisson">Poisson (GLM)</option>
+              <option value="negbin">Negative binomial (GLM)</option>
+              <option value="binomial">Binomial (GLM, logit)</option>
+              <option value="loess">LOESS smoother</option>
+            </select></label>
+          <span class="df-scatter-note" id="df-scatter-note"></span>
+        </div>
+        <div class="df-fit-stats" id="df-fit-stats"></div>
+        <div class="df-resizable"><div id="df-scatter" class="df-plot"></div></div>
+      </div>
+
+      <div class="df-dpanel" data-tab="age" hidden>
+        <div class="df-age-controls">
+          <label class="ctl"><span class="ctl-label">Embryo age</span>
+            <select id="df-age-src">
+              <option value="avg">Average diffusion time (this embryo)</option>
+              <option value="pron">Pronuclei-distance pseudotime</option>
+            </select></label>
+          <span class="df-age-note" id="df-age-note"></span>
+        </div>
+        <div class="df-age-legend" id="df-age-legend"></div>
+        <div class="df-age-grid-wrap"><div id="df-age-grid" class="df-age-grid"></div></div>
+      </div>
     </div>
   </section>
 

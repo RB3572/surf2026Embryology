@@ -24,13 +24,15 @@
   const drawer = $("#drawer"), drawerHandle = $("#drawer-handle"), dfScatter = $("#df-scatter");
   const dfYaxis = $("#df-yaxis"), dfScatterNote = $("#df-scatter-note"), dfScatterSub = $("#df-scatter-sub");
   const dfModel = $("#df-model"), dfFitStats = $("#df-fit-stats");
+  const drawerBody = $("#drawer-body"), dfDrawerTabs = $("#df-drawer-tabs");
+  const dfAgeSrc = $("#df-age-src"), dfAgeNote = $("#df-age-note"), dfAgeLegend = $("#df-age-legend"), dfAgeGrid = $("#df-age-grid");
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle"), dfList = $("#df-list"), dfEmbAvg = $("#df-embavg");
 
   const state = {
     data: null, genesD: null, meta: null, points: [], byId: {}, currentId: null,
     scene: null, rec: null, ic: "com", metric: "ks", gene: null,
     playing: false, frame: 0, stopFrame: 0, sampleIdx: null, raf: 0, lastT: 0,
-    dotSize: 2.5, drawerOpen: false, cellColor: "#c9d3df", cellOpacity: 0.16,
+    dotSize: 2.5, drawerOpen: false, drawerTab: "scatter", cellColor: "#c9d3df", cellOpacity: 0.16,
   };
   let vcExtras = null;
 
@@ -98,7 +100,7 @@
       controlsEl.hidden = false; placeholder.hidden = true; drawer.hidden = false; rdrawer.hidden = false;
       state.frame = 0; pickSample(); computeStop();
       drawFrame(); renderReadout(); renderList(); renderTimePlot();
-      if (state.drawerOpen) renderScatter();
+      renderActiveDrawer();
     } catch (err) { showError(err.message || String(err)); }
     finally { hideLoading(); }
   }
@@ -325,16 +327,89 @@
     dfScatter.dataset.drawn = "1";
   }
 
+  // ---------- bottom drawer: gene-time vs embryo-age grid ----------
+  // Each gene gets a tile coloured by ratio r = (its diffusion time) / (the embryo's age). The age is
+  // either the embryo's mean gene diffusion time, or its pronuclei-distance pseudotime (smaller distance
+  // = older) rescaled onto the cohort's mean-diffusion-time range so the two live on the same clock.
+  // Per the request, intensity grows as the ratio drops below 1 (diffusion time well under the age →
+  // flagged as a candidate for active/transport-assisted spreading); genes older than the age fade to grey.
+  function ageSecFor(id) {
+    const e = state.data[id]; if (!e) return null;
+    if (dfAgeSrc.value === "pron") {
+      const ids = Object.keys(state.data);
+      const dists = ids.map((k) => state.data[k].min_dist).filter((d) => d != null);
+      if (e.min_dist == null || dists.length < 2) return null;
+      const dmin = Math.min(...dists), dmax = Math.max(...dists);
+      const pt = dmax > dmin ? (dmax - e.min_dist) / (dmax - dmin) : 0.5;   // 1 = oldest (smallest pronuclei distance)
+      const avgs = ids.map((k) => embAvgSec(k, state.ic, state.metric)).filter((a) => a != null);
+      if (!avgs.length) return null;
+      const aMin = Math.min(...avgs), aMax = Math.max(...avgs);
+      return aMin + pt * (aMax - aMin);
+    }
+    return embAvgSec(id, state.ic, state.metric);
+  }
+  const lerp = (a, b, t) => Math.round(a + (b - a) * t);
+  const mix = (c1, c2, t) => `rgb(${lerp(c1[0], c2[0], t)},${lerp(c1[1], c2[1], t)},${lerp(c1[2], c2[2], t)})`;
+  function ageColor(r) {
+    if (r <= 1) { const t = Math.max(0, Math.min(1, 1 - r)); return mix([255, 255, 255], [136, 19, 55], t); }  // white → crimson
+    const t = Math.max(0, Math.min(1, (r - 1) / 2)); return mix([255, 255, 255], [203, 213, 225], t);          // white → slate grey
+  }
+  const ageText = (r) => (r <= 1 && 1 - r > 0.52) ? "#fff" : "#0f172a";
+  function renderAgeGrid() {
+    if (!state.rec || !dfAgeGrid) return;
+    const r = icRec(); if (!r) { dfAgeGrid.innerHTML = ""; return; }
+    const src = dfAgeSrc.value, age = ageSecFor(state.currentId);
+    if (age == null) {
+      dfAgeLegend.innerHTML = ""; dfAgeNote.textContent = "";
+      dfAgeGrid.innerHTML = `<div class="df-age-empty">No ${src === "pron" ? "pronuclei-distance value" : "mean diffusion time"} available for this embryo.</div>`;
+      return;
+    }
+    const fa = fmtTime(age);
+    dfAgeNote.textContent = `age = ${fa.v} ${fa.u} · ` + (src === "pron"
+      ? "pronuclei-distance pseudotime (smaller distance = older), rescaled onto the cohort's mean-diffusion-time range"
+      : "this embryo's mean gene diffusion time");
+    dfAgeLegend.innerHTML =
+      `<span class="df-lg-bar"><i>≪ age</i><i>= age</i><i>&gt; age</i></span>` +
+      `<span class="df-lg-cap">colour intensity = how far a gene's diffusion time sits <b>below</b> the embryo's age — deepest = passive diffusion alone over-explains its spread (transport-assisted candidate); grey = older than the age</span>`;
+    const rows = Object.keys(r.genes).map((g) => {
+      const sec = timeSec(g, state.ic, state.metric);
+      return sec == null ? null : { g, sec, n: r.genes[g].n, ratio: sec / age };
+    }).filter(Boolean).sort((a, b) => a.ratio - b.ratio);
+    dfAgeGrid.innerHTML = rows.map((x) => {
+      const f = fmtTime(x.sec), bg = ageColor(x.ratio), fg = ageText(x.ratio);
+      const mark = x.ratio < 0.97 ? "↓" : x.ratio > 1.03 ? "↑" : "=";
+      const rel = x.ratio < 0.97 ? "less than age" : x.ratio > 1.03 ? "older than age" : "≈ age";
+      return `<button type="button" class="df-tile${x.g === state.gene ? " current" : ""}" data-gene="${x.g}" ` +
+        `style="background:${bg};color:${fg}" title="${x.g} · ${f.v} ${f.u} · ${x.ratio.toFixed(2)}× age (${rel}) · ${x.n.toLocaleString()} tx">` +
+        `<span class="df-tile-top"><span class="df-tile-g">${x.g}</span><span class="df-tile-m">${mark}</span></span>` +
+        `<span class="df-tile-t">${f.v} ${f.u}</span>` +
+        `<span class="df-tile-r">${x.ratio.toFixed(2)}× age</span></button>`;
+    }).join("");
+  }
+  function renderActiveDrawer() {
+    if (!state.drawerOpen) return;
+    if (state.drawerTab === "age") renderAgeGrid();
+    else { renderScatter(); setTimeout(() => { try { Plotly.Plots.resize(dfScatter); } catch (_) {} }, 40); }
+  }
+  function setDrawerTab(tab) {
+    state.drawerTab = tab;
+    dfDrawerTabs.querySelectorAll(".df-dtab").forEach((b) => {
+      const on = b.dataset.tab === tab; b.classList.toggle("active", on); b.setAttribute("aria-selected", String(on));
+    });
+    drawerBody.querySelectorAll(".df-dpanel").forEach((p) => { p.hidden = p.dataset.tab !== tab; });
+    renderActiveDrawer();
+  }
+
   // ---------- wiring ----------
   function onGeneChange(g) {
     if (!g || g === state.gene) return; state.gene = g; geneSelect.value = g;
     stopAnim(); state.frame = 0; pickSample(); computeStop();
     drawFrame(); renderReadout(); renderList(); renderTimePlot();
-    if (state.drawerOpen && dfYaxis.value === "gene_count") renderScatter();
+    if (state.drawerOpen) { if (state.drawerTab === "age") renderAgeGrid(); else if (dfYaxis.value === "gene_count") renderScatter(); }
   }
   function onMetricOrIc() {
     stopAnim(); state.frame = 0; populateGenes(); pickSample(); computeStop();
-    drawFrame(); renderReadout(); renderList(); renderTimePlot(); if (state.drawerOpen) renderScatter();
+    drawFrame(); renderReadout(); renderList(); renderTimePlot(); renderActiveDrawer();
     V.buildTabs(tabsEl, state.points, selectEmbryo, (e) => ({ label: e.label, sub: e.date_short,
       title: `${e.label} · mean diffusion time ${fmtEmbAvg(e.id)}` }));
     V.markActiveTab(tabsEl, state.currentId);
@@ -360,6 +435,9 @@
   function wireDrawer() {
     dfYaxis.addEventListener("change", renderScatter);
     dfModel.addEventListener("change", renderScatter);
+    dfAgeSrc.addEventListener("change", renderAgeGrid);
+    dfDrawerTabs.addEventListener("click", (e) => { const b = e.target.closest(".df-dtab"); if (b) setDrawerTab(b.dataset.tab); });
+    dfAgeGrid.addEventListener("click", (e) => { const t = e.target.closest(".df-tile"); if (t) onGeneChange(t.dataset.gene); });
     let start = null, moved = false;
     drawerHandle.addEventListener("pointerdown", (e) => { if (e.button && e.button !== 0) return; start = { x: e.clientX, y: e.clientY }; moved = false; try { drawerHandle.setPointerCapture(e.pointerId); } catch (_) {} });
     drawerHandle.addEventListener("pointermove", (e) => { if (!start) return;
@@ -377,7 +455,7 @@
   }
   function openDrawer(open) {
     state.drawerOpen = open; drawer.dataset.open = open ? "true" : "false"; drawerHandle.setAttribute("aria-expanded", String(open));
-    if (open) { renderScatter(); setTimeout(() => { try { Plotly.Plots.resize(dfScatter); } catch (_) {} }, 60); }
+    if (open) renderActiveDrawer();
   }
   function wireRdrawer() {
     dfList.addEventListener("click", (e) => { const r = e.target.closest(".df-row"); if (r) onGeneChange(r.dataset.gene); });

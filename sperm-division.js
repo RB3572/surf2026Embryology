@@ -699,8 +699,14 @@
       if (density) {
         const p = emb.best[ki], vA = emb.vp[p], vB = Math.max(emb.vt - emb.vp[p], 1);
         const dA = a / vA * DSCALE, dB = b / vB * DSCALE, hi = Math.max(dA, dB), lo = Math.min(dA, dB);
+        // Null = a UNIFORM distribution → equal density on both sides = total count ÷ total volume.
+        // Each side's density still fluctuates by chance: count ~ Binomial(n, volume-fraction), so the
+        // 95% interval of that side's density is ±1.96·SE ÷ its volume (wider on the smaller side).
+        const T = vA + vB, uniform = totalCount / T * DSCALE;
+        const vHi = dA >= dB ? vA : vB, vLo = dA >= dB ? vB : vA;
+        const se = (v) => 1.96 * Math.sqrt(totalCount * (v / T) * (1 - v / T)) / v * DSCALE;
         return { label: emb.label, high: hi, low: lo, total: hi + lo, highCount, lowCount, totalCount,
-          nullMean: 0, nullLow: 0, nullHigh: 0 };
+          nullMean: uniform, nullLow: uniform, nullHigh: uniform, errHi: se(vHi), errLo: se(vLo) };
       }
       const scale = percentMode ? 100 / totalCount : 1;
       const [nullLowCount, nullHighCount] = binomial95(totalCount);
@@ -739,7 +745,7 @@
             y0: r.high, y1: r.total, fillcolor: xsBarLowColor.value, line: { color: "rgba(15,23,42,0.48)", width: 0.65 } }
         );
       }
-      if (!density && xsBarNull.checked) shapes.push({ type: "rect", xref: "x", yref: "y", layer: "above",
+      if (xsBarNull.checked) shapes.push({ type: "rect", xref: "x", yref: "y", layer: "above",
         x0: cx - 0.34, x1: cx + 0.34, y0: baseline, y1: r.nullMean,
         fillcolor: hexAlpha(xsBarNullColor.value, 0.30), line: { color: "#5f666d", width: 0.55 } });
     });
@@ -750,7 +756,8 @@
         { type: "scatter", mode: "markers", name: density ? "Lower-density half" : "Lower-count half", legendrank: 20, x: [null], y: [null],
           marker: { symbol: "square", size: 11, color: xsBarLowColor.value }, hoverinfo: "skip" }
       );
-      if (!density && xsBarNull.checked) traces.push({ type: "scatter", mode: "markers", name: percentMode ? "50% null expectation" : "Null mean", legendrank: 30,
+      if (xsBarNull.checked) traces.push({ type: "scatter", mode: "markers", legendrank: 30,
+        name: density ? "Uniform-density null" : percentMode ? "50% null expectation" : "Null mean",
         x: [null], y: [null], marker: { symbol: "square", size: 11, color: hexAlpha(xsBarNullColor.value, 0.6) }, hoverinfo: "skip" });
     }
     if (!density && xsBarInterval.checked) traces.push({ type: "scatter", mode: "markers", name: "95% null interval", x,
@@ -759,6 +766,15 @@
       error_y: { type: "data", symmetric: false, array: rows.map((r) => r.nullHigh - r.nullMean),
         arrayminus: rows.map((r) => r.nullMean - r.nullLow), color: "#111827", thickness: 0.8, width: 2.5 },
       hovertemplate: "%{x}<br>95% null interval<extra></extra>" });
+    // density: a 95% interval per side (centred on the uniform-density null), at each side-bar's centre
+    if (density && xsBarInterval.checked) {
+      const errBar = (dx, key, showLeg) => ({ type: "scatter", mode: "markers", name: "95% null interval",
+        legendrank: 40, showlegend: showLeg, x: rows.map((_, i) => i + BAR_X0 + dx), y: rows.map((r) => r.nullMean),
+        marker: { size: 1, color: "rgba(0,0,0,0)" },
+        error_y: { type: "data", symmetric: true, array: rows.map((r) => r[key]), color: "#111827", thickness: 0.8, width: 2.2 },
+        hovertemplate: "%{x}<br>95% null interval<extra></extra>" });
+      traces.push(errBar(-0.135, "errHi", xsBarLegend.checked), errBar(0.135, "errLo", false));
+    }
     traces.push({ type: "scatter", mode: "markers", showlegend: false, x,
       y: rows.map((r) => stacked ? r.total : Math.max(r.high, r.low)),
       customdata: rows.map((r) => [r.label, r.high, r.low, r.total, r.nullMean, r.nullLow, r.nullHigh,
@@ -766,7 +782,7 @@
       marker: { size: 24, color: "rgba(0,0,0,0)" },
       hovertemplate: density
         ? "%{customdata[0]}<br>higher-density half %{customdata[1]:.1f}<br>lower-density half %{customdata[2]:.1f}" +
-          " ×10⁻⁴/µm³<br>counts %{customdata[7]} / %{customdata[8]}<extra></extra>"
+          " ×10⁻⁴/µm³<br>uniform-density null %{customdata[4]:.1f}<br>counts %{customdata[7]} / %{customdata[8]}<extra></extra>"
         : percentMode
           ? "%{customdata[0]}<br>higher half %{customdata[1]:.1f}% (%{customdata[7]} transcripts)" +
             "<br>lower half %{customdata[2]:.1f}% (%{customdata[8]} transcripts)" +
@@ -777,7 +793,7 @@
     xsBarSub.textContent = `· ${g} · ${rows.length} zygotes${density ? " · count ÷ side volume" : ""}`;
     const maxY = percentMode ? 100 : Math.max(...rows.map((r) => stacked
       ? Math.max(r.total, r.nullHigh)
-      : Math.max(r.high, r.low, r.nullHigh))) * 1.18;
+      : Math.max(r.high, r.low, r.nullHigh, (r.nullMean || 0) + (r.errHi || 0)))) * 1.18;
     plotInto(xsBars, traces, {
       shapes, margin: { l: 56, r: 10, t: xsBarLegend.checked ? 48 : 8, b: 92 }, autosize: true,
       showlegend: xsBarLegend.checked,

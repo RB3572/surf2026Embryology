@@ -26,7 +26,6 @@
   function binomTwoSided(k, n) {
     if (n === 0) return 1;
     const logC = (n, k) => { let s = 0; for (let i = 0; i < k; i++) s += Math.log(n - i) - Math.log(i + 1); return s; };
-    let cum = 0; for (let i = 0; i <= n; i++) cum += Math.exp(logC(n, i) - n * Math.log(2));  // ~1
     const pmf = (i) => Math.exp(logC(n, i) - n * Math.log(2));
     let lo = 0; for (let i = 0; i <= Math.min(k, n - k); i++) lo += pmf(i);
     return Math.min(1, 2 * lo);
@@ -241,9 +240,9 @@
     const cohort = s.stage;
     const label = cohort === "zygote" ? "zygotes (pronuclear axis)" : "two-cell embryos (realized cleavage plane)";
     const metrics = [
-      { key: "plane_vs_pb", title: "vs polar body (animal–vegetal axis)" },
-      { key: "plane_vs_sperm", title: "vs sperm entry (midpiece)" },
-      { key: "plane_vs_shape", title: "vs embryo long axis — SHAPE CONTROL" },
+      { key: "plane_vs_pb", title: "vs polar body (animal–vegetal axis)", color: C.av },
+      { key: "plane_vs_sperm", title: "vs sperm entry (midpiece)", color: C.sperm },
+      { key: "plane_vs_shape", title: "vs embryo long axis — SHAPE CONTROL", color: C.shape },
     ];
     const stats = metrics.map((m) => ({ ...m, s: statFor(cohort, m.key) }));
     const pb = stats[0].s, sp = stats[1].s, sh = stats[2].s;
@@ -264,16 +263,19 @@
       `<div class="ax-v-line">It ${spLine}</div>` +
       `<div class="ax-v-line ax-v-shape"><b style="color:${C.shape}">Shape control:</b> the plane ${shLine}</div>` +
       `<div class="ax-v-null">Null: for a randomly oriented plane, |cos θ| between the plane normal and a landmark direction is Uniform(0,1) (mean 0.5); mean &lt; 0.5 ⇒ the landmark lies in the plane, &gt; 0.5 ⇒ toward a pole. Tested by z-score against the exact null variance 1/12.</div>`;
-    // histograms of |cos| with the flat null
-    plotInto(histsEl, stats.filter((m) => m.s).map((m, idx) => ({
+    // histograms of |cos| with the flat null. Filter ONCE and lay out from the SAME list the
+    // traces come from — otherwise a metric with no data shifts every later trace onto the
+    // wrong subplot (and the wrong title/colour). Colour travels with the metric, not the index.
+    const shown = stats.filter((m) => m.s);
+    plotInto(histsEl, shown.map((m, idx) => ({
       type: "histogram", x: m.s.cs, xbins: { start: 0, end: 1, size: 0.1 },
-      marker: { color: [C.av, C.sperm, C.shape][idx] }, opacity: 0.8, name: m.title, xaxis: `x${idx + 1}`, yaxis: `y${idx + 1}`,
-    })), histLayout(stats));
+      marker: { color: m.color }, opacity: 0.8, name: m.title, xaxis: `x${idx + 1}`, yaxis: `y${idx + 1}`,
+    })), histLayout(shown));
   }
   function histLayout(stats) {
     const lay = { showlegend: false, height: histsEl.clientHeight || 220, margin: { l: 30, r: 8, t: 24, b: 30 },
       paper_bgcolor: "transparent", plot_bgcolor: "transparent",
-      grid: { rows: 1, columns: 3, pattern: "independent" }, annotations: [] };
+      grid: { rows: 1, columns: Math.max(1, stats.length), pattern: "independent" }, annotations: [] };
     stats.forEach((m, i) => {
       const ax = i === 0 ? "" : i + 1;
       lay[`xaxis${ax}`] = { title: { text: "|cos θ|", font: { size: 9 } }, range: [0, 1], tickfont: { size: 8 }, gridcolor: "#eef1f5" };

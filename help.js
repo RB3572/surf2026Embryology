@@ -226,6 +226,50 @@
         inert globules, whereas real mRNAs travel inside RNP granules through a crowded, structured, and partly flowing
         cytoplasm.</div>` },
 
+    "pseudotime-calibration": { eyebrow: "Pronuclear Pseudotime Calibration · the method", title: "How old is this fixed zygote?",
+      html: `<p class="lede">A fixed zygote is a single frozen snapshot — there is no clock in the image. But the
+        two pronuclei <b>migrate toward the cell centre</b> at a fairly reproducible pace, so their positions carry
+        information about how far the embryo has travelled between <b>pronuclear formation</b> and <b>NEBD</b>.
+        This project measures exactly how much information, using real time-lapse embryos where the true time IS known.</p>
+        <h3>The target</h3>
+        <div class="help-eq">τ = (time since pronuclear formation) / (pronuclear formation → NEBD)</div>
+        <p>τ&nbsp;=&nbsp;0 at pronuclear formation, τ&nbsp;=&nbsp;1 at NEBD. Normalizing is essential because total
+        zygote-stage duration varies between embryos (here 8.75–11.75&nbsp;h), so raw hours are not comparable.</p>
+        <h3>Two cohorts, kept strictly separate</h3>
+        <ul><li><b>Training / validation</b> — 53 untreated live-imaged zygotes (2,057 frames) from the public
+          Scheffler&nbsp;et&nbsp;al. 2021 source data. These have <b>ground-truth timestamps</b>, so they are the only
+          cohort that can measure whether the clock works.</li>
+        <li><b>Application</b> — this project's fixed MERFISH zygotes. These have <b>no ground truth</b>; the frozen
+          model is applied once and every number is a prediction carrying the held-out uncertainty.</li></ul>
+        <h3>Why the splits are grouped by embryo</h3>
+        <p>Adjacent frames from one embryo are nearly identical images. A random frame-level split would put a frame's
+        near-duplicate in the training set and make the score look far better than it is. So <b>every frame from one
+        embryo stays in one fold</b> — the model is always scored on embryos it has never seen.</p>
+        <div class="help-callout"><b>Two feature families are banned from every deployable model.</b>
+        (1) <b>male/female</b> distances — fixed zygotes have no reliable pronuclear identity call, so only
+        identity-free <i>sorted</i> near/far features can transfer. (2) <b>Relative pronuclear volumes</b> — the
+        published values are each divided by that pronucleus's volume at the <i>end of its own trajectory</i>, so they
+        encode the answer and cannot be measured in a snapshot. Including them cuts error nearly in half; that result
+        is shown only as a clearly-separated <b>non-deployable upper bound</b>.</div>
+        <h3>How the model was chosen</h3>
+        <p>The rule was fixed <i>before</i> looking at results: lowest <b>macro MAE</b> (the mean of per-embryo MAE, so
+        each embryo counts once and long trajectories can't dominate), then pairwise ordering accuracy, then simplicity.
+        A monotonic <b>isotonic</b> calibration of the summed cell-centred distance won — beating both ridge regression
+        and gradient boosting. Isotonic assumes only the <i>direction</i> of the relationship, not a constant speed.</p>
+        <h3>The uncertainty interval</h3>
+        <p>A <b>grouped split-conformal</b> interval: the 95% half-width is the 95th percentile of the out-of-fold
+        absolute residuals, each produced by a model that never saw that embryo. It is deliberately <b>wide</b> —
+        that width is the measured noise floor of pronuclear geometry as a clock, not a defect in the fit.</p>
+        <h3>Reading the fixed-cohort panel</h3>
+        <ul><li><span class="tag">pass</span> — geometry inside the training range on every core feature.</li>
+        <li><span class="tag">caution</span> — outside the training 1st–99th percentile, or an elevated multivariate
+          (Mahalanobis) distance from the training cloud.</li>
+        <li><span class="tag">out-of-domain</span> — outside the training min–max range. A τ is still shown, but it is
+          an extrapolation and should not be trusted.</li></ul>
+        <div class="help-callout">The <b>legacy surface-gap score</b> is a different quantity and is never merged with
+        τ. The public workbook contains no surface-to-surface gap measurement, so nothing here validates or calibrates
+        that score — the two are shown side by side for comparison only.</div>` },
+
     "division-crossembryo": { eyebrow: "Division Planes · bottom drawer", title: "Do all zygotes lean the same way?",
       html: `<p class="lede">One zygote leaning to one side could be luck. The real question is whether <b>many</b> zygotes
         lean the <b>same</b> way once you line them up.</p>

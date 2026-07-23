@@ -1,0 +1,1591 @@
+{
+ "meta": {
+  "model_version": "pnpt-2.0.0",
+  "data_version": "scheffler2021-v1",
+  "model_label": "Isotonic \u00b7 distance sum",
+  "features": [
+   "distance_sum_um"
+  ],
+  "model_class": "empirical geometry-to-time calibration",
+  "trained_at_utc": "2026-07-23T22:15:38+00:00",
+  "seed": 20260723,
+  "applied_at_utc": "2026-07-23T22:15:38+00:00",
+  "halfwidth_95": 0.24464,
+  "nested_outer_test": {
+   "macro_mae": 0.09088,
+   "pooled_mae": 0.09101,
+   "median_ae": 0.06899,
+   "pooled_rmse": 0.11982,
+   "pearson_r": 0.90682,
+   "pearson_r2": 0.82232,
+   "pooled_spearman": 0.89907,
+   "pooled_kendall_tau_b": 0.73032,
+   "pooled_ordering": {
+    "comparable": 2107282,
+    "concordant": 1820128,
+    "discordant": 280819,
+    "tied_pred": 6335,
+    "tied_true": 7314,
+    "strict_accuracy": 0.86373,
+    "half_credit_accuracy": 0.86524,
+    "tie_rate": 0.00301,
+    "inversion_rate": 0.13326
+   },
+   "macro_within_embryo_ordering": 0.96697,
+   "macro_within_embryo_spearman": 0.9903
+  },
+  "n_total": 51,
+  "n_predicted": 51,
+  "qc_counts": {
+   "caution": 8,
+   "pass": 40,
+   "out-of-domain": 3
+  },
+  "geometry_source": "calibration_data/fixed_cohort_geometry.csv",
+  "cell_center_definition": "centroid of binary_fill_holes(segment1 | pronucleusA | pronucleusB) in physical um; segment 1 has the pronuclei carved out, so the union is required",
+  "qc_thresholds": {
+   "mahalanobis_caution": 3.808,
+   "mahalanobis_extreme": 5.893,
+   "core_features": [
+    "nearer_to_center_um",
+    "farther_to_center_um"
+   ]
+  },
+  "downstream_default": "out-of-domain zygotes are EXCLUDED from downstream regressions by default; they can be shown explicitly in the UI",
+  "domain_shift": {
+   "nearer_to_center_um": {
+    "fixed": {
+     "min": 6.54,
+     "median": 17.63,
+     "max": 38.38
+    },
+    "training": {
+     "min": 6.26,
+     "median": 12.83,
+     "max": 33.05
+    },
+    "fixed_median_percentile_in_training": 75.7,
+    "n_above_training_max": 1,
+    "n_below_training_min": 0
+   },
+   "farther_to_center_um": {
+    "fixed": {
+     "min": 9.98,
+     "median": 24.25,
+     "max": 46.55
+    },
+    "training": {
+     "min": 8.53,
+     "median": 14.81,
+     "max": 44.37
+    },
+    "fixed_median_percentile_in_training": 90.1,
+    "n_above_training_max": 3,
+    "n_below_training_min": 0
+   },
+   "distance_sum_um": {
+    "fixed": {
+     "min": 16.52,
+     "median": 41.75,
+     "max": 82.9
+    },
+    "training": {
+     "min": 16.29,
+     "median": 27.64,
+     "max": 72.71
+    },
+    "fixed_median_percentile_in_training": 84.5,
+    "n_above_training_max": 2,
+    "n_below_training_min": 0
+   },
+   "consequence": {
+    "n_distinct_tau": 29,
+    "n_at_or_below_tau_0_06": 17,
+    "note": "The fixed cohort's cell-centred distances are systematically LARGER than the live training distribution (median near the 84th training percentile). Two indistinguishable explanations: (a) these fixed zygotes really are sampled earlier in pronuclear migration, or (b) a systematic measurement offset between Scheffler's live-imaging geometry and this project's fixed 3-D segmentation. Separating them needs raw stacks processed through the identical pipeline. Consequence: 17 of 51 fixed zygotes sit at or below tau=0.06, so the early end is compressed and weakly ordered there."
+   }
+  },
+  "transcript_data_used": false,
+  "legacy_note": "legacy_surface_gap_um is the pre-existing minimum surface-to-surface pronuclear gap. The Scheffler workbook calibrates CELL-CENTRED DISTANCE features and contains no surface-gap measurement, so this calibration neither validates nor calibrates the legacy score."
+ },
+ "embryos": [
+  {
+   "id": "20251226_zygote_p1_1",
+   "label": "Z-P1-fov1",
+   "date_short": "Dec 26",
+   "legacy_surface_gap_um": 38.98,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.0,
+   "tau_raw": 0.0,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.24464,
+   "qc": "caution",
+   "reason": "nearer_to_center_um=28.5um outside training p01-p99 [7.0, 25.4]; farther_to_center_um=40.9um outside training p01-p99 [9.2, 37.9]; Mahalanobis 4.13 > 3.81 (training p97.5)",
+   "mahalanobis": 4.132,
+   "features": {
+    "nearer_to_center_um": 28.5278,
+    "farther_to_center_um": 40.9197,
+    "distance_sum_um": 69.4475,
+    "distance_difference_um": 12.3919,
+    "cell_volume_um3": 380407.0,
+    "cell_radius_equiv_um": 44.95,
+    "pron_volume_a_um3": 2572.6,
+    "pron_volume_b_um3": 2507.8
+   }
+  },
+  {
+   "id": "20251226_zygote_p1_10",
+   "label": "Z-P1-fov10",
+   "date_short": "Dec 26",
+   "legacy_surface_gap_um": 3.89,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.1405,
+   "tau_raw": 0.1405,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.38514,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 2.072,
+   "features": {
+    "nearer_to_center_um": 16.9184,
+    "farther_to_center_um": 25.1447,
+    "distance_sum_um": 42.063,
+    "distance_difference_um": 8.2263,
+    "cell_volume_um3": 327769.2,
+    "cell_radius_equiv_um": 42.77,
+    "pron_volume_a_um3": 7359.1,
+    "pron_volume_b_um3": 4687.2
+   }
+  },
+  {
+   "id": "20251226_zygote_p1_2_2",
+   "label": "Z-P1-fov2_2",
+   "date_short": "Dec 26",
+   "legacy_surface_gap_um": 2.73,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.0867,
+   "tau_raw": 0.0867,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.33134,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.895,
+   "features": {
+    "nearer_to_center_um": 20.0002,
+    "farther_to_center_um": 27.289,
+    "distance_sum_um": 47.2892,
+    "distance_difference_um": 7.2889,
+    "cell_volume_um3": 388185.8,
+    "cell_radius_equiv_um": 45.25,
+    "pron_volume_a_um3": 8929.4,
+    "pron_volume_b_um3": 6919.9
+   }
+  },
+  {
+   "id": "20251226_zygote_p1_4",
+   "label": "Z-P1-fov4",
+   "date_short": "Dec 26",
+   "legacy_surface_gap_um": 0.3,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.0867,
+   "tau_raw": 0.0867,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.33134,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 3.546,
+   "features": {
+    "nearer_to_center_um": 17.6347,
+    "farther_to_center_um": 29.8802,
+    "distance_sum_um": 47.515,
+    "distance_difference_um": 12.2455,
+    "cell_volume_um3": 178018.6,
+    "cell_radius_equiv_um": 34.9,
+    "pron_volume_a_um3": 12322.1,
+    "pron_volume_b_um3": 7359.1
+   }
+  },
+  {
+   "id": "20251226_zygote_p1_7",
+   "label": "Z-P1-fov7",
+   "date_short": "Dec 26",
+   "legacy_surface_gap_um": 17.64,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.14007,
+   "tau_raw": 0.14007,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.38471,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 3.048,
+   "features": {
+    "nearer_to_center_um": 16.3709,
+    "farther_to_center_um": 27.1916,
+    "distance_sum_um": 43.5624,
+    "distance_difference_um": 10.8207,
+    "cell_volume_um3": 349164.7,
+    "cell_radius_equiv_um": 43.68,
+    "pron_volume_a_um3": 5078.2,
+    "pron_volume_b_um3": 3801.6
+   }
+  },
+  {
+   "id": "20251226_zygote_p1_8",
+   "label": "Z-P1-fov8",
+   "date_short": "Dec 26",
+   "legacy_surface_gap_um": 28.01,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.05248,
+   "tau_raw": 0.05248,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.29712,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 2.883,
+   "features": {
+    "nearer_to_center_um": 24.8939,
+    "farther_to_center_um": 24.916,
+    "distance_sum_um": 49.8099,
+    "distance_difference_um": 0.0222,
+    "cell_volume_um3": 320883.1,
+    "cell_radius_equiv_um": 42.47,
+    "pron_volume_a_um3": 2595.6,
+    "pron_volume_b_um3": 1303.2
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_0_1",
+   "label": "Z-P1-fov0_1",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 2.66,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.24187,
+   "tau_raw": 0.24187,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.48651,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.562,
+   "features": {
+    "nearer_to_center_um": 18.5136,
+    "farther_to_center_um": 18.6308,
+    "distance_sum_um": 37.1443,
+    "distance_difference_um": 0.1172,
+    "cell_volume_um3": 340686.0,
+    "cell_radius_equiv_um": 43.33,
+    "pron_volume_a_um3": 11451.6,
+    "pron_volume_b_um3": 6629.8
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_0_2",
+   "label": "Z-P1-fov0_2",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 6.62,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.12697,
+   "tau_raw": 0.12697,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.37161,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.306,
+   "features": {
+    "nearer_to_center_um": 20.1462,
+    "farther_to_center_um": 23.8723,
+    "distance_sum_um": 44.0185,
+    "distance_difference_um": 3.7261,
+    "cell_volume_um3": 327709.4,
+    "cell_radius_equiv_um": 42.77,
+    "pron_volume_a_um3": 4610.2,
+    "pron_volume_b_um3": 4148.6
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_1",
+   "label": "Z-P1-fov1",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 3.86,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.37004,
+   "tau_raw": 0.37004,
+   "out_of_range": false,
+   "lo95": 0.1254,
+   "hi95": 0.61468,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 0.698,
+   "features": {
+    "nearer_to_center_um": 15.5291,
+    "farther_to_center_um": 16.704,
+    "distance_sum_um": 32.2331,
+    "distance_difference_um": 1.1749,
+    "cell_volume_um3": 344501.3,
+    "cell_radius_equiv_um": 43.49,
+    "pron_volume_a_um3": 6936.5,
+    "pron_volume_b_um3": 2911.0
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_10",
+   "label": "Z-P1-fov10",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 1.24,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.54753,
+   "tau_raw": 0.54753,
+   "out_of_range": false,
+   "lo95": 0.30289,
+   "hi95": 0.79217,
+   "qc": "caution",
+   "reason": "Mahalanobis 3.94 > 3.81 (training p97.5)",
+   "mahalanobis": 3.936,
+   "features": {
+    "nearer_to_center_um": 7.9274,
+    "farther_to_center_um": 19.0512,
+    "distance_sum_um": 26.9786,
+    "distance_difference_um": 11.1238,
+    "cell_volume_um3": 328345.2,
+    "cell_radius_equiv_um": 42.8,
+    "pron_volume_a_um3": 12350.9,
+    "pron_volume_b_um3": 5810.4
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_11",
+   "label": "Z-P1-fov11",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 0.3,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.46495,
+   "tau_raw": 0.46495,
+   "out_of_range": false,
+   "lo95": 0.22031,
+   "hi95": 0.70959,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 0.709,
+   "features": {
+    "nearer_to_center_um": 12.5723,
+    "farther_to_center_um": 16.4949,
+    "distance_sum_um": 29.0672,
+    "distance_difference_um": 3.9226,
+    "cell_volume_um3": 247478.4,
+    "cell_radius_equiv_um": 38.95,
+    "pron_volume_a_um3": 5029.9,
+    "pron_volume_b_um3": 3199.0
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_12",
+   "label": "Z-P1-fov12",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 1.35,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.54753,
+   "tau_raw": 0.54753,
+   "out_of_range": false,
+   "lo95": 0.30289,
+   "hi95": 0.79217,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.518,
+   "features": {
+    "nearer_to_center_um": 10.7865,
+    "farther_to_center_um": 16.2507,
+    "distance_sum_um": 27.0371,
+    "distance_difference_um": 5.4642,
+    "cell_volume_um3": 363770.6,
+    "cell_radius_equiv_um": 44.28,
+    "pron_volume_a_um3": 12598.6,
+    "pron_volume_b_um3": 7703.3
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_2",
+   "label": "Z-P1-fov2",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 12.25,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.24036,
+   "tau_raw": 0.24036,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.485,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 2.727,
+   "features": {
+    "nearer_to_center_um": 13.94,
+    "farther_to_center_um": 23.578,
+    "distance_sum_um": 37.5179,
+    "distance_difference_um": 9.638,
+    "cell_volume_um3": 325392.5,
+    "cell_radius_equiv_um": 42.67,
+    "pron_volume_a_um3": 6711.1,
+    "pron_volume_b_um3": 4221.4
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_3",
+   "label": "Z-P1-fov3",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 9.14,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.32671,
+   "tau_raw": 0.32671,
+   "out_of_range": false,
+   "lo95": 0.08207,
+   "hi95": 0.57135,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.403,
+   "features": {
+    "nearer_to_center_um": 13.8382,
+    "farther_to_center_um": 19.9899,
+    "distance_sum_um": 33.8282,
+    "distance_difference_um": 6.1517,
+    "cell_volume_um3": 265693.7,
+    "cell_radius_equiv_um": 39.88,
+    "pron_volume_a_um3": 4930.6,
+    "pron_volume_b_um3": 3352.3
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_4",
+   "label": "Z-P1-fov4",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 0.42,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.2003,
+   "tau_raw": 0.2003,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.44493,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 0.936,
+   "features": {
+    "nearer_to_center_um": 18.3782,
+    "farther_to_center_um": 21.4244,
+    "distance_sum_um": 39.8026,
+    "distance_difference_um": 3.0462,
+    "cell_volume_um3": 374989.7,
+    "cell_radius_equiv_um": 44.73,
+    "pron_volume_a_um3": 12478.3,
+    "pron_volume_b_um3": 8179.2
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_5",
+   "label": "Z-P1-fov5",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 5.48,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.15275,
+   "tau_raw": 0.15275,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.39739,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.197,
+   "features": {
+    "nearer_to_center_um": 19.4785,
+    "farther_to_center_um": 22.2698,
+    "distance_sum_um": 41.7483,
+    "distance_difference_um": 2.7912,
+    "cell_volume_um3": 281481.1,
+    "cell_radius_equiv_um": 40.66,
+    "pron_volume_a_um3": 9423.4,
+    "pron_volume_b_um3": 6969.6
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_6_0",
+   "label": "Z-P1-fov6_0",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 1.59,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.38418,
+   "tau_raw": 0.38418,
+   "out_of_range": false,
+   "lo95": 0.13954,
+   "hi95": 0.62882,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 0.946,
+   "features": {
+    "nearer_to_center_um": 15.5773,
+    "farther_to_center_um": 16.0617,
+    "distance_sum_um": 31.639,
+    "distance_difference_um": 0.4843,
+    "cell_volume_um3": 343224.0,
+    "cell_radius_equiv_um": 43.43,
+    "pron_volume_a_um3": 13074.5,
+    "pron_volume_b_um3": 6562.8
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_6_1",
+   "label": "Z-P1-fov6_1",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 1.08,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.53035,
+   "tau_raw": 0.53035,
+   "out_of_range": false,
+   "lo95": 0.28571,
+   "hi95": 0.77499,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 3.764,
+   "features": {
+    "nearer_to_center_um": 8.6492,
+    "farther_to_center_um": 19.5641,
+    "distance_sum_um": 28.2133,
+    "distance_difference_um": 10.9148,
+    "cell_volume_um3": 308059.2,
+    "cell_radius_equiv_um": 41.9,
+    "pron_volume_a_um3": 11957.0,
+    "pron_volume_b_um3": 7228.8
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_7_0",
+   "label": "Z-P1-fov7_0",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 1.9,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.46495,
+   "tau_raw": 0.46495,
+   "out_of_range": false,
+   "lo95": 0.22031,
+   "hi95": 0.70959,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 2.263,
+   "features": {
+    "nearer_to_center_um": 10.6756,
+    "farther_to_center_um": 18.2007,
+    "distance_sum_um": 28.8762,
+    "distance_difference_um": 7.5251,
+    "cell_volume_um3": 354120.5,
+    "cell_radius_equiv_um": 43.89,
+    "pron_volume_a_um3": 9168.5,
+    "pron_volume_b_um3": 5284.1
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_7_1",
+   "label": "Z-P1-fov7_1",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 0.3,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.64342,
+   "tau_raw": 0.64342,
+   "out_of_range": false,
+   "lo95": 0.39878,
+   "hi95": 0.88806,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 0.648,
+   "features": {
+    "nearer_to_center_um": 10.9561,
+    "farther_to_center_um": 12.745,
+    "distance_sum_um": 23.7011,
+    "distance_difference_um": 1.7889,
+    "cell_volume_um3": 254960.6,
+    "cell_radius_equiv_um": 39.34,
+    "pron_volume_a_um3": 10470.2,
+    "pron_volume_b_um3": 7652.2
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_8_0",
+   "label": "Z-P1-fov8_0",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 0.3,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.46495,
+   "tau_raw": 0.46495,
+   "out_of_range": false,
+   "lo95": 0.22031,
+   "hi95": 0.70959,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.088,
+   "features": {
+    "nearer_to_center_um": 12.079,
+    "farther_to_center_um": 16.873,
+    "distance_sum_um": 28.952,
+    "distance_difference_um": 4.794,
+    "cell_volume_um3": 339071.0,
+    "cell_radius_equiv_um": 43.26,
+    "pron_volume_a_um3": 11978.6,
+    "pron_volume_b_um3": 7721.3
+   }
+  },
+  {
+   "id": "20260407_zygote_p1_8_1",
+   "label": "Z-P1-fov8_1",
+   "date_short": "Apr 7",
+   "legacy_surface_gap_um": 0.3,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.25284,
+   "tau_raw": 0.25284,
+   "out_of_range": false,
+   "lo95": 0.0082,
+   "hi95": 0.49748,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 0.562,
+   "features": {
+    "nearer_to_center_um": 16.6311,
+    "farther_to_center_um": 19.7711,
+    "distance_sum_um": 36.4023,
+    "distance_difference_um": 3.14,
+    "cell_volume_um3": 253981.4,
+    "cell_radius_equiv_um": 39.29,
+    "pron_volume_a_um3": 7249.0,
+    "pron_volume_b_um3": 6194.9
+   }
+  },
+  {
+   "id": "20260409_zygote_p2_9",
+   "label": "Z-P2-fov9",
+   "date_short": "Apr 9",
+   "legacy_surface_gap_um": 2.32,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.94486,
+   "tau_raw": 0.94486,
+   "out_of_range": false,
+   "lo95": 0.70022,
+   "hi95": 1.0,
+   "qc": "caution",
+   "reason": "nearer_to_center_um=6.5um outside training p01-p99 [7.0, 25.4]",
+   "mahalanobis": 1.811,
+   "features": {
+    "nearer_to_center_um": 6.5446,
+    "farther_to_center_um": 9.9779,
+    "distance_sum_um": 16.5224,
+    "distance_difference_um": 3.4333,
+    "cell_volume_um3": 135012.2,
+    "cell_radius_equiv_um": 31.82,
+    "pron_volume_a_um3": 8027.3,
+    "pron_volume_b_um3": 3458.9
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_0",
+   "label": "Z-P2-fov0",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 27.89,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.05248,
+   "tau_raw": 0.05248,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.29712,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.842,
+   "features": {
+    "nearer_to_center_um": 22.558,
+    "farther_to_center_um": 27.4183,
+    "distance_sum_um": 49.9763,
+    "distance_difference_um": 4.8602,
+    "cell_volume_um3": 257463.4,
+    "cell_radius_equiv_um": 39.46,
+    "pron_volume_a_um3": 5156.6,
+    "pron_volume_b_um3": 3872.9
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_1",
+   "label": "Z-P2-fov1",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 22.4,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.109,
+   "tau_raw": 0.109,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.35364,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.508,
+   "features": {
+    "nearer_to_center_um": 20.9099,
+    "farther_to_center_um": 25.6023,
+    "distance_sum_um": 46.5122,
+    "distance_difference_um": 4.6924,
+    "cell_volume_um3": 295138.8,
+    "cell_radius_equiv_um": 41.3,
+    "pron_volume_a_um3": 6531.8,
+    "pron_volume_b_um3": 5155.9
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_10",
+   "label": "Z-P2-fov10",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 0.3,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.41432,
+   "tau_raw": 0.41432,
+   "out_of_range": false,
+   "lo95": 0.16968,
+   "hi95": 0.65896,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 0.164,
+   "features": {
+    "nearer_to_center_um": 14.2699,
+    "farther_to_center_um": 16.426,
+    "distance_sum_um": 30.6959,
+    "distance_difference_um": 2.1561,
+    "cell_volume_um3": 288087.1,
+    "cell_radius_equiv_um": 40.97,
+    "pron_volume_a_um3": 13387.0,
+    "pron_volume_b_um3": 8829.4
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_12",
+   "label": "Z-P2-fov12",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 19.76,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.0867,
+   "tau_raw": 0.0867,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.33134,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.769,
+   "features": {
+    "nearer_to_center_um": 22.3201,
+    "farther_to_center_um": 26.1727,
+    "distance_sum_um": 48.4927,
+    "distance_difference_um": 3.8526,
+    "cell_volume_um3": 285454.8,
+    "cell_radius_equiv_um": 40.85,
+    "pron_volume_a_um3": 6194.2,
+    "pron_volume_b_um3": 5556.2
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_13",
+   "label": "Z-P2-fov13",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 25.05,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.0,
+   "tau_raw": 0.0,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.24464,
+   "qc": "out-of-domain",
+   "reason": "nearer_to_center_um=27.9um outside training p01-p99 [7.0, 25.4]; farther_to_center_um=45.0um outside training range [8.5, 44.4]; Mahalanobis 5.46 > 3.81 (training p97.5)",
+   "mahalanobis": 5.455,
+   "features": {
+    "nearer_to_center_um": 27.8997,
+    "farther_to_center_um": 44.9931,
+    "distance_sum_um": 72.8928,
+    "distance_difference_um": 17.0933,
+    "cell_volume_um3": 273933.4,
+    "cell_radius_equiv_um": 40.29,
+    "pron_volume_a_um3": 3454.6,
+    "pron_volume_b_um3": 2936.9
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_14",
+   "label": "Z-P2-fov14",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 2.06,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.38418,
+   "tau_raw": 0.38418,
+   "out_of_range": false,
+   "lo95": 0.13954,
+   "hi95": 0.62882,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 2.744,
+   "features": {
+    "nearer_to_center_um": 11.3215,
+    "farther_to_center_um": 20.3636,
+    "distance_sum_um": 31.6851,
+    "distance_difference_um": 9.0421,
+    "cell_volume_um3": 272544.5,
+    "cell_radius_equiv_um": 40.22,
+    "pron_volume_a_um3": 9123.1,
+    "pron_volume_b_um3": 6583.7
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_16",
+   "label": "Z-P2-fov16",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 22.99,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.05248,
+   "tau_raw": 0.05248,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.29712,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 2.89,
+   "features": {
+    "nearer_to_center_um": 25.0969,
+    "farther_to_center_um": 25.2835,
+    "distance_sum_um": 50.3805,
+    "distance_difference_um": 0.1866,
+    "cell_volume_um3": 261427.0,
+    "cell_radius_equiv_um": 39.67,
+    "pron_volume_a_um3": 6115.7,
+    "pron_volume_b_um3": 4946.4
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_17",
+   "label": "Z-P2-fov17",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 31.31,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.0,
+   "tau_raw": 0.0,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.24464,
+   "qc": "caution",
+   "reason": "nearer_to_center_um=27.9um outside training p01-p99 [7.0, 25.4]; farther_to_center_um=39.4um outside training p01-p99 [9.2, 37.9]; Mahalanobis 3.83 > 3.81 (training p97.5)",
+   "mahalanobis": 3.828,
+   "features": {
+    "nearer_to_center_um": 27.9397,
+    "farther_to_center_um": 39.3809,
+    "distance_sum_um": 67.3206,
+    "distance_difference_um": 11.4412,
+    "cell_volume_um3": 315231.1,
+    "cell_radius_equiv_um": 42.22,
+    "pron_volume_a_um3": 3946.3,
+    "pron_volume_b_um3": 3173.8
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_18_0",
+   "label": "Z-P2-fov18_0",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 46.59,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.0,
+   "tau_raw": 0.0,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.24464,
+   "qc": "caution",
+   "reason": "nearer_to_center_um=27.6um outside training p01-p99 [7.0, 25.4]; farther_to_center_um=43.0um outside training p01-p99 [9.2, 37.9]; Mahalanobis 4.90 > 3.81 (training p97.5)",
+   "mahalanobis": 4.896,
+   "features": {
+    "nearer_to_center_um": 27.6204,
+    "farther_to_center_um": 42.9928,
+    "distance_sum_um": 70.6132,
+    "distance_difference_um": 15.3724,
+    "cell_volume_um3": 263265.1,
+    "cell_radius_equiv_um": 39.76,
+    "pron_volume_a_um3": 3206.2,
+    "pron_volume_b_um3": 2546.6
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_18_1",
+   "label": "Z-P2-fov18_1",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 16.77,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.186,
+   "tau_raw": 0.186,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.43064,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 2.571,
+   "features": {
+    "nearer_to_center_um": 15.7461,
+    "farther_to_center_um": 25.239,
+    "distance_sum_um": 40.9851,
+    "distance_difference_um": 9.493,
+    "cell_volume_um3": 240896.9,
+    "cell_radius_equiv_um": 38.6,
+    "pron_volume_a_um3": 6569.3,
+    "pron_volume_b_um3": 5593.0
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_19_1",
+   "label": "Z-P2-fov19_1",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 32.7,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.03735,
+   "tau_raw": 0.03735,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.28199,
+   "qc": "caution",
+   "reason": "nearer_to_center_um=26.3um outside training p01-p99 [7.0, 25.4]",
+   "mahalanobis": 3.005,
+   "features": {
+    "nearer_to_center_um": 26.3296,
+    "farther_to_center_um": 27.2629,
+    "distance_sum_um": 53.5925,
+    "distance_difference_um": 0.9333,
+    "cell_volume_um3": 257564.9,
+    "cell_radius_equiv_um": 39.47,
+    "pron_volume_a_um3": 4220.6,
+    "pron_volume_b_um3": 3813.8
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_2",
+   "label": "Z-P2-fov2",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 2.1,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.0,
+   "tau_raw": 0.0,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.24464,
+   "qc": "out-of-domain",
+   "reason": "nearer_to_center_um=38.4um outside training range [6.3, 33.1]; farther_to_center_um=44.5um outside training range [8.5, 44.4]; Mahalanobis 5.19 > 3.81 (training p97.5)",
+   "mahalanobis": 5.191,
+   "features": {
+    "nearer_to_center_um": 38.3841,
+    "farther_to_center_um": 44.5145,
+    "distance_sum_um": 82.8986,
+    "distance_difference_um": 6.1304,
+    "cell_volume_um3": 281774.9,
+    "cell_radius_equiv_um": 40.67,
+    "pron_volume_a_um3": 3980.9,
+    "pron_volume_b_um3": 3733.9
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_20",
+   "label": "Z-P2-fov20",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 0.3,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.22177,
+   "tau_raw": 0.22177,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.46641,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.767,
+   "features": {
+    "nearer_to_center_um": 15.3471,
+    "farther_to_center_um": 22.6705,
+    "distance_sum_um": 38.0176,
+    "distance_difference_um": 7.3234,
+    "cell_volume_um3": 262188.0,
+    "cell_radius_equiv_um": 39.7,
+    "pron_volume_a_um3": 10329.1,
+    "pron_volume_b_um3": 8822.9
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_21",
+   "label": "Z-P2-fov21",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 2.41,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.62633,
+   "tau_raw": 0.62633,
+   "out_of_range": false,
+   "lo95": 0.38169,
+   "hi95": 0.87097,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.16,
+   "features": {
+    "nearer_to_center_um": 10.4397,
+    "farther_to_center_um": 14.5942,
+    "distance_sum_um": 25.0339,
+    "distance_difference_um": 4.1546,
+    "cell_volume_um3": 253141.9,
+    "cell_radius_equiv_um": 39.24,
+    "pron_volume_a_um3": 8940.2,
+    "pron_volume_b_um3": 6328.8
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_22_0",
+   "label": "Z-P2-fov22_0",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 0.67,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.66772,
+   "tau_raw": 0.66772,
+   "out_of_range": false,
+   "lo95": 0.42308,
+   "hi95": 0.91236,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 0.649,
+   "features": {
+    "nearer_to_center_um": 10.9796,
+    "farther_to_center_um": 12.6523,
+    "distance_sum_um": 23.6319,
+    "distance_difference_um": 1.6727,
+    "cell_volume_um3": 271553.8,
+    "cell_radius_equiv_um": 40.17,
+    "pron_volume_a_um3": 10160.6,
+    "pron_volume_b_um3": 6609.6
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_22_1",
+   "label": "Z-P2-fov22_1",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 27.75,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.0,
+   "tau_raw": 0.0,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.24464,
+   "qc": "caution",
+   "reason": "nearer_to_center_um=28.1um outside training p01-p99 [7.0, 25.4]; farther_to_center_um=38.2um outside training p01-p99 [9.2, 37.9]",
+   "mahalanobis": 3.543,
+   "features": {
+    "nearer_to_center_um": 28.0875,
+    "farther_to_center_um": 38.1722,
+    "distance_sum_um": 66.2597,
+    "distance_difference_um": 10.0847,
+    "cell_volume_um3": 247783.0,
+    "cell_radius_equiv_um": 38.96,
+    "pron_volume_a_um3": 1877.0,
+    "pron_volume_b_um3": 1759.7
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_23",
+   "label": "Z-P2-fov23",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 10.98,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.05248,
+   "tau_raw": 0.05248,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.29712,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.929,
+   "features": {
+    "nearer_to_center_um": 22.9839,
+    "farther_to_center_um": 27.8937,
+    "distance_sum_um": 50.8776,
+    "distance_difference_um": 4.9098,
+    "cell_volume_um3": 302413.7,
+    "cell_radius_equiv_um": 41.64,
+    "pron_volume_a_um3": 7549.2,
+    "pron_volume_b_um3": 6498.0
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_25_0",
+   "label": "Z-P2-fov25_0",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 0.3,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.55003,
+   "tau_raw": 0.55003,
+   "out_of_range": false,
+   "lo95": 0.30539,
+   "hi95": 0.79467,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 0.477,
+   "features": {
+    "nearer_to_center_um": 12.717,
+    "farther_to_center_um": 13.9618,
+    "distance_sum_um": 26.6788,
+    "distance_difference_um": 1.2449,
+    "cell_volume_um3": 268179.8,
+    "cell_radius_equiv_um": 40.0,
+    "pron_volume_a_um3": 9339.8,
+    "pron_volume_b_um3": 5591.5
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_26",
+   "label": "Z-P2-fov26",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 0.3,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.64342,
+   "tau_raw": 0.64342,
+   "out_of_range": false,
+   "lo95": 0.39878,
+   "hi95": 0.88806,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 2.66,
+   "features": {
+    "nearer_to_center_um": 8.0915,
+    "farther_to_center_um": 15.648,
+    "distance_sum_um": 23.7394,
+    "distance_difference_um": 7.5565,
+    "cell_volume_um3": 280915.9,
+    "cell_radius_equiv_um": 40.63,
+    "pron_volume_a_um3": 11066.4,
+    "pron_volume_b_um3": 6893.3
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_4",
+   "label": "Z-P2-fov4",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 1.34,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.29803,
+   "tau_raw": 0.29803,
+   "out_of_range": false,
+   "lo95": 0.05339,
+   "hi95": 0.54267,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 0.64,
+   "features": {
+    "nearer_to_center_um": 15.2858,
+    "farther_to_center_um": 19.5482,
+    "distance_sum_um": 34.834,
+    "distance_difference_um": 4.2624,
+    "cell_volume_um3": 279796.3,
+    "cell_radius_equiv_um": 40.57,
+    "pron_volume_a_um3": 12010.3,
+    "pron_volume_b_um3": 7879.0
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_5",
+   "label": "Z-P2-fov5",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 3.35,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.2003,
+   "tau_raw": 0.2003,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.44493,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 3.419,
+   "features": {
+    "nearer_to_center_um": 13.9389,
+    "farther_to_center_um": 25.3904,
+    "distance_sum_um": 39.3293,
+    "distance_difference_um": 11.4516,
+    "cell_volume_um3": 297660.2,
+    "cell_radius_equiv_um": 41.42,
+    "pron_volume_a_um3": 5733.4,
+    "pron_volume_b_um3": 4140.0
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_6",
+   "label": "Z-P2-fov6",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 18.14,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.05248,
+   "tau_raw": 0.05248,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.29712,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.978,
+   "features": {
+    "nearer_to_center_um": 23.2933,
+    "farther_to_center_um": 27.8333,
+    "distance_sum_um": 51.1266,
+    "distance_difference_um": 4.54,
+    "cell_volume_um3": 291013.2,
+    "cell_radius_equiv_um": 41.11,
+    "pron_volume_a_um3": 5737.0,
+    "pron_volume_b_um3": 3991.7
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_7_0",
+   "label": "Z-P2-fov7_0",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 10.78,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.05248,
+   "tau_raw": 0.05248,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.29712,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 2.613,
+   "features": {
+    "nearer_to_center_um": 24.6732,
+    "farther_to_center_um": 25.7553,
+    "distance_sum_um": 50.4284,
+    "distance_difference_um": 1.0821,
+    "cell_volume_um3": 251039.5,
+    "cell_radius_equiv_um": 39.13,
+    "pron_volume_a_um3": 3157.9,
+    "pron_volume_b_um3": 2952.7
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_7_1",
+   "label": "Z-P2-fov7_1",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 7.51,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.05583,
+   "tau_raw": 0.05583,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.30047,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.836,
+   "features": {
+    "nearer_to_center_um": 22.619,
+    "farther_to_center_um": 26.3898,
+    "distance_sum_um": 49.0088,
+    "distance_difference_um": 3.7708,
+    "cell_volume_um3": 281297.5,
+    "cell_radius_equiv_um": 40.65,
+    "pron_volume_a_um3": 4746.2,
+    "pron_volume_b_um3": 3651.1
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_8_0",
+   "label": "Z-P2-fov8_0",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 5.24,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.109,
+   "tau_raw": 0.109,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.35364,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 1.581,
+   "features": {
+    "nearer_to_center_um": 21.271,
+    "farther_to_center_um": 24.2515,
+    "distance_sum_um": 45.5225,
+    "distance_difference_um": 2.9805,
+    "cell_volume_um3": 274048.6,
+    "cell_radius_equiv_um": 40.29,
+    "pron_volume_a_um3": 3293.3,
+    "pron_volume_b_um3": 2789.3
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_8_1",
+   "label": "Z-P2-fov8_1",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 25.63,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.0,
+   "tau_raw": 0.0,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.24464,
+   "qc": "caution",
+   "reason": "farther_to_center_um=41.0um outside training p01-p99 [9.2, 37.9]; Mahalanobis 5.64 > 3.81 (training p97.5)",
+   "mahalanobis": 5.645,
+   "features": {
+    "nearer_to_center_um": 22.9039,
+    "farther_to_center_um": 40.988,
+    "distance_sum_um": 63.8919,
+    "distance_difference_um": 18.0841,
+    "cell_volume_um3": 255775.7,
+    "cell_radius_equiv_um": 39.38,
+    "pron_volume_a_um3": 4168.1,
+    "pron_volume_b_um3": 3178.8
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_9_0",
+   "label": "Z-P2-fov9_0",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 24.82,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.0,
+   "tau_raw": 0.0,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.24464,
+   "qc": "out-of-domain",
+   "reason": "farther_to_center_um=46.5um outside training range [8.5, 44.4]; Mahalanobis 9.00 > 5.89 (training p99.9)",
+   "mahalanobis": 9.005,
+   "features": {
+    "nearer_to_center_um": 19.6226,
+    "farther_to_center_um": 46.5457,
+    "distance_sum_um": 66.1683,
+    "distance_difference_um": 26.9231,
+    "cell_volume_um3": 287441.3,
+    "cell_radius_equiv_um": 40.94,
+    "pron_volume_a_um3": 2983.0,
+    "pron_volume_b_um3": 2938.3
+   }
+  },
+  {
+   "id": "20260425_zygote_p2_9_1",
+   "label": "Z-P2-fov9_1",
+   "date_short": "Apr 25",
+   "legacy_surface_gap_um": 27.3,
+   "model_version": "pnpt-2.0.0",
+   "data_version": "scheffler2021-v1",
+   "feature_schema": [
+    "distance_sum_um"
+   ],
+   "tau": 0.05248,
+   "tau_raw": 0.05248,
+   "out_of_range": false,
+   "lo95": 0.0,
+   "hi95": 0.29712,
+   "qc": "pass",
+   "reason": "",
+   "mahalanobis": 2.394,
+   "features": {
+    "nearer_to_center_um": 22.1151,
+    "farther_to_center_um": 30.4731,
+    "distance_sum_um": 52.5883,
+    "distance_difference_um": 8.358,
+    "cell_volume_um3": 278447.8,
+    "cell_radius_equiv_um": 40.51,
+    "pron_volume_a_um3": 5050.8,
+    "pron_volume_b_um3": 4425.8
+   }
+  }
+ ]
+}

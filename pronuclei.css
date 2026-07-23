@@ -130,3 +130,23 @@
   font-size: 13px; line-height: 1; padding: 0; }
 .pn-set-x:hover { background: #fdecec; color: #dc2626; }
 .pn-set-empty { font-size: 11.5px; color: var(--ink-soft); font-style: italic; }
+
+/* ---- calibrated pseudotime (from the frozen Pronuclear Pseudotime Calibration model) ---- */
+.pn-ctl { display: inline-flex; align-items: center; gap: 7px; }
+.pn-ctl-l { font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--ink-soft); }
+.pn-ctl select { font: inherit; font-size: 12px; font-weight: 600; color: var(--ink);
+  padding: 5px 9px; border: 1px solid var(--line); border-radius: 7px;
+  background: var(--surface); cursor: pointer; }
+.pn-cal { margin-top: 7px; padding-top: 7px; border-top: 1px dashed var(--line); }
+.pn-cal-ci { font-size: 11.5px; color: var(--ink-2); display: flex; align-items: center;
+  gap: 6px; flex-wrap: wrap; }
+.pn-cal-qc { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 999px; }
+.pn-cal-ok { background: #e7f6ec; color: #15803d; }
+.pn-cal-warn { background: #fff3e0; color: #b45309; }
+.pn-cal-bad { background: #fdeaea; color: #b42318; }
+.pn-cal-ver { font-family: var(--mono); font-size: 9.5px; color: var(--ink-soft);
+  background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+.pn-cal-na { font-size: 12px; font-weight: 600; color: var(--ink-soft); display: block; }
+.pn-cal-why { font-size: 10.5px; color: var(--ink-soft); line-height: 1.45; margin-top: 2px; }
+.pn-cal-inline { font-family: var(--mono); font-size: 10.5px; color: #4f46e5; }

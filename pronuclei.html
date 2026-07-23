@@ -146,8 +146,15 @@
             <option value="vol">÷ volume (density /µm³)</option>
           </select>
         </label>
-        <label class="pn-pt-toggle" title="Use (max distance − pronuclei distance) as a pseudotime axis, where max distance is the largest among the plotted embryos — larger pseudotime = later in development.">
-          <input type="checkbox" id="pseudotime-toggle"><span>Pseudotime axis</span></label>
+        <label class="pn-ctl" title="Which developmental axis the graphs below use. Legacy is the historical surface-gap ordering; calibrated τ comes from the frozen Pronuclear Pseudotime Calibration model.">
+          <span class="pn-ctl-l">Time axis</span>
+          <select id="pn-clock">
+            <option value="legacy">Legacy surface-gap ordering score (default)</option>
+            <option value="calibrated">Calibrated pseudotime τ</option>
+          </select>
+        </label>
+        <label class="pn-pt-toggle" data-t0="Use (max gap − pronuclei gap) as a legacy ordering score, where max gap is the largest among the plotted embryos — larger score = later in development. Applies to the legacy axis only." title="Use (max gap − pronuclei gap) as a legacy ordering score, where max gap is the largest among the plotted embryos — larger score = later in development. Applies to the legacy axis only.">
+          <input type="checkbox" id="pseudotime-toggle"><span>Legacy ordering score</span></label>
         <label class="pn-pt-toggle" title="Swap the x and y axes on every graph below (the fit is unchanged — only the view is transposed).">
           <input type="checkbox" id="flip-toggle"><span>Flip x / y</span></label>
         <button class="help-btn pn-stats-help" data-help="pronuclei-stats" aria-label="How the statistics are computed" title="How R², the equation, Pearson r and the p-value are computed">?</button>

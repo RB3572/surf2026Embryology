@@ -1,0 +1,790 @@
+{
+ "meta": {
+  "model_version": "pnpt-2.0.0",
+  "data_version": "scheffler2021-v1",
+  "generated_at_utc": "2026-07-23T22:21:13+00:00",
+  "seed": 20260723,
+  "quick": false,
+  "purpose": "quantify how much the measured pseudotime error attenuates transcript-vs-pseudotime R^2, so an observed value can be interpreted rather than dismissed",
+  "transcripts_used_in_clock": false,
+  "transcripts_used_here": "only in the frozen downstream illustration (part 3)"
+ },
+ "clock_reliability": {
+  "source": "nested outer-test predictions only (untouched evaluation embryos)",
+  "model_version": "pnpt-2.0.0",
+  "n_embryos": 53,
+  "n_frames": 2057,
+  "pearson_r": 0.90682,
+  "pearson_r2": 0.82232,
+  "spearman": 0.89907,
+  "strict_pairwise_ordering": 0.86373,
+  "macro_within_embryo_ordering": 0.96697,
+  "tie_rate": 0.00301,
+  "inversion_rate": 0.13326,
+  "macro_mae_tau": 0.09088,
+  "median_ae_tau": 0.06899,
+  "rmse_tau": 0.11982,
+  "median_ae_hours": 0.6801,
+  "mean_ae_hours": 0.9008,
+  "hours_caveat": "Hours are computed as |tau error| x that embryo's OBSERVED migration duration, which exists only for the live-imaging validation cohort. Fixed MERFISH zygotes have NO known absolute duration, so their tau cannot be converted to hours.",
+  "bootstrap_ci95_by_embryo": {
+   "pearson_r": [
+    0.88875,
+    0.92639
+   ],
+   "pearson_r2": [
+    0.78988,
+    0.8582
+   ],
+   "spearman": [
+    0.8797,
+    0.92163
+   ],
+   "macro_mae": [
+    0.08078,
+    0.10163
+   ],
+   "median_ae": [
+    0.05846,
+    0.08158
+   ],
+   "median_ae_hours": [
+    0.58256,
+    0.80788
+   ]
+  }
+ },
+ "attenuation": {
+  "description": "Generic attenuation: outcome generated from TRUE tau at a known latent R^2, then regressed on the clock's empirical PREDICTED tau.",
+  "design": {
+   "cohort_design": "snapshot \u2014 one frame per sampled embryo",
+   "n_snapshot_embryos": 48,
+   "n_replicates": 1200,
+   "resampling": "embryo-level with replacement",
+   "error_model": "empirical (true, predicted) pairs, not a Gaussian assumption"
+  },
+  "curves": {
+   "linear": [
+    {
+     "latent_true_r2": 0.02,
+     "observed_r2_median": 0.01966,
+     "observed_r2_ci95": [
+      4e-05,
+      0.15762
+     ],
+     "observed_r2_q25_q75": [
+      0.0044,
+      0.05198
+     ],
+     "attenuation_ratio": 0.9829
+    },
+    {
+     "latent_true_r2": 0.05,
+     "observed_r2_median": 0.04201,
+     "observed_r2_ci95": [
+      0.00019,
+      0.2156
+     ],
+     "observed_r2_q25_q75": [
+      0.01246,
+      0.08866
+     ],
+     "attenuation_ratio": 0.8401
+    },
+    {
+     "latent_true_r2": 0.1,
+     "observed_r2_median": 0.08849,
+     "observed_r2_ci95": [
+      0.00111,
+      0.27213
+     ],
+     "observed_r2_q25_q75": [
+      0.04603,
+      0.14793
+     ],
+     "attenuation_ratio": 0.8849
+    },
+    {
+     "latent_true_r2": 0.15,
+     "observed_r2_median": 0.12661,
+     "observed_r2_ci95": [
+      0.00991,
+      0.32126
+     ],
+     "observed_r2_q25_q75": [
+      0.07385,
+      0.18995
+     ],
+     "attenuation_ratio": 0.8441
+    },
+    {
+     "latent_true_r2": 0.2,
+     "observed_r2_median": 0.16938,
+     "observed_r2_ci95": [
+      0.03387,
+      0.37474
+     ],
+     "observed_r2_q25_q75": [
+      0.11179,
+      0.23592
+     ],
+     "attenuation_ratio": 0.8469
+    },
+    {
+     "latent_true_r2": 0.3,
+     "observed_r2_median": 0.25664,
+     "observed_r2_ci95": [
+      0.08331,
+      0.47098
+     ],
+     "observed_r2_q25_q75": [
+      0.18673,
+      0.32764
+     ],
+     "attenuation_ratio": 0.8555
+    },
+    {
+     "latent_true_r2": 0.4,
+     "observed_r2_median": 0.34404,
+     "observed_r2_ci95": [
+      0.14222,
+      0.52105
+     ],
+     "observed_r2_q25_q75": [
+      0.27243,
+      0.40579
+     ],
+     "attenuation_ratio": 0.8601
+    },
+    {
+     "latent_true_r2": 0.5,
+     "observed_r2_median": 0.41828,
+     "observed_r2_ci95": [
+      0.24242,
+      0.59902
+     ],
+     "observed_r2_q25_q75": [
+      0.35669,
+      0.48199
+     ],
+     "attenuation_ratio": 0.8366
+    },
+    {
+     "latent_true_r2": 0.6,
+     "observed_r2_median": 0.50269,
+     "observed_r2_ci95": [
+      0.31862,
+      0.66111
+     ],
+     "observed_r2_q25_q75": [
+      0.44297,
+      0.56673
+     ],
+     "attenuation_ratio": 0.8378
+    },
+    {
+     "latent_true_r2": 0.7,
+     "observed_r2_median": 0.58509,
+     "observed_r2_ci95": [
+      0.42934,
+      0.72485
+     ],
+     "observed_r2_q25_q75": [
+      0.53414,
+      0.63647
+     ],
+     "attenuation_ratio": 0.8358
+    },
+    {
+     "latent_true_r2": 0.8,
+     "observed_r2_median": 0.66245,
+     "observed_r2_ci95": [
+      0.5155,
+      0.7879
+     ],
+     "observed_r2_q25_q75": [
+      0.61778,
+      0.70755
+     ],
+     "attenuation_ratio": 0.8281
+    },
+    {
+     "latent_true_r2": 0.9,
+     "observed_r2_median": 0.74859,
+     "observed_r2_ci95": [
+      0.61951,
+      0.83363
+     ],
+     "observed_r2_q25_q75": [
+      0.70769,
+      0.7819
+     ],
+     "attenuation_ratio": 0.8318
+    },
+    {
+     "latent_true_r2": 0.95,
+     "observed_r2_median": 0.78791,
+     "observed_r2_ci95": [
+      0.67567,
+      0.87251
+     ],
+     "observed_r2_q25_q75": [
+      0.74992,
+      0.8187
+     ],
+     "attenuation_ratio": 0.8294
+    }
+   ],
+   "monotone_saturating": [
+    {
+     "latent_true_r2": 0.02,
+     "observed_r2_median": 0.0186,
+     "observed_r2_ci95": [
+      6e-05,
+      0.16079
+     ],
+     "observed_r2_q25_q75": [
+      0.00399,
+      0.05109
+     ],
+     "attenuation_ratio": 0.93
+    },
+    {
+     "latent_true_r2": 0.05,
+     "observed_r2_median": 0.04248,
+     "observed_r2_ci95": [
+      0.00012,
+      0.20448
+     ],
+     "observed_r2_q25_q75": [
+      0.01265,
+      0.09369
+     ],
+     "attenuation_ratio": 0.8496
+    },
+    {
+     "latent_true_r2": 0.1,
+     "observed_r2_median": 0.08368,
+     "observed_r2_ci95": [
+      0.00101,
+      0.28456
+     ],
+     "observed_r2_q25_q75": [
+      0.03758,
+      0.1358
+     ],
+     "attenuation_ratio": 0.8368
+    },
+    {
+     "latent_true_r2": 0.15,
+     "observed_r2_median": 0.12189,
+     "observed_r2_ci95": [
+      0.00874,
+      0.32537
+     ],
+     "observed_r2_q25_q75": [
+      0.07012,
+      0.18661
+     ],
+     "attenuation_ratio": 0.8126
+    },
+    {
+     "latent_true_r2": 0.2,
+     "observed_r2_median": 0.16916,
+     "observed_r2_ci95": [
+      0.03352,
+      0.36365
+     ],
+     "observed_r2_q25_q75": [
+      0.11001,
+      0.2322
+     ],
+     "attenuation_ratio": 0.8458
+    },
+    {
+     "latent_true_r2": 0.3,
+     "observed_r2_median": 0.24986,
+     "observed_r2_ci95": [
+      0.08198,
+      0.46546
+     ],
+     "observed_r2_q25_q75": [
+      0.18504,
+      0.32001
+     ],
+     "attenuation_ratio": 0.8329
+    },
+    {
+     "latent_true_r2": 0.4,
+     "observed_r2_median": 0.33633,
+     "observed_r2_ci95": [
+      0.15201,
+      0.53163
+     ],
+     "observed_r2_q25_q75": [
+      0.26762,
+      0.40104
+     ],
+     "attenuation_ratio": 0.8408
+    },
+    {
+     "latent_true_r2": 0.5,
+     "observed_r2_median": 0.40787,
+     "observed_r2_ci95": [
+      0.22197,
+      0.58123
+     ],
+     "observed_r2_q25_q75": [
+      0.3459,
+      0.47318
+     ],
+     "attenuation_ratio": 0.8157
+    },
+    {
+     "latent_true_r2": 0.6,
+     "observed_r2_median": 0.49725,
+     "observed_r2_ci95": [
+      0.31024,
+      0.65746
+     ],
+     "observed_r2_q25_q75": [
+      0.43584,
+      0.55479
+     ],
+     "attenuation_ratio": 0.8288
+    },
+    {
+     "latent_true_r2": 0.7,
+     "observed_r2_median": 0.57244,
+     "observed_r2_ci95": [
+      0.40863,
+      0.71674
+     ],
+     "observed_r2_q25_q75": [
+      0.52091,
+      0.62446
+     ],
+     "attenuation_ratio": 0.8178
+    },
+    {
+     "latent_true_r2": 0.8,
+     "observed_r2_median": 0.65552,
+     "observed_r2_ci95": [
+      0.52455,
+      0.77068
+     ],
+     "observed_r2_q25_q75": [
+      0.61354,
+      0.6983
+     ],
+     "attenuation_ratio": 0.8194
+    },
+    {
+     "latent_true_r2": 0.9,
+     "observed_r2_median": 0.73204,
+     "observed_r2_ci95": [
+      0.62148,
+      0.82272
+     ],
+     "observed_r2_q25_q75": [
+      0.69477,
+      0.76545
+     ],
+     "attenuation_ratio": 0.8134
+    },
+    {
+     "latent_true_r2": 0.95,
+     "observed_r2_median": 0.77145,
+     "observed_r2_ci95": [
+      0.66095,
+      0.85287
+     ],
+     "observed_r2_q25_q75": [
+      0.7375,
+      0.80161
+     ],
+     "attenuation_ratio": 0.8121
+    }
+   ]
+  },
+  "interpretation_guard": "This quantifies ONLY the attenuation caused by pseudotime error. A low observed R^2 is NOT thereby explained: transcript measurement noise, probe-set and batch effects, biological heterogeneity between embryos, and small n all reduce R^2 independently. The curve gives an UPPER envelope for what a given latent trend could look like through this clock, not a claim that the trend exists."
+ },
+ "downstream_illustration": {
+  "confirmatory_gene": "MuERV-L",
+  "predeclared_genes": [
+   "MuERV-L",
+   "Zscan4d",
+   "Zfp352",
+   "Obox3"
+  ],
+  "predeclared_note": "This list is fixed in the source file and was NOT chosen after seeing results. Out-of-domain zygotes are EXCLUDED by default; a sensitivity fit including them is reported alongside.",
+  "results": {
+   "MuERV-L": {
+    "status": "estimable",
+    "gene": "MuERV-L",
+    "n": 22,
+    "include_out_of_domain": false,
+    "model_form": "ordinary least squares: count ~ tau (single predictor, no covariates)",
+    "observed_r2": 0.43447,
+    "pearson_r": 0.65914,
+    "slope_counts_per_unit_tau": 441.999,
+    "intercept": -72.19,
+    "direction": "increases with tau",
+    "ols_p": 0.0008485896797148382,
+    "permutation_p_embryo_level": 0.001999000499750125,
+    "n_permutations": 2000,
+    "r2_bootstrap_ci95": [
+     0.02917,
+     0.75514
+    ],
+    "robustness": {
+     "why": "transcript counts are heavy-tailed; MERVL in particular fires as a burst at ZGA, so one late embryo can dominate an OLS fit",
+     "max_count": 759,
+     "median_count": 5.0,
+     "count_ratio_max_to_next": 18.5,
+     "leave_top_out": [
+      {
+       "dropped_top_n_by_count": 1,
+       "n": 21,
+       "r2": 0.16966,
+       "p": 0.06355
+      },
+      {
+       "dropped_top_n_by_count": 2,
+       "n": 20,
+       "r2": 0.30613,
+       "p": 0.01139
+      },
+      {
+       "dropped_top_n_by_count": 3,
+       "n": 19,
+       "r2": 0.26836,
+       "p": 0.02308
+      }
+     ],
+     "max_single_point_influence_on_r2": 0.26481,
+     "spearman_rho": 0.49658,
+     "spearman_p": 0.01873,
+     "spearman_permutation_p": 0.01999000499750125,
+     "log1p_ols_r2": 0.51043,
+     "log1p_ols_p": 0.00019,
+     "log1p_direction": "increases with tau",
+     "verdict": "OUTLIER-DRIVEN: dropping the single highest-count embryo changes R^2 by 0.265"
+    },
+    "probe_set_coverage": {
+     "n_zygotes_with_gene": 22,
+     "n_zygotes_with_tau": 51,
+     "note": "MERFISH panels are disjoint, so a gene is measured only in the subset of zygotes whose panel contains it"
+    },
+    "sensitivity_including_out_of_domain": {
+     "n": 23,
+     "observed_r2": 0.42697,
+     "pearson_r": 0.65343,
+     "permutation_p_embryo_level": 0.0009995002498750624
+    },
+    "compatible_latent_true_r2": {
+     "min": 0.3,
+     "max": 0.7
+    }
+   },
+   "Zscan4d": {
+    "status": "estimable",
+    "gene": "Zscan4d",
+    "n": 18,
+    "include_out_of_domain": false,
+    "model_form": "ordinary least squares: count ~ tau (single predictor, no covariates)",
+    "observed_r2": 0.01389,
+    "pearson_r": 0.11785,
+    "slope_counts_per_unit_tau": 11.246,
+    "intercept": 19.844,
+    "direction": "increases with tau",
+    "ols_p": 0.6414235152053118,
+    "permutation_p_embryo_level": 0.6431784107946027,
+    "n_permutations": 2000,
+    "r2_bootstrap_ci95": [
+     9e-05,
+     0.46225
+    ],
+    "robustness": {
+     "why": "transcript counts are heavy-tailed; MERVL in particular fires as a burst at ZGA, so one late embryo can dominate an OLS fit",
+     "max_count": 87,
+     "median_count": 18.0,
+     "count_ratio_max_to_next": 1.9,
+     "leave_top_out": [
+      {
+       "dropped_top_n_by_count": 1,
+       "n": 17,
+       "r2": 0.0114,
+       "p": 0.68337
+      },
+      {
+       "dropped_top_n_by_count": 2,
+       "n": 16,
+       "r2": 0.00487,
+       "p": 0.79737
+      },
+      {
+       "dropped_top_n_by_count": 3,
+       "n": 15,
+       "r2": 3e-05,
+       "p": 0.9842
+      }
+     ],
+     "max_single_point_influence_on_r2": 0.16119,
+     "spearman_rho": 0.11722,
+     "spearman_p": 0.64321,
+     "spearman_permutation_p": 0.6231884057971014,
+     "log1p_ols_r2": 0.0063,
+     "log1p_ols_p": 0.75414,
+     "log1p_direction": "decreases with tau",
+     "verdict": "OUTLIER-DRIVEN: dropping the single highest-count embryo changes R^2 by 0.161"
+    },
+    "probe_set_coverage": {
+     "n_zygotes_with_gene": 18,
+     "n_zygotes_with_tau": 51,
+     "note": "MERFISH panels are disjoint, so a gene is measured only in the subset of zygotes whose panel contains it"
+    },
+    "sensitivity_including_out_of_domain": {
+     "n": 19,
+     "observed_r2": 0.03096,
+     "pearson_r": 0.17596,
+     "permutation_p_embryo_level": 0.44227886056971516
+    },
+    "compatible_latent_true_r2": {
+     "min": 0.02,
+     "max": 0.15
+    }
+   },
+   "Zfp352": {
+    "status": "estimable",
+    "gene": "Zfp352",
+    "n": 12,
+    "include_out_of_domain": false,
+    "model_form": "ordinary least squares: count ~ tau (single predictor, no covariates)",
+    "observed_r2": 0.29879,
+    "pearson_r": -0.54662,
+    "slope_counts_per_unit_tau": -208.195,
+    "intercept": 109.641,
+    "direction": "decreases with tau",
+    "ols_p": 0.06591586391390698,
+    "permutation_p_embryo_level": 0.04047976011994003,
+    "n_permutations": 2000,
+    "r2_bootstrap_ci95": [
+     0.04525,
+     0.66038
+    ],
+    "robustness": {
+     "why": "transcript counts are heavy-tailed; MERVL in particular fires as a burst at ZGA, so one late embryo can dominate an OLS fit",
+     "max_count": 220,
+     "median_count": 20.0,
+     "count_ratio_max_to_next": 1.4,
+     "leave_top_out": [
+      {
+       "dropped_top_n_by_count": 1,
+       "n": 11,
+       "r2": 0.29181,
+       "p": 0.08626
+      },
+      {
+       "dropped_top_n_by_count": 2,
+       "n": 10,
+       "r2": 0.08218,
+       "p": 0.42196
+      },
+      {
+       "dropped_top_n_by_count": 3,
+       "n": 9,
+       "r2": 0.16106,
+       "p": 0.28436
+      }
+     ],
+     "max_single_point_influence_on_r2": 0.12608,
+     "spearman_rho": -0.39076,
+     "spearman_p": 0.20913,
+     "spearman_permutation_p": 0.21539230384807595,
+     "log1p_ols_r2": 0.19067,
+     "log1p_ols_p": 0.15583,
+     "log1p_direction": "decreases with tau",
+     "verdict": "stable to single-point removal"
+    },
+    "probe_set_coverage": {
+     "n_zygotes_with_gene": 12,
+     "n_zygotes_with_tau": 51,
+     "note": "MERFISH panels are disjoint, so a gene is measured only in the subset of zygotes whose panel contains it"
+    },
+    "sensitivity_including_out_of_domain": {
+     "n": 12,
+     "observed_r2": 0.29879,
+     "pearson_r": -0.54662,
+     "permutation_p_embryo_level": 0.0544727636181909
+    },
+    "compatible_latent_true_r2": {
+     "min": 0.15,
+     "max": 0.5
+    }
+   },
+   "Obox3": {
+    "status": "not estimable",
+    "reason": "only 4 zygotes carry Obox3 with a usable tau (need >= 8)",
+    "n": 4
+   }
+  },
+  "discovery_scan": {
+   "status": "DISCOVERY \u2014 not confirmatory; reported separately and FDR-corrected",
+   "n_genes_tested": 349,
+   "n_q_below_0_05": 0,
+   "top20": [
+    {
+     "gene": "Fmn2",
+     "n": 9,
+     "r2": 0.86612,
+     "p": 0.00027001358130824464,
+     "q_bh": 0.094235
+    },
+    {
+     "gene": "MuERV-L",
+     "n": 22,
+     "r2": 0.43447,
+     "p": 0.0008485896797148382,
+     "q_bh": 0.102798
+    },
+    {
+     "gene": "Camk2d",
+     "n": 9,
+     "r2": 0.81342,
+     "p": 0.0008836511638924442,
+     "q_bh": 0.102798
+    },
+    {
+     "gene": "Smad1",
+     "n": 29,
+     "r2": 0.25236,
+     "p": 0.005485501744512398,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "Zp1",
+     "n": 17,
+     "r2": 0.40375,
+     "p": 0.006124023885995515,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "Obox2",
+     "n": 25,
+     "r2": 0.2764,
+     "p": 0.006951759515018408,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "Tsen54",
+     "n": 25,
+     "r2": 0.26503,
+     "p": 0.008457841657157236,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "Rab9",
+     "n": 9,
+     "r2": 0.64201,
+     "p": 0.00943055355410165,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "Tnfaip8",
+     "n": 9,
+     "r2": 0.62642,
+     "p": 0.01104519821273282,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "Katnal2",
+     "n": 10,
+     "r2": 0.55445,
+     "p": 0.013491738197706162,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "Yap1",
+     "n": 29,
+     "r2": 0.20506,
+     "p": 0.013635175118976538,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "Spz1",
+     "n": 10,
+     "r2": 0.55305,
+     "p": 0.013675104336892941,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "Nono",
+     "n": 27,
+     "r2": 0.21823,
+     "p": 0.01402056816988949,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "Tulp3",
+     "n": 10,
+     "r2": 0.55024,
+     "p": 0.014047440280607053,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "Taf9b",
+     "n": 9,
+     "r2": 0.60029,
+     "p": 0.014206846511574152,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "Ddx20",
+     "n": 28,
+     "r2": 0.19622,
+     "p": 0.018238004149713074,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "Nlrp2",
+     "n": 29,
+     "r2": 0.18917,
+     "p": 0.018377637412172833,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "Nsf",
+     "n": 10,
+     "r2": 0.52055,
+     "p": 0.018506053663871255,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "Obox1",
+     "n": 27,
+     "r2": 0.20095,
+     "p": 0.019023240536301424,
+     "q_bh": 0.200236
+    },
+    {
+     "gene": "A430033K04Rik",
+     "n": 10,
+     "r2": 0.51715,
+     "p": 0.01907996880067309,
+     "q_bh": 0.200236
+    }
+   ],
+   "note": "A screen over every gene is exploratory. Any hit here would need independent confirmation; it does not license reinterpreting the predeclared result."
+  },
+  "headline": {
+   "verdict": "significant-but-outlier-driven",
+   "observed_r2": 0.43447,
+   "robust_spearman_rho": 0.49658,
+   "robust_log1p_r2": 0.51043,
+   "outlier_driven": true,
+   "answer_to_the_low_r2_question": "Yes \u2014 an observed R^2 of 0.10-0.15 is fully compatible with a real, moderately strong latent trend under this clock's measured error: the simulation puts a latent true R^2 of 0.15 at an observed median of 0.127 and a latent 0.30 at 0.257, with wide intervals at n~48. A low observed R^2 is therefore NOT evidence against a trend. It is equally NOT evidence for one: clock error is only one of several variance sources, and this analysis bounds only that one.",
+   "text": "MuERV-L against calibrated tau gives OLS R^2 = 0.434 (n = 22, embryo-level permutation p = 0.002). THIS NUMBER IS NOT ROBUST: one embryo carries 759 counts (18.5x the next highest), and removing that single embryo moves R^2 by 0.265 (to 0.170, p = 0.064). The outlier-robust statistics are Spearman rho = 0.497 (permutation p = 0.020) and log1p-OLS R^2 = 0.510. Biologically the burst is plausible \u2014 MERVL fires at ZGA and that embryo sits latest on the clock \u2014 but a single point cannot carry the claim. For scale, under the measured clock error a latent trend of true R^2 = 0.50 is expected to present as observed R^2 ~ 0.418, true R^2 = 0.30 as ~ 0.257, and true R^2 = 0.10 as ~ 0.088. Taken at face value the observed R^2 is compatible with latent true R^2 in [0.30, 0.70]; the simulation cannot narrow it further."
+  }
+ }
+}

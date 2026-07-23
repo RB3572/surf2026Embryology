@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pronuclear Pseudotime Calibration · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="pseudotime-calibration.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="help.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#4f46e5;box-shadow:0 0 0 4px color-mix(in srgb,#4f46e5 18%,transparent)"></span>
+      <span class="brand-name">Pronuclear&nbsp;Pseudotime&nbsp;Calibration</span>
+      <span class="brand-sub" id="pt-subtitle">loading…</span>
+    </div>
+    <nav class="pt-nav" id="pt-nav" aria-label="Sections"></nav>
+  </header>
+
+  <main class="pt-main" id="pt-main">
+
+    <!-- ═══════════ 1 · TRAINING SUMMARY ═══════════ -->
+    <section class="pt-sec" id="sec-summary" data-sec="summary">
+      <h1>Training &amp; validation summary
+        <button class="help-btn" data-help="pseudotime-calibration" aria-label="What is this analysis?">?</button>
+      </h1>
+      <p class="pt-lede">A geometric clock that estimates normalized pronuclear-migration pseudotime
+        <b>τ</b> for a single fixed zygote from geometry alone.
+        <span class="pt-def">τ = (time since pronuclear formation) / (pronuclear formation → NEBD)</span>,
+        reported on [0,&nbsp;1]. Trained on public <b>live-imaged</b> control zygotes, validated with
+        embryo-grouped cross-validation, then frozen and applied to this project's <b>fixed</b>
+        MERFISH zygotes.</p>
+
+      <div class="pt-cohorts">
+        <div class="pt-cohort pt-cohort-train">
+          <span class="pt-cohort-k">Training / validation cohort</span>
+          <b id="sum-train-title">—</b>
+          <span class="pt-cohort-d" id="sum-train-desc">—</span>
+        </div>
+        <div class="pt-cohort pt-cohort-apply">
+          <span class="pt-cohort-k">Application cohort</span>
+          <b id="sum-apply-title">—</b>
+          <span class="pt-cohort-d" id="sum-apply-desc">—</span>
+        </div>
+      </div>
+
+      <div class="pt-kpis" id="sum-kpis"></div>
+
+      <div class="pt-warn" id="sum-warn"></div>
+
+      <div class="pt-two">
+        <div class="pt-block">
+          <h2>Dataset &amp; split</h2>
+          <div class="pt-tablewrap"><table class="pt-table" id="sum-dataset"></table></div>
+        </div>
+        <div class="pt-block">
+          <h2>Selected model</h2>
+          <div class="pt-tablewrap"><table class="pt-table" id="sum-model"></table></div>
+        </div>
+      </div>
+
+      <div class="pt-block">
+        <h2>Feature governance <span class="pt-sub">what may and may not enter a deployable model</span></h2>
+        <div class="pt-tablewrap"><table class="pt-table pt-table-feat" id="sum-features"></table></div>
+      </div>
+    </section>
+
+    <!-- ═══════════ 2 · TRAINING REPLAY ═══════════ -->
+    <section class="pt-sec" id="sec-replay" data-sec="replay" hidden>
+      <h1>Interactive training replay</h1>
+      <p class="pt-lede">A faithful <b>replay of precomputed offline cross-validation artifacts</b> —
+        not live in-browser training. Each fold was fitted on 4/5 of the embryos and scored on the
+        held-out fifth; stepping through the folds shows exactly which embryos were held out and how
+        the model scored on them.</p>
+
+      <div class="pt-ctlbar">
+        <label class="pt-ctl"><span class="pt-ctl-l">Model</span>
+          <select id="rp-model"></select></label>
+        <label class="pt-ctl"><span class="pt-ctl-l">Fold</span>
+          <select id="rp-fold"></select></label>
+        <button class="pt-btn pt-btn-go" id="rp-play" aria-label="Play or pause the fold cycle">▶ Play</button>
+        <button class="pt-btn" id="rp-step" aria-label="Advance one fold">Step ▸</button>
+        <span class="pt-note" id="rp-note"></span>
+      </div>
+
+      <div class="pt-foldstrip" id="rp-strip" role="img" aria-label="Embryo fold membership"></div>
+
+      <div class="pt-two">
+        <div class="pt-block">
+          <h2>Held-out fit <span class="pt-sub" id="rp-fit-sub"></span></h2>
+          <div class="pt-plot" id="rp-fit"></div>
+        </div>
+        <div class="pt-block">
+          <h2>Residuals for the held-out fold</h2>
+          <div class="pt-plot" id="rp-res"></div>
+        </div>
+      </div>
+      <div class="pt-block">
+        <h2>Per-fold metrics <span class="pt-sub">the highlighted row is the fold shown above</span></h2>
+        <div class="pt-tablewrap"><table class="pt-table" id="rp-metrics"></table></div>
+      </div>
+    </section>
+
+    <!-- ═══════════ 3 · PREDICTED VS TRUE ═══════════ -->
+    <section class="pt-sec" id="sec-oof" data-sec="oof" hidden>
+      <h1>Held-out predicted vs true τ</h1>
+      <p class="pt-lede">Every one of the 2,057 frames, each predicted by a model that never saw that
+        embryo. Perfect prediction lies on the identity line.</p>
+      <div class="pt-ctlbar">
+        <label class="pt-ctl"><span class="pt-ctl-l">Colour by</span>
+          <select id="oof-color">
+            <option value="fold">Fold</option>
+            <option value="embryo">Embryo</option>
+            <option value="residual">Residual</option>
+            <option value="none">Single colour</option>
+          </select></label>
+        <label class="pt-tg"><input type="checkbox" id="oof-band" checked><span>95% interval band</span></label>
+        <label class="pt-tg"><input type="checkbox" id="oof-ident" checked><span>Identity line</span></label>
+        <button class="pt-btn" id="oof-csv">Download CSV</button>
+      </div>
+      <div class="pt-plot pt-plot-tall" id="oof-plot"></div>
+      <p class="pt-note" id="oof-note"></p>
+    </section>
+
+    <!-- ═══════════ 4 · PER-EMBRYO TRAJECTORIES ═══════════ -->
+    <section class="pt-sec" id="sec-traj" data-sec="traj" hidden>
+      <h1>Per-embryo trajectory explorer</h1>
+      <p class="pt-lede">One live-imaged embryo at a time: its true τ and its out-of-fold predicted τ
+        against elapsed hours since pronuclear formation.</p>
+      <div class="pt-ctlbar">
+        <label class="pt-ctl"><span class="pt-ctl-l">Embryo</span>
+          <select id="tj-embryo"></select></label>
+        <label class="pt-tg"><input type="checkbox" id="tj-dist"><span>Near/far distance tracks</span></label>
+        <label class="pt-tg"><input type="checkbox" id="tj-marks" checked><span>Mark large residuals &amp; inversions</span></label>
+      </div>
+      <div class="pt-plot pt-plot-tall" id="tj-plot"></div>
+      <div class="pt-kpis pt-kpis-sm" id="tj-kpis"></div>
+    </section>
+
+    <!-- ═══════════ 5 · MODEL COMPARISON ═══════════ -->
+    <section class="pt-sec" id="sec-models" data-sec="models" hidden>
+      <h1>Model comparison</h1>
+      <p class="pt-lede">All candidates scored by the same embryo-grouped held-out protocol.
+        Selection was predeclared: <b>macro MAE</b> (mean of per-embryo MAE, so every embryo counts
+        once), then pairwise ordering accuracy, then simplicity.</p>
+      <div class="pt-block">
+        <h2>Deployable candidates</h2>
+        <div class="pt-plot" id="cmp-plot"></div>
+        <div class="pt-tablewrap"><table class="pt-table" id="cmp-table"></table></div>
+        <p class="pt-note" id="cmp-note"></p>
+      </div>
+      <div class="pt-block pt-block-danger" id="cmp-leaky-block">
+        <h2 class="pt-danger-h">⚠ Non-deployable upper bound — excluded from selection</h2>
+        <p class="pt-note" id="cmp-leaky-note"></p>
+        <div class="pt-tablewrap"><table class="pt-table" id="cmp-leaky"></table></div>
+      </div>
+    </section>
+
+    <!-- ═══════════ 6 · DIAGNOSTICS ═══════════ -->
+    <section class="pt-sec" id="sec-diag" data-sec="diag" hidden>
+      <h1>Residual &amp; uncertainty diagnostics</h1>
+      <div class="pt-two">
+        <div class="pt-block">
+          <h2>Residual vs true <span class="lc">τ</span></h2>
+          <div class="pt-plot" id="dg-scatter"></div>
+        </div>
+        <div class="pt-block">
+          <h2>Residual distribution</h2>
+          <div class="pt-plot" id="dg-hist"></div>
+        </div>
+      </div>
+      <div class="pt-block">
+        <h2>95% interval coverage <span class="pt-sub">overall and by migration phase</span></h2>
+        <div class="pt-plot pt-plot-short" id="dg-cov"></div>
+        <div class="pt-tablewrap"><table class="pt-table" id="dg-cov-table"></table></div>
+      </div>
+      <div class="pt-block">
+        <h2>Uncertainty method &amp; limitations</h2>
+        <div id="dg-unc"></div>
+      </div>
+    </section>
+
+    <!-- ═══════════ 7 · FIXED COHORT ═══════════ -->
+    <section class="pt-sec" id="sec-fixed" data-sec="fixed" hidden>
+      <h1>Fixed MERFISH cohort — calibrated τ</h1>
+      <p class="pt-lede">The frozen model applied once to this project's fixed zygotes. These embryos
+        have <b>no ground-truth time</b>; the interval is the calibration's held-out uncertainty
+        carried over, and it assumes the live→fixed geometry transfer holds.</p>
+      <div class="pt-ctlbar">
+        <label class="pt-ctl"><span class="pt-ctl-l">Order by</span>
+          <select id="fx-order">
+            <option value="tau">Calibrated τ</option>
+            <option value="legacy">Legacy surface-gap score</option>
+            <option value="label">Embryo label</option>
+          </select></label>
+        <label class="pt-tg" title="Out-of-domain zygotes have geometry outside the training range, so their tau is an extrapolation. They are excluded from downstream regressions by default."><input type="checkbox" id="fx-ood"><span>Show out-of-domain embryos (excluded by default)</span></label>
+        <button class="pt-btn" id="fx-csv">Download CSV</button>
+        <button class="pt-btn" id="fx-json">Download JSON</button>
+      </div>
+      <div class="pt-warn" id="fx-exclude"></div>
+      <div class="pt-plot pt-plot-tall" id="fx-plot"></div>
+
+      <div class="pt-block">
+        <h2>Calibrated <span class="lc">τ</span> vs the legacy surface-gap score
+          <span class="pt-sub">two different quantities — shown side by side, never merged</span></h2>
+        <p class="pt-note" id="fx-legacy-note"></p>
+        <div class="pt-plot" id="fx-cmp"></div>
+      </div>
+
+      <div class="pt-block">
+        <h2>All fixed zygotes <span class="pt-sub">click a row to open it in the Pronuclei viewer</span></h2>
+        <div class="pt-tablewrap pt-scroll"><table class="pt-table pt-table-fixed" id="fx-table"></table></div>
+      </div>
+    </section>
+
+    <!-- ═══════════ 8 · NOISE CEILING / ATTENUATION ═══════════ -->
+    <section class="pt-sec" id="sec-noise" data-sec="noise" hidden>
+      <h1>What pseudotime noise does to transcript R²</h1>
+      <p class="pt-lede">The clock has a measured error. Any transcript-versus-pseudotime fit is
+        therefore <b>attenuated</b>: a real biological trend shows up weaker than it truly is,
+        because the x-axis itself is noisy. This section quantifies that attenuation, so an observed
+        R² can be <i>interpreted</i> rather than dismissed — the analysis requested in the 23 Jul
+        meeting.</p>
+
+      <div class="pt-warn" id="nc-guard"></div>
+
+      <div class="pt-block">
+        <h2>Clock reliability <span class="pt-sub">from untouched nested outer-test predictions only</span></h2>
+        <div class="pt-kpis pt-kpis-sm" id="nc-rel"></div>
+        <p class="pt-note" id="nc-hours"></p>
+      </div>
+
+      <div class="pt-block">
+        <h2>Attenuation curve <span class="pt-sub">latent true R² → what you would actually observe</span></h2>
+        <div class="pt-ctlbar">
+          <label class="pt-ctl"><span class="pt-ctl-l">Trend shape</span>
+            <select id="nc-shape"></select></label>
+          <label class="pt-tg"><input type="checkbox" id="nc-band" checked><span>95% simulation band</span></label>
+          <label class="pt-tg"><input type="checkbox" id="nc-ident" checked><span>No-attenuation line</span></label>
+          <label class="pt-tg"><input type="checkbox" id="nc-marker" checked><span>Predeclared gene marker</span></label>
+        </div>
+        <div class="pt-plot pt-plot-tall" id="nc-plot"></div>
+        <p class="pt-note" id="nc-note"></p>
+      </div>
+
+      <div class="pt-block">
+        <h2>Predeclared downstream illustration <span class="pt-sub">frozen clock · genes fixed in source before running</span></h2>
+        <div class="pt-verdict" id="nc-verdict"></div>
+        <div class="pt-tablewrap"><table class="pt-table" id="nc-genes"></table></div>
+        <p class="pt-note" id="nc-scan"></p>
+      </div>
+    </section>
+
+    <!-- ═══════════ LIMITATIONS (always last) ═══════════ -->
+    <section class="pt-sec" id="sec-limits" data-sec="limits" hidden>
+      <h1>Scientific limitations</h1>
+      <div id="lim-body"></div>
+    </section>
+
+  </main>
+
+  <script src="viewer-core.js"></script>
+  <script src="pseudotime-calibration.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

@@ -22,6 +22,7 @@ export const PROJECTS = [
   { key: "sperm-pca", label: "Sperm Prediction (PCA)" },
   { key: "axes", label: "Fertilization Geometry" },
   { key: "alphabeta", label: "Sperm α/β · 2-cell" },
+  { key: "pseudotime-calibration", label: "Pronuclear Pseudotime Calibration" },
 ];
 const KEYS = new Set(PROJECTS.map((p) => p.key));
 const DEFAULTS = { "Kathy Tam": ["pronuclei", "extpt"] };   // seeded on first run

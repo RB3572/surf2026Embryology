@@ -31,6 +31,7 @@
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
   const rankNEl = $("#rank-n"), rankPosEl = $("#rank-pos"), rankNegEl = $("#rank-neg");
   const ptToggle = $("#pseudotime-toggle");
+  const clockSel = $("#pn-clock");
   const regionSel = $("#region-sel"), normSel = $("#norm-sel"), flipToggle = $("#flip-toggle");
   const setAdd = $("#set-add"), setChipsEl = $("#set-chips"), setPresetsEl = $("#set-presets"),
         setRequireAllEl = $("#set-requireall"), setClearEl = $("#set-clear"),
@@ -40,6 +41,9 @@
   const state = { points: [], byId: {}, genesAgg: null, gaById: {}, geneCorr: [], userGene: null, rankN: 10,
                   currentId: null, scene: null, fit: null, drawerOpen: false, showDots: false,
                   regType: "linear", dotSize: 1.5, pseudotime: false,
+                  // x-axis clock. DEFAULT STAYS "legacy" so established analyses are unchanged
+                  // until the new calibration has been reviewed. calib/calById are filled in init.
+                  clock: "legacy", calib: null, calById: {},
                   region: "all", norm: "count", flip: false, segData: null,
                   geneSet: [], setRequireAll: false, graphTab: "gene" };
   const PLOT_OF = { gene: geneScatter, total: scatterPlot, set: setScatter };
@@ -48,12 +52,17 @@
 
   (async function init() {
     try {
-      const [m, ga, sd] = await Promise.all([
+      const [m, ga, sd, cal] = await Promise.all([
         (await fetch("data/pronuclei_manifest.json")).json(),
         V.loadGz("data/pronuclei_genes.json.gz"),
         V.loadGz("data/pronuclei_segcounts.json.gz").catch(() => null),   // per-segment counts + volumes (optional)
+        // calibrated pseudotime (optional — the page works unchanged without it)
+        fetch("data/pronuclei_pseudotime.json").then((r) => (r.ok ? r.json() : null)).catch(() => null),
       ]);
       state.points = m.embryos; state.genesAgg = ga; state.segData = sd;
+      state.calib = cal;
+      state.calById = {};
+      if (cal) (cal.embryos || []).forEach((e) => (state.calById[e.id] = e));
       state.points.forEach((p) => (state.byId[p.id] = p));
       state.genesAgg.embryos.forEach((e) => (state.gaById[e.id] = e));
       countEl.textContent = `${m.embryos.length} zygotes · pronuclei auto-detected inside the cytoplasm`;
@@ -65,6 +74,13 @@
       }));
       wireDrawer(); wireRdrawer(); wireGraphTabs(); renderRanks();
       ptToggle.addEventListener("change", () => { state.pseudotime = ptToggle.checked; renderAllScatters(); });
+      applyClockAvail();
+      if (clockSel) clockSel.addEventListener("change", () => {
+        state.clock = clockSel.value; syncClockUI(); renderAllScatters();
+      });
+      // deep link from the calibration page: ?embryo=<id>
+      const want = new URLSearchParams(location.search).get("embryo");
+      if (want && state.byId[want]) selectEmbryo(want);
       vcExtras = V.addWindowExtras($("#controls-body"), { defaultSize: state.dotSize, onDotSize: (s) => { state.dotSize = s; if (state.scene) render(); } });
       geneSelect.addEventListener("change", () => selectGene(geneSelect.value));
       rankNEl.addEventListener("change", () => { state.rankN = parseInt(rankNEl.value, 10) || 10; renderRanks(); });
@@ -210,7 +226,28 @@
       `<div class="pn-big"><span>${(s._md ? s._md.distUm : s.distance_um)}</span> µm <span class="pn-lbl">pronuclei distance</span></div>` +
       `<div class="pn-big"><span>${s.total_transcripts.toLocaleString()}</span> <span class="pn-lbl">total transcripts</span></div>` +
       `<div class="pn-resid"><b>${gene()}</b> here: ${gc != null ? gc.toLocaleString() + " transcripts" : "not in this zygote's panel"}</div>` +
-      `<div class="pn-resid">pronuclei auto-detected as segments <b>${s.pron_labels[0]}</b> &amp; <b>${s.pron_labels[1]}</b></div>`;
+      `<div class="pn-resid">pronuclei auto-detected as segments <b>${s.pron_labels[0]}</b> &amp; <b>${s.pron_labels[1]}</b></div>` +
+      calibratedReadout(s.id);
+  }
+  // Calibrated pseudotime for this zygote (from the frozen Pronuclear Pseudotime Calibration
+  // model). Absent data or an unavailable prediction shows an explicit reason, never a zero.
+  function calibratedReadout(id) {
+    if (!state.calib) return "";
+    const r = (state.calib.embryos || []).find((e) => e.id === id);
+    const meta = state.calib.meta;
+    const ver = `<span class="pn-cal-ver">${meta.model_version}</span>`;
+    if (!r) return `<div class="pn-cal"><span class="pn-cal-na">calibrated τ not available</span>` +
+      `<span class="pn-cal-why">this zygote is not in the calibration output</span></div>`;
+    if (r.tau == null) return `<div class="pn-cal"><span class="pn-cal-na">calibrated τ not available</span>` +
+      `<span class="pn-cal-why">${r.reason || "no prediction"}</span>${ver}</div>`;
+    const cls = r.qc === "pass" ? "ok" : r.qc === "caution" ? "warn" : "bad";
+    return `<div class="pn-cal">` +
+      `<div class="pn-big"><span>${r.tau.toFixed(3)}</span> <span class="pn-lbl">calibrated τ` +
+      ` (0 = PN formation → 1 = NEBD)</span></div>` +
+      `<div class="pn-cal-ci">95% interval ${r.lo95.toFixed(2)} – ${r.hi95.toFixed(2)}` +
+      ` · <span class="pn-cal-qc pn-cal-${cls}">QC ${r.qc}</span>${ver}</div>` +
+      (r.reason ? `<div class="pn-cal-why">${r.reason}</div>` : "") +
+      `</div>`;
   }
 
   // ---------- region + normalization + gene-set config (bottom drawer) ----------
@@ -559,11 +596,58 @@
     });
   }
   function updRegNote() { const m = MODELS[state.regType] || MODELS.linear; if (regNoteEl) regNoteEl.textContent = m.bio; }
-  // pseudotime = max(distance among the plotted embryos) − distance, so larger = later in
-  // development (pronuclei approach over time). maxD is per-chart (the embryos being plotted).
+  // LEGACY surface-gap ordering score = max(gap among the plotted embryos) − gap, so larger =
+  // later. It is a relative ordering with no time unit, and its scale depends on which embryos
+  // happen to be plotted. Kept as the DEFAULT so published analyses are unchanged.
   const ptx = (dists, maxD) => (state.pseudotime ? dists.map((d) => maxD - d) : dists);
-  const PT_X_TITLE = "pseudotime  ·  max distance − pronuclei distance (larger = later)";
-  const X_TITLE = () => (state.pseudotime ? PT_X_TITLE : "min pronuclei distance (µm)  ·  smaller = later in development");
+  const PT_X_TITLE = "legacy surface-gap ordering score  ·  max gap − pronuclei gap (larger = later)";
+  const X_TITLE = () => (state.clock === "calibrated" ? CAL_X_TITLE
+    : state.pseudotime ? PT_X_TITLE : "min pronuclei surface gap (µm)  ·  smaller = later in development");
+  const CAL_X_TITLE = "calibrated pseudotime τ  ·  0 = pronuclear formation → 1 = NEBD";
+
+  // Build the x axis for one scatter. In calibrated mode the x value is the frozen model's τ and
+  // embryos without a prediction are dropped (never plotted as zero); the y/id/label arrays are
+  // filtered in lockstep so nothing desynchronises.
+  function clockX(rawDists, ids, labels, Y) {
+    if (state.clock !== "calibrated") {
+      return { X: ptx(rawDists, Math.max(...rawDists)), Y, ids, labels, dropped: 0 };
+    }
+    const X = [], Y2 = [], I = [], L = [];
+    let dropped = 0;
+    for (let i = 0; i < ids.length; i++) {
+      const r = state.calById[ids[i]];
+      if (!r || r.tau == null) { dropped++; continue; }
+      X.push(r.tau); Y2.push(Y[i]); I.push(ids[i]); L.push(labels[i]);
+    }
+    return { X, Y: Y2, ids: I, labels: L, dropped };
+  }
+  const clockUnit = () => (state.clock === "calibrated" ? "" : state.pseudotime ? "" : "µm");
+  function clockNote(dropped) {
+    if (state.clock !== "calibrated") return "";
+    const v = state.calib ? state.calib.meta.model_version : "?";
+    return ` · <span class="pn-cal-inline">calibrated τ (${v})</span>` +
+      (dropped ? ` · <b>${dropped}</b> without a τ estimate excluded` : "");
+  }
+  // Calibrated mode needs the artifact; disable the control (with a reason) when it is missing.
+  function applyClockAvail() {
+    if (!clockSel) return;
+    if (state.calib) return;
+    const opt = [...clockSel.options].find((o) => o.value === "calibrated");
+    if (opt) { opt.disabled = true; opt.textContent += " — not built"; }
+    clockSel.title = "Calibrated τ unavailable — run build_pronuclei_pseudotime.py";
+    state.clock = "legacy"; clockSel.value = "legacy";
+  }
+  // The legacy pseudotime checkbox only applies to the legacy score.
+  function syncClockUI() {
+    const cal = state.clock === "calibrated";
+    if (ptToggle) {
+      ptToggle.disabled = cal;
+      ptToggle.parentElement.style.opacity = cal ? 0.45 : 1;
+      ptToggle.parentElement.title = cal
+        ? "Not applicable: calibrated τ is already an absolute 0→1 developmental axis"
+        : ptToggle.parentElement.dataset.t0 || "";
+    }
+  }
   const RENDER = { gene: () => renderGeneScatter(), total: () => renderScatter(), set: () => renderSetScatter() };
   function renderActive() { (RENDER[state.graphTab] || RENDER.gene)(); }
   function renderAllScatters() { renderActive(); }        // only the visible graph needs (re)drawing
@@ -580,14 +664,18 @@
   function renderScatter() {
     if (!shown(scatterPlot)) return;                       // skip the graphs on hidden tabs
     const pts = state.points.filter((p) => hasSeg(p.id));   // region≠all drops embryos without per-segment data
-    const dists = pts.map((p) => p.distance);
-    const Y = pts.map((p) => normVal(totalIn(p.id), p.id));
-    const X = ptx(dists, Math.max(...dists));
+    const c = clockX(pts.map((p) => p.distance), pts.map((p) => p.id), pts.map((p) => p.label),
+                     pts.map((p) => normVal(totalIn(p.id), p.id)));
+    const X = c.X, Y = c.Y;
+    if (X.length < 3) {
+      scatterPlot.innerHTML = `<div class="pn-empty">Only ${X.length} zygote(s) have a calibrated τ — too few to fit.</div>`;
+      pnFit.innerHTML = clockNote(c.dropped); return;
+    }
     state.fit = fitModel(state.regType, X, Y);
-    scatter(scatterPlot, X, Y, pts.map((p) => p.id), pts.map((p) => p.label), state.fit,
-      X_TITLE(), yLabel("total transcripts"), yUnitNow(), state.currentId, state.pseudotime ? "" : "µm", yFmtNow());
+    scatter(scatterPlot, X, Y, c.ids, c.labels, state.fit,
+      X_TITLE(), yLabel("total transcripts"), yUnitNow(), state.currentId, clockUnit(), yFmtNow());
     const f = state.fit;
-    pnFit.innerHTML = `· <b>${f.n}</b> zygotes · ${statsHtml(X, Y, f)}`;
+    pnFit.innerHTML = `· <b>${f.n}</b> zygotes · ${statsHtml(X, Y, f)}${clockNote(c.dropped)}`;
   }
   function renderGeneScatter() {
     if (!shown(geneScatter)) return;
@@ -604,12 +692,16 @@
       geneFit.innerHTML = `· <b>${g}</b>`;
       return;
     }
-    const X = ptx(xs, Math.max(...xs)), Y = ys;
+    const c = clockX(xs, ids, labels, ys);
+    const X = c.X, Y = c.Y;
+    if (X.length < 3) {
+      geneScatter.innerHTML = `<div class="pn-empty">Only ${X.length} zygote(s) with <b>${g}</b> have a calibrated τ — too few to fit.</div>`;
+      geneFit.innerHTML = `· <b>${g}</b>${clockNote(c.dropped)}`; return;
+    }
     const model = fitModel(state.regType, X, Y);
-    scatter(geneScatter, X, Y, ids, labels, model,
-      state.pseudotime ? "pseudotime" : "min pronuclei distance (µm)", yLabel(`${g} count`), yUnitNow(), state.currentId,
-      state.pseudotime ? "" : "µm", yFmtNow());
-    geneFit.innerHTML = `· <b>${g}</b> · n=${xs.length} · ${statsHtml(X, Y, model)}`;
+    scatter(geneScatter, X, Y, c.ids, c.labels, model,
+      X_TITLE(), yLabel(`${g} count`), yUnitNow(), state.currentId, clockUnit(), yFmtNow());
+    geneFit.innerHTML = `· <b>${g}</b> · n=${X.length} · ${statsHtml(X, Y, model)}${clockNote(c.dropped)}`;
   }
   // Gene-set scatter: per zygote, SUM the set genes' counts (in the chosen region) vs distance.
   // "require all" → only zygotes that contain every set gene (identical gene list per point);
@@ -644,11 +736,16 @@
       setFit.innerHTML = `· <b>${nSet}</b> gene${nSet === 1 ? "" : "s"}`;
       return;
     }
-    const X = ptx(s.xs, Math.max(...s.xs)), Y = s.ys;
+    const c = clockX(s.xs, s.ids, s.labels, s.ys);
+    const X = c.X, Y = c.Y;
+    if (X.length < 3) {
+      setScatter.innerHTML = `<div class="pn-empty">Only ${X.length} zygote(s) have a calibrated τ — too few to fit.</div>`;
+      setFit.innerHTML = `· <b>${nSet}</b> gene${nSet === 1 ? "" : "s"}${clockNote(c.dropped)}`; return;
+    }
     const model = fitModel(state.regType, X, Y);
-    scatter(setScatter, X, Y, s.ids, s.labels, model,
-      X_TITLE(), yLabel("Σ set count"), yUnitNow(), state.currentId, state.pseudotime ? "" : "µm", yFmtNow());
-    setFit.innerHTML = `· <b>${nSet}</b> gene${nSet === 1 ? "" : "s"} · <b>${s.xs.length}</b> zygotes · ${state.setRequireAll ? "all present" : "≥1 present"} · ${statsHtml(X, Y, model)}`;
+    scatter(setScatter, X, Y, c.ids, c.labels, model,
+      X_TITLE(), yLabel("Σ set count"), yUnitNow(), state.currentId, clockUnit(), yFmtNow());
+    setFit.innerHTML = `· <b>${nSet}</b> gene${nSet === 1 ? "" : "s"} · <b>${X.length}</b> zygotes · ${state.setRequireAll ? "all present" : "≥1 present"} · ${statsHtml(X, Y, model)}${clockNote(c.dropped)}`;
   }
 
   // ---------- right drawer: correlation ranking ----------

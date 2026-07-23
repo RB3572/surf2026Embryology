@@ -1,0 +1,1827 @@
+{
+ "meta": {
+  "model_version": "pnpt-2.0.0",
+  "data_version": "scheffler2021-v1",
+  "seed": 20260723,
+  "trained_at_utc": "2026-07-23T22:15:38+00:00",
+  "n_outer_folds": 5,
+  "n_inner_folds": 4,
+  "split_strategy": "NESTED GroupKFold on embryo_id: outer folds are untouched evaluation embryos; inner folds inside each outer-train set do all model/feature/hyperparameter selection",
+  "target": "tau = (t - pronuclear formation) / (NEBD - pronuclear formation)",
+  "selection_rule": "lowest inner-CV macro MAE (mean of per-embryo MAE, so each embryo counts once); ties within 0.002 broken by higher strict pairwise ordering accuracy, then by lower complexity rank",
+  "model_class": "empirical geometry-to-time calibration; NOT a mechanistic model of forces or pronuclear migration",
+  "sklearn_version": "1.6.1",
+  "changes_from_v1": [
+   "nested outer/inner grouped CV replaces single-level OOF used for both selection and reporting (v1 was selection-optimistic)",
+   "group-aware split-conformal with disjoint fit/calibration/test embryos replaces the circular same-residual quantile-and-coverage",
+   "explicit pair counting replaces (Kendall tau-b + 1)/2 as ordering accuracy",
+   "added a smooth monotone spline candidate that competes under the same inner-CV rule"
+  ]
+ },
+ "dataset": {
+  "source_csv": "calibration_data/scheffler2021/scheffler_2021_control_zygote_trajectories.csv",
+  "sha256": "af781a219b3b2e66508a53f3921daabf87da03da3f4be83a37771b2243ebd3a8",
+  "data_version": "scheffler2021-v1",
+  "n_embryos": 53,
+  "n_frames": 2057,
+  "frames_per_embryo": {
+   "min": 35,
+   "max": 41,
+   "median": 39.0
+  },
+  "frame_interval_h": 0.25,
+  "migration_duration_h": {
+   "min": 8.75,
+   "max": 11.75,
+   "median": 9.75
+  },
+  "tau_range": [
+   0.0,
+   0.9756
+  ],
+  "deployable_features": [
+   "nearer_to_center_um",
+   "farther_to_center_um",
+   "distance_sum_um",
+   "distance_difference_um"
+  ],
+  "excluded_columns": [
+   "male_to_center_um",
+   "female_to_center_um",
+   "male_relative_volume",
+   "female_relative_volume",
+   "volume_sum",
+   "volume_difference"
+  ],
+  "exclusion_reason": "male_*/female_* need pronuclear identity, absent in fixed zygotes; *volume* columns are normalised to each pronucleus's own future endpoint volume, so they leak elapsed time",
+  "validation": {
+   "checks_passed": [
+    "53 embryos",
+    "2057 rows",
+    "required columns present",
+    "no missing values in deployable features",
+    "time_h monotonic within embryo",
+    "tau within [0,1]",
+    "tau == time_h / migration_duration_h"
+   ],
+   "notes": [
+    "3 missing values in non-deployable columns (never used)"
+   ]
+  }
+ },
+ "folds": {
+  "outer_assignment": {
+   "Scheffler2021_Z01": 3,
+   "Scheffler2021_Z02": 1,
+   "Scheffler2021_Z03": 1,
+   "Scheffler2021_Z04": 0,
+   "Scheffler2021_Z05": 2,
+   "Scheffler2021_Z06": 3,
+   "Scheffler2021_Z07": 2,
+   "Scheffler2021_Z08": 3,
+   "Scheffler2021_Z09": 3,
+   "Scheffler2021_Z10": 0,
+   "Scheffler2021_Z11": 4,
+   "Scheffler2021_Z12": 0,
+   "Scheffler2021_Z13": 1,
+   "Scheffler2021_Z14": 2,
+   "Scheffler2021_Z15": 3,
+   "Scheffler2021_Z16": 4,
+   "Scheffler2021_Z17": 3,
+   "Scheffler2021_Z18": 4,
+   "Scheffler2021_Z19": 2,
+   "Scheffler2021_Z20": 2,
+   "Scheffler2021_Z21": 1,
+   "Scheffler2021_Z22": 1,
+   "Scheffler2021_Z23": 0,
+   "Scheffler2021_Z24": 4,
+   "Scheffler2021_Z25": 3,
+   "Scheffler2021_Z26": 2,
+   "Scheffler2021_Z27": 0,
+   "Scheffler2021_Z28": 1,
+   "Scheffler2021_Z29": 1,
+   "Scheffler2021_Z30": 0,
+   "Scheffler2021_Z31": 4,
+   "Scheffler2021_Z32": 3,
+   "Scheffler2021_Z33": 2,
+   "Scheffler2021_Z34": 1,
+   "Scheffler2021_Z35": 4,
+   "Scheffler2021_Z36": 1,
+   "Scheffler2021_Z37": 3,
+   "Scheffler2021_Z38": 4,
+   "Scheffler2021_Z39": 2,
+   "Scheffler2021_Z40": 3,
+   "Scheffler2021_Z41": 0,
+   "Scheffler2021_Z42": 4,
+   "Scheffler2021_Z43": 2,
+   "Scheffler2021_Z44": 4,
+   "Scheffler2021_Z45": 0,
+   "Scheffler2021_Z46": 4,
+   "Scheffler2021_Z47": 3,
+   "Scheffler2021_Z48": 0,
+   "Scheffler2021_Z49": 4,
+   "Scheffler2021_Z50": 2,
+   "Scheffler2021_Z51": 2,
+   "Scheffler2021_Z52": 1,
+   "Scheffler2021_Z53": 0
+  },
+  "outer_sizes": [
+   {
+    "fold": 0,
+    "n_embryos": 10,
+    "n_frames": 391
+   },
+   {
+    "fold": 1,
+    "n_embryos": 10,
+    "n_frames": 391
+   },
+   {
+    "fold": 2,
+    "n_embryos": 11,
+    "n_frames": 425
+   },
+   {
+    "fold": 3,
+    "n_embryos": 11,
+    "n_frames": 425
+   },
+   {
+    "fold": 4,
+    "n_embryos": 11,
+    "n_frames": 425
+   }
+  ]
+ },
+ "nested_evaluation": {
+  "description": "Unbiased: every prediction below comes from a model chosen by an inner CV that never saw this embryo, then fitted without it.",
+  "outer_test_metrics": {
+   "macro_mae": 0.09088,
+   "pooled_mae": 0.09101,
+   "median_ae": 0.06899,
+   "pooled_rmse": 0.11982,
+   "pearson_r": 0.90682,
+   "pearson_r2": 0.82232,
+   "pooled_spearman": 0.89907,
+   "pooled_kendall_tau_b": 0.73032,
+   "pooled_ordering": {
+    "comparable": 2107282,
+    "concordant": 1820128,
+    "discordant": 280819,
+    "tied_pred": 6335,
+    "tied_true": 7314,
+    "strict_accuracy": 0.86373,
+    "half_credit_accuracy": 0.86524,
+    "tie_rate": 0.00301,
+    "inversion_rate": 0.13326
+   },
+   "macro_within_embryo_ordering": 0.96697,
+   "macro_within_embryo_spearman": 0.9903
+  },
+  "bootstrap_ci95_by_embryo": {
+   "macro_mae": [
+    0.08078,
+    0.10164
+   ],
+   "pearson_r": [
+    0.88875,
+    0.92639
+   ],
+   "pearson_r2": [
+    0.78988,
+    0.8582
+   ],
+   "pooled_spearman": [
+    0.87969,
+    0.92163
+   ],
+   "pooled_strict_ordering": [
+    0.84998,
+    0.88249
+   ],
+   "macro_within_embryo_ordering": [
+    0.95933,
+    0.97335
+   ]
+  },
+  "per_outer_fold": [
+   {
+    "outer_fold": 0,
+    "chosen_by_inner_cv": "isotonic_sum",
+    "chosen_label": "Isotonic \u00b7 distance sum",
+    "n_train_embryos": 43,
+    "n_test_embryos": 10,
+    "n_train_frames": 1666,
+    "n_test_frames": 391,
+    "test_embryos": [
+     "Scheffler2021_Z04",
+     "Scheffler2021_Z10",
+     "Scheffler2021_Z12",
+     "Scheffler2021_Z23",
+     "Scheffler2021_Z27",
+     "Scheffler2021_Z30",
+     "Scheffler2021_Z41",
+     "Scheffler2021_Z45",
+     "Scheffler2021_Z48",
+     "Scheffler2021_Z53"
+    ],
+    "inner_scores": {
+     "linear_sum": {
+      "macro_mae": 0.1023,
+      "strict_ordering": 0.86986
+     },
+     "linear_nearer": {
+      "macro_mae": 0.10632,
+      "strict_ordering": 0.84945
+     },
+     "isotonic_sum": {
+      "macro_mae": 0.08924,
+      "strict_ordering": 0.86389
+     },
+     "isotonic_nearer": {
+      "macro_mae": 0.103,
+      "strict_ordering": 0.83849
+     },
+     "monospline_sum": {
+      "macro_mae": 0.09382,
+      "strict_ordering": 0.87028
+     },
+     "ridge_core": {
+      "macro_mae": 0.10173,
+      "strict_ordering": 0.86284
+     },
+     "ridge_symmetric": {
+      "macro_mae": 0.10173,
+      "strict_ordering": 0.86281
+     },
+     "hgb_symmetric": {
+      "macro_mae": 0.0917,
+      "strict_ordering": 0.86398
+     }
+    },
+    "outer_test_metrics": {
+     "macro_mae": 0.08416,
+     "pooled_mae": 0.08377,
+     "median_ae": 0.05575,
+     "pooled_rmse": 0.11275,
+     "pearson_r": 0.91927,
+     "pearson_r2": 0.84505,
+     "pooled_spearman": 0.91872,
+     "pooled_kendall_tau_b": 0.76642,
+     "pooled_ordering": {
+      "comparable": 76007,
+      "concordant": 65696,
+      "discordant": 8179,
+      "tied_pred": 2132,
+      "tied_true": 238,
+      "strict_accuracy": 0.86434,
+      "half_credit_accuracy": 0.87837,
+      "tie_rate": 0.02805,
+      "inversion_rate": 0.10761
+     },
+     "macro_within_embryo_ordering": 0.96862,
+     "macro_within_embryo_spearman": 0.99735
+    }
+   },
+   {
+    "outer_fold": 1,
+    "chosen_by_inner_cv": "isotonic_sum",
+    "chosen_label": "Isotonic \u00b7 distance sum",
+    "n_train_embryos": 43,
+    "n_test_embryos": 10,
+    "n_train_frames": 1666,
+    "n_test_frames": 391,
+    "test_embryos": [
+     "Scheffler2021_Z02",
+     "Scheffler2021_Z03",
+     "Scheffler2021_Z13",
+     "Scheffler2021_Z21",
+     "Scheffler2021_Z22",
+     "Scheffler2021_Z28",
+     "Scheffler2021_Z29",
+     "Scheffler2021_Z34",
+     "Scheffler2021_Z36",
+     "Scheffler2021_Z52"
+    ],
+    "inner_scores": {
+     "linear_sum": {
+      "macro_mae": 0.0996,
+      "strict_ordering": 0.87684
+     },
+     "linear_nearer": {
+      "macro_mae": 0.10304,
+      "strict_ordering": 0.85522
+     },
+     "isotonic_sum": {
+      "macro_mae": 0.08508,
+      "strict_ordering": 0.87125
+     },
+     "isotonic_nearer": {
+      "macro_mae": 0.09914,
+      "strict_ordering": 0.84596
+     },
+     "monospline_sum": {
+      "macro_mae": 0.08751,
+      "strict_ordering": 0.87731
+     },
+     "ridge_core": {
+      "macro_mae": 0.09979,
+      "strict_ordering": 0.86487
+     },
+     "ridge_symmetric": {
+      "macro_mae": 0.0998,
+      "strict_ordering": 0.86481
+     },
+     "hgb_symmetric": {
+      "macro_mae": 0.09345,
+      "strict_ordering": 0.86258
+     }
+    },
+    "outer_test_metrics": {
+     "macro_mae": 0.10654,
+     "pooled_mae": 0.10684,
+     "median_ae": 0.07923,
+     "pooled_rmse": 0.13863,
+     "pearson_r": 0.87424,
+     "pearson_r2": 0.7643,
+     "pooled_spearman": 0.86888,
+     "pooled_kendall_tau_b": 0.70283,
+     "pooled_ordering": {
+      "comparable": 76009,
+      "concordant": 63470,
+      "discordant": 10643,
+      "tied_pred": 1896,
+      "tied_true": 236,
+      "strict_accuracy": 0.83503,
+      "half_credit_accuracy": 0.8475,
+      "tie_rate": 0.02494,
+      "inversion_rate": 0.14002
+     },
+     "macro_within_embryo_ordering": 0.95984,
+     "macro_within_embryo_spearman": 0.98949
+    }
+   },
+   {
+    "outer_fold": 2,
+    "chosen_by_inner_cv": "isotonic_sum",
+    "chosen_label": "Isotonic \u00b7 distance sum",
+    "n_train_embryos": 42,
+    "n_test_embryos": 11,
+    "n_train_frames": 1632,
+    "n_test_frames": 425,
+    "test_embryos": [
+     "Scheffler2021_Z05",
+     "Scheffler2021_Z07",
+     "Scheffler2021_Z14",
+     "Scheffler2021_Z19",
+     "Scheffler2021_Z20",
+     "Scheffler2021_Z26",
+     "Scheffler2021_Z33",
+     "Scheffler2021_Z39",
+     "Scheffler2021_Z43",
+     "Scheffler2021_Z50",
+     "Scheffler2021_Z51"
+    ],
+    "inner_scores": {
+     "linear_sum": {
+      "macro_mae": 0.10398,
+      "strict_ordering": 0.86987
+     },
+     "linear_nearer": {
+      "macro_mae": 0.10929,
+      "strict_ordering": 0.84563
+     },
+     "isotonic_sum": {
+      "macro_mae": 0.08922,
+      "strict_ordering": 0.8624
+     },
+     "isotonic_nearer": {
+      "macro_mae": 0.10524,
+      "strict_ordering": 0.83587
+     },
+     "monospline_sum": {
+      "macro_mae": 0.09257,
+      "strict_ordering": 0.86943
+     },
+     "ridge_core": {
+      "macro_mae": 0.10358,
+      "strict_ordering": 0.86332
+     },
+     "ridge_symmetric": {
+      "macro_mae": 0.10358,
+      "strict_ordering": 0.8633
+     },
+     "hgb_symmetric": {
+      "macro_mae": 0.09197,
+      "strict_ordering": 0.86273
+     }
+    },
+    "outer_test_metrics": {
+     "macro_mae": 0.08738,
+     "pooled_mae": 0.08825,
+     "median_ae": 0.06811,
+     "pooled_rmse": 0.11372,
+     "pearson_r": 0.91883,
+     "pearson_r2": 0.84425,
+     "pooled_spearman": 0.91445,
+     "pooled_kendall_tau_b": 0.76446,
+     "pooled_ordering": {
+      "comparable": 89856,
+      "concordant": 77752,
+      "discordant": 9848,
+      "tied_pred": 2256,
+      "tied_true": 244,
+      "strict_accuracy": 0.8653,
+      "half_credit_accuracy": 0.87785,
+      "tie_rate": 0.02511,
+      "inversion_rate": 0.1096
+     },
+     "macro_within_embryo_ordering": 0.97136,
+     "macro_within_embryo_spearman": 0.99725
+    }
+   },
+   {
+    "outer_fold": 3,
+    "chosen_by_inner_cv": "monospline_sum",
+    "chosen_label": "Monotone spline \u00b7 distance sum",
+    "n_train_embryos": 42,
+    "n_test_embryos": 11,
+    "n_train_frames": 1632,
+    "n_test_frames": 425,
+    "test_embryos": [
+     "Scheffler2021_Z01",
+     "Scheffler2021_Z06",
+     "Scheffler2021_Z08",
+     "Scheffler2021_Z09",
+     "Scheffler2021_Z15",
+     "Scheffler2021_Z17",
+     "Scheffler2021_Z25",
+     "Scheffler2021_Z32",
+     "Scheffler2021_Z37",
+     "Scheffler2021_Z40",
+     "Scheffler2021_Z47"
+    ],
+    "inner_scores": {
+     "linear_sum": {
+      "macro_mae": 0.10276,
+      "strict_ordering": 0.8657
+     },
+     "linear_nearer": {
+      "macro_mae": 0.10947,
+      "strict_ordering": 0.84271
+     },
+     "isotonic_sum": {
+      "macro_mae": 0.09391,
+      "strict_ordering": 0.85481
+     },
+     "isotonic_nearer": {
+      "macro_mae": 0.10832,
+      "strict_ordering": 0.83342
+     },
+     "monospline_sum": {
+      "macro_mae": 0.0955,
+      "strict_ordering": 0.86301
+     },
+     "ridge_core": {
+      "macro_mae": 0.10311,
+      "strict_ordering": 0.85854
+     },
+     "ridge_symmetric": {
+      "macro_mae": 0.10312,
+      "strict_ordering": 0.85852
+     },
+     "hgb_symmetric": {
+      "macro_mae": 0.09577,
+      "strict_ordering": 0.85982
+     }
+    },
+    "outer_test_metrics": {
+     "macro_mae": 0.09095,
+     "pooled_mae": 0.09105,
+     "median_ae": 0.07476,
+     "pooled_rmse": 0.11825,
+     "pearson_r": 0.91086,
+     "pearson_r2": 0.82966,
+     "pooled_spearman": 0.91983,
+     "pooled_kendall_tau_b": 0.77919,
+     "pooled_ordering": {
+      "comparable": 89970,
+      "concordant": 80062,
+      "discordant": 9908,
+      "tied_pred": 0,
+      "tied_true": 130,
+      "strict_accuracy": 0.88987,
+      "half_credit_accuracy": 0.88987,
+      "tie_rate": 0.0,
+      "inversion_rate": 0.11013
+     },
+     "macro_within_embryo_ordering": 0.99163,
+     "macro_within_embryo_spearman": 0.99787
+    }
+   },
+   {
+    "outer_fold": 4,
+    "chosen_by_inner_cv": "hgb_symmetric",
+    "chosen_label": "Gradient boosting \u00b7 symmetric distances",
+    "n_train_embryos": 42,
+    "n_test_embryos": 11,
+    "n_train_frames": 1632,
+    "n_test_frames": 425,
+    "test_embryos": [
+     "Scheffler2021_Z11",
+     "Scheffler2021_Z16",
+     "Scheffler2021_Z18",
+     "Scheffler2021_Z24",
+     "Scheffler2021_Z31",
+     "Scheffler2021_Z35",
+     "Scheffler2021_Z38",
+     "Scheffler2021_Z42",
+     "Scheffler2021_Z44",
+     "Scheffler2021_Z46",
+     "Scheffler2021_Z49"
+    ],
+    "inner_scores": {
+     "linear_sum": {
+      "macro_mae": 0.10465,
+      "strict_ordering": 0.86606
+     },
+     "linear_nearer": {
+      "macro_mae": 0.10907,
+      "strict_ordering": 0.84351
+     },
+     "isotonic_sum": {
+      "macro_mae": 0.09247,
+      "strict_ordering": 0.85912
+     },
+     "isotonic_nearer": {
+      "macro_mae": 0.10489,
+      "strict_ordering": 0.83403
+     },
+     "monospline_sum": {
+      "macro_mae": 0.09525,
+      "strict_ordering": 0.86289
+     },
+     "ridge_core": {
+      "macro_mae": 0.10398,
+      "strict_ordering": 0.85888
+     },
+     "ridge_symmetric": {
+      "macro_mae": 0.10398,
+      "strict_ordering": 0.85883
+     },
+     "hgb_symmetric": {
+      "macro_mae": 0.09196,
+      "strict_ordering": 0.86439
+     }
+    },
+    "outer_test_metrics": {
+     "macro_mae": 0.0862,
+     "pooled_mae": 0.08583,
+     "median_ae": 0.06338,
+     "pooled_rmse": 0.11486,
+     "pearson_r": 0.91789,
+     "pearson_r2": 0.84252,
+     "pooled_spearman": 0.90776,
+     "pooled_kendall_tau_b": 0.7503,
+     "pooled_ordering": {
+      "comparable": 89791,
+      "concordant": 78601,
+      "discordant": 11143,
+      "tied_pred": 47,
+      "tied_true": 309,
+      "strict_accuracy": 0.87538,
+      "half_credit_accuracy": 0.87564,
+      "tie_rate": 0.00052,
+      "inversion_rate": 0.1241
+     },
+     "macro_within_embryo_ordering": 0.94288,
+     "macro_within_embryo_spearman": 0.97013
+    }
+   }
+  ],
+  "inner_selection_stability": {
+   "isotonic_sum": 3,
+   "monospline_sum": 1,
+   "hgb_symmetric": 1
+  },
+  "per_embryo": {
+   "Scheffler2021_Z01": {
+    "n": 40,
+    "mae": 0.16727,
+    "rmse": 0.20083,
+    "bias": -0.16655,
+    "spearman": 0.99775,
+    "strict_ordering": 0.98718,
+    "tie_rate": 0.0
+   },
+   "Scheffler2021_Z02": {
+    "n": 37,
+    "mae": 0.16503,
+    "rmse": 0.18607,
+    "bias": -0.16385,
+    "spearman": 0.99579,
+    "strict_ordering": 0.96246,
+    "tie_rate": 0.03303
+   },
+   "Scheffler2021_Z03": {
+    "n": 38,
+    "mae": 0.042,
+    "rmse": 0.05133,
+    "bias": 0.03575,
+    "spearman": 0.99891,
+    "strict_ordering": 0.98578,
+    "tie_rate": 0.01138
+   },
+   "Scheffler2021_Z04": {
+    "n": 39,
+    "mae": 0.03498,
+    "rmse": 0.04505,
+    "bias": 0.00075,
+    "spearman": 0.99878,
+    "strict_ordering": 0.97841,
+    "tie_rate": 0.02024
+   },
+   "Scheffler2021_Z05": {
+    "n": 39,
+    "mae": 0.12963,
+    "rmse": 0.15261,
+    "bias": -0.12885,
+    "spearman": 0.99747,
+    "strict_ordering": 0.96896,
+    "tie_rate": 0.02834
+   },
+   "Scheffler2021_Z06": {
+    "n": 35,
+    "mae": 0.10029,
+    "rmse": 0.11458,
+    "bias": 0.06898,
+    "spearman": 0.99188,
+    "strict_ordering": 0.98151,
+    "tie_rate": 0.0
+   },
+   "Scheffler2021_Z07": {
+    "n": 35,
+    "mae": 0.03867,
+    "rmse": 0.04846,
+    "bias": 0.01042,
+    "spearman": 0.99481,
+    "strict_ordering": 0.95798,
+    "tie_rate": 0.03866
+   },
+   "Scheffler2021_Z08": {
+    "n": 38,
+    "mae": 0.10554,
+    "rmse": 0.12017,
+    "bias": 0.07358,
+    "spearman": 0.99956,
+    "strict_ordering": 0.99716,
+    "tie_rate": 0.0
+   },
+   "Scheffler2021_Z09": {
+    "n": 38,
+    "mae": 0.11435,
+    "rmse": 0.13627,
+    "bias": 0.07968,
+    "spearman": 0.99869,
+    "strict_ordering": 0.99289,
+    "tie_rate": 0.0
+   },
+   "Scheffler2021_Z10": {
+    "n": 41,
+    "mae": 0.17929,
+    "rmse": 0.19404,
+    "bias": -0.17929,
+    "spearman": 0.999,
+    "strict_ordering": 0.98171,
+    "tie_rate": 0.01829
+   },
+   "Scheffler2021_Z11": {
+    "n": 41,
+    "mae": 0.08744,
+    "rmse": 0.10422,
+    "bias": 0.08223,
+    "spearman": 0.98018,
+    "strict_ordering": 0.9439,
+    "tie_rate": 0.00366
+   },
+   "Scheffler2021_Z12": {
+    "n": 37,
+    "mae": 0.11096,
+    "rmse": 0.12662,
+    "bias": 0.10851,
+    "spearman": 0.99578,
+    "strict_ordering": 0.95946,
+    "tie_rate": 0.03754
+   },
+   "Scheffler2021_Z13": {
+    "n": 37,
+    "mae": 0.06538,
+    "rmse": 0.07901,
+    "bias": 0.02902,
+    "spearman": 0.99662,
+    "strict_ordering": 0.96997,
+    "tie_rate": 0.02402
+   },
+   "Scheffler2021_Z14": {
+    "n": 37,
+    "mae": 0.07086,
+    "rmse": 0.09115,
+    "bias": 0.06302,
+    "spearman": 0.99929,
+    "strict_ordering": 0.98498,
+    "tie_rate": 0.01502
+   },
+   "Scheffler2021_Z15": {
+    "n": 36,
+    "mae": 0.0641,
+    "rmse": 0.07777,
+    "bias": 0.02448,
+    "spearman": 0.99768,
+    "strict_ordering": 0.98889,
+    "tie_rate": 0.0
+   },
+   "Scheffler2021_Z16": {
+    "n": 39,
+    "mae": 0.10097,
+    "rmse": 0.14546,
+    "bias": -0.09977,
+    "spearman": 0.92479,
+    "strict_ordering": 0.90283,
+    "tie_rate": 0.0027
+   },
+   "Scheffler2021_Z17": {
+    "n": 41,
+    "mae": 0.03599,
+    "rmse": 0.04401,
+    "bias": 0.01212,
+    "spearman": 0.9993,
+    "strict_ordering": 0.99634,
+    "tie_rate": 0.0
+   },
+   "Scheffler2021_Z18": {
+    "n": 38,
+    "mae": 0.06499,
+    "rmse": 0.08727,
+    "bias": -0.03751,
+    "spearman": 0.98446,
+    "strict_ordering": 0.95875,
+    "tie_rate": 0.0
+   },
+   "Scheffler2021_Z19": {
+    "n": 41,
+    "mae": 0.08465,
+    "rmse": 0.11658,
+    "bias": -0.07999,
+    "spearman": 0.99865,
+    "strict_ordering": 0.97073,
+    "tie_rate": 0.02927
+   },
+   "Scheffler2021_Z20": {
+    "n": 40,
+    "mae": 0.08091,
+    "rmse": 0.1003,
+    "bias": -0.03836,
+    "spearman": 0.99361,
+    "strict_ordering": 0.9641,
+    "tie_rate": 0.02564
+   },
+   "Scheffler2021_Z21": {
+    "n": 41,
+    "mae": 0.16667,
+    "rmse": 0.19187,
+    "bias": -0.16019,
+    "spearman": 0.9784,
+    "strict_ordering": 0.94512,
+    "tie_rate": 0.02805
+   },
+   "Scheffler2021_Z22": {
+    "n": 39,
+    "mae": 0.04206,
+    "rmse": 0.05342,
+    "bias": 0.00951,
+    "spearman": 0.99818,
+    "strict_ordering": 0.97706,
+    "tie_rate": 0.02024
+   },
+   "Scheffler2021_Z23": {
+    "n": 41,
+    "mae": 0.04298,
+    "rmse": 0.05384,
+    "bias": 0.00194,
+    "spearman": 0.99695,
+    "strict_ordering": 0.96829,
+    "tie_rate": 0.02683
+   },
+   "Scheffler2021_Z24": {
+    "n": 41,
+    "mae": 0.09229,
+    "rmse": 0.12018,
+    "bias": -0.0867,
+    "spearman": 0.98219,
+    "strict_ordering": 0.95,
+    "tie_rate": 0.00122
+   },
+   "Scheffler2021_Z25": {
+    "n": 41,
+    "mae": 0.05495,
+    "rmse": 0.06866,
+    "bias": 0.02129,
+    "spearman": 0.99913,
+    "strict_ordering": 0.99512,
+    "tie_rate": 0.0
+   },
+   "Scheffler2021_Z26": {
+    "n": 41,
+    "mae": 0.08632,
+    "rmse": 0.10538,
+    "bias": -0.0577,
+    "spearman": 0.99328,
+    "strict_ordering": 0.95976,
+    "tie_rate": 0.03171
+   },
+   "Scheffler2021_Z27": {
+    "n": 41,
+    "mae": 0.05006,
+    "rmse": 0.07314,
+    "bias": -0.04337,
+    "spearman": 0.99861,
+    "strict_ordering": 0.97561,
+    "tie_rate": 0.02439
+   },
+   "Scheffler2021_Z28": {
+    "n": 39,
+    "mae": 0.14579,
+    "rmse": 0.16704,
+    "bias": -0.14124,
+    "spearman": 0.99878,
+    "strict_ordering": 0.98381,
+    "tie_rate": 0.0135
+   },
+   "Scheffler2021_Z29": {
+    "n": 41,
+    "mae": 0.17839,
+    "rmse": 0.20873,
+    "bias": 0.15556,
+    "spearman": 0.93226,
+    "strict_ordering": 0.84634,
+    "tie_rate": 0.11829
+   },
+   "Scheffler2021_Z30": {
+    "n": 41,
+    "mae": 0.05312,
+    "rmse": 0.06877,
+    "bias": -0.01694,
+    "spearman": 0.99529,
+    "strict_ordering": 0.96098,
+    "tie_rate": 0.03293
+   },
+   "Scheffler2021_Z31": {
+    "n": 41,
+    "mae": 0.0715,
+    "rmse": 0.08947,
+    "bias": 0.071,
+    "spearman": 0.98271,
+    "strict_ordering": 0.95488,
+    "tie_rate": 0.00122
+   },
+   "Scheffler2021_Z32": {
+    "n": 41,
+    "mae": 0.10514,
+    "rmse": 0.13817,
+    "bias": -0.06776,
+    "spearman": 0.99895,
+    "strict_ordering": 0.9939,
+    "tie_rate": 0.0
+   },
+   "Scheffler2021_Z33": {
+    "n": 41,
+    "mae": 0.08988,
+    "rmse": 0.10724,
+    "bias": 0.08643,
+    "spearman": 0.99874,
+    "strict_ordering": 0.97805,
+    "tie_rate": 0.02073
+   },
+   "Scheffler2021_Z34": {
+    "n": 41,
+    "mae": 0.07843,
+    "rmse": 0.08869,
+    "bias": 0.06089,
+    "spearman": 0.99904,
+    "strict_ordering": 0.97683,
+    "tie_rate": 0.02317
+   },
+   "Scheffler2021_Z35": {
+    "n": 40,
+    "mae": 0.08314,
+    "rmse": 0.11663,
+    "bias": -0.06988,
+    "spearman": 0.97303,
+    "strict_ordering": 0.94359,
+    "tie_rate": 0.00385
+   },
+   "Scheffler2021_Z36": {
+    "n": 41,
+    "mae": 0.06124,
+    "rmse": 0.07572,
+    "bias": 0.05954,
+    "spearman": 0.99843,
+    "strict_ordering": 0.97805,
+    "tie_rate": 0.01951
+   },
+   "Scheffler2021_Z37": {
+    "n": 40,
+    "mae": 0.12132,
+    "rmse": 0.14391,
+    "bias": 0.0887,
+    "spearman": 0.99794,
+    "strict_ordering": 0.99103,
+    "tie_rate": 0.0
+   },
+   "Scheffler2021_Z38": {
+    "n": 38,
+    "mae": 0.05274,
+    "rmse": 0.06676,
+    "bias": 0.04237,
+    "spearman": 0.99185,
+    "strict_ordering": 0.97013,
+    "tie_rate": 0.00142
+   },
+   "Scheffler2021_Z39": {
+    "n": 40,
+    "mae": 0.13014,
+    "rmse": 0.15198,
+    "bias": 0.12566,
+    "spearman": 0.99742,
+    "strict_ordering": 0.96923,
+    "tie_rate": 0.02692
+   },
+   "Scheffler2021_Z40": {
+    "n": 38,
+    "mae": 0.0752,
+    "rmse": 0.09206,
+    "bias": 0.04358,
+    "spearman": 0.99825,
+    "strict_ordering": 0.99147,
+    "tie_rate": 0.0
+   },
+   "Scheffler2021_Z41": {
+    "n": 39,
+    "mae": 0.0672,
+    "rmse": 0.09588,
+    "bias": -0.03959,
+    "spearman": 0.99731,
+    "strict_ordering": 0.96221,
+    "tie_rate": 0.03779
+   },
+   "Scheffler2021_Z42": {
+    "n": 39,
+    "mae": 0.08289,
+    "rmse": 0.11115,
+    "bias": 0.04937,
+    "spearman": 0.91841,
+    "strict_ordering": 0.90013,
+    "tie_rate": 0.0027
+   },
+   "Scheffler2021_Z43": {
+    "n": 38,
+    "mae": 0.13112,
+    "rmse": 0.15326,
+    "bias": -0.12246,
+    "spearman": 0.99863,
+    "strict_ordering": 0.97155,
+    "tie_rate": 0.02845
+   },
+   "Scheffler2021_Z44": {
+    "n": 35,
+    "mae": 0.13397,
+    "rmse": 0.16769,
+    "bias": 0.12932,
+    "spearman": 0.97913,
+    "strict_ordering": 0.9479,
+    "tie_rate": 0.00336
+   },
+   "Scheffler2021_Z45": {
+    "n": 37,
+    "mae": 0.12545,
+    "rmse": 0.15207,
+    "bias": 0.11905,
+    "spearman": 0.99822,
+    "strict_ordering": 0.97147,
+    "tie_rate": 0.02853
+   },
+   "Scheffler2021_Z46": {
+    "n": 37,
+    "mae": 0.10153,
+    "rmse": 0.12727,
+    "bias": 0.09863,
+    "spearman": 0.97819,
+    "strict_ordering": 0.95195,
+    "tie_rate": 0.0
+   },
+   "Scheffler2021_Z47": {
+    "n": 37,
+    "mae": 0.05627,
+    "rmse": 0.07213,
+    "bias": 0.02204,
+    "spearman": 0.99739,
+    "strict_ordering": 0.99249,
+    "tie_rate": 0.0
+   },
+   "Scheffler2021_Z48": {
+    "n": 38,
+    "mae": 0.10779,
+    "rmse": 0.12939,
+    "bias": 0.09283,
+    "spearman": 0.99792,
+    "strict_ordering": 0.97013,
+    "tie_rate": 0.02845
+   },
+   "Scheffler2021_Z49": {
+    "n": 36,
+    "mae": 0.07675,
+    "rmse": 0.09829,
+    "bias": 0.07009,
+    "spearman": 0.97651,
+    "strict_ordering": 0.94762,
+    "tie_rate": 0.00159
+   },
+   "Scheffler2021_Z50": {
+    "n": 36,
+    "mae": 0.04858,
+    "rmse": 0.06408,
+    "bias": 0.03732,
+    "spearman": 0.99845,
+    "strict_ordering": 0.9746,
+    "tie_rate": 0.02381
+   },
+   "Scheffler2021_Z51": {
+    "n": 37,
+    "mae": 0.07045,
+    "rmse": 0.09688,
+    "bias": -0.06876,
+    "spearman": 0.99935,
+    "strict_ordering": 0.98498,
+    "tie_rate": 0.01502
+   },
+   "Scheffler2021_Z52": {
+    "n": 37,
+    "mae": 0.12038,
+    "rmse": 0.15152,
+    "bias": -0.11596,
+    "spearman": 0.99852,
+    "strict_ordering": 0.97297,
+    "tie_rate": 0.02703
+   },
+   "Scheffler2021_Z53": {
+    "n": 37,
+    "mae": 0.0698,
+    "rmse": 0.10029,
+    "bias": -0.03541,
+    "spearman": 0.99567,
+    "strict_ordering": 0.95796,
+    "tie_rate": 0.03904
+   }
+  }
+ },
+ "models": [
+  {
+   "key": "linear_sum",
+   "label": "Linear \u00b7 distance sum",
+   "features": [
+    "distance_sum_um"
+   ],
+   "n_features": 1,
+   "complexity": "2 parameters",
+   "deployable": true,
+   "note": "transparent one-feature baseline",
+   "inner_cv_macro_mae_mean": 0.10266,
+   "inner_cv_macro_mae_per_outer": [
+    0.1023,
+    0.0996,
+    0.10398,
+    0.10276,
+    0.10465
+   ],
+   "inner_cv_strict_ordering_mean": 0.86967,
+   "chosen_in_n_outer_folds": 0,
+   "selected_for_production": false
+  },
+  {
+   "key": "linear_nearer",
+   "label": "Linear \u00b7 nearer distance",
+   "features": [
+    "nearer_to_center_um"
+   ],
+   "n_features": 1,
+   "complexity": "2 parameters",
+   "deployable": true,
+   "note": "one-feature baseline on the nearer pronucleus",
+   "inner_cv_macro_mae_mean": 0.10744,
+   "inner_cv_macro_mae_per_outer": [
+    0.10632,
+    0.10304,
+    0.10929,
+    0.10947,
+    0.10907
+   ],
+   "inner_cv_strict_ordering_mean": 0.8473,
+   "chosen_in_n_outer_folds": 0,
+   "selected_for_production": false
+  },
+  {
+   "key": "isotonic_sum",
+   "label": "Isotonic \u00b7 distance sum",
+   "features": [
+    "distance_sum_um"
+   ],
+   "n_features": 1,
+   "complexity": "monotone step function",
+   "deployable": true,
+   "note": "monotone, assumes direction not constant speed; produces prediction TIES",
+   "inner_cv_macro_mae_mean": 0.08998,
+   "inner_cv_macro_mae_per_outer": [
+    0.08924,
+    0.08508,
+    0.08922,
+    0.09391,
+    0.09247
+   ],
+   "inner_cv_strict_ordering_mean": 0.86229,
+   "chosen_in_n_outer_folds": 3,
+   "selected_for_production": true
+  },
+  {
+   "key": "isotonic_nearer",
+   "label": "Isotonic \u00b7 nearer distance",
+   "features": [
+    "nearer_to_center_um"
+   ],
+   "n_features": 1,
+   "complexity": "monotone step function",
+   "deployable": true,
+   "note": "monotone step calibration of the nearer pronucleus",
+   "inner_cv_macro_mae_mean": 0.10412,
+   "inner_cv_macro_mae_per_outer": [
+    0.103,
+    0.09914,
+    0.10524,
+    0.10832,
+    0.10489
+   ],
+   "inner_cv_strict_ordering_mean": 0.83755,
+   "chosen_in_n_outer_folds": 0,
+   "selected_for_production": false
+  },
+  {
+   "key": "monospline_sum",
+   "label": "Monotone spline \u00b7 distance sum",
+   "features": [
+    "distance_sum_um"
+   ],
+   "n_features": 1,
+   "complexity": "I-spline, 6 knots, non-negative coefs",
+   "deployable": true,
+   "note": "smooth monotone alternative to isotonic \u2014 continuous, no step ties",
+   "inner_cv_macro_mae_mean": 0.09293,
+   "inner_cv_macro_mae_per_outer": [
+    0.09382,
+    0.08751,
+    0.09257,
+    0.0955,
+    0.09525
+   ],
+   "inner_cv_strict_ordering_mean": 0.86858,
+   "chosen_in_n_outer_folds": 1,
+   "selected_for_production": false
+  },
+  {
+   "key": "ridge_core",
+   "label": "Ridge \u00b7 near+far",
+   "features": [
+    "nearer_to_center_um",
+    "farther_to_center_um"
+   ],
+   "n_features": 2,
+   "complexity": "2 features, L2",
+   "deployable": true,
+   "note": "regularised linear on the two sorted distances",
+   "inner_cv_macro_mae_mean": 0.10244,
+   "inner_cv_macro_mae_per_outer": [
+    0.10173,
+    0.09979,
+    0.10358,
+    0.10311,
+    0.10398
+   ],
+   "inner_cv_strict_ordering_mean": 0.86169,
+   "chosen_in_n_outer_folds": 0,
+   "selected_for_production": false
+  },
+  {
+   "key": "ridge_symmetric",
+   "label": "Ridge \u00b7 symmetric distances",
+   "features": [
+    "nearer_to_center_um",
+    "farther_to_center_um",
+    "distance_sum_um",
+    "distance_difference_um"
+   ],
+   "n_features": 4,
+   "complexity": "4 features, L2",
+   "deployable": true,
+   "note": "adds the (redundant) sum and difference",
+   "inner_cv_macro_mae_mean": 0.10244,
+   "inner_cv_macro_mae_per_outer": [
+    0.10173,
+    0.0998,
+    0.10358,
+    0.10312,
+    0.10398
+   ],
+   "inner_cv_strict_ordering_mean": 0.86165,
+   "chosen_in_n_outer_folds": 0,
+   "selected_for_production": false
+  },
+  {
+   "key": "hgb_symmetric",
+   "label": "Gradient boosting \u00b7 symmetric distances",
+   "features": [
+    "nearer_to_center_um",
+    "farther_to_center_um",
+    "distance_sum_um",
+    "distance_difference_um"
+   ],
+   "n_features": 4,
+   "complexity": "depth-3 trees, 200 iters",
+   "deployable": true,
+   "note": "the one nonlinear candidate",
+   "inner_cv_macro_mae_mean": 0.09297,
+   "inner_cv_macro_mae_per_outer": [
+    0.0917,
+    0.09345,
+    0.09197,
+    0.09577,
+    0.09196
+   ],
+   "inner_cv_strict_ordering_mean": 0.8627,
+   "chosen_in_n_outer_folds": 1,
+   "selected_for_production": false
+  },
+  {
+   "key": "LEAKY_ridge_volumes",
+   "label": "Ridge \u00b7 distances + endpoint-normalised volumes",
+   "features": [
+    "nearer_to_center_um",
+    "farther_to_center_um",
+    "distance_sum_um",
+    "distance_difference_um",
+    "male_relative_volume",
+    "female_relative_volume",
+    "volume_sum",
+    "volume_difference"
+   ],
+   "n_features": 8,
+   "complexity": "8 features, L2",
+   "deployable": false,
+   "note": "NON-DEPLOYABLE upper bound: relative volumes are normalised to each pronucleus's own future endpoint volume, so they encode elapsed time and cannot be measured in a fixed snapshot.",
+   "selected_for_production": false,
+   "nested_outer_test_metrics": {
+    "macro_mae": 0.04995,
+    "pooled_mae": 0.05018,
+    "median_ae": 0.04216,
+    "pooled_rmse": 0.06502,
+    "pearson_r": 0.97358,
+    "pearson_r2": 0.94785,
+    "pooled_spearman": 0.97881,
+    "pooled_kendall_tau_b": 0.88004,
+    "pooled_ordering": {
+     "comparable": 2107282,
+     "concordant": 1979772,
+     "discordant": 124068,
+     "tied_pred": 3442,
+     "tied_true": 7314,
+     "strict_accuracy": 0.93949,
+     "half_credit_accuracy": 0.94031,
+     "tie_rate": 0.00163,
+     "inversion_rate": 0.05888
+    },
+    "macro_within_embryo_ordering": 0.99161,
+    "macro_within_embryo_spearman": 0.99728
+   }
+  }
+ ],
+ "production": {
+  "key": "isotonic_sum",
+  "label": "Isotonic \u00b7 distance sum",
+  "features": [
+   "distance_sum_um"
+  ],
+  "spec": {
+   "kind": "IsotonicOnFeature",
+   "features": [
+    "distance_sum_um"
+   ],
+   "form": "tau = isotonic(sign*x)",
+   "sign": -1.0,
+   "knots_x": [
+    -72.7055,
+    -62.88974,
+    -62.84347,
+    -61.33216,
+    -60.97823,
+    -58.10462,
+    -57.78819,
+    -56.5601,
+    -56.49511,
+    -56.21594,
+    -56.18957,
+    -55.85689,
+    -55.76399,
+    -55.29508,
+    -55.18782,
+    -55.09011,
+    -52.70746,
+    -52.69976,
+    -49.08889,
+    -49.03851,
+    -48.96662,
+    -48.81479,
+    -48.7317,
+    -46.78186,
+    -46.73941,
+    -46.71564,
+    -44.02972,
+    -44.01081,
+    -43.97737,
+    -43.93747,
+    -42.17936,
+    -42.1304,
+    -41.77613,
+    -41.72515,
+    -41.12095,
+    -41.10495,
+    -41.04409,
+    -40.96111,
+    -40.72967,
+    -40.68259,
+    -40.51741,
+    -40.51181,
+    -38.7885,
+    -38.77493,
+    -37.81916,
+    -37.78307,
+    -37.27527,
+    -37.27122,
+    -36.55789,
+    -36.55476,
+    -36.05733,
+    -36.05656,
+    -36.01023,
+    -35.97979,
+    -35.86822,
+    -35.82064,
+    -35.44246,
+    -35.43726,
+    -34.88167,
+    -34.86587,
+    -34.75191,
+    -34.74723,
+    -34.29245,
+    -34.28328,
+    -33.15236,
+    -33.11623,
+    -32.94521,
+    -32.92331,
+    -32.76398,
+    -32.7534,
+    -32.74534,
+    -32.24301,
+    -32.18264,
+    -32.14645,
+    -32.11858,
+    -31.52001,
+    -31.48787,
+    -31.18515,
+    -31.18021,
+    -30.69338,
+    -30.69044,
+    -29.45145,
+    -29.42717,
+    -29.17642,
+    -29.14141,
+    -28.84354,
+    -28.84078,
+    -28.69403,
+    -28.63194,
+    -28.27109,
+    -28.20937,
+    -27.39607,
+    -27.39211,
+    -27.37202,
+    -27.35811,
+    -26.87026,
+    -26.86118,
+    -26.80547,
+    -26.78126,
+    -26.41807,
+    -26.41743,
+    -26.3117,
+    -26.30595,
+    -25.66689,
+    -25.65186,
+    -25.29049,
+    -25.27955,
+    -24.5931,
+    -24.57612,
+    -24.24856,
+    -24.2396,
+    -23.65261,
+    -23.63722,
+    -22.84511,
+    -22.82997,
+    -22.18817,
+    -22.116565,
+    -22.10758,
+    -22.10618,
+    -21.353224,
+    -21.341029,
+    -21.296967,
+    -21.28489,
+    -20.828611,
+    -20.825486,
+    -20.77628,
+    -20.761729,
+    -20.176923,
+    -20.169685,
+    -19.53506,
+    -19.526346,
+    -19.143826,
+    -19.122642,
+    -19.079073,
+    -19.073424,
+    -18.98669,
+    -18.977743,
+    -18.313174,
+    -18.310514,
+    -18.309301,
+    -18.300839,
+    -18.291345,
+    -18.287764,
+    -18.280115,
+    -18.082067,
+    -18.075874,
+    -17.670533,
+    -17.636555,
+    -17.612116,
+    -17.04684,
+    -16.99015,
+    -16.49738,
+    -16.294803
+   ],
+   "knots_y": [
+    0.0,
+    0.0,
+    0.00271,
+    0.00271,
+    0.006171,
+    0.006171,
+    0.007218,
+    0.007218,
+    0.014977,
+    0.014977,
+    0.02439,
+    0.02439,
+    0.025641,
+    0.035754,
+    0.035754,
+    0.037353,
+    0.037353,
+    0.052483,
+    0.052483,
+    0.052632,
+    0.06036,
+    0.06036,
+    0.086699,
+    0.086699,
+    0.102564,
+    0.109,
+    0.109,
+    0.139285,
+    0.139285,
+    0.140071,
+    0.140071,
+    0.140503,
+    0.140503,
+    0.162929,
+    0.162929,
+    0.182085,
+    0.182085,
+    0.187595,
+    0.187595,
+    0.189684,
+    0.189684,
+    0.200295,
+    0.200295,
+    0.22177,
+    0.22177,
+    0.24036,
+    0.24036,
+    0.24187,
+    0.24187,
+    0.252843,
+    0.252843,
+    0.257143,
+    0.257143,
+    0.266363,
+    0.266363,
+    0.267077,
+    0.267077,
+    0.269519,
+    0.269519,
+    0.298032,
+    0.298032,
+    0.315631,
+    0.315631,
+    0.326715,
+    0.326715,
+    0.331548,
+    0.331548,
+    0.33529,
+    0.33529,
+    0.368421,
+    0.369309,
+    0.369309,
+    0.373734,
+    0.373734,
+    0.384179,
+    0.384179,
+    0.391104,
+    0.391104,
+    0.414319,
+    0.414319,
+    0.425045,
+    0.425045,
+    0.461448,
+    0.461448,
+    0.464953,
+    0.464953,
+    0.481164,
+    0.481164,
+    0.482743,
+    0.482743,
+    0.53359,
+    0.53359,
+    0.534353,
+    0.534353,
+    0.547526,
+    0.547526,
+    0.549396,
+    0.549396,
+    0.550032,
+    0.550032,
+    0.565776,
+    0.565776,
+    0.587298,
+    0.587298,
+    0.603554,
+    0.603554,
+    0.626329,
+    0.626329,
+    0.631384,
+    0.631384,
+    0.64342,
+    0.64342,
+    0.667718,
+    0.667718,
+    0.676056,
+    0.676056,
+    0.676596,
+    0.676596,
+    0.68655,
+    0.68655,
+    0.692219,
+    0.692219,
+    0.707668,
+    0.707668,
+    0.707901,
+    0.707901,
+    0.725167,
+    0.725167,
+    0.77286,
+    0.77286,
+    0.805083,
+    0.805083,
+    0.817839,
+    0.817839,
+    0.840452,
+    0.840452,
+    0.850986,
+    0.850986,
+    0.861004,
+    0.861004,
+    0.868421,
+    0.891892,
+    0.891892,
+    0.893471,
+    0.893471,
+    0.897371,
+    0.897371,
+    0.923077,
+    0.92435,
+    0.92435,
+    0.944862,
+    0.944862,
+    0.972222
+   ]
+  },
+  "locked_by": "lowest inner-CV macro MAE (mean of per-embryo MAE, so each embryo counts once); ties within 0.002 broken by higher strict pairwise ordering accuracy, then by lower complexity rank",
+  "inner_cv_aggregate": {
+   "linear_sum": {
+    "macro_mae": 0.10266,
+    "strict_ordering": 0.86967
+   },
+   "linear_nearer": {
+    "macro_mae": 0.10744,
+    "strict_ordering": 0.8473
+   },
+   "isotonic_sum": {
+    "macro_mae": 0.08998,
+    "strict_ordering": 0.86229
+   },
+   "isotonic_nearer": {
+    "macro_mae": 0.10412,
+    "strict_ordering": 0.83755
+   },
+   "monospline_sum": {
+    "macro_mae": 0.09293,
+    "strict_ordering": 0.86858
+   },
+   "ridge_core": {
+    "macro_mae": 0.10244,
+    "strict_ordering": 0.86169
+   },
+   "ridge_symmetric": {
+    "macro_mae": 0.10244,
+    "strict_ordering": 0.86165
+   },
+   "hgb_symmetric": {
+    "macro_mae": 0.09297,
+    "strict_ordering": 0.8627
+   }
+  },
+  "feature_stats": {
+   "nearer_to_center_um": {
+    "min": 6.2592,
+    "max": 33.0516,
+    "mean": 13.9964,
+    "std": 4.7086,
+    "p01": 6.9946,
+    "p99": 25.4281
+   },
+   "farther_to_center_um": {
+    "min": 8.5293,
+    "max": 44.3664,
+    "mean": 16.504,
+    "std": 6.1641,
+    "p01": 9.2148,
+    "p99": 37.8839
+   },
+   "distance_sum_um": {
+    "min": 16.2948,
+    "max": 72.7055,
+    "mean": 30.5004,
+    "std": 10.6168,
+    "p01": 17.3436,
+    "p99": 61.5644
+   },
+   "distance_difference_um": {
+    "min": 0.0018,
+    "max": 21.3702,
+    "mean": 2.5077,
+    "std": 2.7601,
+    "p01": 0.0346,
+    "p99": 15.1911
+   }
+  },
+  "note": "Refit on all 53 embryos AFTER nested evaluation and selection. Its honest performance is the nested outer-test estimate above, not a refit score."
+ },
+ "uncertainty": {
+  "method": "repeated 3-way EMBRYO split-conformal: disjoint fit / calibration / test embryo sets. The published half-width is the frame-pooled quantile of absolute residuals on CALIBRATION embryos, with the finite-sample correction taken over the EMBRYO count (trajectories are the independent units); coverage is then measured on different, untouched TEST embryos.",
+  "conservative_variant": {
+   "definition": "per-embryo 95th-percentile residual, then an embryo-level quantile of those \u2014 a quantile of quantiles",
+   "halfwidth_mean": 0.33554,
+   "coverage_frame_marginal": {
+    "mean": 0.9896,
+    "ci95": [
+     0.9551,
+     1.0
+    ],
+    "n_replicates": 40
+   },
+   "coverage_embryo_macro": {
+    "mean": 0.9899,
+    "ci95": [
+     0.9566,
+     1.0
+    ],
+    "n_replicates": 40
+   },
+   "comment": "over-covers by construction; reported so the cost of the stricter clustering assumption is visible rather than hidden"
+  },
+  "interval_type": "MARGINAL PER FRAME, not simultaneous per embryo: it targets 95% of frames, so a whole embryo can still sit outside. No simultaneous-coverage claim is made.",
+  "embryo_exchangeable_note": "A conformal certificate that is exact under EMBRYO exchangeability needs ceil((n+1)*0.95) <= n, i.e. n >= 19 calibration embryos. This design uses 15 calibration embryos per replicate, so the embryo-level certificate is attainable but tight; the frame-level certificate is not exact because frames within a trajectory are correlated. The reported coverage is therefore the EMPIRICALLY MEASURED value on disjoint test embryos, with a bootstrap interval \u2014 not a theoretical guarantee.",
+  "split_per_replicate": {
+   "fit_embryos": 26,
+   "calibration_embryos": 15,
+   "test_embryos": 12
+  },
+  "level": 0.95,
+  "n_replicates": 40,
+  "halfwidth_mean": 0.24464,
+  "width_mean": 0.48928,
+  "coverage_frame_marginal": {
+   "mean": 0.9483,
+   "ci95": [
+    0.8873,
+    0.9917
+   ],
+   "n_replicates": 40
+  },
+  "coverage_embryo_macro": {
+   "mean": 0.949,
+   "ci95": [
+    0.8887,
+    0.9915
+   ],
+   "n_replicates": 40
+  },
+  "coverage_by_phase": {
+   "early": {
+    "mean": 0.9853,
+    "ci95": [
+     0.9499,
+     1.0
+    ],
+    "n_replicates": 40
+   },
+   "mid": {
+    "mean": 0.9354,
+    "ci95": [
+     0.8367,
+     1.0
+    ],
+    "n_replicates": 40
+   },
+   "late": {
+    "mean": 0.9212,
+    "ci95": [
+     0.726,
+     1.0
+    ],
+    "n_replicates": 40
+   }
+  },
+  "limitations": [
+   "53 embryos is too few for a stable hard 95% guarantee; the bootstrap interval on coverage is reported instead of asserting exactly 95%.",
+   "The interval is a constant width in tau, so genuinely harder phases are under-covered and easy phases over-covered \u2014 see coverage_by_phase.",
+   "Calibrated on live-imaged embryos; transfer to fixed MERFISH geometry is assumed, not measured, because no raw 3-D stacks are public."
+  ]
+ },
+ "residual_diagnostics": {
+  "overall_mae": 0.09101,
+  "overall_bias": 9e-05,
+  "by_phase": [
+   {
+    "phase": "early",
+    "tau_range": [
+     0,
+     0.333
+    ],
+    "n": 715,
+    "mae": 0.05503,
+    "bias": 0.031
+   },
+   {
+    "phase": "mid",
+    "tau_range": [
+     0.3333333333333333,
+     0.667
+    ],
+    "n": 700,
+    "mae": 0.11075,
+    "bias": 0.04164
+   },
+   {
+    "phase": "late",
+    "tau_range": [
+     0.6666666666666666,
+     1.001
+    ],
+    "n": 642,
+    "mae": 0.10955,
+    "bias": -0.07962
+   }
+  ]
+ }
+}

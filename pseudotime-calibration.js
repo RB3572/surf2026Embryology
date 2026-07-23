@@ -132,12 +132,12 @@
     const ciTxt = (a) => (a ? `95% CI ${fmt(a[0])} – ${fmt(a[1])}` : "");
     const cov = u.coverage_frame_marginal;
     $("#sum-kpis").innerHTML =
-      kpi(fmt(m.macro_mae), "macro MAE<br><b>nested outer-test</b>", m.macro_mae <= 0.10 ? "pt-kpi-ok" : "pt-kpi-warn", ciTxt(ci.macro_mae)) +
+      kpi(fmt(m.macro_mae), "macro MAE<br><b>nested — selection procedure</b>", m.macro_mae <= 0.10 ? "pt-kpi-ok" : "pt-kpi-warn", ciTxt(ci.macro_mae)) +
       kpi(fmt(m.median_ae), "median absolute error", m.median_ae <= 0.10 ? "pt-kpi-ok" : "") +
       kpi(fmt(m.pooled_spearman), "Spearman ρ", m.pooled_spearman >= 0.8 ? "pt-kpi-ok" : "pt-kpi-warn", ciTxt(ci.pooled_spearman)) +
       kpi(pct(ORD(m)), "strict pairwise ordering<br><span class=\"pt-kpi-nb\">explicit pair counting</span>", ORD(m) >= 0.8 ? "pt-kpi-ok" : "pt-kpi-warn", ciTxt(ci.pooled_strict_ordering)) +
-      kpi(pct(cov.mean), "95% coverage<br><span class=\"pt-kpi-nb\">measured on separate embryos</span>", Math.abs(cov.mean - 0.95) <= 0.05 ? "pt-kpi-ok" : "pt-kpi-warn", `95% CI ${pct(cov.ci95[0])} – ${pct(cov.ci95[1])}`) +
-      kpi("±" + fmt(u.halfwidth_mean), "95% interval half-width", u.halfwidth_mean > 0.2 ? "pt-kpi-warn" : "");
+      kpi(pct(cov.mean), "measured coverage<br><span class=\"pt-kpi-nb\">on separate embryos · no guarantee</span>", Math.abs(cov.mean - 0.95) <= 0.05 ? "pt-kpi-ok" : "pt-kpi-warn", `95% CI ${pct(cov.ci95[0])} – ${pct(cov.ci95[1])}`) +
+      kpi("±" + fmt(u.halfwidth_mean), "empirical interval half-width<br><span class=\"pt-kpi-nb\">rigorous cluster variant ±" + fmt((u.rigorous_cluster_sensitivity || {}).halfwidth_mean) + "</span>", u.halfwidth_mean > 0.2 ? "pt-kpi-warn" : "");
 
     $("#sum-warn").innerHTML =
       `<b>Endpoint-normalized volumes are excluded from every deployable model.</b> The published
@@ -166,8 +166,11 @@
       row("Model version", `<span class="pt-mono">${esc(c.meta.model_version)}</span>`) +
       row("Features", s.features.map((f) => `<span class="pt-mono">${esc(f)}</span>`).join("<br>")) +
       row("Selection rule", esc(c.meta.selection_rule)) +
-      row("Uncertainty", esc(u.method)) +
+      row("Interval", `<b>${esc(u.interval_name)}</b> — <b style="color:#b42318">no formal ` +
+        `coverage guarantee</b>`) +
+      row("Interval method", esc(u.method)) +
       row("Interval type", esc(u.interval_type)) +
+      row("Why not conformal", esc(u.why_not_conformal)) +
       row("Seed", `<span class="pt-mono">${c.meta.seed}</span>`) +
       row("Trained (UTC)", `<span class="pt-mono">${esc(c.meta.trained_at_utc)}</span>`) +
       row("scikit-learn", `<span class="pt-mono">${esc(c.meta.sklearn_version)}</span>`);
@@ -494,7 +497,16 @@
     const stab = c.nested_evaluation.inner_selection_stability || {};
     const stabTxt = Object.entries(stab).sort((a, b) => b[1] - a[1])
       .map(([k, v]) => `<b>${esc(k)}</b> in ${v}/${nOuter}`).join(", ");
+    const ff = c.fixed_family_sensitivity;
     $("#cmp-note").innerHTML =
+      (ff ? `<div class="pt-lim" style="margin-bottom:10px"><b>Two different quantities — do not ` +
+        `conflate them</b><span><b>Nested outer-test (${fmt(c.nested_evaluation.outer_test_metrics.macro_mae)})</b> ` +
+        `estimates the performance of the <i>complete selection procedure</i>, whose chosen family ` +
+        `varied across outer folds. <b>Fixed-family grouped CV (${fmt(ff.metrics.macro_mae)}` +
+        `${ff.bootstrap_ci95_macro_mae ? ", 95% CI " + fmt(ff.bootstrap_ci95_macro_mae[0]) + "–" + fmt(ff.bootstrap_ci95_macro_mae[1]) : ""})</b> ` +
+        `scores the locked family <i>${esc(ff.label)}</i> directly, but is <b>${esc(ff.status)}</b>: ` +
+        `${esc(ff.why)} The ${fmt(Math.abs(ff.difference_vs_nested_macro_mae))} gap between them is ` +
+        `the selection optimism this design removes from the headline number.</span></div>` : "") +
       `Ranked by the criterion selection actually used: <b>mean inner-CV macro MAE</b>. ` +
       `The unbiased performance number is the single nested outer-test estimate ` +
       `(<b>${fmt(c.nested_evaluation.outer_test_metrics.macro_mae)}</b>), not any per-candidate ` +
@@ -574,33 +586,47 @@
       `<td>${pct(u.coverage_frame_marginal.mean)}</td>` +
       `<td class="pt-note">${pct(u.coverage_frame_marginal.ci95[0])} – ${pct(u.coverage_frame_marginal.ci95[1])}</td></tr>`;
 
-    const cv = u.conservative_variant || {};
+    const rc = u.rigorous_cluster_sensitivity || {};
     $("#dg-unc").innerHTML =
+      `<div class="pt-warn" style="margin-bottom:12px"><b>${esc(u.interval_name)} — no formal
+        coverage guarantee.</b> ${esc(u.why_not_conformal)}</div>` +
       `<p class="pt-lede" style="margin-bottom:10px"><b>Method.</b> ${esc(u.method)}</p>` +
       `<div class="pt-two" style="margin-bottom:12px">
-         <div class="pt-block"><h2>Published interval</h2>
+         <div class="pt-block"><h2>Primary — empirical disjoint-embryo interval</h2>
            <div class="pt-kpis pt-kpis-sm">
              <div class="pt-kpi"><div class="pt-kpi-n">±${fmt(u.halfwidth_mean)}</div>
                <div class="pt-kpi-k">half-width in τ</div></div>
              <div class="pt-kpi"><div class="pt-kpi-n">${pct(u.coverage_frame_marginal.mean)}</div>
-               <div class="pt-kpi-k">frame-marginal coverage</div>
+               <div class="pt-kpi-k">frame-marginal coverage (measured)</div>
                <div class="pt-kpi-ci">95% CI ${pct(u.coverage_frame_marginal.ci95[0])} – ${pct(u.coverage_frame_marginal.ci95[1])}</div></div>
              <div class="pt-kpi"><div class="pt-kpi-n">${pct(u.coverage_embryo_macro.mean)}</div>
-               <div class="pt-kpi-k">embryo-macro coverage</div>
+               <div class="pt-kpi-k">embryo-macro coverage (measured)</div>
                <div class="pt-kpi-ci">95% CI ${pct(u.coverage_embryo_macro.ci95[0])} – ${pct(u.coverage_embryo_macro.ci95[1])}</div></div>
-           </div></div>
-         <div class="pt-block"><h2>Conservative variant</h2>
-           <p class="pt-note">${esc(cv.definition || "")}</p>
-           <div class="pt-kpis pt-kpis-sm">
-             <div class="pt-kpi"><div class="pt-kpi-n">±${fmt(cv.halfwidth_mean)}</div>
-               <div class="pt-kpi-k">half-width in τ</div></div>
-             <div class="pt-kpi"><div class="pt-kpi-n">${pct((cv.coverage_frame_marginal || {}).mean)}</div>
-               <div class="pt-kpi-k">frame-marginal coverage</div></div>
            </div>
-           <p class="pt-note">${esc(cv.comment || "")}</p></div>
+           <p class="pt-note">Split per replicate: ${u.split_per_replicate.fit_embryos} fit /
+             ${u.split_per_replicate.calibration_embryos} calibrate /
+             ${u.split_per_replicate.test_embryos} test embryos, all disjoint.
+             Quantile computed over ${esc(u.quantile_computed_over)}.</p></div>
+         <div class="pt-block"><h2>Sensitivity — cluster-conformal construction</h2>
+           <p class="pt-note"><b>Each construction protects:</b> ${esc(rc.protects || "")}</p>
+           <div class="pt-kpis pt-kpis-sm">
+             <div class="pt-kpi"><div class="pt-kpi-n">±${fmt(rc.halfwidth_mean)}</div>
+               <div class="pt-kpi-k">MEAN half-width over ${rc.n_constructions} constructions${rc.width_ratio_vs_primary ? ` (${rc.width_ratio_vs_primary}× wider)` : ""}</div>
+               <div class="pt-kpi-ci">per-split range ${rc.halfwidth_per_split_range ? "±" + fmt(rc.halfwidth_per_split_range[0]) + " – ±" + fmt(rc.halfwidth_per_split_range[1]) : "—"}</div></div>
+             <div class="pt-kpi"><div class="pt-kpi-n">${pct((rc.coverage_simultaneous_per_embryo || {}).mean)}</div>
+               <div class="pt-kpi-k">simultaneous per-embryo coverage (measured)</div></div>
+           </div>
+           <div class="pt-warn" style="margin:10px 0 0"><b>The guarantee is per construction, not for
+             the number shown.</b> ${esc(rc.guarantee_scope || "")}</div>
+           <p class="pt-note"><b>Score:</b> ${esc(rc.nonconformity_score || "")}.
+             n_cal = ${rc.n_calibration_embryos}, k = ${rc.quantile_index_k}.
+             ${esc(rc.feasibility_note || "")}</p>
+           <p class="pt-note"><b>Assumptions:</b> ${(rc.assumptions || []).map(esc).join("; ")}.</p></div>
        </div>` +
       `<div class="pt-lim"><b>Interval type</b><span>${esc(u.interval_type)}</span></div>` +
-      `<div class="pt-lim"><b>Small-sample honesty</b><span>${esc(u.embryo_exchangeable_note)}</span></div>` +
+      `<div class="pt-lim" style="border-left-color:#b42318"><b>Applied to the fixed cohort</b>` +
+      `<span>${esc(u.applies_to_fixed_cohort_as)}</span></div>` +
+      `<div class="pt-lim"><b>Estimator caveat</b><span>${esc(u.estimator_note)}</span></div>` +
       u.limitations.map((l) => `<div class="pt-lim"><span>${esc(l)}</span></div>`).join("");
   }
 
@@ -668,13 +694,12 @@
     }], {
       margin: { l: 108, r: 20, t: 8, b: 46 },
       height: Math.max(420, 15 * ok.length + 70),
-      xaxis: { title: "calibrated τ (0 = pronuclear formation, 1 = NEBD)", range: [-0.04, 1.04],
-               gridcolor: C.grid, zeroline: false },
+      xaxis: { title: "calibrated τ (0 = pronuclear formation, 1 = NEBD) · bars = empirical interval",
+               range: [-0.04, 1.04], gridcolor: C.grid, zeroline: false },
       yaxis: { automargin: true, tickfont: { size: 9.5 }, type: "category" },
     });
     $("#fx-plot").style.height = Math.max(420, 15 * ok.length + 70) + "px";
 
-    // τ vs legacy score — two different quantities, never merged
     const both = rows.filter((r) => r.tau != null && r.legacy_surface_gap_um != null);
     plot("fx-cmp", [{
       type: "scatter", mode: "markers", x: both.map((r) => r.legacy_surface_gap_um),
@@ -689,14 +714,16 @@
     const ds = meta.domain_shift || {};
     $("#fx-legacy-note").innerHTML =
       `<b>These are different quantities and are never merged.</b> The legacy score is the minimum
-       surface-to-surface gap between the two pronuclei; calibrated τ is a cell-centred distance clock.
-       The Scheffler workbook contains <b>no surface-gap measurement</b>, so this calibration neither
-       validates nor calibrates the legacy score — the panel is a comparison, not a conversion.` +
+       surface-to-surface gap between the two pronuclei; calibrated τ is a <b>cell-centred distance</b>
+       clock. The Scheffler workbook calibrates cell-centred distance features and contains
+       <b>no surface-gap measurement</b>, so this calibration neither validates nor calibrates the
+       legacy score — the panel is a comparison, not a conversion. The legacy score remains the
+       site's default axis.` +
       (ds.consequence ? `<br><br><b>Domain shift.</b> ${esc(ds.consequence.note)}` : "");
 
     const qc = rows.reduce((m, r) => (m[r.qc] = (m[r.qc] || 0) + 1, m), {});
     $("#fx-table").innerHTML =
-      `<tr><th>Embryo</th><th>τ</th><th>95% interval</th><th>QC</th><th>nearer µm</th><th>farther µm</th>` +
+      `<tr><th>Embryo</th><th>τ</th><th>Empirical interval</th><th>QC</th><th>nearer µm</th><th>farther µm</th>` +
       `<th>Σ µm</th><th>Mahalanobis</th><th>Legacy gap µm</th><th>Model</th><th>Notes</th></tr>` +
       rows.map((r) => {
         const f = r.features || {};
@@ -721,15 +748,15 @@
 
     const kpiWrap = $("#sec-fixed").querySelector(".pt-kpis") || (() => {
       const d = document.createElement("div"); d.className = "pt-kpis pt-kpis-sm";
-      $("#fx-plot").parentNode.insertBefore(d, $("#fx-plot")); return d;
+      $("#fx-plot").parentNode.insertBefore(d, $("#fx-exclude") || $("#fx-plot")); return d;
     })();
     const kpi = (n, k, cls) => `<div class="pt-kpi ${cls || ""}"><div class="pt-kpi-n">${n}</div><div class="pt-kpi-k">${k}</div></div>`;
     kpiWrap.innerHTML =
       kpi(meta.n_predicted + " / " + meta.n_total, "zygotes with a τ estimate") +
       kpi(qc.pass || 0, "QC pass", "pt-kpi-ok") +
       kpi(qc.caution || 0, "QC caution", (qc.caution ? "pt-kpi-warn" : "")) +
-      kpi(qc["out-of-domain"] || 0, "out-of-domain", (qc["out-of-domain"] ? "pt-kpi-warn" : "")) +
-      kpi("±" + fmt(meta.halfwidth_95), "95% half-width (from live validation)");
+      kpi(nOod, "out-of-domain (excluded)", (nOod ? "pt-kpi-warn" : "")) +
+      kpi("±" + fmt(meta.halfwidth_95), "empirical half-width<br>transfer uncertainty, no guarantee");
     const ex = $("#fx-exclude");
     if (ex) ex.innerHTML = $("#fx-ood").checked
       ? `<b>Showing all ${state.fixed.embryos.length} zygotes, including ${nOod} out-of-domain.</b> ` +
@@ -773,10 +800,17 @@
       `${pct(rel.macro_within_embryo_ordering)}, inversions ${pct(rel.inversion_rate)}, ` +
       `prediction ties ${pct(rel.tie_rate)}.`;
 
-    const shapes = Object.keys(att.curves);
+    // scenario selector — the fixed-cohort-matched curve is the one relevant to MuERV-L, so it is
+    // the default when available.
+    const scen = Object.keys(att.scenarios);
+    const preferred = scen.includes("fixed_cohort_matched") ? "fixed_cohort_matched" : scen[0];
+    $("#nc-scenario").innerHTML = scen.map((k) =>
+      `<option value="${esc(k)}"${k === preferred ? " selected" : ""}>` +
+      `${esc(att.scenarios[k].label)}</option>`).join("");
+    const shapes = Object.keys(att.scenarios[preferred].curves);
     $("#nc-shape").innerHTML = shapes.map((k) =>
       `<option value="${esc(k)}">${esc(k.replace(/_/g, " "))}</option>`).join("");
-    ["nc-shape", "nc-band", "nc-ident", "nc-marker"].forEach((id) =>
+    ["nc-scenario", "nc-shape", "nc-band", "nc-ident", "nc-marker"].forEach((id) =>
       $("#" + id).addEventListener("change", drawNoise));
     drawNoise();
 
@@ -826,8 +860,13 @@
   function drawNoise() {
     const att = state.noise.attenuation;
     const dn = state.noise.downstream_illustration || {};
-    const rows = att.curves[$("#nc-shape").value] || [];
-    const x = rows.map((r) => r.latent_true_r2);
+    const scName = $("#nc-scenario").value;
+    const sc = att.scenarios[scName];
+    const rows = (sc.curves[$("#nc-shape").value] || []).filter((r) => r.achievable);
+    const unreach = (sc.curves[$("#nc-shape").value] || []).filter((r) => !r.achievable);
+    // x is the ACHIEVED true-time R², not the requested value — they agree by construction now,
+    // but plotting the achieved value is what makes the axis label literally true.
+    const x = rows.map((r) => r.achieved_true_r2_median);
     const traces = [];
     if ($("#nc-band").checked) {
       traces.push(
@@ -844,38 +883,67 @@
     traces.push({ type: "scatter", mode: "lines+markers", name: "median observed R²", x,
       y: rows.map((r) => r.observed_r2_median),
       line: { color: C.train, width: 2.4 }, marker: { size: 6 },
-      hovertemplate: "latent true R² %{x:.2f}<br>observed median %{y:.3f}<extra></extra>" });
+      hovertemplate: "achieved true R² %{x:.3f}<br>observed median %{y:.3f}<extra></extra>" });
+
+    // the OTHER scenario, faint — makes the absence of a unique inversion visible
+    const otherName = Object.keys(att.scenarios).find((k) => k !== scName);
+    if (otherName) {
+      const o = (att.scenarios[otherName].curves[$("#nc-shape").value] || [])
+        .filter((r) => r.achievable);
+      traces.push({ type: "scatter", mode: "lines", name: att.scenarios[otherName].label + " (other scenario)",
+        x: o.map((r) => r.achieved_true_r2_median), y: o.map((r) => r.observed_r2_median),
+        line: { color: "#0d9488", width: 1.6, dash: "dot" },
+        hovertemplate: "other scenario<br>achieved true R² %{x:.3f}<br>observed %{y:.3f}<extra></extra>" });
+    }
 
     const conf = (dn.results || {})[dn.confirmatory_gene];
     if ($("#nc-marker").checked && conf && conf.status === "estimable") {
-      const o = conf.observed_r2;
-      traces.push({ type: "scatter", mode: "lines", x: [0, 1], y: [o, o],
+      const ob = conf.observed_r2;
+      traces.push({ type: "scatter", mode: "lines", x: [0, 1], y: [ob, ob],
         line: { color: C.bad, width: 1.6, dash: "dot" },
-        name: `${dn.confirmatory_gene} observed R² = ${fmt(o)}`,
-        hovertemplate: `${esc(dn.confirmatory_gene)} observed R² ${fmt(o)}<extra></extra>` });
-      const comp = conf.compatible_latent_true_r2;
+        name: `${dn.confirmatory_gene} observed R² = ${fmt(ob)}`,
+        hovertemplate: `${esc(dn.confirmatory_gene)} observed R² ${fmt(ob)}<extra></extra>` });
+      const comp = (conf.compatible_latent_true_r2_by_scenario || {})[scName];
       if (comp) {
-        traces.push({ type: "scatter", mode: "markers",
-          x: [comp.min, comp.max], y: [o, o],
+        traces.push({ type: "scatter", mode: "markers", x: [comp.min, comp.max], y: [ob, ob],
           marker: { size: 11, color: C.bad, symbol: "diamond", line: { color: "#fff", width: 1.4 } },
-          name: "compatible latent range",
+          name: "compatible latent range (this scenario)",
           hovertemplate: "compatible latent true R² %{x:.2f}<extra></extra>" });
       }
     }
     plot("nc-plot", traces, {
       showlegend: true,
-      legend: { orientation: "h", x: 0, y: 1.02, yanchor: "bottom", font: { size: 10 } },
-      margin: { l: 60, r: 16, t: 54, b: 48 },
-      xaxis: { title: "latent TRUE R² (biological trend vs real τ)", range: [0, 1], gridcolor: C.grid, zeroline: false },
+      legend: { orientation: "h", x: 0, y: 1.02, yanchor: "bottom", font: { size: 9.5 } },
+      margin: { l: 60, r: 16, t: 66, b: 48 },
+      xaxis: { title: "achieved TRUE-time R² (measured, not the requested target)", range: [0, 1],
+               gridcolor: C.grid, zeroline: false },
       yaxis: { title: "observed R² (same trend vs PREDICTED τ)", range: [0, 1], gridcolor: C.grid, zeroline: false },
     });
+
+    $("#nc-scenario-note").innerHTML =
+      `<b>${esc(sc.label)}.</b> ${esc(sc.description)}. <b>Relevance:</b> ${esc(sc.relevance)}` +
+      (sc.caveat ? ` <b>Caveat:</b> ${esc(sc.caveat)}.` : ".") +
+      `<br><b>${esc(att.no_unique_inversion)}</b>`;
+
     const d = att.design;
     $("#nc-note").innerHTML =
       `Simulated as a <b>snapshot cohort</b>: ${d.n_snapshot_embryos} embryos, one frame each, ` +
-      `${d.n_replicates.toLocaleString()} replicates, ${esc(d.resampling)}. The error model is ` +
-      `<b>${esc(d.error_model)}</b> — real (true, predicted) pairs are resampled together, so the ` +
-      `step ties, heteroscedasticity and phase-dependent bias of the actual clock are preserved ` +
-      `rather than replaced by a Gaussian approximation.`;
+      `${d.n_replicates.toLocaleString()} replicates, ${esc(d.resampling)}. Error model: ` +
+      `<b>${esc(d.error_model)}</b>. Latent R²: ${esc(d.latent_r2_definition)}.`;
+
+    $("#nc-achieved").innerHTML =
+      `<tr><th>Requested (target)</th><th>Achieved true-time R² (measured median)</th>` +
+      `<th>Achieved 95% CI</th><th>Observed R² (median)</th><th>Observed 95% CI</th>` +
+      `<th>Attenuation ratio</th></tr>` +
+      rows.map((r) =>
+        `<tr><td>${fmt(r.latent_true_r2, 2)}</td><td><b>${fmt(r.achieved_true_r2_median)}</b></td>` +
+        `<td class="pt-note">${fmt(r.achieved_true_r2_ci95[0])} – ${fmt(r.achieved_true_r2_ci95[1])}</td>` +
+        `<td>${fmt(r.observed_r2_median)}</td>` +
+        `<td class="pt-note">${fmt(r.observed_r2_ci95[0])} – ${fmt(r.observed_r2_ci95[1])}</td>` +
+        `<td>${fmt(r.attenuation_ratio)}</td></tr>`).join("") +
+      unreach.map((r) =>
+        `<tr><td>${fmt(r.latent_true_r2, 2)}</td><td colspan="5" class="pt-wrap pt-note">` +
+        `NOT ACHIEVABLE — ${esc(r.reason || "")}</td></tr>`).join("");
   }
 
   // ═══════════════════════════════════ limitations ═══════════════════════════════════
@@ -898,12 +966,13 @@
        "MERFISH zygotes segmented by this project's pipeline. No raw 3-D stacks are public, so the " +
        "two geometries cannot be processed identically and the transfer error is unquantified. The " +
        "live-cohort error is therefore a LOWER BOUND on the fixed-cohort error."],
-      ["Prediction intervals are wide, constant-width, and frame-marginal",
-       `The 95% half-width is ±${fmt(u.halfwidth_mean)} in τ — about ±${(u.halfwidth_mean * 100).toFixed(0)}% ` +
-       "of the whole pronuclear-formation→NEBD interval. It is marginal per frame, not simultaneous " +
-       "per embryo, and constant in τ, so hard phases are under-covered. With 53 embryos a hard 95% " +
-       "certificate is not attainable; the measured coverage and its bootstrap interval are reported " +
-       "instead of asserting the nominal level."],
+      ["The prediction interval is EMPIRICAL, not a coverage guarantee",
+       `The published half-width is ±${fmt(u.halfwidth_mean)} in τ — about ±${(u.halfwidth_mean * 100).toFixed(0)}% ` +
+       "of the whole pronuclear-formation→NEBD interval. It is an empirical disjoint-embryo " +
+       "interval: estimated on calibration embryos, measured on different test embryos, with NO " +
+       "formal 95% certificate, because frames within a trajectory are correlated. A rigorous " +
+       `cluster-level conformal interval exists but is ±${fmt((u.rigorous_cluster_sensitivity || {}).halfwidth_mean)} ` +
+       "wide, because with 53 embryos the valid quantile is forced to the maximum per-embryo score."],
       ["Model selection is not strongly determined",
        "The inner CV did not choose the same family in every outer fold — the top candidates differ " +
        "by less than the fold-to-fold spread. The production lock is a documented tie-break, not a " +

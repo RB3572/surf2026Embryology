@@ -9,7 +9,23 @@ forces or of pronuclear migration; it makes no claim about the physics that move
 TARGET      tau = (t - pronuclear formation) / (NEBD - pronuclear formation), on [0,1].
 COHORT      Scheffler et al. 2021 public source data: 53 untreated live-imaged zygotes, 2057 frames.
 
-WHY v2 (pnpt-2.0.0) — the validation semantics changed, so the version had to change:
+WHY v3 (pnpt-3.0.0) — interval semantics and attenuation scenarios changed again:
+
+  A. THE PRIMARY INTERVAL IS NOT CONFORMAL AND NO LONGER CLAIMS TO BE.  v2 applied a frame-count
+     conformal correction while its own metadata said the correction was over the EMBRYO count, and
+     asserted that a finite exact 95% cluster certificate was "attainable" with 15 calibration
+     embryos when the threshold is 19.  Both were wrong.  The primary interval is now named an
+     EMPIRICAL DISJOINT-EMBRYO PREDICTION INTERVAL: a plain 95th percentile on calibration embryos,
+     evaluated on different test embryos, with bootstrap uncertainty and NO formal guarantee.
+  B. A genuinely rigorous CLUSTER-LEVEL conformal interval is reported separately, using ONE
+     nonconformity score per calibration embryo (max |residual|), which protects SIMULTANEOUS
+     per-embryo coverage.  With 53 embryos the valid quantile is the MAXIMUM score; the resulting
+     width is honestly wide and reported as such.
+  C. The nested score estimates the INNER-SELECTION PROCEDURE (whose chosen family varies by fold),
+     not the locked production family.  A separate, clearly post-selection fixed-family grouped-CV
+     sensitivity is now reported for the locked family.
+
+WHY v2 — the validation semantics changed, so the version had to change:
 
   1. NESTED grouped CV.  v1 chose the model and reported its score on the SAME 5 out-of-fold
      folds, which is selection-optimistic: the winner is partly chosen for fitting those folds.
@@ -18,11 +34,10 @@ WHY v2 (pnpt-2.0.0) — the validation semantics changed, so the version had to 
      predictions are reported as performance.  The production family is then locked by a
      predeclared aggregation over the inner results and refit on all 53 embryos.
 
-  2. GROUP-AWARE CONFORMAL.  v1 took the 95th percentile of the same residuals whose coverage it
-     then reported — that is circular and establishes nothing.  Now three DISJOINT embryo roles per
-     replicate: fit / conformal-calibrate / test.  The quantile comes from calibration embryos, the
-     coverage from different test embryos.  Frame-marginal AND embryo-macro coverage are reported
-     separately, with bootstrap CIs, because n=53 makes a hard 95% claim unstable.
+  2. DISJOINT-EMBRYO INTERVAL.  v1 took the 95th percentile of the same residuals whose coverage it
+     then reported — circular, establishing nothing.  Now three DISJOINT embryo roles per replicate:
+     fit / calibrate / test.  The width comes from calibration embryos, the coverage from different
+     test embryos, with bootstrap CIs.  (v3 corrects how this is NAMED — see A above.)
 
   3. EXPLICIT PAIR COUNTING.  v1 reported (Kendall tau-b + 1)/2 as "pairwise ordering accuracy".
      With a step-function predictor that is wrong — tau-b absorbs ties into a correction rather than
@@ -64,7 +79,7 @@ SRC_CSV = os.path.join(HERE, "calibration_data", "scheffler2021",
                        "scheffler_2021_control_zygote_trajectories.csv")
 OUT_DIR = os.path.join(HERE, "data", "pseudotime_calibration")
 
-MODEL_VERSION = "pnpt-2.0.0"
+MODEL_VERSION = "pnpt-3.0.0"
 DATA_VERSION = "scheffler2021-v1"
 SEED = 20260723
 N_OUTER, N_INNER = 5, 4
@@ -513,97 +528,231 @@ def main():
     # honest disclosure when the outer folds disagreed with the locked family
     stability = {k: inner_choice.count(k) for k in set(inner_choice)}
 
-    # ---------------- GROUP-AWARE conformal: fit / calibrate / test are DISJOINT embryos ----------
-    # Repeated 3-way embryo split. The quantile comes from calibration embryos; coverage is measured
-    # on different, untouched test embryos. Frame-marginal AND embryo-macro coverage reported.
+    # ───── SECONDARY: fixed-family grouped CV for the LOCKED production family ─────
+    # The nested estimate above scores the SELECTION PROCEDURE, whose chosen family varied across
+    # outer folds. It is NOT a direct unbiased score of the locked family. This block runs a plain
+    # grouped 5-fold CV holding the family FIXED at the production choice, which answers "how does
+    # isotonic-on-distance-sum itself behave out-of-fold?" — but it is POST-SELECTION and therefore
+    # DESCRIPTIVE ONLY: the family was chosen using these same 53 embryos, so this number is
+    # optimistically biased and must never be quoted as the headline performance.
+    ff_pred = np.full(len(df), np.nan)
+    for ko in range(N_OUTER):
+        te_o = outer == ko
+        ff_pred[te_o] = np.clip(fit_predict(prod, df.loc[~te_o], df.loc[te_o], y[~te_o], seed), 0, 1)
+    ff_m = metric_block(y, ff_pred, groups)
+    def _ff_mae(sel, gg):
+        e = np.abs(ff_pred[sel] - y[sel])
+        return float(np.mean([e[gg == u].mean() for u in np.unique(gg)]))
+    fixed_family = {
+        "label": prod["label"], "key": prod_key,
+        "status": "POST-SELECTION — descriptive only, NOT an unbiased estimate",
+        "why": ("The production family was locked using all 53 embryos (via the inner-CV aggregate), "
+                "so a grouped CV of that same family on the same embryos is optimistically biased. "
+                "The unbiased development-time number is the nested SELECTION-PROCEDURE estimate."),
+        "protocol": f"plain grouped {N_OUTER}-fold CV, family held fixed at the production choice",
+        "metrics": {k: v for k, v in ff_m.items() if k != "per_embryo"},
+        "bootstrap_ci95_macro_mae": boot_ci(None, groups, _ff_mae, seed, B_BOOT),
+        "difference_vs_nested_macro_mae": round(ff_m["macro_mae"] - nested["macro_mae"], 5),
+    }
+    print(f"  fixed-family sensitivity (POST-SELECTION, {prod['label']}): "
+          f"macroMAE={ff_m['macro_mae']:.4f} "
+          f"(nested selection-procedure estimate was {nested['macro_mae']:.4f})")
+
+    # ─────────── UNCERTAINTY: an EMPIRICAL interval + a RIGOROUS cluster-level sensitivity ───────
+    # HONEST FRAMING (corrected in v3). The primary interval below is NOT a formal conformal
+    # certificate and is not described as one. Frames within a trajectory are strongly correlated,
+    # so frame-level exchangeability — which any frame-count conformal correction assumes — does not
+    # hold. What we actually do is: estimate a width on CALIBRATION embryos, evaluate coverage on
+    # DIFFERENT test embryos, and report the measured coverage with bootstrap uncertainty. That is
+    # an empirical disjoint-embryo prediction interval, nothing stronger.
+    #
+    # A genuinely valid cluster-level statement needs ONE nonconformity score per embryo. With n_cal
+    # calibration embryos the conformal index is k = ceil((n_cal+1)*(1-alpha)); a finite exact 95%
+    # statement requires k <= n_cal, i.e. n_cal >= 19. Moreover k == n_cal for every n_cal in
+    # [19, 38], so with 53 embryos the valid quantile IS THE MAXIMUM of the per-embryo scores. That
+    # is rigorous but very wide, and it is reported as such rather than hidden.
+    ALPHA = 0.05
+    N_CAL_MIN = int(np.ceil(ALPHA ** -1)) - 1          # smallest n with ceil((n+1)(1-a)) <= n  -> 19
     rng = np.random.default_rng(seed + 7)
+
+    # --- primary: empirical disjoint-embryo interval (fit 50% / calibrate 30% / test 20%) ---
+    n_fit, n_cal = int(0.50 * len(embryos)), int(0.30 * len(embryos))
+    n_te = len(embryos) - n_fit - n_cal
     cov_frame, cov_macro, widths, per_phase = [], [], [], {"early": [], "mid": [], "late": []}
-    cov_frame_c, cov_macro_c, widths_c = [], [], []          # conservative embryo-level variant
-    for rep in range(N_CONF_REP):
+    for _ in range(N_CONF_REP):
         perm = rng.permutation(embryos)
-        n_fit, n_cal = int(0.50 * len(embryos)), int(0.30 * len(embryos))
         e_fit, e_cal, e_te = perm[:n_fit], perm[n_fit:n_fit + n_cal], perm[n_fit + n_cal:]
-        m_fit = np.isin(groups, e_fit); m_cal = np.isin(groups, e_cal); m_te = np.isin(groups, e_te)
+        m_fit, m_cal, m_te = (np.isin(groups, e) for e in (e_fit, e_cal, e_te))
         if not (m_fit.any() and m_cal.any() and m_te.any()):
             continue
         p_cal = np.clip(fit_predict(prod, df.loc[m_fit], df.loc[m_cal], y[m_fit], seed), 0, 1)
         p_te = np.clip(fit_predict(prod, df.loc[m_fit], df.loc[m_te], y[m_fit], seed), 0, 1)
-        res_cal = np.abs(p_cal - y[m_cal]); gcal = groups[m_cal]
-        n_e, n_f = len(np.unique(gcal)), len(res_cal)
-        # PRIMARY (published): frame-pooled quantile over CALIBRATION embryos, standard split-
-        # conformal finite-sample correction on the FRAME count. This targets a FRAME-MARGINAL 95%.
-        # Frames within an embryo are NOT exchangeable with frames across embryos, so the nominal
-        # certificate does not transfer exactly — which is precisely why coverage is then MEASURED
-        # on disjoint test embryos below rather than asserted. See `embryo_exchangeable_note`.
-        hw = float(np.quantile(res_cal, min(1.0, np.ceil((n_f + 1) * 0.95) / n_f)))
-        # CONSERVATIVE variant: per-embryo 95th percentile, then an embryo-level quantile of those.
-        # Reported for comparison; it over-covers, which is itself informative.
-        emb_q = np.array([np.quantile(res_cal[gcal == e], 0.95) for e in np.unique(gcal)])
-        hw_c = float(np.quantile(emb_q, min(1.0, np.ceil((n_e + 1) * 0.95) / n_e)))
+        res_cal = np.abs(p_cal - y[m_cal])
+        # PLAIN empirical 95th percentile of the pooled calibration-embryo residuals. No conformal
+        # finite-sample correction is applied, because none would be valid under clustering; calling
+        # it a "frame-count corrected conformal quantile" (as v2 did) was the error being fixed.
+        hw = float(np.quantile(res_cal, 1 - ALPHA))
         res_te = np.abs(p_te - y[m_te]); gte = groups[m_te]
         cov_frame.append(float(np.mean(res_te <= hw)))
         cov_macro.append(float(np.mean([np.mean(res_te[gte == e] <= hw) for e in np.unique(gte)])))
         widths.append(2 * hw)
-        cov_frame_c.append(float(np.mean(res_te <= hw_c)))
-        cov_macro_c.append(float(np.mean([np.mean(res_te[gte == e] <= hw_c) for e in np.unique(gte)])))
-        widths_c.append(2 * hw_c)
         for name, lo, hi in (("early", 0, 1 / 3), ("mid", 1 / 3, 2 / 3), ("late", 2 / 3, 1.001)):
             mm = (y[m_te] >= lo) & (y[m_te] < hi)
             if mm.any():
                 per_phase[name].append(float(np.mean(res_te[mm] <= hw)))
+
+    # --- sensitivity: RIGOROUS cluster-level split conformal, one score per calibration embryo ---
+    # Score = max |residual| over the embryo's frames  =>  the interval is SIMULTANEOUS over all
+    # frames of a new embryo: P(every frame of an exchangeable new embryo is covered) >= 1 - alpha.
+    # Split forced to n_cal >= N_CAL_MIN so the quantile index is attainable.
+    n_cal_r = max(N_CAL_MIN, int(0.36 * len(embryos)))
+    n_fit_r = int(0.45 * len(embryos))
+    n_te_r = len(embryos) - n_fit_r - n_cal_r
+    k_idx = int(np.ceil((n_cal_r + 1) * (1 - ALPHA)))
+    feasible = k_idx <= n_cal_r
+    uses_max = feasible and k_idx == n_cal_r
+    cov_simul, cov_frame_r, widths_r = [], [], []
+    if feasible and n_te_r >= 3:
+        for _ in range(N_CONF_REP):
+            perm = rng.permutation(embryos)
+            e_fit, e_cal, e_te = (perm[:n_fit_r], perm[n_fit_r:n_fit_r + n_cal_r],
+                                  perm[n_fit_r + n_cal_r:])
+            m_fit, m_cal, m_te = (np.isin(groups, e) for e in (e_fit, e_cal, e_te))
+            if not (m_fit.any() and m_cal.any() and m_te.any()):
+                continue
+            p_cal = np.clip(fit_predict(prod, df.loc[m_fit], df.loc[m_cal], y[m_fit], seed), 0, 1)
+            p_te = np.clip(fit_predict(prod, df.loc[m_fit], df.loc[m_te], y[m_fit], seed), 0, 1)
+            rc, gc = np.abs(p_cal - y[m_cal]), groups[m_cal]
+            scores = np.sort(np.array([rc[gc == e].max() for e in np.unique(gc)]))   # ONE per embryo
+            hw_r = float(scores[k_idx - 1])                                          # k-th smallest
+            rt, gt = np.abs(p_te - y[m_te]), groups[m_te]
+            cov_simul.append(float(np.mean([rt[gt == e].max() <= hw_r for e in np.unique(gt)])))
+            cov_frame_r.append(float(np.mean(rt <= hw_r)))
+            widths_r.append(2 * hw_r)
+
     def _s(a):
         a = np.array(a, float)
+        if not len(a):
+            return None
         return {"mean": round(float(a.mean()), 4),
                 "ci95": [round(float(np.quantile(a, .025)), 4), round(float(np.quantile(a, .975)), 4)],
                 "n_replicates": len(a)}
+
     halfwidth = float(np.mean(widths) / 2)
+    hw_rig = float(np.mean(widths_r) / 2) if widths_r else None
     conformal = {
-        "method": ("repeated 3-way EMBRYO split-conformal: disjoint fit / calibration / test embryo "
-                   "sets. The published half-width is the frame-pooled quantile of absolute "
-                   "residuals on CALIBRATION embryos, with the finite-sample correction taken over "
-                   "the EMBRYO count (trajectories are the independent units); coverage is then "
-                   "measured on different, untouched TEST embryos."),
-        "conservative_variant": {
-            "definition": ("per-embryo 95th-percentile residual, then an embryo-level quantile of "
-                           "those — a quantile of quantiles"),
-            "halfwidth_mean": round(float(np.mean(widths_c) / 2), 5),
-            "coverage_frame_marginal": _s(cov_frame_c),
-            "coverage_embryo_macro": _s(cov_macro_c),
-            "comment": ("over-covers by construction; reported so the cost of the stricter "
-                        "clustering assumption is visible rather than hidden")},
-        "interval_type": ("MARGINAL PER FRAME, not simultaneous per embryo: it targets 95% of "
-                          "frames, so a whole embryo can still sit outside. No simultaneous-"
-                          "coverage claim is made."),
-        "embryo_exchangeable_note": (
-            "A conformal certificate that is exact under EMBRYO exchangeability needs "
-            "ceil((n+1)*0.95) <= n, i.e. n >= 19 calibration embryos. This design uses "
-            f"{int(0.30 * len(embryos))} calibration embryos per replicate, so the embryo-level "
-            "certificate is attainable but tight; the frame-level certificate is not exact because "
-            "frames within a trajectory are correlated. The reported coverage is therefore the "
-            "EMPIRICALLY MEASURED value on disjoint test embryos, with a bootstrap interval — not "
-            "a theoretical guarantee."),
-        "split_per_replicate": {"fit_embryos": int(0.50 * len(embryos)),
-                                "calibration_embryos": int(0.30 * len(embryos)),
-                                "test_embryos": len(embryos) - int(0.50 * len(embryos)) - int(0.30 * len(embryos))},
+        "interval_name": "empirical disjoint-embryo prediction interval",
+        "formal_guarantee": False,
+        "method": (
+            "Repeated 3-way EMBRYO split (disjoint fit / calibration / test). The half-width is the "
+            "PLAIN empirical 95th percentile of pooled absolute residuals on the CALIBRATION "
+            "embryos; coverage is then measured on different, untouched TEST embryos and reported "
+            "with a bootstrap interval. NO finite-sample conformal correction is applied and NO "
+            "formal 95% guarantee is claimed: frames within a trajectory are correlated, so the "
+            "frame-level exchangeability such a correction assumes does not hold."),
+        "why_not_conformal": (
+            "A frame-count conformal correction would assume frames are exchangeable, which is false "
+            "here (adjacent frames of one embryo are near-duplicates). A valid CLUSTER-level "
+            f"conformal statement needs one score per embryo and n_cal >= {N_CAL_MIN}; this primary "
+            f"split uses n_cal = {n_cal}, which is below that threshold. The rigorous version is "
+            "reported separately below."),
+        "interval_type": (
+            "MARGINAL PER FRAME and EMPIRICAL: it targets 95% of frames on average across "
+            "replicates. It is not simultaneous over an embryo's frames and carries no coverage "
+            "certificate."),
+        "applies_to_fixed_cohort_as": (
+            "EMPIRICAL TRANSFER UNCERTAINTY. Applying this width to a fixed MERFISH snapshot assumes "
+            "the live-imaged residual distribution transfers to a different segmentation pipeline "
+            "and a shifted geometry cohort. That assumption is unverified, so the fixed-cohort "
+            "interval is an empirical indication of spread, NOT a coverage guarantee."),
+        "estimator_note": (
+            "The published half-width is the MEAN of the per-replicate widths, applied to the final "
+            "model refitted on all 53 embryos. Averaging widths across random splits and reusing "
+            "them for a differently-fitted model is a reasonable empirical summary but is not "
+            "itself a split-conformal construction."),
         "level": 0.95, "n_replicates": len(widths),
+        "quantile_computed_over": "pooled calibration-embryo FRAMES (plain empirical percentile)",
+        "split_per_replicate": {"fit_embryos": n_fit, "calibration_embryos": n_cal,
+                                "test_embryos": n_te},
         "halfwidth_mean": round(halfwidth, 5),
         "width_mean": round(float(np.mean(widths)), 5),
         "coverage_frame_marginal": _s(cov_frame),
         "coverage_embryo_macro": _s(cov_macro),
         "coverage_by_phase": {k: _s(v) for k, v in per_phase.items() if v},
+        "rigorous_cluster_sensitivity": {
+            "name": "cluster-conformal construction sensitivity",
+            "what_is_reported": (
+                "the MEAN half-width over independent per-split cluster-conformal constructions, "
+                "plus the coverage measured on each split's held-out embryos"),
+            # The distinction the aggregate hides: EACH construction is a valid conformal interval;
+            # their AVERAGE is not, and neither is applying that average to a model refitted on all
+            # 53 embryos (which saw every calibration embryo).
+            "per_split_construction_has_finite_sample_guarantee": bool(feasible),
+            "reported_mean_halfwidth_has_formal_guarantee": False,
+            "guarantee_scope": (
+                f"Each of the {N_CONF_REP} individual constructions is a valid split-conformal "
+                "interval: with one nonconformity score per calibration embryo and "
+                f"k = {k_idx} <= n_cal = {n_cal_r}, it attains >= 95% SIMULTANEOUS per-embryo "
+                "coverage. The MEAN of those widths reported below is a summary statistic, NOT a "
+                "conformal interval, and attaching the guarantee to it would be an overclaim."),
+            "assumptions": [
+                "embryos are exchangeable (one lab, one protocol, untreated controls — plausible "
+                "within this cohort, untested beyond it)",
+                "the model is fitted independently of the calibration embryos (enforced by the "
+                "disjoint fit/calibration/test split)",
+                "the guarantee is per-construction and does NOT transfer to the final model "
+                "refitted on all 53 embryos, which has seen every calibration embryo",
+            ],
+            "nonconformity_score": "max |residual| over all frames of a calibration embryo",
+            "protects": ("per construction: P(EVERY frame of a new exchangeable embryo lies inside "
+                         "the interval) >= 0.95, i.e. SIMULTANEOUS per-embryo coverage — a strictly "
+                         "stronger statement than the frame-marginal primary interval"),
+            "split_per_replicate": {"fit_embryos": n_fit_r, "calibration_embryos": n_cal_r,
+                                    "test_embryos": n_te_r},
+            "quantile_index_k": k_idx, "n_calibration_embryos": n_cal_r,
+            "uses_maximum_score": bool(uses_max),
+            "feasibility_note": (
+                f"k = ceil((n_cal+1)*0.95) = {k_idx} and n_cal = {n_cal_r}. "
+                + (f"k == n_cal, so the valid quantile IS THE MAXIMUM of the {n_cal_r} per-embryo "
+                   "scores. That is exact but deliberately conservative: with 53 embryos, k < n_cal "
+                   "would require n_cal >= 39, leaving too few embryos to fit and test. The width "
+                   "below is therefore honestly wide."
+                   if uses_max else "k < n_cal, so a sub-maximal order statistic is used.")),
+            "halfwidth_mean": round(hw_rig, 5) if hw_rig is not None else None,
+            "halfwidth_per_split_range": ([round(float(np.min(widths_r) / 2), 5),
+                                           round(float(np.max(widths_r) / 2), 5)]
+                                          if widths_r else None),
+            "width_mean": round(float(np.mean(widths_r)), 5) if widths_r else None,
+            "n_constructions": len(widths_r),
+            "coverage_simultaneous_per_embryo": _s(cov_simul),
+            "coverage_frame_marginal": _s(cov_frame_r),
+            "width_ratio_vs_primary": (round(hw_rig / halfwidth, 3)
+                                       if (hw_rig and halfwidth) else None),
+        },
         "limitations": [
-            "53 embryos is too few for a stable hard 95% guarantee; the bootstrap interval on "
-            "coverage is reported instead of asserting exactly 95%.",
-            "The interval is a constant width in tau, so genuinely harder phases are under-covered "
+            "The primary interval has NO formal coverage guarantee — it is an empirical "
+            "disjoint-embryo interval whose coverage is measured, not certified.",
+            "53 embryos is too few for a non-conservative cluster-level conformal quantile: any "
+            f"feasible n_cal in [{N_CAL_MIN}, 38] forces the MAXIMUM per-embryo score.",
+            "The cluster-conformal guarantee holds for EACH individual split construction, not for "
+            "the averaged width reported, and not for the production model refitted on all 53 "
+            "embryos — that model has seen every calibration embryo, so no split-conformal "
+            "statement applies to it.",
+            "The interval is constant width in tau, so genuinely harder phases are under-covered "
             "and easy phases over-covered — see coverage_by_phase.",
-            "Calibrated on live-imaged embryos; transfer to fixed MERFISH geometry is assumed, not "
+            "Estimated on live-imaged embryos; transfer to fixed MERFISH geometry is assumed, not "
             "measured, because no raw 3-D stacks are public.",
         ],
     }
-    print(f"  conformal (disjoint fit/cal/test embryos, {len(widths)} reps): half-width "
+    print(f"  interval (EMPIRICAL, disjoint fit/cal/test, {len(widths)} reps): half-width "
           f"±{halfwidth:.3f} · frame coverage {conformal['coverage_frame_marginal']['mean']:.3f} "
-          f"{conformal['coverage_frame_marginal']['ci95']} · embryo-macro "
-          f"{conformal['coverage_embryo_macro']['mean']:.3f}")
+          f"{conformal['coverage_frame_marginal']['ci95']}")
+    if hw_rig is not None:
+        rc_ = conformal["rigorous_cluster_sensitivity"]
+        print(f"  rigorous cluster conformal (n_cal={n_cal_r}, k={k_idx}"
+              f"{', = MAX' if uses_max else ''}): half-width ±{hw_rig:.3f} "
+              f"({rc_['width_ratio_vs_primary']}x wider) · simultaneous per-embryo coverage "
+              f"{rc_['coverage_simultaneous_per_embryo']['mean']:.3f}")
 
     # ---------------- refit production on ALL embryos (only after selection + evaluation) --------
     final = prod["make"](seed)
@@ -719,6 +868,18 @@ def main():
             "model_class": ("empirical geometry-to-time calibration; NOT a mechanistic model of "
                             "forces or pronuclear migration"),
             "sklearn_version": __import__("sklearn").__version__,
+            "changes_from_v2": [
+                "the primary interval is renamed an EMPIRICAL DISJOINT-EMBRYO PREDICTION INTERVAL "
+                "and no longer claims any conformal guarantee; v2 mixed a frame-count correction "
+                "with embryo-count metadata and wrongly said a 15-embryo calibration set could give "
+                "a finite exact 95% cluster certificate (the threshold is 19)",
+                "a rigorous cluster-level split-conformal sensitivity is added, using one "
+                "nonconformity score per calibration embryo and protecting SIMULTANEOUS per-embryo "
+                "coverage; with 53 embryos its valid quantile is the maximum score, so it is wide",
+                "the nested estimate is explicitly labelled as the performance of the SELECTION "
+                "PROCEDURE, with a separate post-selection fixed-family sensitivity for the locked "
+                "production family",
+            ],
             "changes_from_v1": [
                 "nested outer/inner grouped CV replaces single-level OOF used for both selection "
                 "and reporting (v1 was selection-optimistic)",
@@ -733,13 +894,19 @@ def main():
                                    "n_embryos": sum(1 for v in fold_of.values() if v == k),
                                    "n_frames": int((outer == k).sum())} for k in range(N_OUTER)]},
         "nested_evaluation": {
-            "description": ("Unbiased: every prediction below comes from a model chosen by an inner "
-                            "CV that never saw this embryo, then fitted without it."),
+            "estimates": ("the performance of the COMPLETE INNER-SELECTION PROCEDURE, not of the "
+                          "locked production family: the family chosen by the inner CV varied "
+                          "across outer folds, so this is the expected performance of 'run the "
+                          "selection procedure, then predict'"),
+            "description": ("Unbiased for that procedure: every prediction comes from a model "
+                            "chosen by an inner CV that never saw this embryo, then fitted without "
+                            "it. See fixed_family_sensitivity for the locked family (post-selection)."),
             "outer_test_metrics": {k: v for k, v in nested.items() if k != "per_embryo"},
             "bootstrap_ci95_by_embryo": ci,
             "per_outer_fold": outer_records,
             "inner_selection_stability": stability,
             "per_embryo": nested["per_embryo"]},
+        "fixed_family_sensitivity": fixed_family,
         "models": models_out,
         "production": {
             "key": prod_key, "label": prod["label"], "features": prod["features"],

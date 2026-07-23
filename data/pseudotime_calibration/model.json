@@ -1,7 +1,7 @@
 {
- "model_version": "pnpt-2.0.0",
+ "model_version": "pnpt-3.0.0",
  "data_version": "scheffler2021-v1",
- "trained_at_utc": "2026-07-23T22:15:38+00:00",
+ "trained_at_utc": "2026-07-23T23:42:05+00:00",
  "seed": 20260723,
  "selected_key": "isotonic_sum",
  "label": "Isotonic \u00b7 distance sum",
@@ -326,7 +326,7 @@
    0.972222
   ]
  },
- "halfwidth_95": 0.24464,
+ "halfwidth_95": 0.242,
  "feature_stats": {
   "nearer_to_center_um": {
    "min": 6.2592,

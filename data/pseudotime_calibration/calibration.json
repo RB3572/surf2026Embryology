@@ -1,9 +1,9 @@
 {
  "meta": {
-  "model_version": "pnpt-2.0.0",
+  "model_version": "pnpt-3.0.0",
   "data_version": "scheffler2021-v1",
   "seed": 20260723,
-  "trained_at_utc": "2026-07-23T22:15:38+00:00",
+  "trained_at_utc": "2026-07-23T23:42:05+00:00",
   "n_outer_folds": 5,
   "n_inner_folds": 4,
   "split_strategy": "NESTED GroupKFold on embryo_id: outer folds are untouched evaluation embryos; inner folds inside each outer-train set do all model/feature/hyperparameter selection",
@@ -11,6 +11,11 @@
   "selection_rule": "lowest inner-CV macro MAE (mean of per-embryo MAE, so each embryo counts once); ties within 0.002 broken by higher strict pairwise ordering accuracy, then by lower complexity rank",
   "model_class": "empirical geometry-to-time calibration; NOT a mechanistic model of forces or pronuclear migration",
   "sklearn_version": "1.6.1",
+  "changes_from_v2": [
+   "the primary interval is renamed an EMPIRICAL DISJOINT-EMBRYO PREDICTION INTERVAL and no longer claims any conformal guarantee; v2 mixed a frame-count correction with embryo-count metadata and wrongly said a 15-embryo calibration set could give a finite exact 95% cluster certificate (the threshold is 19)",
+   "a rigorous cluster-level split-conformal sensitivity is added, using one nonconformity score per calibration embryo and protecting SIMULTANEOUS per-embryo coverage; with 53 embryos its valid quantile is the maximum score, so it is wide",
+   "the nested estimate is explicitly labelled as the performance of the SELECTION PROCEDURE, with a separate post-selection fixed-family sensitivity for the locked production family"
+  ],
   "changes_from_v1": [
    "nested outer/inner grouped CV replaces single-level OOF used for both selection and reporting (v1 was selection-optimistic)",
    "group-aware split-conformal with disjoint fit/calibration/test embryos replaces the circular same-residual quantile-and-coverage",
@@ -154,7 +159,8 @@
   ]
  },
  "nested_evaluation": {
-  "description": "Unbiased: every prediction below comes from a model chosen by an inner CV that never saw this embryo, then fitted without it.",
+  "estimates": "the performance of the COMPLETE INNER-SELECTION PROCEDURE, not of the locked production family: the family chosen by the inner CV varied across outer folds, so this is the expected performance of 'run the selection procedure, then predict'",
+  "description": "Unbiased for that procedure: every prediction comes from a model chosen by an inner CV that never saw this embryo, then fitted without it. See fixed_family_sensitivity for the locked family (post-selection).",
   "outer_test_metrics": {
    "macro_mae": 0.09088,
    "pooled_mae": 0.09101,
@@ -600,9 +606,9 @@
    }
   ],
   "inner_selection_stability": {
-   "isotonic_sum": 3,
    "monospline_sum": 1,
-   "hgb_symmetric": 1
+   "hgb_symmetric": 1,
+   "isotonic_sum": 3
   },
   "per_embryo": {
    "Scheffler2021_Z01": {
@@ -1083,6 +1089,41 @@
     "tie_rate": 0.03904
    }
   }
+ },
+ "fixed_family_sensitivity": {
+  "label": "Isotonic \u00b7 distance sum",
+  "key": "isotonic_sum",
+  "status": "POST-SELECTION \u2014 descriptive only, NOT an unbiased estimate",
+  "why": "The production family was locked using all 53 embryos (via the inner-CV aggregate), so a grouped CV of that same family on the same embryos is optimistically biased. The unbiased development-time number is the nested SELECTION-PROCEDURE estimate.",
+  "protocol": "plain grouped 5-fold CV, family held fixed at the production choice",
+  "metrics": {
+   "macro_mae": 0.08886,
+   "pooled_mae": 0.08909,
+   "median_ae": 0.06763,
+   "pooled_rmse": 0.11705,
+   "pearson_r": 0.91118,
+   "pearson_r2": 0.83025,
+   "pooled_spearman": 0.90295,
+   "pooled_kendall_tau_b": 0.73612,
+   "pooled_ordering": {
+    "comparable": 2107282,
+    "concordant": 1823249,
+    "discordant": 273355,
+    "tied_pred": 10678,
+    "tied_true": 7314,
+    "strict_accuracy": 0.86521,
+    "half_credit_accuracy": 0.86775,
+    "tie_rate": 0.00507,
+    "inversion_rate": 0.12972
+   },
+   "macro_within_embryo_ordering": 0.97035,
+   "macro_within_embryo_spearman": 0.99616
+  },
+  "bootstrap_ci95_macro_mae": [
+   0.07856,
+   0.09955
+  ],
+  "difference_vs_nested_macro_mae": -0.00202
  },
  "models": [
   {
@@ -1707,74 +1748,58 @@
   "note": "Refit on all 53 embryos AFTER nested evaluation and selection. Its honest performance is the nested outer-test estimate above, not a refit score."
  },
  "uncertainty": {
-  "method": "repeated 3-way EMBRYO split-conformal: disjoint fit / calibration / test embryo sets. The published half-width is the frame-pooled quantile of absolute residuals on CALIBRATION embryos, with the finite-sample correction taken over the EMBRYO count (trajectories are the independent units); coverage is then measured on different, untouched TEST embryos.",
-  "conservative_variant": {
-   "definition": "per-embryo 95th-percentile residual, then an embryo-level quantile of those \u2014 a quantile of quantiles",
-   "halfwidth_mean": 0.33554,
-   "coverage_frame_marginal": {
-    "mean": 0.9896,
-    "ci95": [
-     0.9551,
-     1.0
-    ],
-    "n_replicates": 40
-   },
-   "coverage_embryo_macro": {
-    "mean": 0.9899,
-    "ci95": [
-     0.9566,
-     1.0
-    ],
-    "n_replicates": 40
-   },
-   "comment": "over-covers by construction; reported so the cost of the stricter clustering assumption is visible rather than hidden"
-  },
-  "interval_type": "MARGINAL PER FRAME, not simultaneous per embryo: it targets 95% of frames, so a whole embryo can still sit outside. No simultaneous-coverage claim is made.",
-  "embryo_exchangeable_note": "A conformal certificate that is exact under EMBRYO exchangeability needs ceil((n+1)*0.95) <= n, i.e. n >= 19 calibration embryos. This design uses 15 calibration embryos per replicate, so the embryo-level certificate is attainable but tight; the frame-level certificate is not exact because frames within a trajectory are correlated. The reported coverage is therefore the EMPIRICALLY MEASURED value on disjoint test embryos, with a bootstrap interval \u2014 not a theoretical guarantee.",
+  "interval_name": "empirical disjoint-embryo prediction interval",
+  "formal_guarantee": false,
+  "method": "Repeated 3-way EMBRYO split (disjoint fit / calibration / test). The half-width is the PLAIN empirical 95th percentile of pooled absolute residuals on the CALIBRATION embryos; coverage is then measured on different, untouched TEST embryos and reported with a bootstrap interval. NO finite-sample conformal correction is applied and NO formal 95% guarantee is claimed: frames within a trajectory are correlated, so the frame-level exchangeability such a correction assumes does not hold.",
+  "why_not_conformal": "A frame-count conformal correction would assume frames are exchangeable, which is false here (adjacent frames of one embryo are near-duplicates). A valid CLUSTER-level conformal statement needs one score per embryo and n_cal >= 19; this primary split uses n_cal = 15, which is below that threshold. The rigorous version is reported separately below.",
+  "interval_type": "MARGINAL PER FRAME and EMPIRICAL: it targets 95% of frames on average across replicates. It is not simultaneous over an embryo's frames and carries no coverage certificate.",
+  "applies_to_fixed_cohort_as": "EMPIRICAL TRANSFER UNCERTAINTY. Applying this width to a fixed MERFISH snapshot assumes the live-imaged residual distribution transfers to a different segmentation pipeline and a shifted geometry cohort. That assumption is unverified, so the fixed-cohort interval is an empirical indication of spread, NOT a coverage guarantee.",
+  "estimator_note": "The published half-width is the MEAN of the per-replicate widths, applied to the final model refitted on all 53 embryos. Averaging widths across random splits and reusing them for a differently-fitted model is a reasonable empirical summary but is not itself a split-conformal construction.",
+  "level": 0.95,
+  "n_replicates": 40,
+  "quantile_computed_over": "pooled calibration-embryo FRAMES (plain empirical percentile)",
   "split_per_replicate": {
    "fit_embryos": 26,
    "calibration_embryos": 15,
    "test_embryos": 12
   },
-  "level": 0.95,
-  "n_replicates": 40,
-  "halfwidth_mean": 0.24464,
-  "width_mean": 0.48928,
+  "halfwidth_mean": 0.242,
+  "width_mean": 0.48399,
   "coverage_frame_marginal": {
-   "mean": 0.9483,
+   "mean": 0.9458,
    "ci95": [
-    0.8873,
+    0.887,
     0.9917
    ],
    "n_replicates": 40
   },
   "coverage_embryo_macro": {
-   "mean": 0.949,
+   "mean": 0.9466,
    "ci95": [
-    0.8887,
+    0.8871,
     0.9915
    ],
    "n_replicates": 40
   },
   "coverage_by_phase": {
    "early": {
-    "mean": 0.9853,
+    "mean": 0.9842,
     "ci95": [
-     0.9499,
+     0.9495,
      1.0
     ],
     "n_replicates": 40
    },
    "mid": {
-    "mean": 0.9354,
+    "mean": 0.9327,
     "ci95": [
-     0.8367,
+     0.8302,
      1.0
     ],
     "n_replicates": 40
    },
    "late": {
-    "mean": 0.9212,
+    "mean": 0.9174,
     "ci95": [
      0.726,
      1.0
@@ -1782,10 +1807,59 @@
     "n_replicates": 40
    }
   },
+  "rigorous_cluster_sensitivity": {
+   "name": "cluster-conformal construction sensitivity",
+   "what_is_reported": "the MEAN half-width over independent per-split cluster-conformal constructions, plus the coverage measured on each split's held-out embryos",
+   "per_split_construction_has_finite_sample_guarantee": true,
+   "reported_mean_halfwidth_has_formal_guarantee": false,
+   "guarantee_scope": "Each of the 40 individual constructions is a valid split-conformal interval: with one nonconformity score per calibration embryo and k = 19 <= n_cal = 19, it attains >= 95% SIMULTANEOUS per-embryo coverage. The MEAN of those widths reported below is a summary statistic, NOT a conformal interval, and attaching the guarantee to it would be an overclaim.",
+   "assumptions": [
+    "embryos are exchangeable (one lab, one protocol, untreated controls \u2014 plausible within this cohort, untested beyond it)",
+    "the model is fitted independently of the calibration embryos (enforced by the disjoint fit/calibration/test split)",
+    "the guarantee is per-construction and does NOT transfer to the final model refitted on all 53 embryos, which has seen every calibration embryo"
+   ],
+   "nonconformity_score": "max |residual| over all frames of a calibration embryo",
+   "protects": "per construction: P(EVERY frame of a new exchangeable embryo lies inside the interval) >= 0.95, i.e. SIMULTANEOUS per-embryo coverage \u2014 a strictly stronger statement than the frame-marginal primary interval",
+   "split_per_replicate": {
+    "fit_embryos": 23,
+    "calibration_embryos": 19,
+    "test_embryos": 11
+   },
+   "quantile_index_k": 19,
+   "n_calibration_embryos": 19,
+   "uses_maximum_score": true,
+   "feasibility_note": "k = ceil((n_cal+1)*0.95) = 19 and n_cal = 19. k == n_cal, so the valid quantile IS THE MAXIMUM of the 19 per-embryo scores. That is exact but deliberately conservative: with 53 embryos, k < n_cal would require n_cal >= 39, leaving too few embryos to fit and test. The width below is therefore honestly wide.",
+   "halfwidth_mean": 0.34996,
+   "halfwidth_per_split_range": [
+    0.29543,
+    0.43869
+   ],
+   "width_mean": 0.69992,
+   "n_constructions": 40,
+   "coverage_simultaneous_per_embryo": {
+    "mean": 0.9409,
+    "ci95": [
+     0.7273,
+     1.0
+    ],
+    "n_replicates": 40
+   },
+   "coverage_frame_marginal": {
+    "mean": 0.9947,
+    "ci95": [
+     0.9584,
+     1.0
+    ],
+    "n_replicates": 40
+   },
+   "width_ratio_vs_primary": 1.446
+  },
   "limitations": [
-   "53 embryos is too few for a stable hard 95% guarantee; the bootstrap interval on coverage is reported instead of asserting exactly 95%.",
-   "The interval is a constant width in tau, so genuinely harder phases are under-covered and easy phases over-covered \u2014 see coverage_by_phase.",
-   "Calibrated on live-imaged embryos; transfer to fixed MERFISH geometry is assumed, not measured, because no raw 3-D stacks are public."
+   "The primary interval has NO formal coverage guarantee \u2014 it is an empirical disjoint-embryo interval whose coverage is measured, not certified.",
+   "53 embryos is too few for a non-conservative cluster-level conformal quantile: any feasible n_cal in [19, 38] forces the MAXIMUM per-embryo score.",
+   "The cluster-conformal guarantee holds for EACH individual split construction, not for the averaged width reported, and not for the production model refitted on all 53 embryos \u2014 that model has seen every calibration embryo, so no split-conformal statement applies to it.",
+   "The interval is constant width in tau, so genuinely harder phases are under-covered and easy phases over-covered \u2014 see coverage_by_phase.",
+   "Estimated on live-imaged embryos; transfer to fixed MERFISH geometry is assumed, not measured, because no raw 3-D stacks are public."
   ]
  },
  "residual_diagnostics": {

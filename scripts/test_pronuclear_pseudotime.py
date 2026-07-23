@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Tests for the pronuclear pseudotime calibration (pnpt-2.x).
+Tests for the pronuclear pseudotime calibration (pnpt-3.x).
 
 Designed to FAIL on the specific ways this analysis could quietly become wrong:
   * an embryo crossing a train / conformal-calibration / test boundary
@@ -154,31 +154,216 @@ def main():
           recomputed == art["production"]["key"],
           f"recomputed={recomputed} stored={art['production']['key']}")
 
-    # ───────────────────── conformal: disjoint roles, independent coverage ─────────────────────
-    print("\n[conformal interval independence]")
+    # ───────────── interval: honest naming, no false conformal claim, code==metadata ─────────────
+    print("\n[prediction interval — naming and validity]")
     u = art["uncertainty"]
     sp = u["split_per_replicate"]
     check("fit / calibration / test embryo counts are disjoint and sum to 53",
-          sp["fit_embryos"] + sp["calibration_embryos"] + sp["test_embryos"] == 53,
-          str(sp))
-    check("all three conformal roles are non-empty",
-          min(sp.values()) > 0, str(sp))
-    check("method states that calibration and test embryos differ",
-          "disjoint" in u["method"].lower() and "test" in u["method"].lower())
-    check("interval type documents marginal-per-frame vs simultaneous",
-          "MARGINAL PER FRAME" in u["interval_type"])
+          sp["fit_embryos"] + sp["calibration_embryos"] + sp["test_embryos"] == 53, str(sp))
+    check("all three roles are non-empty", min(sp.values()) > 0, str(sp))
+    check("primary interval is named an EMPIRICAL disjoint-embryo interval",
+          "empirical" in u["interval_name"].lower() and "disjoint-embryo" in u["interval_name"].lower(),
+          u.get("interval_name"))
+    check("primary interval explicitly disclaims a formal guarantee",
+          u["formal_guarantee"] is False)
+
+    # THE v2 BUG: n_cal below the cluster-conformal threshold while claiming a finite 95% certificate
+    ALPHA = 0.05
+    N_MIN = int(np.ceil(1 / ALPHA)) - 1                       # 19
+    ncal = sp["calibration_embryos"]
+    txt_all = json.dumps(u)
+    claims_cert = bool(re.search(r"certificate is attainable|guarantee(?:d|s)? 95|"
+                                 r"exact 95% (?:cluster|conformal)", txt_all, re.I))
+    check(f"primary interval (n_cal={ncal}) makes no exact-95% cluster-conformal claim",
+          not (ncal < N_MIN and claims_cert),
+          f"n_cal={ncal} < {N_MIN} yet the text claims a finite exact 95% certificate")
+    # the word may appear in a negation ("NO conformal correction is applied"); what must not
+    # happen is the method DESCRIBING ITSELF as conformal
+    m_low = u["method"].lower()
+    self_describes = bool(re.search(r"(?<!no )(?<!not )(?:split-)?conformal (?:interval|quantile|"
+                                    r"construction|certificate)|is a (?:split-)?conformal", m_low))
+    check("primary method does not describe ITSELF as conformal",
+          not self_describes, u["method"][:140])
+    check("primary method explicitly negates the conformal correction",
+          bool(re.search(r"no .{0,40}conformal correction", m_low)))
+    check("primary states why a conformal correction would be invalid",
+          "exchangeab" in u["why_not_conformal"].lower())
+
+    # code/metadata agreement: v2 used the FRAME count while saying EMBRYO count
+    src = open(os.path.join(HERE, "scripts", "train_pronuclear_pseudotime.py")).read()
+    prim = re.search(r"hw = float\(np\.quantile\(res_cal,([^)]*)\)\)", src)
+    check("primary half-width is a plain percentile (no hidden finite-sample correction)",
+          bool(prim) and "ceil" not in prim.group(1), prim.group(1) if prim else "not found")
+    says_embryo_count = "correction taken over" in u["method"] and "EMBRYO count" in u["method"]
+    check("metadata does not claim an embryo-count correction the code never applies",
+          not says_embryo_count)
+    check("metadata states exactly what the quantile is computed over",
+          "FRAME" in u["quantile_computed_over"].upper()
+          or "frame" in u["quantile_computed_over"].lower(), u.get("quantile_computed_over"))
+    check("estimator note admits averaging widths is not a conformal construction",
+          "not" in u["estimator_note"].lower() and "conformal" in u["estimator_note"].lower())
+    check("fixed-cohort application is labelled empirical transfer uncertainty",
+          "EMPIRICAL TRANSFER UNCERTAINTY" in u["applies_to_fixed_cohort_as"])
+
+    # ADVERSARIAL: these two guards must FIRE on the exact v2 defects, so prove they do.
+    print("\n[guards fire on the v2 defects]")
+    def guard_ncal_vs_claim(n_cal_, text_):
+        """True = guard fires (a false exact-95% cluster claim with too few calibration embryos)."""
+        claims = bool(re.search(r"certificate is attainable|guarantee(?:d|s)? 95|"
+                                r"exact 95% (?:cluster|conformal)", text_, re.I))
+        return n_cal_ < N_MIN and claims
+    v2_text = ("A conformal certificate that is exact under EMBRYO exchangeability needs "
+               "ceil((n+1)*0.95) <= n, i.e. n >= 19 calibration embryos. This design uses 15 "
+               "calibration embryos per replicate, so the embryo-level certificate is attainable "
+               "but tight;")
+    check("guard FIRES on the v2 text (15 cal embryos claiming an attainable certificate)",
+          guard_ncal_vs_claim(15, v2_text))
+    check("guard does NOT fire on the current v3 artifact",
+          not guard_ncal_vs_claim(ncal, txt_all))
+
+    def guard_count_mismatch(code_expr, meta_text):
+        """True = guard fires (code uses the FRAME count while metadata claims EMBRYO count)."""
+        uses_frame = "n_f" in code_expr
+        says_embryo = "EMBRYO count" in meta_text
+        return uses_frame and says_embryo
+    check("guard FIRES on the v2 frame-count-vs-embryo-count mismatch",
+          guard_count_mismatch("np.ceil((n_f + 1) * 0.95) / n_f",
+                               "the finite-sample correction taken over the EMBRYO count"))
+    prim_expr = prim.group(1) if prim else ""
+    check("guard does NOT fire on the current v3 code/metadata pair",
+          not guard_count_mismatch(prim_expr, u["method"]))
+
+    print("\n[cluster-conformal construction sensitivity]")
+    rc = u["rigorous_cluster_sensitivity"]
+    ns = rc["nonconformity_score"].lower()
+    check("uses ONE nonconformity score per calibration embryo (an embryo-level aggregate)",
+          "embryo" in ns and any(k in ns for k in ("max", "maximum", "quantile", "per-embryo")),
+          rc["nonconformity_score"])
+    check("the score is an aggregate over the embryo's frames, not a per-frame score",
+          "frames of" in ns or "over all frames" in ns, rc["nonconformity_score"])
+    check(f"n_cal >= {N_MIN} so the conformal quantile index is attainable",
+          rc["n_calibration_embryos"] >= N_MIN, str(rc["n_calibration_embryos"]))
+    k_expect = int(np.ceil((rc["n_calibration_embryos"] + 1) * (1 - ALPHA)))
+    check("quantile index k matches ceil((n_cal+1)*(1-alpha))",
+          rc["quantile_index_k"] == k_expect, f"{rc['quantile_index_k']} != {k_expect}")
+    check("k <= n_cal (each construction is finite and exact)",
+          rc["quantile_index_k"] <= rc["n_calibration_embryos"])
+    check("states precisely what each construction protects (simultaneous per-embryo)",
+          "SIMULTANEOUS" in rc["protects"].upper())
+    check("reports simultaneous per-embryo coverage, not just frame coverage",
+          rc.get("coverage_simultaneous_per_embryo") is not None)
+    check("discloses whether the maximum score is used",
+          isinstance(rc.get("uses_maximum_score"), bool))
+    if rc.get("uses_maximum_score"):
+        check("explains why the maximum is forced at this sample size",
+              "MAXIMUM" in rc["feasibility_note"].upper())
+    check("rigorous construction is wider than the empirical interval (honest cost)",
+          rc["halfwidth_mean"] >= u["halfwidth_mean"],
+          f"rigorous {rc['halfwidth_mean']} vs empirical {u['halfwidth_mean']}")
+    check("no quantile-of-quantiles is described as simultaneous",
+          "quantile of quantiles" not in json.dumps(rc).lower())
+
+    # ── THE AGGREGATE OVERCLAIM: a guarantee must not attach to an AVERAGED width ──
+    print("\n[aggregate width carries no guarantee]")
+    check("per-split construction guarantee is stated separately from the reported mean",
+          "per_split_construction_has_finite_sample_guarantee" in rc
+          and "reported_mean_halfwidth_has_formal_guarantee" in rc,
+          str(sorted(k for k in rc if "guarantee" in k)))
+    check("the REPORTED MEAN half-width does NOT claim a formal guarantee",
+          rc["reported_mean_halfwidth_has_formal_guarantee"] is False)
+    check("each individual construction DOES carry the finite-sample guarantee",
+          rc["per_split_construction_has_finite_sample_guarantee"] is True)
+    check("no bare `formal_guarantee: true` remains on the aggregate block",
+          rc.get("formal_guarantee") is not True, str(rc.get("formal_guarantee")))
+    check("guarantee scope says the mean is a summary, not a conformal interval",
+          "NOT a conformal interval" in rc["guarantee_scope"]
+          or "not a conformal interval" in rc["guarantee_scope"].lower())
+    check("assumptions list exchangeability and calibration-independent fitting",
+          any("exchangeab" in a.lower() for a in rc["assumptions"])
+          and any("independent" in a.lower() for a in rc["assumptions"]))
+    check("states the guarantee does NOT transfer to the all-embryo production model",
+          any("all 53 embryos" in a or "refitted on all" in a for a in rc["assumptions"])
+          or "refitted on all 53" in json.dumps(u))
+    check("the mean is labelled as a mean over multiple constructions",
+          "MEAN" in rc["what_is_reported"].upper() and rc.get("n_constructions", 0) > 1)
+    check("per-split width range is reported so the spread behind the mean is visible",
+          isinstance(rc.get("halfwidth_per_split_range"), list))
+    # the UI must not present the averaged width as a rigorous guaranteed interval
+    js = open(os.path.join(HERE, "pseudotime-calibration.js")).read()
+    check("UI panel is not titled as a rigorous guaranteed interval",
+          "Sensitivity — rigorous cluster-level conformal" not in js)
+    check("UI states the guarantee is per construction, not for the displayed number",
+          "guarantee is per construction" in js)
+
+    print("\n[interval coverage reporting]")
     check("frame-marginal and embryo-macro coverage reported separately",
-          "coverage_frame_marginal" in u and "coverage_embryo_macro" in u)
-    check("coverage carries a bootstrap interval, not a bare number",
+          u["coverage_frame_marginal"] is not None and u["coverage_embryo_macro"] is not None)
+    check("coverage carries a bootstrap interval",
           isinstance(u["coverage_frame_marginal"].get("ci95"), list))
     check("coverage reported by tau phase", len(u.get("coverage_by_phase", {})) >= 2)
-    check("conservative embryo-level variant also reported",
-          "conservative_variant" in u)
-    check("multiple conformal replicates were run", u["n_replicates"] >= 5)
-    # the headline coverage must NOT be the same-residual quantile self-check of v1
-    check("coverage is not asserted to be exactly the nominal level",
-          abs(u["coverage_frame_marginal"]["mean"] - 0.95) > 1e-9
-          or u["coverage_frame_marginal"]["ci95"][0] < 0.95)
+    check("multiple replicates were run", u["n_replicates"] >= 5)
+
+    # ───────── attenuation seeds must be stable across PROCESSES, not just within one ─────────
+    print("\n[attenuation seed reproducibility]")
+    A_PATH = os.path.join(HERE, "scripts", "analyze_pseudotime_noise_ceiling.py")
+    asrc = open(A_PATH).read()
+    check("scenario seeds are NOT derived from hash() (Python randomises it per process)",
+          "hash(" not in asrc.replace("hashlib", ""), "found a hash() call")
+    check("explicit stable scenario seed offsets are declared",
+          "SCENARIO_SEED_OFFSET" in asrc)
+    # run the seed computation in FRESH processes under different PYTHONHASHSEED values
+    prog = ("import sys,json; sys.path.insert(0,%r); "
+            "import analyze_pseudotime_noise_ceiling as A; "
+            "print(json.dumps({k: A._scenario_seed(20260723, k) "
+            "for k in sorted(A.SCENARIO_SEED_OFFSET)}))" % os.path.join(HERE, "scripts"))
+    seeds = []
+    for hs in ("0", "1", "12345", "random"):
+        env = dict(os.environ, PYTHONHASHSEED=hs)
+        r = subprocess.run([sys.executable, "-c", prog], capture_output=True, text=True, env=env)
+        seeds.append(r.stdout.strip())
+    check("scenario seeds identical across PYTHONHASHSEED=0/1/12345/random",
+          len(set(seeds)) == 1, str(seeds))
+    # an unknown scenario must raise rather than silently fall back to something unstable
+    prog2 = ("import sys; sys.path.insert(0,%r); "
+             "import analyze_pseudotime_noise_ceiling as A; "
+             "\ntry:\n A._scenario_seed(1,'nope'); print('NO_RAISE')\n"
+             "except KeyError: print('RAISED')" % os.path.join(HERE, "scripts"))
+    r2 = subprocess.run([sys.executable, "-c", prog2], capture_output=True, text=True)
+    check("an unregistered scenario raises instead of using an unstable seed",
+          "RAISED" in r2.stdout, r2.stdout.strip() + r2.stderr[-120:])
+
+    nc_probe = os.path.join(ART, "noise_ceiling.json")
+    if os.path.isfile(nc_probe):
+        ncp = load(nc_probe)
+        off = ncp["attenuation"]["design"].get("scenario_seed_offsets")
+        check("artifact records the scenario seed offsets actually used", bool(off), str(off))
+        check("artifact notes seeds are not hash-derived",
+              "hash()" in ncp["attenuation"]["design"].get("seed_note", ""))
+
+    # ────────── nested = SELECTION PROCEDURE, distinct from the locked production family ──────────
+    print("\n[what the nested estimate estimates]")
+    ne = art["nested_evaluation"]
+    check("nested block states it estimates the SELECTION PROCEDURE",
+          "PROCEDURE" in ne["estimates"].upper())
+    stab = ne.get("inner_selection_stability", {})
+    check("inner selection stability is recorded", bool(stab))
+    if len(stab) > 1:
+        check("nested estimate is NOT described as an unbiased score of the locked family",
+              "locked production family" in ne["estimates"] or "not of the" in ne["estimates"])
+    ff = art.get("fixed_family_sensitivity")
+    check("a fixed-family sensitivity is reported for the locked family", ff is not None)
+    if ff:
+        check("fixed-family result is labelled POST-SELECTION / descriptive",
+              "POST-SELECTION" in ff["status"].upper())
+        check("fixed-family explains why it is biased",
+              "optimistic" in ff["why"].lower() or "biased" in ff["why"].lower())
+        check("fixed-family targets the locked production family",
+              ff["key"] == art["production"]["key"])
+        check("fixed-family reports its own bootstrap CI",
+              isinstance(ff.get("bootstrap_ci95_macro_mae"), list))
+        check("the two estimates are reported separately, not merged",
+              ff["metrics"]["macro_mae"] != ne["outer_test_metrics"]["macro_mae"]
+              or ff["difference_vs_nested_macro_mae"] == 0)
 
     # ───────────────────── feature governance / no transcripts in the clock ─────────────────────
     print("\n[feature governance]")
@@ -256,11 +441,15 @@ def main():
 
     # ───────────────────── artifacts + version consistency ─────────────────────
     print("\n[artifact integrity + versioning]")
-    check("model version bumped past v1", ver.startswith("pnpt-2"), ver)
+    mver = re.match(r"pnpt-(\d+)\.", ver)
+    check("model version bumped past v1 (interval + attenuation semantics changed)",
+          bool(mver) and int(mver.group(1)) >= 3, ver)
     model = load(os.path.join(ART, "model.json"))
     check("model.json version matches calibration.json", model["model_version"] == ver)
     check("model.json features match the production features", model["features"] == prod_feats)
-    check("calibration.json documents the v1->v2 semantic change",
+    check("calibration.json documents the v2->v3 semantic change",
+          len(art["meta"].get("changes_from_v2", [])) >= 3)
+    check("calibration.json still documents the v1->v2 change",
           len(art["meta"].get("changes_from_v1", [])) >= 3)
     check("model is described as an empirical calibration, not mechanistic",
           "empirical" in art["meta"]["model_class"].lower()
@@ -282,13 +471,44 @@ def main():
               "outer-test" in nc["clock_reliability"]["source"])
         check("noise-ceiling states transcripts were not used in the clock",
               nc["meta"]["transcripts_used_in_clock"] is False)
-        check("attenuation curves cover both linear and a nonlinear trend",
-              len(nc["attenuation"]["curves"]) >= 2)
+        att = nc["attenuation"]
+        check("attenuation reports named SCENARIOS, not a single curve",
+              "scenarios" in att and len(att["scenarios"]) >= 1)
+        check("validation-uniform scenario present", "validation_uniform" in att["scenarios"])
+        if "fixed_cohort_matched" in att["scenarios"]:
+            fm = att["scenarios"]["fixed_cohort_matched"]
+            check("fixed-cohort-matched scenario documents that only the PREDICTED tau is matched",
+                  "TRUE tau" in fm.get("caveat", "") or "true tau" in fm.get("caveat", "").lower())
+            check("fixed-cohort-matched scenario says OOD zygotes are excluded",
+                  "out-of-domain" in fm["description"].lower())
+        check("artifact denies a unique observed->latent inversion",
+              "no unique" in att["no_unique_inversion"].lower()
+              or "NO unique" in att["no_unique_inversion"])
+        for sc, v in att["scenarios"].items():
+            check(f"{sc}: covers both linear and a nonlinear trend", len(v["curves"]) >= 2)
         check("attenuation carries an interpretation guard against over-claiming",
-              "NOT thereby explained" in nc["attenuation"]["interpretation_guard"])
-        check("hours conversion is caveated as live-cohort-only",
-              "no known absolute duration" in nc["clock_reliability"]["hours_caveat"].lower()
-              or "NO known absolute duration" in nc["clock_reliability"]["hours_caveat"])
+              "NOT thereby explained" in att["interpretation_guard"])
+        d_ = att["design"]["latent_r2_definition"]
+        check("latent R^2 definition says TARGET, not an identity",
+              "TARGET" in d_.upper() and "not an identity" in d_.lower(), d_[:140])
+        check("latent R^2 definition says the realized value is measured and reported",
+              "measured" in d_.lower() and "achieved_true_r2_median" in d_)
+
+        # ACHIEVED vs REQUESTED latent R^2 must agree (the v2 nonlinear mislabelling)
+        print("\n[latent R^2 calibration]")
+        for sc, v in att["scenarios"].items():
+            for shape, rows in v["curves"].items():
+                ok_rows = [r for r in rows if r.get("achievable")]
+                check(f"{sc}/{shape}: achieved true R^2 recorded for every achievable point",
+                      all("achieved_true_r2_median" in r for r in ok_rows))
+                worst = max((abs(r["achieved_true_r2_median"] - r["latent_true_r2"])
+                             for r in ok_rows), default=0.0)
+                check(f"{sc}/{shape}: median achieved true R^2 within 0.03 of requested",
+                      worst <= 0.03, f"max deviation {worst:.4f}")
+                unreach = [r for r in rows if not r.get("achievable")]
+                if unreach:
+                    check(f"{sc}/{shape}: unreachable grid points carry a reason",
+                          all(r.get("reason") for r in unreach))
         d = nc.get("downstream_illustration", {})
         if d.get("results"):
             check("downstream genes are predeclared in source",

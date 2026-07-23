@@ -52,6 +52,19 @@ GENES_P = os.path.join(HERE, "data", "pronuclei_genes.json.gz")
 # The others are the standard ZGA markers already used elsewhere in this project. This list is
 # fixed in source, so it cannot be tuned to the result.
 PREDECLARED = ["MuERV-L", "Zscan4d", "Zfp352", "Obox3"]
+
+# EXPLICIT, STABLE per-scenario seed offsets. Never derive these from hash(): Python randomises
+# string hashing per process (PYTHONHASHSEED), so hash-derived seeds silently make the artifact
+# non-reproducible across fresh runs even with the same --seed. Any new scenario must be given an
+# offset here; _scenario_seed() raises rather than falling back to something unstable.
+SCENARIO_SEED_OFFSET = {"validation_uniform": 101, "fixed_cohort_matched": 202}
+
+
+def _scenario_seed(base, name):
+    if name not in SCENARIO_SEED_OFFSET:
+        raise KeyError(f"scenario '{name}' has no stable seed offset in SCENARIO_SEED_OFFSET; "
+                       "add one rather than deriving a seed from hash()")
+    return int(base) + SCENARIO_SEED_OFFSET[name]
 CONFIRMATORY = "MuERV-L"
 MIN_N = 8                      # below this an embryo-level fit is not interpretable
 
@@ -124,21 +137,77 @@ def reliability(cal, frames, seed, B):
     }
 
 
-# ═══════════════════════════ 2 · generic attenuation / noise ceiling ═══════════════════════════
-def attenuation(frames, seed, B, n_snapshot, latent_grid):
+# ═══════════════════════════ 2 · attenuation / noise ceiling ═══════════════════════════
+def _calibrate_noise(sig, t_true, target_r2, rng):
+    """Choose the noise sd that TARGETS `target_r2` for the R^2 against TRUE tau, under the SAME
+    model form later used against predicted tau (OLS on a single predictor).
+
+    With standardized signal s and outcome = s + e, e ~ N(0, sd):
+        E[R^2(outcome ~ t_true)] ~= rho^2 / (1 + sd^2),   rho = corr(t_true, s)
+    so sd^2 = rho^2/target - 1.
+
+    THIS IS A TARGET, NOT AN IDENTITY. The noise is a finite random draw, so the REALIZED R^2 in any
+    single replicate scatters around the target (and is very slightly upward-biased, as sample R^2
+    always is). The realized value is therefore MEASURED per replicate and reported as
+    `achieved_true_r2_median` / `achieved_true_r2_ci95`; the plot's x-axis uses the achieved value,
+    not the request.
+
+    For a NONLINEAR trend rho^2 < 1, which caps the achievable R^2 — v2 silently ignored this and
+    mislabelled `rho^2 * target` as the latent R^2. Targets above rho^2 are now reported as NOT
+    ACHIEVABLE rather than quietly produced."""
+    rho = float(np.corrcoef(t_true, sig)[0, 1])
+    rho2 = rho * rho
+    if not np.isfinite(rho2) or rho2 <= 0:
+        return None, rho2
+    if target_r2 >= rho2:
+        return None, rho2                     # unreachable with this trend shape
+    sd = float(np.sqrt(rho2 / target_r2 - 1.0))
+    return sig + rng.normal(0, sd, len(sig)), rho2
+
+
+def _sampler_uniform(idx, embs, n, rng):
+    """VALIDATION-UNIFORM: one uniformly random frame per sampled embryo. Because the live videos
+    are sampled evenly in time, this yields an approximately UNIFORM true-tau distribution."""
+    pick = rng.choice(embs, size=n, replace=True)
+    return np.array([rng.choice(idx[e]) for e in pick])
+
+
+def _make_matched_sampler(p_all, g_all, fixed_taus):
+    """FIXED-COHORT-MATCHED: draw validation frames whose PREDICTED tau reproduces the fixed
+    cohort's predicted-tau distribution.
+
+    IMPORTANT AND UNAVOIDABLE CAVEAT: only the PREDICTOR distribution can be matched. The fixed
+    cohort's TRUE tau distribution is unknown and unknowable (that is the entire reason the clock
+    exists), so this scenario assumes the residual structure conditional on predicted tau transfers
+    from live to fixed. It is a sensitivity analysis, not a correction."""
+    order = np.argsort(p_all)
+    ps = p_all[order]
+
+    def sampler(idx, embs, n, rng):
+        targets = rng.choice(fixed_taus, size=n, replace=True)
+        out = []
+        for t in targets:
+            j = int(np.searchsorted(ps, t))
+            lo, hi = max(0, j - 12), min(len(ps), j + 12)
+            cand = order[lo:hi]
+            out.append(int(rng.choice(cand)) if len(cand) else int(rng.integers(0, len(p_all))))
+        return np.array(out)
+    return sampler
+
+
+def attenuation(frames, seed, B, n_snapshot, latent_grid, fixed_taus=None):
     """For each latent true R^2, simulate an outcome from TRUE tau, then measure the R^2 you would
-    observe if you regressed it on the clock's PREDICTED tau instead.
+    observe regressing it on the clock's PREDICTED tau.
 
     Design choices that keep this realistic rather than flattering:
       * SNAPSHOT design: one frame per embryo per replicate, because the fixed cohort is one
-        snapshot per zygote — not a trajectory. Using whole trajectories would understate the
-        attenuation by averaging error away.
+        snapshot per zygote — not a trajectory.
       * The (true, predicted) PAIR is resampled together, so the empirical residual structure
-        (heteroscedasticity, the isotonic step ties, the phase-dependent bias) is preserved exactly
-        rather than being replaced by a Gaussian assumption.
+        (heteroscedasticity, step ties, phase-dependent bias) is preserved exactly.
       * Embryo-level resampling with replacement.
-      * Two trend shapes: linear in tau, and a monotone saturating trend, so the answer is not an
-        artefact of assuming linearity.
+      * TWO SAMPLING SCENARIOS (see below) — R^2 attenuation depends strongly on predictor range,
+        and the fixed cohort is compressed near early tau, so a single curve would be misleading.
+      * The realized true-time R^2 is calibrated per replicate and REPORTED, not assumed.
     """
     fr = frames["frames"]
     y = np.array([f["tau_true"] for f in fr], float)
@@ -146,54 +215,99 @@ def attenuation(frames, seed, B, n_snapshot, latent_grid):
     g = np.array([f["embryo_id"] for f in fr])
     embs = np.unique(g)
     idx = {e: np.flatnonzero(g == e) for e in embs}
-    rng = np.random.default_rng(seed)
+
+    scenarios = {"validation_uniform": {
+        "sampler": _sampler_uniform,
+        "label": "validation-uniform snapshot sampling",
+        "description": ("one uniformly random frame per sampled validation embryo; the live videos "
+                        "are evenly sampled in time, so true tau is approximately uniform"),
+        "relevance": ("characterises the clock over its full calibrated range; NOT matched to the "
+                      "fixed MERFISH cohort")}}
+    if fixed_taus is not None and len(fixed_taus) >= 5:
+        scenarios["fixed_cohort_matched"] = {
+            "sampler": _make_matched_sampler(p, g, np.asarray(fixed_taus, float)),
+            "label": "fixed-cohort-matched sensitivity",
+            "description": ("validation frames drawn so their PREDICTED tau reproduces the fixed "
+                            "MERFISH cohort's predicted-tau distribution, out-of-domain zygotes "
+                            "excluded"),
+            "relevance": ("the scenario relevant to interpreting a fixed-cohort gene result such as "
+                          "MuERV-L, because the fixed cohort is compressed near early tau and R^2 "
+                          "depends strongly on predictor range"),
+            "caveat": ("only the PREDICTED-tau distribution is matched; the fixed cohort's TRUE tau "
+                       "distribution is unknown, so this assumes the residual structure conditional "
+                       "on predicted tau transfers from live to fixed imaging")}
 
     shapes = {"linear": lambda t: t,
               "monotone_saturating": lambda t: 1.0 - np.exp(-3.0 * t)}
     out = {}
-    for shape_name, f_shape in shapes.items():
-        rows = []
-        for r2_true in latent_grid:
-            obs = []
-            for _ in range(B):
-                pick = rng.choice(embs, size=n_snapshot, replace=True)
-                # one random frame per sampled embryo -> a synthetic snapshot cohort
-                sel = np.array([rng.choice(idx[e]) for e in pick])
-                t_true, t_pred = y[sel], p[sel]
-                sig = f_shape(t_true)
-                if np.std(sig) == 0:
+    for sc_name, sc in scenarios.items():
+        rng = np.random.default_rng(_scenario_seed(seed, sc_name))
+        out[sc_name] = {k: v for k, v in sc.items() if k != "sampler"}
+        curves = {}
+        for shape_name, f_shape in shapes.items():
+            rows = []
+            for r2_true in latent_grid:
+                obs, ach, n_unreachable = [], [], 0
+                for _ in range(B):
+                    sel = sc["sampler"](idx, embs, n_snapshot, rng)
+                    t_true, t_pred = y[sel], p[sel]
+                    sig = f_shape(t_true)
+                    if np.std(sig) == 0 or np.std(t_true) == 0:
+                        continue
+                    sig = (sig - sig.mean()) / np.std(sig)
+                    outcome, rho2 = _calibrate_noise(sig, t_true, r2_true, rng)
+                    if outcome is None:
+                        n_unreachable += 1
+                        continue
+                    a = r2_of(t_true, outcome)          # REALIZED true-time R^2, same model form
+                    o = r2_of(t_pred, outcome)          # observed, against predicted tau
+                    if np.isfinite(a) and np.isfinite(o):
+                        ach.append(a); obs.append(o)
+                obs, ach = np.array(obs), np.array(ach)
+                if len(obs) < max(10, 0.05 * B):
+                    rows.append({"latent_true_r2": round(float(r2_true), 4), "achievable": False,
+                                 "reason": ("requested R^2 exceeds what this trend shape can produce "
+                                            "against true tau (rho^2 cap)"),
+                                 "n_unreachable_replicates": n_unreachable})
                     continue
-                sig = (sig - sig.mean()) / np.std(sig)
-                # noise scaled so that R^2(outcome ~ TRUE tau) == r2_true by construction
-                if r2_true <= 0:
-                    outcome = rng.normal(0, 1, len(sig))
-                elif r2_true >= 1:
-                    outcome = sig
-                else:
-                    nsd = np.sqrt((1 - r2_true) / r2_true)
-                    outcome = sig + rng.normal(0, nsd, len(sig))
-                obs.append(r2_of(t_pred, outcome))
-            obs = np.array([v for v in obs if np.isfinite(v)])
-            if not len(obs):
-                continue
-            rows.append({
-                "latent_true_r2": round(float(r2_true), 4),
-                "observed_r2_median": round(float(np.median(obs)), 5),
-                "observed_r2_ci95": [round(float(np.quantile(obs, .025)), 5),
-                                     round(float(np.quantile(obs, .975)), 5)],
-                "observed_r2_q25_q75": [round(float(np.quantile(obs, .25)), 5),
-                                        round(float(np.quantile(obs, .75)), 5)],
-                "attenuation_ratio": (round(float(np.median(obs) / r2_true), 4)
-                                      if r2_true > 0 else None)})
-        out[shape_name] = rows
+                rows.append({
+                    "latent_true_r2": round(float(r2_true), 4), "achievable": True,
+                    "achieved_true_r2_median": round(float(np.median(ach)), 5),
+                    "achieved_true_r2_ci95": [round(float(np.quantile(ach, .025)), 5),
+                                              round(float(np.quantile(ach, .975)), 5)],
+                    "observed_r2_median": round(float(np.median(obs)), 5),
+                    "observed_r2_ci95": [round(float(np.quantile(obs, .025)), 5),
+                                         round(float(np.quantile(obs, .975)), 5)],
+                    "observed_r2_q25_q75": [round(float(np.quantile(obs, .25)), 5),
+                                            round(float(np.quantile(obs, .75)), 5)],
+                    "attenuation_ratio": (round(float(np.median(obs) / np.median(ach)), 4)
+                                          if np.median(ach) > 0 else None),
+                    "n_replicates_used": int(len(obs))})
+            curves[shape_name] = rows
+        out[sc_name]["curves"] = curves
     return {
-        "description": ("Generic attenuation: outcome generated from TRUE tau at a known latent "
+        "description": ("Attenuation: an outcome is generated from TRUE tau at a calibrated latent "
                         "R^2, then regressed on the clock's empirical PREDICTED tau."),
         "design": {"cohort_design": "snapshot — one frame per sampled embryo",
                    "n_snapshot_embryos": n_snapshot, "n_replicates": B,
                    "resampling": "embryo-level with replacement",
-                   "error_model": "empirical (true, predicted) pairs, not a Gaussian assumption"},
-        "curves": out,
+                   "error_model": "empirical (true, predicted) pairs, not a Gaussian assumption",
+                   "scenario_seed_offsets": dict(SCENARIO_SEED_OFFSET),
+                   "seed_note": ("scenario seeds are explicit stable offsets from --seed; they are "
+                                 "never derived from hash(), which Python randomises per process"),
+                   "latent_r2_definition": (
+                       "the noise sd is solved per replicate to TARGET the requested OLS R^2 "
+                       "against TRUE tau, using the same single-predictor model form later applied "
+                       "to predicted tau. This is a target in expectation, not an identity: a "
+                       "finite random draw makes the realized R^2 scatter around it (and sample "
+                       "R^2 is slightly upward-biased). The REALIZED value is measured per "
+                       "replicate and reported as achieved_true_r2_median / achieved_true_r2_ci95, "
+                       "and the curve is plotted against the achieved value, not the request.")},
+        "scenarios": out,
+        "no_unique_inversion": (
+            "The two scenarios give DIFFERENT mappings from observed to latent R^2, so there is no "
+            "unique inversion. An observed value must be read against the scenario that matches the "
+            "cohort it came from, and even then the interval is wide."),
         "interpretation_guard": (
             "This quantifies ONLY the attenuation caused by pseudotime error. A low observed R^2 "
             "is NOT thereby explained: transcript measurement noise, probe-set and batch effects, "
@@ -204,14 +318,14 @@ def attenuation(frames, seed, B, n_snapshot, latent_grid):
 
 
 def invert_curve(curve_rows, observed_r2):
-    """Given an observed R^2, report the range of latent true R^2 compatible with it (i.e. those
-    whose simulated 95% band contains the observation). This is the quantity that actually answers
-    'is R^2 ~ 0.1-0.15 compatible with a meaningful latent trend?'."""
-    compat = [r["latent_true_r2"] for r in curve_rows
+    """Range of ACHIEVED true-time R^2 whose simulated 95% band contains the observation. Reported
+    per scenario — the two scenarios disagree, so there is NO unique inversion."""
+    rows = [r for r in curve_rows if r.get("achievable")]
+    compat = [r["achieved_true_r2_median"] for r in rows
               if r["observed_r2_ci95"][0] <= observed_r2 <= r["observed_r2_ci95"][1]]
     if not compat:
         return None
-    return {"min": min(compat), "max": max(compat)}
+    return {"min": round(min(compat), 4), "max": round(max(compat), 4)}
 
 
 # ═══════════════════════════ 3 · frozen downstream illustration ═══════════════════════════
@@ -322,8 +436,9 @@ def downstream(fixed, seed, B, atten_curves):
             res["sensitivity_including_out_of_domain"] = {
                 k: v for k, v in fit_gene(g, include_ood=True).items()
                 if k in ("n", "observed_r2", "pearson_r", "permutation_p_embryo_level")}
-            lin = atten_curves["curves"]["linear"]
-            res["compatible_latent_true_r2"] = invert_curve(lin, res["observed_r2"])
+            res["compatible_latent_true_r2_by_scenario"] = {
+                sc: invert_curve(v["curves"]["linear"], res["observed_r2"])
+                for sc, v in atten_curves["scenarios"].items()}
         results[g] = res
 
     # ---- separate DISCOVERY scan, FDR-corrected, explicitly not confirmatory ----
@@ -365,12 +480,17 @@ def build_headline(conf, atten):
                 "text": (f"The predeclared confirmatory gene {CONFIRMATORY} could not be evaluated: "
                          f"{conf.get('reason', 'unknown reason')}.")}
     obs = conf["observed_r2"]
-    comp = conf.get("compatible_latent_true_r2")
+    bysc = conf.get("compatible_latent_true_r2_by_scenario", {})
+    sc_name = ("fixed_cohort_matched" if "fixed_cohort_matched" in atten["scenarios"]
+               else "validation_uniform")
+    comp = bysc.get(sc_name)
     rb = conf.get("robustness", {})
-    lin = atten["curves"]["linear"]
-    ref = {r["latent_true_r2"]: r for r in lin}
+    lin = [r for r in atten["scenarios"][sc_name]["curves"]["linear"] if r.get("achievable")]
     def med(x):
-        k = min(ref, key=lambda v: abs(v - x)); return ref[k]["observed_r2_median"]
+        if not lin:
+            return float("nan")
+        r = min(lin, key=lambda v: abs(v["achieved_true_r2_median"] - x))
+        return r["observed_r2_median"]
 
     fragile = (rb.get("max_single_point_influence_on_r2") or 0) > 0.15
     loo1 = next((d for d in rb.get("leave_top_out", []) if d["dropped_top_n_by_count"] == 1), None)
@@ -388,12 +508,21 @@ def build_headline(conf, atten):
                 f"R^2 = {rb.get('log1p_ols_r2'):.3f}. Biologically the burst is plausible — MERVL "
                 f"fires at ZGA and that embryo sits latest on the clock — but a single point cannot "
                 f"carry the claim. ")
-    txt += (f"For scale, under the measured clock error a latent trend of true R^2 = 0.50 is "
-            f"expected to present as observed R^2 ~ {med(0.5):.3f}, true R^2 = 0.30 as "
-            f"~ {med(0.3):.3f}, and true R^2 = 0.10 as ~ {med(0.1):.3f}. ")
+    txt += (f"For scale, under the measured clock error and the {sc_name.replace('_', '-')} "
+            f"scenario, a latent trend of true R^2 = 0.50 is expected to present as observed R^2 "
+            f"~ {med(0.5):.3f}, true R^2 = 0.30 as ~ {med(0.3):.3f}, and true R^2 = 0.10 as "
+            f"~ {med(0.1):.3f}. ")
     if comp:
+        other = {k: v for k, v in bysc.items() if k != sc_name and v}
         txt += (f"Taken at face value the observed R^2 is compatible with latent true R^2 in "
-                f"[{comp['min']:.2f}, {comp['max']:.2f}]; the simulation cannot narrow it further.")
+                f"[{comp['min']:.2f}, {comp['max']:.2f}] under the {sc_name.replace('_', '-')} "
+                f"scenario; the simulation cannot narrow it further")
+        if other:
+            o = list(other.items())[0]
+            txt += (f", and the {o[0].replace('_', '-')} scenario gives a DIFFERENT range "
+                    f"[{o[1]['min']:.2f}, {o[1]['max']:.2f}] — there is no unique inversion.")
+        else:
+            txt += "."
     else:
         txt += ("The observed value falls outside the simulated band at every latent R^2 on the "
                 "grid, indicating variance the clock-error model does not capture.")
@@ -413,14 +542,16 @@ def build_headline(conf, atten):
             "robust_spearman_rho": rb.get("spearman_rho"),
             "robust_log1p_r2": rb.get("log1p_ols_r2"),
             "outlier_driven": bool(fragile),
+            "scenario_used": sc_name,
             "answer_to_the_low_r2_question": (
-                "Yes — an observed R^2 of 0.10-0.15 is fully compatible with a real, moderately "
-                f"strong latent trend under this clock's measured error: the simulation puts a "
-                f"latent true R^2 of 0.15 at an observed median of {med(0.15):.3f} and a latent "
-                f"0.30 at {med(0.3):.3f}, with wide intervals at n~{atten['design']['n_snapshot_embryos']}. "
-                "A low observed R^2 is therefore NOT evidence against a trend. It is equally NOT "
-                "evidence for one: clock error is only one of several variance sources, and this "
-                "analysis bounds only that one."),
+                "Yes — an observed R^2 of 0.10-0.15 is compatible with a real, moderately strong "
+                f"latent trend under this clock's measured error. In the {sc_name.replace('_', '-')} "
+                f"scenario the simulation puts a latent true R^2 of 0.15 at an observed median of "
+                f"{med(0.15):.3f} and a latent 0.30 at {med(0.3):.3f}, with wide intervals at "
+                f"n~{atten['design']['n_snapshot_embryos']}. A low observed R^2 is therefore NOT "
+                "evidence against a trend. It is equally NOT evidence for one: clock error is only "
+                "one of several variance sources, this analysis bounds only that one, and the two "
+                "sampling scenarios give different mappings, so no unique inversion exists."),
             "text": txt}
 
 
@@ -445,19 +576,32 @@ def main():
 
     n_fixed = 0
     fixed = None
+    fixed_taus = None
     if os.path.isfile(FIXED_P):
         fixed = json.load(open(FIXED_P))
-        n_fixed = sum(1 for r in fixed["embryos"]
-                      if r.get("tau") is not None and r.get("qc") != "out-of-domain")
+        keep = [r for r in fixed["embryos"]
+                if r.get("tau") is not None and r.get("qc") != "out-of-domain"]
+        n_fixed = len(keep)
+        fixed_taus = [r["tau"] for r in keep]          # OOD excluded by default, as downstream
     n_snapshot = max(12, n_fixed or 40)
     grid = [0.02, 0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 0.95]
-    att = attenuation(frames, a.seed + 1, B_SIM, n_snapshot, grid)
-    lin = att["curves"]["linear"]
-    print(f"  attenuation (n={n_snapshot} snapshot embryos, {B_SIM} reps):")
-    for r in lin:
-        if r["latent_true_r2"] in (0.1, 0.3, 0.5, 0.8, 0.95):
-            print(f"    latent true R2={r['latent_true_r2']:.2f} -> observed median "
-                  f"{r['observed_r2_median']:.3f} CI {r['observed_r2_ci95']}")
+    att = attenuation(frames, a.seed + 1, B_SIM, n_snapshot, grid, fixed_taus)
+    print(f"  attenuation (n={n_snapshot} snapshot embryos, {B_SIM} reps, "
+          f"{len(att['scenarios'])} scenarios):")
+    for sc, v in att["scenarios"].items():
+        print(f"    [{sc}]")
+        for r in v["curves"]["linear"]:
+            if r["latent_true_r2"] in (0.1, 0.3, 0.5, 0.8):
+                if not r.get("achievable"):
+                    print(f"      requested {r['latent_true_r2']:.2f} -> NOT ACHIEVABLE")
+                else:
+                    print(f"      requested {r['latent_true_r2']:.2f} "
+                          f"(achieved {r['achieved_true_r2_median']:.3f}) -> observed median "
+                          f"{r['observed_r2_median']:.3f} CI {r['observed_r2_ci95']}")
+        sat = v["curves"]["monotone_saturating"]
+        n_un = sum(1 for r in sat if not r.get("achievable"))
+        if n_un:
+            print(f"      (saturating trend: {n_un}/{len(sat)} grid points unreachable — rho^2 cap)")
 
     down = {"status": "not estimable", "reason": "data/pronuclei_pseudotime.json not present"}
     if fixed:

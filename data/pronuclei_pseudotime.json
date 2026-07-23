@@ -1,16 +1,16 @@
 {
  "meta": {
-  "model_version": "pnpt-2.0.0",
+  "model_version": "pnpt-3.0.0",
   "data_version": "scheffler2021-v1",
   "model_label": "Isotonic \u00b7 distance sum",
   "features": [
    "distance_sum_um"
   ],
   "model_class": "empirical geometry-to-time calibration",
-  "trained_at_utc": "2026-07-23T22:15:38+00:00",
+  "trained_at_utc": "2026-07-23T23:42:05+00:00",
   "seed": 20260723,
-  "applied_at_utc": "2026-07-23T22:15:38+00:00",
-  "halfwidth_95": 0.24464,
+  "applied_at_utc": "2026-07-23T23:42:05+00:00",
+  "halfwidth_95": 0.242,
   "nested_outer_test": {
    "macro_mae": 0.09088,
    "pooled_mae": 0.09101,
@@ -113,7 +113,7 @@
    "label": "Z-P1-fov1",
    "date_short": "Dec 26",
    "legacy_surface_gap_um": 38.98,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -122,7 +122,7 @@
    "tau_raw": 0.0,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.24464,
+   "hi95": 0.242,
    "qc": "caution",
    "reason": "nearer_to_center_um=28.5um outside training p01-p99 [7.0, 25.4]; farther_to_center_um=40.9um outside training p01-p99 [9.2, 37.9]; Mahalanobis 4.13 > 3.81 (training p97.5)",
    "mahalanobis": 4.132,
@@ -142,7 +142,7 @@
    "label": "Z-P1-fov10",
    "date_short": "Dec 26",
    "legacy_surface_gap_um": 3.89,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -151,7 +151,7 @@
    "tau_raw": 0.1405,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.38514,
+   "hi95": 0.3825,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 2.072,
@@ -171,7 +171,7 @@
    "label": "Z-P1-fov2_2",
    "date_short": "Dec 26",
    "legacy_surface_gap_um": 2.73,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -180,7 +180,7 @@
    "tau_raw": 0.0867,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.33134,
+   "hi95": 0.3287,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.895,
@@ -200,7 +200,7 @@
    "label": "Z-P1-fov4",
    "date_short": "Dec 26",
    "legacy_surface_gap_um": 0.3,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -209,7 +209,7 @@
    "tau_raw": 0.0867,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.33134,
+   "hi95": 0.3287,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 3.546,
@@ -229,7 +229,7 @@
    "label": "Z-P1-fov7",
    "date_short": "Dec 26",
    "legacy_surface_gap_um": 17.64,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -238,7 +238,7 @@
    "tau_raw": 0.14007,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.38471,
+   "hi95": 0.38207,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 3.048,
@@ -258,7 +258,7 @@
    "label": "Z-P1-fov8",
    "date_short": "Dec 26",
    "legacy_surface_gap_um": 28.01,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -267,7 +267,7 @@
    "tau_raw": 0.05248,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.29712,
+   "hi95": 0.29448,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 2.883,
@@ -287,7 +287,7 @@
    "label": "Z-P1-fov0_1",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 2.66,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -296,7 +296,7 @@
    "tau_raw": 0.24187,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.48651,
+   "hi95": 0.48387,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.562,
@@ -316,7 +316,7 @@
    "label": "Z-P1-fov0_2",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 6.62,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -325,7 +325,7 @@
    "tau_raw": 0.12697,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.37161,
+   "hi95": 0.36897,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.306,
@@ -345,7 +345,7 @@
    "label": "Z-P1-fov1",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 3.86,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -353,8 +353,8 @@
    "tau": 0.37004,
    "tau_raw": 0.37004,
    "out_of_range": false,
-   "lo95": 0.1254,
-   "hi95": 0.61468,
+   "lo95": 0.12804,
+   "hi95": 0.61204,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 0.698,
@@ -374,7 +374,7 @@
    "label": "Z-P1-fov10",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 1.24,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -382,8 +382,8 @@
    "tau": 0.54753,
    "tau_raw": 0.54753,
    "out_of_range": false,
-   "lo95": 0.30289,
-   "hi95": 0.79217,
+   "lo95": 0.30553,
+   "hi95": 0.78953,
    "qc": "caution",
    "reason": "Mahalanobis 3.94 > 3.81 (training p97.5)",
    "mahalanobis": 3.936,
@@ -403,7 +403,7 @@
    "label": "Z-P1-fov11",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 0.3,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -411,8 +411,8 @@
    "tau": 0.46495,
    "tau_raw": 0.46495,
    "out_of_range": false,
-   "lo95": 0.22031,
-   "hi95": 0.70959,
+   "lo95": 0.22295,
+   "hi95": 0.70695,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 0.709,
@@ -432,7 +432,7 @@
    "label": "Z-P1-fov12",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 1.35,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -440,8 +440,8 @@
    "tau": 0.54753,
    "tau_raw": 0.54753,
    "out_of_range": false,
-   "lo95": 0.30289,
-   "hi95": 0.79217,
+   "lo95": 0.30553,
+   "hi95": 0.78953,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.518,
@@ -461,7 +461,7 @@
    "label": "Z-P1-fov2",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 12.25,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -470,7 +470,7 @@
    "tau_raw": 0.24036,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.485,
+   "hi95": 0.48236,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 2.727,
@@ -490,7 +490,7 @@
    "label": "Z-P1-fov3",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 9.14,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -498,8 +498,8 @@
    "tau": 0.32671,
    "tau_raw": 0.32671,
    "out_of_range": false,
-   "lo95": 0.08207,
-   "hi95": 0.57135,
+   "lo95": 0.08471,
+   "hi95": 0.56871,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.403,
@@ -519,7 +519,7 @@
    "label": "Z-P1-fov4",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 0.42,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -528,7 +528,7 @@
    "tau_raw": 0.2003,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.44493,
+   "hi95": 0.44229,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 0.936,
@@ -548,7 +548,7 @@
    "label": "Z-P1-fov5",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 5.48,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -557,7 +557,7 @@
    "tau_raw": 0.15275,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.39739,
+   "hi95": 0.39475,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.197,
@@ -577,7 +577,7 @@
    "label": "Z-P1-fov6_0",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 1.59,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -585,8 +585,8 @@
    "tau": 0.38418,
    "tau_raw": 0.38418,
    "out_of_range": false,
-   "lo95": 0.13954,
-   "hi95": 0.62882,
+   "lo95": 0.14218,
+   "hi95": 0.62618,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 0.946,
@@ -606,7 +606,7 @@
    "label": "Z-P1-fov6_1",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 1.08,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -614,8 +614,8 @@
    "tau": 0.53035,
    "tau_raw": 0.53035,
    "out_of_range": false,
-   "lo95": 0.28571,
-   "hi95": 0.77499,
+   "lo95": 0.28835,
+   "hi95": 0.77235,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 3.764,
@@ -635,7 +635,7 @@
    "label": "Z-P1-fov7_0",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 1.9,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -643,8 +643,8 @@
    "tau": 0.46495,
    "tau_raw": 0.46495,
    "out_of_range": false,
-   "lo95": 0.22031,
-   "hi95": 0.70959,
+   "lo95": 0.22295,
+   "hi95": 0.70695,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 2.263,
@@ -664,7 +664,7 @@
    "label": "Z-P1-fov7_1",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 0.3,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -672,8 +672,8 @@
    "tau": 0.64342,
    "tau_raw": 0.64342,
    "out_of_range": false,
-   "lo95": 0.39878,
-   "hi95": 0.88806,
+   "lo95": 0.40142,
+   "hi95": 0.88542,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 0.648,
@@ -693,7 +693,7 @@
    "label": "Z-P1-fov8_0",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 0.3,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -701,8 +701,8 @@
    "tau": 0.46495,
    "tau_raw": 0.46495,
    "out_of_range": false,
-   "lo95": 0.22031,
-   "hi95": 0.70959,
+   "lo95": 0.22295,
+   "hi95": 0.70695,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.088,
@@ -722,7 +722,7 @@
    "label": "Z-P1-fov8_1",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 0.3,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -730,8 +730,8 @@
    "tau": 0.25284,
    "tau_raw": 0.25284,
    "out_of_range": false,
-   "lo95": 0.0082,
-   "hi95": 0.49748,
+   "lo95": 0.01084,
+   "hi95": 0.49484,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 0.562,
@@ -751,7 +751,7 @@
    "label": "Z-P2-fov9",
    "date_short": "Apr 9",
    "legacy_surface_gap_um": 2.32,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -759,7 +759,7 @@
    "tau": 0.94486,
    "tau_raw": 0.94486,
    "out_of_range": false,
-   "lo95": 0.70022,
+   "lo95": 0.70286,
    "hi95": 1.0,
    "qc": "caution",
    "reason": "nearer_to_center_um=6.5um outside training p01-p99 [7.0, 25.4]",
@@ -780,7 +780,7 @@
    "label": "Z-P2-fov0",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 27.89,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -789,7 +789,7 @@
    "tau_raw": 0.05248,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.29712,
+   "hi95": 0.29448,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.842,
@@ -809,7 +809,7 @@
    "label": "Z-P2-fov1",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 22.4,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -818,7 +818,7 @@
    "tau_raw": 0.109,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.35364,
+   "hi95": 0.351,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.508,
@@ -838,7 +838,7 @@
    "label": "Z-P2-fov10",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 0.3,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -846,8 +846,8 @@
    "tau": 0.41432,
    "tau_raw": 0.41432,
    "out_of_range": false,
-   "lo95": 0.16968,
-   "hi95": 0.65896,
+   "lo95": 0.17232,
+   "hi95": 0.65632,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 0.164,
@@ -867,7 +867,7 @@
    "label": "Z-P2-fov12",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 19.76,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -876,7 +876,7 @@
    "tau_raw": 0.0867,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.33134,
+   "hi95": 0.3287,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.769,
@@ -896,7 +896,7 @@
    "label": "Z-P2-fov13",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 25.05,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -905,7 +905,7 @@
    "tau_raw": 0.0,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.24464,
+   "hi95": 0.242,
    "qc": "out-of-domain",
    "reason": "nearer_to_center_um=27.9um outside training p01-p99 [7.0, 25.4]; farther_to_center_um=45.0um outside training range [8.5, 44.4]; Mahalanobis 5.46 > 3.81 (training p97.5)",
    "mahalanobis": 5.455,
@@ -925,7 +925,7 @@
    "label": "Z-P2-fov14",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 2.06,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -933,8 +933,8 @@
    "tau": 0.38418,
    "tau_raw": 0.38418,
    "out_of_range": false,
-   "lo95": 0.13954,
-   "hi95": 0.62882,
+   "lo95": 0.14218,
+   "hi95": 0.62618,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 2.744,
@@ -954,7 +954,7 @@
    "label": "Z-P2-fov16",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 22.99,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -963,7 +963,7 @@
    "tau_raw": 0.05248,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.29712,
+   "hi95": 0.29448,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 2.89,
@@ -983,7 +983,7 @@
    "label": "Z-P2-fov17",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 31.31,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -992,7 +992,7 @@
    "tau_raw": 0.0,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.24464,
+   "hi95": 0.242,
    "qc": "caution",
    "reason": "nearer_to_center_um=27.9um outside training p01-p99 [7.0, 25.4]; farther_to_center_um=39.4um outside training p01-p99 [9.2, 37.9]; Mahalanobis 3.83 > 3.81 (training p97.5)",
    "mahalanobis": 3.828,
@@ -1012,7 +1012,7 @@
    "label": "Z-P2-fov18_0",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 46.59,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1021,7 +1021,7 @@
    "tau_raw": 0.0,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.24464,
+   "hi95": 0.242,
    "qc": "caution",
    "reason": "nearer_to_center_um=27.6um outside training p01-p99 [7.0, 25.4]; farther_to_center_um=43.0um outside training p01-p99 [9.2, 37.9]; Mahalanobis 4.90 > 3.81 (training p97.5)",
    "mahalanobis": 4.896,
@@ -1041,7 +1041,7 @@
    "label": "Z-P2-fov18_1",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 16.77,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1050,7 +1050,7 @@
    "tau_raw": 0.186,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.43064,
+   "hi95": 0.428,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 2.571,
@@ -1070,7 +1070,7 @@
    "label": "Z-P2-fov19_1",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 32.7,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1079,7 +1079,7 @@
    "tau_raw": 0.03735,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.28199,
+   "hi95": 0.27935,
    "qc": "caution",
    "reason": "nearer_to_center_um=26.3um outside training p01-p99 [7.0, 25.4]",
    "mahalanobis": 3.005,
@@ -1099,7 +1099,7 @@
    "label": "Z-P2-fov2",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 2.1,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1108,7 +1108,7 @@
    "tau_raw": 0.0,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.24464,
+   "hi95": 0.242,
    "qc": "out-of-domain",
    "reason": "nearer_to_center_um=38.4um outside training range [6.3, 33.1]; farther_to_center_um=44.5um outside training range [8.5, 44.4]; Mahalanobis 5.19 > 3.81 (training p97.5)",
    "mahalanobis": 5.191,
@@ -1128,7 +1128,7 @@
    "label": "Z-P2-fov20",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 0.3,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1137,7 +1137,7 @@
    "tau_raw": 0.22177,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.46641,
+   "hi95": 0.46377,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.767,
@@ -1157,7 +1157,7 @@
    "label": "Z-P2-fov21",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 2.41,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1165,8 +1165,8 @@
    "tau": 0.62633,
    "tau_raw": 0.62633,
    "out_of_range": false,
-   "lo95": 0.38169,
-   "hi95": 0.87097,
+   "lo95": 0.38433,
+   "hi95": 0.86833,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.16,
@@ -1186,7 +1186,7 @@
    "label": "Z-P2-fov22_0",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 0.67,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1194,8 +1194,8 @@
    "tau": 0.66772,
    "tau_raw": 0.66772,
    "out_of_range": false,
-   "lo95": 0.42308,
-   "hi95": 0.91236,
+   "lo95": 0.42572,
+   "hi95": 0.90972,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 0.649,
@@ -1215,7 +1215,7 @@
    "label": "Z-P2-fov22_1",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 27.75,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1224,7 +1224,7 @@
    "tau_raw": 0.0,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.24464,
+   "hi95": 0.242,
    "qc": "caution",
    "reason": "nearer_to_center_um=28.1um outside training p01-p99 [7.0, 25.4]; farther_to_center_um=38.2um outside training p01-p99 [9.2, 37.9]",
    "mahalanobis": 3.543,
@@ -1244,7 +1244,7 @@
    "label": "Z-P2-fov23",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 10.98,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1253,7 +1253,7 @@
    "tau_raw": 0.05248,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.29712,
+   "hi95": 0.29448,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.929,
@@ -1273,7 +1273,7 @@
    "label": "Z-P2-fov25_0",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 0.3,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1281,8 +1281,8 @@
    "tau": 0.55003,
    "tau_raw": 0.55003,
    "out_of_range": false,
-   "lo95": 0.30539,
-   "hi95": 0.79467,
+   "lo95": 0.30803,
+   "hi95": 0.79203,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 0.477,
@@ -1302,7 +1302,7 @@
    "label": "Z-P2-fov26",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 0.3,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1310,8 +1310,8 @@
    "tau": 0.64342,
    "tau_raw": 0.64342,
    "out_of_range": false,
-   "lo95": 0.39878,
-   "hi95": 0.88806,
+   "lo95": 0.40142,
+   "hi95": 0.88542,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 2.66,
@@ -1331,7 +1331,7 @@
    "label": "Z-P2-fov4",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 1.34,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1339,8 +1339,8 @@
    "tau": 0.29803,
    "tau_raw": 0.29803,
    "out_of_range": false,
-   "lo95": 0.05339,
-   "hi95": 0.54267,
+   "lo95": 0.05603,
+   "hi95": 0.54003,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 0.64,
@@ -1360,7 +1360,7 @@
    "label": "Z-P2-fov5",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 3.35,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1369,7 +1369,7 @@
    "tau_raw": 0.2003,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.44493,
+   "hi95": 0.44229,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 3.419,
@@ -1389,7 +1389,7 @@
    "label": "Z-P2-fov6",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 18.14,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1398,7 +1398,7 @@
    "tau_raw": 0.05248,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.29712,
+   "hi95": 0.29448,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.978,
@@ -1418,7 +1418,7 @@
    "label": "Z-P2-fov7_0",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 10.78,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1427,7 +1427,7 @@
    "tau_raw": 0.05248,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.29712,
+   "hi95": 0.29448,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 2.613,
@@ -1447,7 +1447,7 @@
    "label": "Z-P2-fov7_1",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 7.51,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1456,7 +1456,7 @@
    "tau_raw": 0.05583,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.30047,
+   "hi95": 0.29783,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.836,
@@ -1476,7 +1476,7 @@
    "label": "Z-P2-fov8_0",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 5.24,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1485,7 +1485,7 @@
    "tau_raw": 0.109,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.35364,
+   "hi95": 0.351,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 1.581,
@@ -1505,7 +1505,7 @@
    "label": "Z-P2-fov8_1",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 25.63,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1514,7 +1514,7 @@
    "tau_raw": 0.0,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.24464,
+   "hi95": 0.242,
    "qc": "caution",
    "reason": "farther_to_center_um=41.0um outside training p01-p99 [9.2, 37.9]; Mahalanobis 5.64 > 3.81 (training p97.5)",
    "mahalanobis": 5.645,
@@ -1534,7 +1534,7 @@
    "label": "Z-P2-fov9_0",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 24.82,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1543,7 +1543,7 @@
    "tau_raw": 0.0,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.24464,
+   "hi95": 0.242,
    "qc": "out-of-domain",
    "reason": "farther_to_center_um=46.5um outside training range [8.5, 44.4]; Mahalanobis 9.00 > 5.89 (training p99.9)",
    "mahalanobis": 9.005,
@@ -1563,7 +1563,7 @@
    "label": "Z-P2-fov9_1",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 27.3,
-   "model_version": "pnpt-2.0.0",
+   "model_version": "pnpt-3.0.0",
    "data_version": "scheffler2021-v1",
    "feature_schema": [
     "distance_sum_um"
@@ -1572,7 +1572,7 @@
    "tau_raw": 0.05248,
    "out_of_range": false,
    "lo95": 0.0,
-   "hi95": 0.29712,
+   "hi95": 0.29448,
    "qc": "pass",
    "reason": "",
    "mahalanobis": 2.394,

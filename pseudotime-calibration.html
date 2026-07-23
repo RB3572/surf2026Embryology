@@ -236,14 +236,18 @@
       <div class="pt-block">
         <h2>Attenuation curve <span class="pt-sub">latent true R² → what you would actually observe</span></h2>
         <div class="pt-ctlbar">
+          <label class="pt-ctl" title="The fixed MERFISH cohort is compressed near early tau, and R-squared attenuation depends strongly on predictor range — so the sampling scenario matters."><span class="pt-ctl-l">Scenario</span>
+            <select id="nc-scenario"></select></label>
           <label class="pt-ctl"><span class="pt-ctl-l">Trend shape</span>
             <select id="nc-shape"></select></label>
           <label class="pt-tg"><input type="checkbox" id="nc-band" checked><span>95% simulation band</span></label>
           <label class="pt-tg"><input type="checkbox" id="nc-ident" checked><span>No-attenuation line</span></label>
           <label class="pt-tg"><input type="checkbox" id="nc-marker" checked><span>Predeclared gene marker</span></label>
         </div>
+        <div class="pt-warn" id="nc-scenario-note"></div>
         <div class="pt-plot pt-plot-tall" id="nc-plot"></div>
         <p class="pt-note" id="nc-note"></p>
+        <div class="pt-tablewrap"><table class="pt-table" id="nc-achieved"></table></div>
       </div>
 
       <div class="pt-block">

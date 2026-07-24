@@ -179,3 +179,22 @@
 .pn-shift-ok { background: #fffbf3; border-color: #f0d9a8; border-left: 3px solid #d97706; color: #6b4a12; }
 .pn-shift-note b { color: #3a2408; }
 .pn-shift-bad b { color: #7a1d1d; }
+
+/* ---- manual point exclusion ---- */
+.pn-ex-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex-basis: 100%;
+  margin-top: 8px; padding: 7px 10px; border-radius: 8px;
+  background: #fffafa; border: 1px solid #f2c4c4; border-left: 3px solid #b42318; }
+.pn-ex-row[hidden] { display: none; }
+.pn-ex-lab { font-size: 12px; font-weight: 700; color: #7a1d1d; }
+.pn-ex-list { display: inline-flex; gap: 5px; flex-wrap: wrap; }
+.pn-ex-chip { font: inherit; font-size: 11px; font-weight: 600; color: #7a1d1d;
+  background: #fff; border: 1px solid #e9b8b8; border-radius: 999px; padding: 2px 8px;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+.pn-ex-chip:hover { background: #fdeaea; border-color: #b42318; }
+.pn-ex-chip span { font-size: 12px; opacity: .7; }
+.pn-ex-reset { font: inherit; font-size: 11px; font-weight: 600; color: #7a1d1d; background: #fff;
+  border: 1px solid #e9b8b8; border-radius: 6px; padding: 3px 9px; cursor: pointer; }
+.pn-ex-reset:hover { background: #fdeaea; border-color: #b42318; }
+.pn-ex-hint { flex-basis: 100%; font-size: 10.5px; color: #8a5555; line-height: 1.5; }
+.pn-ex-warn { color: #b42318; }
+.pn-ex-warn b { color: #7a1d1d; }

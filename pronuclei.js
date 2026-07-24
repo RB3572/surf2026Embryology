@@ -32,6 +32,8 @@
   const rankNEl = $("#rank-n"), rankPosEl = $("#rank-pos"), rankNegEl = $("#rank-neg");
   const ptToggle = $("#pseudotime-toggle");
   const clockSel = $("#pn-clock");
+  const exRowEl = $("#pn-ex-row"), exCountEl = $("#pn-ex-count"),
+        exListEl = $("#pn-ex-list"), exResetEl = $("#pn-ex-reset");
   const shiftOnEl = $("#pn-shift"), shiftDeltaEl = $("#pn-shift-delta"),
         shiftResetEl = $("#pn-shift-reset"), shiftHintEl = $("#pn-shift-hint");
   const regionSel = $("#region-sel"), normSel = $("#norm-sel"), flipToggle = $("#flip-toggle");
@@ -50,6 +52,9 @@
                   // never silently alter an established analysis. shiftDelta defaults to the
                   // calibration project's own 95% half-width once that artifact loads.
                   shiftOn: false, shiftDelta: 0.24, _shiftFrom: null,
+                  // manually excluded embryos (in-session only — never persisted, so a reload
+                  // can never silently carry a hand-trimmed cohort into a later analysis)
+                  excluded: new Set(), _excludedPts: null,
                   region: "all", norm: "count", flip: false, segData: null,
                   geneSet: [], setRequireAll: false, graphTab: "gene" };
   const PLOT_OF = { gene: geneScatter, total: scatterPlot, set: setScatter };
@@ -87,7 +92,7 @@
         state.shiftVersion = cal.meta.model_version || "";
       }
       applyClockAvail();
-      wireShift();
+      wireShift(); wireExclude();
       if (clockSel) clockSel.addEventListener("change", () => {
         state.clock = clockSel.value; syncClockUI(); syncShiftUI(); renderAllScatters();
       });
@@ -710,15 +715,25 @@
           marker: { size: 5, color: "#cbd5e1", symbol: "circle-open", line: { width: 1.2, color: "#94a3b8" } },
           text: labels, hovertemplate: "%{text}<br>original τ<extra></extra>" });
     }
+    // excluded embryos, drawn as ghosts — click one to bring it back
+    const ex = state._excludedPts;
+    if (ex && ex.x.length) {
+      traces.push({ type: "scatter", mode: "markers", name: "excluded (click to restore)",
+        x: ex.x.map((d, i) => H(d, ex.y[i])), y: ex.x.map((d, i) => Vv(d, ex.y[i])),
+        marker: { size: 9, color: "rgba(180,35,24,0.16)", symbol: "x-thin",
+                  line: { width: 2, color: "#b42318" } },
+        text: ex.labels, customdata: ex.ids,
+        hovertemplate: "%{text}<br><b>excluded</b> — click to restore<extra></extra>" });
+    }
     traces.push(
       { type: "scatter", mode: "markers", name: "zygotes", x: others.map((o) => o.h), y: others.map((o) => o.v),
         marker: { size: 8, color: "#94a3b8", opacity: 0.72, line: { width: 0 } },
-        text: others.map((o) => o.lab), hovertemplate: hover },
+        text: others.map((o) => o.lab), customdata: others.map((o) => o.id), hovertemplate: hover },
       { type: "scatter", mode: "lines", name: model.label, x: chx, y: chy,
         line: { color: "#0891b2", width: 2.4, shape: "spline" }, hoverinfo: "skip" });
     if (cur) traces.push({ type: "scatter", mode: "markers", name: cur.lab, x: [cur.h], y: [cur.v],
       marker: { size: 15, color: CUR_C, line: { width: 2, color: "#fff" } },
-      text: [cur.lab], hovertemplate: hover });
+      text: [cur.lab], customdata: [cur.id], hovertemplate: hover });
     const countIsX = flip;                          // count axis gets rangemode:tozero; distance floats
     plotInto(div, traces, {
       margin: { l: 64, r: 12, t: 6, b: 40 }, autosize: true,   // fills its resizable container (see .pn-resizable)
@@ -726,6 +741,22 @@
       yaxis: { title: { text: vTitle, font: { size: 10 } }, tickfont: { size: 9 }, gridcolor: "#eef1f5", rangemode: countIsX ? "normal" : "tozero" },
       paper_bgcolor: "transparent", plot_bgcolor: "transparent",
       legend: { orientation: "h", font: { size: 10 }, y: 1.16, x: 1, xanchor: "right" },
+    });
+    bindExcludeClick(div);
+  }
+
+  // ── click a point to exclude it (click a ghost to restore) ──────────────────────────────────
+  // Bound once per plot div; Plotly.react re-renders the traces but keeps the element's handlers.
+  function bindExcludeClick(div) {
+    if (!div || div._pnExcludeBound) return;
+    div._pnExcludeBound = true;
+    div.on("plotly_click", (ev) => {
+      const pt = ev && ev.points && ev.points[0];
+      const id = pt && pt.customdata;
+      if (!id || typeof id !== "string") return;          // model curve / shift lines carry none
+      if (state.excluded.has(id)) state.excluded.delete(id);
+      else state.excluded.add(id);
+      syncExcludeUI(); renderAllScatters();
     });
   }
   function updRegNote() { const m = MODELS[state.regType] || MODELS.linear; if (regNoteEl) regNoteEl.textContent = m.bio; }
@@ -742,17 +773,36 @@
   // embryos without a prediction are dropped (never plotted as zero); the y/id/label arrays are
   // filtered in lockstep so nothing desynchronises.
   function clockX(rawDists, ids, labels, Y) {
+    // 1) map to the chosen axis
+    let X, Y2 = Y, I = ids, L = labels, dropped = 0;
     if (state.clock !== "calibrated") {
-      return { X: ptx(rawDists, Math.max(...rawDists)), Y, ids, labels, dropped: 0 };
+      X = rawDists.slice();
+    } else {
+      X = []; Y2 = []; I = []; L = [];
+      for (let i = 0; i < ids.length; i++) {
+        const r = state.calById[ids[i]];
+        if (!r || r.tau == null) { dropped++; continue; }
+        X.push(r.tau); Y2.push(Y[i]); I.push(ids[i]); L.push(labels[i]);
+      }
     }
-    const X = [], Y2 = [], I = [], L = [];
-    let dropped = 0;
-    for (let i = 0; i < ids.length; i++) {
-      const r = state.calById[ids[i]];
-      if (!r || r.tau == null) { dropped++; continue; }
-      X.push(r.tau); Y2.push(Y[i]); I.push(ids[i]); L.push(labels[i]);
+    // 2) split off manually excluded embryos. They are NOT deleted — they are returned separately
+    //    so the scatter can still draw them as ghosts. Hiding a removed point entirely would make
+    //    a hand-trimmed fit indistinguishable from the full one.
+    const kX = [], kY = [], kI = [], kL = [], eX = [], eY = [], eI = [], eL = [];
+    for (let i = 0; i < I.length; i++) {
+      const ex = state.excluded.has(I[i]);
+      (ex ? eX : kX).push(X[i]); (ex ? eY : kY).push(Y2[i]);
+      (ex ? eI : kI).push(I[i]); (ex ? eL : kL).push(L[i]);
     }
-    return { X, Y: Y2, ids: I, labels: L, dropped };
+    // 3) the legacy score is (max − value) over the PLOTTED embryos, so its reference is the kept
+    //    set; ghosts get the same transform so they stay comparable.
+    if (state.clock !== "calibrated" && state.pseudotime) {
+      const mx = kX.length ? Math.max(...kX) : 0;
+      for (let i = 0; i < kX.length; i++) kX[i] = mx - kX[i];
+      for (let i = 0; i < eX.length; i++) eX[i] = mx - eX[i];
+    }
+    return { X: kX, Y: kY, ids: kI, labels: kL, dropped,
+             exX: eX, exY: eY, exIds: eI, exLabels: eL };
   }
   const clockUnit = () => (state.clock === "calibrated" ? "" : state.pseudotime ? "" : "µm");
   function clockNote(dropped) {
@@ -762,6 +812,39 @@
       (dropped ? ` · <b>${dropped}</b> without a τ estimate excluded` : "");
   }
   // Calibrated mode needs the artifact; disable the control (with a reason) when it is missing.
+  // ── manual exclusion UI ───────────────────────────────────────────────────────────────────
+  // Hand-removing points is a real p-hacking vector, so the state is always displayed: a live
+  // count, every excluded label listed and individually restorable, and a warning on the fit line.
+  function syncExcludeUI() {
+    if (!exRowEl) return;
+    const n = state.excluded.size;
+    exRowEl.hidden = n === 0;
+    if (!n) return;
+    const byId = {};
+    state.points.forEach((p) => (byId[p.id] = p.label));
+    if (exCountEl) exCountEl.textContent = String(n);
+    if (exListEl) exListEl.innerHTML = [...state.excluded]
+      .map((id) => `<button class="pn-ex-chip" data-id="${id}" title="Restore ${byId[id] || id}">` +
+                   `${byId[id] || id}<span aria-hidden="true">×</span></button>`).join("");
+  }
+  function wireExclude() {
+    if (exListEl) exListEl.addEventListener("click", (e) => {
+      const b = e.target.closest(".pn-ex-chip"); if (!b) return;
+      state.excluded.delete(b.dataset.id); syncExcludeUI(); renderAllScatters();
+    });
+    if (exResetEl) exResetEl.addEventListener("click", () => {
+      state.excluded.clear(); syncExcludeUI(); renderAllScatters();
+    });
+    syncExcludeUI();
+  }
+  // Appended to every fit line while any exclusion is active.
+  function excludeNote() {
+    const n = state.excluded.size;
+    if (!n) return "";
+    return `<span class="pn-ex-warn"> · <b>${n} embryo${n === 1 ? "" : "s"} manually excluded</b>` +
+           ` — this fit is post-hoc; report the full-cohort fit alongside it</span>`;
+  }
+
   // ── τ-shift controls ──────────────────────────────────────────────────────────────────────
   function wireShift() {
     if (!shiftOnEl) return;
@@ -854,11 +937,12 @@
     const PX = sh ? sh.X : X;
     state.fit = sh ? sh.fit : fitModel(state.regType, PX, Y);
     state._shiftFrom = sh ? X : null;
+    state._excludedPts = { x: c.exX, y: c.exY, ids: c.exIds, labels: c.exLabels };
     scatter(scatterPlot, PX, Y, c.ids, c.labels, state.fit,
       X_TITLE(), yLabel("total transcripts"), yUnitNow(), state.currentId, clockUnit(), yFmtNow());
-    state._shiftFrom = null;
+    state._shiftFrom = null; state._excludedPts = null;
     const f = state.fit;
-    pnFit.innerHTML = `· <b>${f.n}</b> zygotes · ${statsHtml(PX, Y, f)}${clockNote(c.dropped)}` + shiftNote(sh);
+    pnFit.innerHTML = `· <b>${f.n}</b> zygotes · ${statsHtml(PX, Y, f)}${clockNote(c.dropped)}${excludeNote()}` + shiftNote(sh);
   }
   function renderGeneScatter() {
     if (!shown(geneScatter)) return;
@@ -885,10 +969,11 @@
     const PX = sh ? sh.X : X;
     const model = sh ? sh.fit : fitModel(state.regType, PX, Y);
     state._shiftFrom = sh ? X : null;
+    state._excludedPts = { x: c.exX, y: c.exY, ids: c.exIds, labels: c.exLabels };
     scatter(geneScatter, PX, Y, c.ids, c.labels, model,
       X_TITLE(), yLabel(`${g} count`), yUnitNow(), state.currentId, clockUnit(), yFmtNow());
-    state._shiftFrom = null;
-    geneFit.innerHTML = `· <b>${g}</b> · n=${PX.length} · ${statsHtml(PX, Y, model)}${clockNote(c.dropped)}` + shiftNote(sh);
+    state._shiftFrom = null; state._excludedPts = null;
+    geneFit.innerHTML = `· <b>${g}</b> · n=${PX.length} · ${statsHtml(PX, Y, model)}${clockNote(c.dropped)}${excludeNote()}` + shiftNote(sh);
   }
   // Gene-set scatter: per zygote, SUM the set genes' counts (in the chosen region) vs distance.
   // "require all" → only zygotes that contain every set gene (identical gene list per point);
@@ -933,10 +1018,11 @@
     const PX = sh ? sh.X : X;
     const model = sh ? sh.fit : fitModel(state.regType, PX, Y);
     state._shiftFrom = sh ? X : null;
+    state._excludedPts = { x: c.exX, y: c.exY, ids: c.exIds, labels: c.exLabels };
     scatter(setScatter, PX, Y, c.ids, c.labels, model,
       X_TITLE(), yLabel("Σ set count"), yUnitNow(), state.currentId, clockUnit(), yFmtNow());
-    state._shiftFrom = null;
-    setFit.innerHTML = `· <b>${nSet}</b> gene${nSet === 1 ? "" : "s"} · <b>${PX.length}</b> zygotes · ${state.setRequireAll ? "all present" : "≥1 present"} · ${statsHtml(PX, Y, model)}${clockNote(c.dropped)}` + shiftNote(sh);
+    state._shiftFrom = null; state._excludedPts = null;
+    setFit.innerHTML = `· <b>${nSet}</b> gene${nSet === 1 ? "" : "s"} · <b>${PX.length}</b> zygotes · ${state.setRequireAll ? "all present" : "≥1 present"} · ${statsHtml(PX, Y, model)}${clockNote(c.dropped)}${excludeNote()}` + shiftNote(sh);
   }
 
   // ---------- right drawer: correlation ranking ----------

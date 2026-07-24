@@ -157,6 +157,12 @@
           <input type="checkbox" id="pseudotime-toggle"><span>Legacy ordering score</span></label>
         <label class="pn-pt-toggle" title="Swap the x and y axes on every graph below (the fit is unchanged — only the view is transposed).">
           <input type="checkbox" id="flip-toggle"><span>Flip x / y</span></label>
+        <div class="pn-ex-row" id="pn-ex-row" hidden>
+          <span class="pn-ex-lab">Excluded (<b id="pn-ex-count">0</b>)</span>
+          <span class="pn-ex-list" id="pn-ex-list"></span>
+          <button class="pn-ex-reset" id="pn-ex-reset" title="Restore every excluded embryo">restore all</button>
+          <span class="pn-ex-hint">Click any point on a graph to exclude it; click a red ✕ ghost, or a chip here, to restore. Excluded embryos leave the fit and the statistics but stay visible as ghosts. Not persisted — a reload restores the full cohort.</span>
+        </div>
         <div class="pn-shift-row">
           <label class="pn-shift-tg" title="Let every point slide along the pseudotime axis within its calibrated uncertainty, to the position that best fits the selected model. This can only increase R² — including for pure noise — so each graph also reports a shuffled-data null.">
             <input type="checkbox" id="pn-shift"><span>Shift points within τ interval</span></label>

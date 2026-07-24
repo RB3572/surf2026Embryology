@@ -251,14 +251,31 @@ window.VCore = (function () {
       slug((document.title || "figure").split("·")[0]) + "-" + slug(gd.id || "figure");
 
     function download(gd, btn) {
-      if (!window.Plotly || !Plotly.downloadImage) return;
+      if (!window.Plotly) return;
       btn.classList.add("busy");
       const fl = gd._fullLayout || {};
       const w = Math.max(fl.width || gd.clientWidth || 900, 320);
       const h = Math.max(fl.height || gd.clientHeight || 600, 240);
-      Promise.resolve(Plotly.downloadImage(gd, { format: "png", scale: SCALE, width: w, height: h, filename: filenameFor(gd) }))
+      const done = () => setTimeout(() => btn.classList.remove("busy"), 400);
+      const name = filenameFor(gd);
+      // The pages draw on a TRANSPARENT background so plots sit on the page colour. A transparent
+      // PNG then renders black in most slide/doc tools, so the EXPORT is forced onto white. Done on
+      // a cloned figure via toImage, so the on-screen plot never flickers or changes.
+      const layout = Object.assign({}, gd.layout,
+        { paper_bgcolor: "#ffffff", plot_bgcolor: "#ffffff" });
+      const legacy = () => Plotly.downloadImage(gd,
+        { format: "png", scale: SCALE, width: w, height: h, filename: name });
+      if (!Plotly.toImage) { Promise.resolve(legacy()).catch(() => {}).then(done); return; }
+      Plotly.toImage({ data: gd.data, layout, config: { displayModeBar: false } },
+                     { format: "png", scale: SCALE, width: w, height: h })
+        .then((url) => {
+          const a = document.createElement("a");
+          a.href = url; a.download = name + ".png";
+          document.body.appendChild(a); a.click(); a.remove();
+        })
+        .catch(() => legacy())
         .catch(() => {})
-        .then(() => setTimeout(() => btn.classList.remove("busy"), 400));
+        .then(done);
     }
     function addBtn(gd) {
       if (!gd || !gd.classList || !gd.classList.contains("js-plotly-plot")) return;

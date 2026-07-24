@@ -150,3 +150,32 @@
 .pn-cal-na { font-size: 12px; font-weight: 600; color: var(--ink-soft); display: block; }
 .pn-cal-why { font-size: 10.5px; color: var(--ink-soft); line-height: 1.45; margin-top: 2px; }
 .pn-cal-inline { font-family: var(--mono); font-size: 10.5px; color: #4f46e5; }
+
+/* ---- τ-interval point shifting (errors-in-variables exploration) ---- */
+.pn-shift-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  flex-basis: 100%; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line);
+  border-left: 3px solid #f59e0b; padding-left: 10px; }
+.pn-shift-row.pn-shift-off { opacity: .55; border-left-color: var(--line); }
+.pn-shift-tg { display: inline-flex; align-items: center; gap: 6px; font-size: 12px;
+  font-weight: 600; color: var(--ink-2); cursor: pointer; }
+.pn-shift-tg input { accent-color: #f59e0b; cursor: pointer; }
+.pn-shift-d { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; color: var(--ink-2); }
+.pn-shift-d input { width: 66px; font: inherit; font-size: 12px; padding: 3px 6px;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+  font-variant-numeric: tabular-nums; }
+.pn-shift-d input:disabled { opacity: .5; }
+.pn-shift-btn { font: inherit; font-size: 11px; font-weight: 600; color: var(--ink-2);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+  padding: 3px 8px; cursor: pointer; }
+.pn-shift-btn:hover:not(:disabled) { border-color: var(--ink-soft); }
+.pn-shift-btn:disabled { opacity: .45; cursor: default; }
+.pn-shift-hint { flex-basis: 100%; font-size: 11px; color: var(--ink-soft); line-height: 1.5; }
+.pn-shift-hint b { color: var(--ink-2); }
+
+/* the read-out under each graph — leads with the null, never the inflated number */
+.pn-shift-note { margin-top: 7px; padding: 8px 11px; border-radius: 8px; font-size: 11.5px;
+  line-height: 1.55; border: 1px solid; }
+.pn-shift-bad { background: #fffafa; border-color: #f2c4c4; border-left: 3px solid #b42318; color: #6b2b2b; }
+.pn-shift-ok { background: #fffbf3; border-color: #f0d9a8; border-left: 3px solid #d97706; color: #6b4a12; }
+.pn-shift-note b { color: #3a2408; }
+.pn-shift-bad b { color: #7a1d1d; }

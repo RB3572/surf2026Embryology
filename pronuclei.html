@@ -157,7 +157,14 @@
           <input type="checkbox" id="pseudotime-toggle"><span>Legacy ordering score</span></label>
         <label class="pn-pt-toggle" title="Swap the x and y axes on every graph below (the fit is unchanged — only the view is transposed).">
           <input type="checkbox" id="flip-toggle"><span>Flip x / y</span></label>
-        <button class="help-btn pn-stats-help" data-help="pronuclei-stats" aria-label="How the statistics are computed" title="How R², the equation, Pearson r and the p-value are computed">?</button>
+        <div class="pn-shift-row">
+          <label class="pn-shift-tg" title="Let every point slide along the pseudotime axis within its calibrated uncertainty, to the position that best fits the selected model. This can only increase R² — including for pure noise — so each graph also reports a shuffled-data null.">
+            <input type="checkbox" id="pn-shift"><span>Shift points within τ interval</span></label>
+          <label class="pn-shift-d">±<input type="number" id="pn-shift-delta" step="0.005" min="0" max="1" value="0.240"><span>τ</span></label>
+          <button class="pn-shift-btn" id="pn-shift-reset" title="Restore the calibration project's published 95% half-width">reset</button>
+          <span class="pn-shift-hint" id="pn-shift-hint"></span>
+        </div>
+                <button class="help-btn pn-stats-help" data-help="pronuclei-stats" aria-label="How the statistics are computed" title="How R², the equation, Pearson r and the p-value are computed">?</button>
         <span class="pn-reg-note" id="reg-note"></span>
       </div>
       <div class="pn-graph-tabs" id="graph-tabs" role="tablist" aria-label="Graphs">

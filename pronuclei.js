@@ -32,6 +32,8 @@
   const rankNEl = $("#rank-n"), rankPosEl = $("#rank-pos"), rankNegEl = $("#rank-neg");
   const ptToggle = $("#pseudotime-toggle");
   const clockSel = $("#pn-clock");
+  const shiftOnEl = $("#pn-shift"), shiftDeltaEl = $("#pn-shift-delta"),
+        shiftResetEl = $("#pn-shift-reset"), shiftHintEl = $("#pn-shift-hint");
   const regionSel = $("#region-sel"), normSel = $("#norm-sel"), flipToggle = $("#flip-toggle");
   const setAdd = $("#set-add"), setChipsEl = $("#set-chips"), setPresetsEl = $("#set-presets"),
         setRequireAllEl = $("#set-requireall"), setClearEl = $("#set-clear"),
@@ -44,6 +46,10 @@
                   // x-axis clock. DEFAULT STAYS "legacy" so established analyses are unchanged
                   // until the new calibration has been reviewed. calib/calById are filled in init.
                   clock: "legacy", calib: null, calById: {},
+                  // τ-interval point shifting. OFF by default: it can only inflate R², so it must
+                  // never silently alter an established analysis. shiftDelta defaults to the
+                  // calibration project's own 95% half-width once that artifact loads.
+                  shiftOn: false, shiftDelta: 0.24, _shiftFrom: null,
                   region: "all", norm: "count", flip: false, segData: null,
                   geneSet: [], setRequireAll: false, graphTab: "gene" };
   const PLOT_OF = { gene: geneScatter, total: scatterPlot, set: setScatter };
@@ -74,9 +80,16 @@
       }));
       wireDrawer(); wireRdrawer(); wireGraphTabs(); renderRanks();
       ptToggle.addEventListener("change", () => { state.pseudotime = ptToggle.checked; renderAllScatters(); });
+      // default the shift interval to the calibration project's published half-width
+      if (cal && cal.meta && cal.meta.halfwidth_95 != null) {
+        state.shiftDelta = +cal.meta.halfwidth_95;
+        state.shiftDefault = +cal.meta.halfwidth_95;
+        state.shiftVersion = cal.meta.model_version || "";
+      }
       applyClockAvail();
+      wireShift();
       if (clockSel) clockSel.addEventListener("change", () => {
-        state.clock = clockSel.value; syncClockUI(); renderAllScatters();
+        state.clock = clockSel.value; syncClockUI(); syncShiftUI(); renderAllScatters();
       });
       // deep link from the calibration page: ?embryo=<id>
       const want = new URLSearchParams(location.search).get("embryo");
@@ -560,6 +573,109 @@
   // ---------- scatters (logical x = pronuclei distance µm, y = transcript count) ----------
   // model.predict maps distance→count. When state.flip is on we transpose the VIEW only (swap
   // which variable is on which axis + the curve) — the underlying fit is unchanged.
+  // ═══════════════ τ-interval point shifting (errors-in-variables exploration) ═══════════════
+  // WHAT IT DOES.  Each point may slide along the pseudotime axis within ±delta (its calibrated
+  // uncertainty) to the position that best fits the chosen model. Motivation is sound: the x axis
+  // really is measured with error, so the raw scatter UNDER-states a true relationship (this is the
+  // attenuation the calibration project quantifies).
+  //
+  // WHY IT MUST NEVER BE READ AS AN ESTIMATE.  Optimising n point positions to maximise R² is an
+  // optimisation over n free parameters. It can only ever raise R², it raises it for PURE NOISE
+  // too, and with a wide enough interval it drives R² -> 1 for any data whatsoever. The resulting
+  // number is a BEST CASE / UPPER BOUND, not a corrected correlation. It is meaningful only against
+  // a null in which the SAME optimiser is turned loose on shuffled data — which is why the
+  // permutation null below is computed automatically and is not optional.
+  const SHIFT_GRID = 25, SHIFT_ITERS = 14;
+
+  function sseOf(X, Y, pred) {
+    let s = 0;
+    for (let i = 0; i < X.length; i++) { const e = Y[i] - pred(X[i]); s += e * e; }
+    return s;
+  }
+  // Alternating optimisation: fit -> move each point to the best x inside its own box -> refit.
+  // Y never changes, so SST is fixed and lowering SSE strictly raises R²; the loop is monotone and
+  // therefore converges. Shifts are always measured from the ORIGINAL x, so |x - x0| <= delta holds
+  // exactly (no drift), and x stays inside [0,1] because τ is bounded.
+  function shiftFit(X0, Y, regType, delta) {
+    const n = X0.length;
+    let X = X0.slice(), fit = fitModel(regType, X, Y), prev = Infinity;
+    for (let it = 0; it < SHIFT_ITERS; it++) {
+      const pred = fit.predict;
+      for (let i = 0; i < n; i++) {
+        const lo = Math.max(0, X0[i] - delta), hi = Math.min(1, X0[i] + delta);
+        let best = X[i], bestE = Infinity;
+        for (let k = 0; k < SHIFT_GRID; k++) {
+          const x = SHIFT_GRID === 1 ? lo : lo + (hi - lo) * k / (SHIFT_GRID - 1);
+          const e = Y[i] - pred(x), e2 = e * e;
+          if (e2 < bestE) { bestE = e2; best = x; }
+        }
+        X[i] = best;
+      }
+      fit = fitModel(regType, X, Y);
+      const sse = sseOf(X, Y, fit.predict);
+      if (!(prev - sse > 1e-12)) break;                 // converged (or no further gain)
+      prev = sse;
+    }
+    return { X, fit };
+  }
+  // Permutation null: the same optimiser, on shuffled y. Answers the only question that makes the
+  // optimised R² interpretable — "how much of this could the optimiser manufacture from nothing?"
+  // Time-budgeted so a slow model (LOESS) cannot freeze the page; the B actually used is reported.
+  function shiftNull(X0, Y, regType, delta, B, budgetMs) {
+    const rnd = mulberry32(0xc10c), t0 = performance.now(), out = [];
+    const y = Y.slice();
+    for (let b = 0; b < B; b++) {
+      for (let i = y.length - 1; i > 0; i--) { const j = (rnd() * (i + 1)) | 0; const t = y[i]; y[i] = y[j]; y[j] = t; }
+      const r = shiftFit(X0, y, regType, delta);
+      if (isFinite(r.fit.r2)) out.push(r.fit.r2);
+      if (performance.now() - t0 > budgetMs) break;
+    }
+    out.sort((a, b) => a - b);
+    return out;
+  }
+  const shiftAvailable = () => state.clock === "calibrated";
+  // Run the shift for one series. Returns null when the toggle is off or not applicable.
+  function applyShift(X, Y, regType) {
+    if (!state.shiftOn || !shiftAvailable() || !(state.shiftDelta > 0) || X.length < 3) return null;
+    const d = state.shiftDelta;
+    const base = fitModel(regType, X, Y);
+    const { X: Xs, fit } = shiftFit(X, Y, regType, d);
+    const shifts = Xs.map((x, i) => x - X[i]);
+    const absS = shifts.map(Math.abs).sort((a, b) => a - b);
+    const atEdge = shifts.filter((v, i) =>
+      Math.abs(Math.abs(v) - Math.min(d, Math.max(X[i], 1 - X[i]) === 0 ? d : d)) < 1e-6 ||
+      Math.abs(v) >= d - 1e-6).length;
+    const nul = shiftNull(X, Y, regType, d, 200, 1200);
+    const ge = nul.filter((v) => v >= fit.r2).length;
+    return {
+      X: Xs, fit, base, delta: d, shifts,
+      medAbs: absS.length ? absS[absS.length >> 1] : 0,
+      atEdge, nAtEdgePct: X.length ? atEdge / X.length : 0,
+      nullMedian: nul.length ? nul[nul.length >> 1] : NaN,
+      nullHi: nul.length ? nul[Math.min(nul.length - 1, Math.floor(0.95 * nul.length))] : NaN,
+      nullB: nul.length, p: nul.length ? (ge + 1) / (nul.length + 1) : NaN,
+    };
+  }
+  // The honest read-out. Deliberately leads with the null, not the inflated number.
+  function shiftNote(sh) {
+    if (!sh) return "";
+    const worse = !(sh.p < 0.05);
+    return `<div class="pn-shift-note ${worse ? "pn-shift-bad" : "pn-shift-ok"}">` +
+      `<b>τ-shift ±${sh.delta.toFixed(3)} · UPPER BOUND, not a corrected fit.</b> ` +
+      `R² <b>${sh.base.r2.toFixed(3)} → ${sh.fit.r2.toFixed(3)}</b> after moving every point to its ` +
+      `best position. Median |shift| ${sh.medAbs.toFixed(3)} τ; ` +
+      `${(100 * sh.nAtEdgePct).toFixed(0)}% of points sit at the interval edge. ` +
+      `<b>Same optimiser on shuffled data reaches R² ${isFinite(sh.nullMedian) ? sh.nullMedian.toFixed(3) : "–"} ` +
+      `(median), ${isFinite(sh.nullHi) ? sh.nullHi.toFixed(3) : "–"} (95th pct), n=${sh.nullB}</b> — ` +
+      `permutation p = <b>${isFinite(sh.p) ? sh.p.toFixed(3) : "–"}</b>. ` +
+      (worse
+        ? `The optimised R² is <b>NOT distinguishable from what point-shifting produces by chance</b>; ` +
+          `read it as an upper bound only.`
+        : `The optimised R² still exceeds the shuffled-data optimum, but it remains a best case, ` +
+          `not an estimate of the underlying correlation.`) +
+      `</div>`;
+  }
+
   function scatter(div, xs, ys, ids, labels, model, xTitle, yTitle, yUnit, curId, xUnit, yFmt) {
     xUnit = xUnit == null ? "µm" : xUnit;
     yFmt = yFmt || ",";
@@ -576,13 +692,30 @@
     const hFmt = flip ? yFmt : ".1f", vFmt = flip ? ".1f" : yFmt;
     const hTitle = flip ? yTitle : xTitle, vTitle = flip ? xTitle : yTitle;
     const hover = `%{text}<br>%{x:${hFmt}}${hUnit ? " " + hUnit : ""} · %{y:${vFmt}}${vUnit ? " " + vUnit : ""}<extra></extra>`;
-    const traces = [
+    const traces = [];
+    // When points have been slid along the pseudotime axis, draw where each one CAME FROM. Showing
+    // moved points without showing the movement would misrepresent the data.
+    const from = state._shiftFrom;
+    if (from && from.length === xs.length) {
+      const lx = [], ly = [];
+      for (let i = 0; i < xs.length; i++) {
+        lx.push(H(from[i], ys[i]), H(xs[i], ys[i]), null);
+        ly.push(Vv(from[i], ys[i]), Vv(xs[i], ys[i]), null);
+      }
+      traces.push(
+        { type: "scatter", mode: "lines", name: "shift applied", x: lx, y: ly,
+          line: { color: "#f59e0b", width: 1.1 }, hoverinfo: "skip" },
+        { type: "scatter", mode: "markers", name: "original position",
+          x: from.map((d, i) => H(d, ys[i])), y: from.map((d, i) => Vv(d, ys[i])),
+          marker: { size: 5, color: "#cbd5e1", symbol: "circle-open", line: { width: 1.2, color: "#94a3b8" } },
+          text: labels, hovertemplate: "%{text}<br>original τ<extra></extra>" });
+    }
+    traces.push(
       { type: "scatter", mode: "markers", name: "zygotes", x: others.map((o) => o.h), y: others.map((o) => o.v),
         marker: { size: 8, color: "#94a3b8", opacity: 0.72, line: { width: 0 } },
         text: others.map((o) => o.lab), hovertemplate: hover },
       { type: "scatter", mode: "lines", name: model.label, x: chx, y: chy,
-        line: { color: "#0891b2", width: 2.4, shape: "spline" }, hoverinfo: "skip" },
-    ];
+        line: { color: "#0891b2", width: 2.4, shape: "spline" }, hoverinfo: "skip" });
     if (cur) traces.push({ type: "scatter", mode: "markers", name: cur.lab, x: [cur.h], y: [cur.v],
       marker: { size: 15, color: CUR_C, line: { width: 2, color: "#fff" } },
       text: [cur.lab], hovertemplate: hover });
@@ -629,6 +762,52 @@
       (dropped ? ` · <b>${dropped}</b> without a τ estimate excluded` : "");
   }
   // Calibrated mode needs the artifact; disable the control (with a reason) when it is missing.
+  // ── τ-shift controls ──────────────────────────────────────────────────────────────────────
+  function wireShift() {
+    if (!shiftOnEl) return;
+    if (shiftDeltaEl) shiftDeltaEl.value = state.shiftDelta.toFixed(3);
+    shiftOnEl.addEventListener("change", () => {
+      state.shiftOn = shiftOnEl.checked; syncShiftUI(); renderAllScatters();
+    });
+    if (shiftDeltaEl) shiftDeltaEl.addEventListener("change", () => {
+      const v = parseFloat(shiftDeltaEl.value);
+      state.shiftDelta = isFinite(v) && v >= 0 ? Math.min(1, v) : state.shiftDelta;
+      shiftDeltaEl.value = state.shiftDelta.toFixed(3);
+      if (state.shiftOn) renderAllScatters(); else syncShiftUI();
+    });
+    if (shiftResetEl) shiftResetEl.addEventListener("click", () => {
+      state.shiftDelta = state.shiftDefault != null ? state.shiftDefault : 0.24;
+      shiftDeltaEl.value = state.shiftDelta.toFixed(3);
+      syncShiftUI(); if (state.shiftOn) renderAllScatters();
+    });
+    syncShiftUI();
+  }
+  // The shift interval is in τ units, so it is only meaningful on the calibrated τ axis. On the
+  // legacy surface-gap axis (µm, and never calibrated by the Scheffler data) it has no defensible
+  // width, so the control is disabled with the reason shown rather than silently doing nothing.
+  function syncShiftUI() {
+    if (!shiftOnEl) return;
+    const ok = shiftAvailable();
+    shiftOnEl.disabled = !ok;
+    if (shiftDeltaEl) shiftDeltaEl.disabled = !ok || !state.shiftOn;
+    if (shiftResetEl) shiftResetEl.disabled = !ok || !state.shiftOn;
+    const row = shiftOnEl.closest(".pn-shift-row");
+    if (row) row.classList.toggle("pn-shift-off", !ok);
+    if (!ok && state.shiftOn) { state.shiftOn = false; shiftOnEl.checked = false; }
+    if (shiftHintEl) {
+      shiftHintEl.innerHTML = !ok
+        ? `Set <b>Time axis → Calibrated pseudotime τ</b> to use this: the interval is in τ units, ` +
+          `and the legacy surface-gap axis (µm) has no calibrated uncertainty.`
+        : state.shiftOn
+          ? `Each point may slide ±${state.shiftDelta.toFixed(3)} τ to wherever it best fits. ` +
+            `<b>This can only raise R², and it raises it for pure noise too</b> — every graph reports ` +
+            `a shuffled-data null so you can see how much is manufactured.`
+          : `Default ±${(state.shiftDefault != null ? state.shiftDefault : state.shiftDelta).toFixed(3)} ` +
+            `is the calibration project's 95% half-width` +
+            `${state.shiftVersion ? " (" + state.shiftVersion + ")" : ""}. Off by default.`;
+    }
+  }
+
   function applyClockAvail() {
     if (!clockSel) return;
     if (state.calib) return;
@@ -671,11 +850,15 @@
       scatterPlot.innerHTML = `<div class="pn-empty">Only ${X.length} zygote(s) have a calibrated τ — too few to fit.</div>`;
       pnFit.innerHTML = clockNote(c.dropped); return;
     }
-    state.fit = fitModel(state.regType, X, Y);
-    scatter(scatterPlot, X, Y, c.ids, c.labels, state.fit,
+    const sh = applyShift(X, Y, state.regType);
+    const PX = sh ? sh.X : X;
+    state.fit = sh ? sh.fit : fitModel(state.regType, PX, Y);
+    state._shiftFrom = sh ? X : null;
+    scatter(scatterPlot, PX, Y, c.ids, c.labels, state.fit,
       X_TITLE(), yLabel("total transcripts"), yUnitNow(), state.currentId, clockUnit(), yFmtNow());
+    state._shiftFrom = null;
     const f = state.fit;
-    pnFit.innerHTML = `· <b>${f.n}</b> zygotes · ${statsHtml(X, Y, f)}${clockNote(c.dropped)}`;
+    pnFit.innerHTML = `· <b>${f.n}</b> zygotes · ${statsHtml(PX, Y, f)}${clockNote(c.dropped)}` + shiftNote(sh);
   }
   function renderGeneScatter() {
     if (!shown(geneScatter)) return;
@@ -698,10 +881,14 @@
       geneScatter.innerHTML = `<div class="pn-empty">Only ${X.length} zygote(s) with <b>${g}</b> have a calibrated τ — too few to fit.</div>`;
       geneFit.innerHTML = `· <b>${g}</b>${clockNote(c.dropped)}`; return;
     }
-    const model = fitModel(state.regType, X, Y);
-    scatter(geneScatter, X, Y, c.ids, c.labels, model,
+    const sh = applyShift(X, Y, state.regType);
+    const PX = sh ? sh.X : X;
+    const model = sh ? sh.fit : fitModel(state.regType, PX, Y);
+    state._shiftFrom = sh ? X : null;
+    scatter(geneScatter, PX, Y, c.ids, c.labels, model,
       X_TITLE(), yLabel(`${g} count`), yUnitNow(), state.currentId, clockUnit(), yFmtNow());
-    geneFit.innerHTML = `· <b>${g}</b> · n=${X.length} · ${statsHtml(X, Y, model)}${clockNote(c.dropped)}`;
+    state._shiftFrom = null;
+    geneFit.innerHTML = `· <b>${g}</b> · n=${PX.length} · ${statsHtml(PX, Y, model)}${clockNote(c.dropped)}` + shiftNote(sh);
   }
   // Gene-set scatter: per zygote, SUM the set genes' counts (in the chosen region) vs distance.
   // "require all" → only zygotes that contain every set gene (identical gene list per point);
@@ -742,10 +929,14 @@
       setScatter.innerHTML = `<div class="pn-empty">Only ${X.length} zygote(s) have a calibrated τ — too few to fit.</div>`;
       setFit.innerHTML = `· <b>${nSet}</b> gene${nSet === 1 ? "" : "s"}${clockNote(c.dropped)}`; return;
     }
-    const model = fitModel(state.regType, X, Y);
-    scatter(setScatter, X, Y, c.ids, c.labels, model,
+    const sh = applyShift(X, Y, state.regType);
+    const PX = sh ? sh.X : X;
+    const model = sh ? sh.fit : fitModel(state.regType, PX, Y);
+    state._shiftFrom = sh ? X : null;
+    scatter(setScatter, PX, Y, c.ids, c.labels, model,
       X_TITLE(), yLabel("Σ set count"), yUnitNow(), state.currentId, clockUnit(), yFmtNow());
-    setFit.innerHTML = `· <b>${nSet}</b> gene${nSet === 1 ? "" : "s"} · <b>${X.length}</b> zygotes · ${state.setRequireAll ? "all present" : "≥1 present"} · ${statsHtml(X, Y, model)}${clockNote(c.dropped)}`;
+    state._shiftFrom = null;
+    setFit.innerHTML = `· <b>${nSet}</b> gene${nSet === 1 ? "" : "s"} · <b>${PX.length}</b> zygotes · ${state.setRequireAll ? "all present" : "≥1 present"} · ${statsHtml(PX, Y, model)}${clockNote(c.dropped)}` + shiftNote(sh);
   }
 
   // ---------- right drawer: correlation ranking ----------

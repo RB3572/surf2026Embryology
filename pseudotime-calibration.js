@@ -106,6 +106,9 @@
         b.classList.toggle("active", b.dataset.view === v));
       if (guided) { if (window.PTGuided) setTimeout(() => window.PTGuided.resizeAll(), 60); }
       else { if (window.PTGuided) window.PTGuided.stopReplay(); resizeIn(state.sec); }
+      // .gd-main is its own scroll container (body is a fixed-height flex shell), so resetting
+      // window scroll alone would leave the guided view where the reader left it.
+      if (gd) gd.scrollTop = 0;
       window.scrollTo({ top: 0 });
     };
     document.querySelectorAll(".pt-vb").forEach((b) =>

@@ -186,9 +186,11 @@
 .gd-class { font-size: 13px !important; color: var(--ink-soft) !important;
   border-left: 3px solid var(--line); padding-left: 11px; }
 
-.gd-step { padding: 26px 0 30px; border-bottom: 1px solid var(--line); scroll-margin-top: 54px; }
+.gd-step { min-width: 0; padding: 26px 0 30px; border-bottom: 1px solid var(--line); scroll-margin-top: 54px; }
 .gd-step:last-child { border-bottom: 0; }
-.gd-head { display: flex; align-items: flex-start; gap: 13px; margin-bottom: 14px; }
+.gd-head { display: flex; align-items: flex-start; gap: 13px; margin-bottom: 14px;
+  flex-wrap: wrap; min-width: 0; }
+.gd-head > div:not(.gd-dl) { flex: 1 1 260px; min-width: 0; }
 .gd-n { flex: none; width: 27px; height: 27px; border-radius: 50%; background: var(--pt);
   color: #fff; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center;
   justify-content: center; margin-top: 2px; }
@@ -197,7 +199,7 @@
 .gd-step-limits h2 { font-size: 18px; font-weight: 700; margin: 0 0 12px; }
 
 /* figures */
-.gd-fig { width: 100%; height: 340px; }
+.gd-fig { width: 100%; min-width: 0; height: 340px; }
 .gd-fig-tall { height: 460px; }
 .gd-fig-short { height: 200px; }
 #fig-folds { height: auto; }
@@ -220,14 +222,16 @@
 
 /* controls */
 .gd-ctlbar { display: flex; align-items: center; gap: 13px; flex-wrap: wrap; margin: 0 0 12px; }
-.gd-ctl { display: inline-flex; align-items: center; gap: 7px; }
+.gd-ctl { display: inline-flex; align-items: center; gap: 7px; max-width: 100%; min-width: 0; }
 .gd-ctl-wide { flex: 1 1 300px; }
 .gd-ctl-wide input[type=range] { flex: 1; min-width: 160px; accent-color: var(--pt); }
 .gd-ctl-l { font-family: var(--mono); font-size: 10px; text-transform: uppercase;
   letter-spacing: .5px; color: var(--ink-soft); white-space: nowrap; }
 .gd-ctlbar select { font: inherit; font-size: 12.5px; font-weight: 600; color: var(--ink);
   padding: 6px 10px; border: 1px solid var(--line); border-radius: 7px;
-  background: var(--surface); cursor: pointer; max-width: 100%; }
+  background: var(--surface); cursor: pointer; max-width: 100%; min-width: 0;
+  flex: 1 1 auto; text-overflow: ellipsis; }
+.gd-ctlbar { min-width: 0; }
 .gd-tg { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--ink-2); cursor: pointer; }
 .gd-tg input { accent-color: var(--pt); cursor: pointer; }
 .gd-btn { font: inherit; font-size: 12px; font-weight: 650; color: var(--ink);

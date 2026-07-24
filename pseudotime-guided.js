@@ -104,6 +104,14 @@ window.PTGuided = (() => {
     });
   }
 
+  // .gd-main scrolls internally, so jumps are computed against it rather than the window
+  function jumpTo(id) {
+    const el = document.getElementById(id), sc = $("#gd-main");
+    if (!el || !sc) return;
+    sc.scrollTo({ top: sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top - 8,
+                  behavior: "smooth" });
+  }
+
   function buildRail() {
     const steps = [["gd-1", "τ scale"], ["gd-2", "Snapshot"], ["gd-3", "Measurement"],
                    ["gd-4", "Training data"], ["gd-5", "Model"], ["gd-6", "Held-out test"],
@@ -112,8 +120,7 @@ window.PTGuided = (() => {
       `<button class="gd-rb" data-t="${id}"><span>${i + 1}</span>${esc(l)}</button>`).join("");
     $("#gd-rail").addEventListener("click", (e) => {
       const b = e.target.closest(".gd-rb"); if (!b) return;
-      const el = $("#" + b.dataset.t);
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      jumpTo(b.dataset.t);
     });
     const obs = new IntersectionObserver((es) => {
       es.forEach((en) => {
@@ -586,7 +593,7 @@ window.PTGuided = (() => {
       el._gdBound = true;
       el.on("plotly_click", (ev) => {
         const id = ev && ev.points && ev.points[0] && ev.points[0].customdata;
-        if (id) { selectEmbryo(id); $("#gd-2").scrollIntoView({ behavior: "smooth", block: "start" }); }
+        if (id) { selectEmbryo(id); jumpTo("gd-2"); }
       });
     }
     const qc = okFixed().reduce((m, r) => (m[r.qc] = (m[r.qc] || 0) + 1, m), {});
@@ -643,7 +650,7 @@ window.PTGuided = (() => {
       </button>`).join("");
     $("#gd-examples").onclick = (e) => {
       const b = e.target.closest(".gd-ex"); if (!b) return;
-      selectEmbryo(b.dataset.id); $("#gd-2").scrollIntoView({ behavior: "smooth", block: "start" });
+      selectEmbryo(b.dataset.id); jumpTo("gd-2");
     };
   }
 

@@ -17,8 +17,166 @@
       <span class="brand-name">Pronuclear&nbsp;Pseudotime&nbsp;Calibration</span>
       <span class="brand-sub" id="pt-subtitle">loading…</span>
     </div>
-    <nav class="pt-nav" id="pt-nav" aria-label="Sections"></nav>
+    <div class="pt-viewswitch" role="tablist" aria-label="View">
+      <button class="pt-vb active" data-view="guided" role="tab">Guided explanation</button>
+      <button class="pt-vb" data-view="advanced" role="tab">Advanced analysis</button>
+    </div>
+    <nav class="pt-nav" id="pt-nav" aria-label="Sections" hidden></nav>
   </header>
+
+  <!-- ═══════════════ GUIDED VISUAL NARRATIVE (primary entry) ═══════════════ -->
+  <main class="gd-main" id="gd-main">
+    <nav class="gd-rail" id="gd-rail" aria-label="Steps"></nav>
+
+    <header class="gd-intro">
+      <h1>How we estimate <em>when</em> a fixed zygote was fixed</h1>
+      <p>A fixed MERFISH embryo carries no timestamp. This walks through how pronuclear
+        <b>geometry alone</b> is turned into an estimated developmental position — what the model
+        uses, how it was trained and tested on live-imaged embryos, and how far you can trust the
+        result on our own zygotes. Every number below is read from the frozen model artifacts.</p>
+      <p class="gd-class">An <b>empirical geometry-to-time calibration</b> — a fitted map from
+        measured distances to normalized time. It is <b>not</b> a mechanistic model of the forces
+        that move the pronuclei, and it makes no claim about them.</p>
+    </header>
+
+    <!-- 1 -->
+    <section class="gd-step" id="gd-1" data-step="1">
+      <div class="gd-head"><span class="gd-n">1</span>
+        <div><h2>The developmental clock we are estimating</h2>
+          <p class="gd-sub">Every zygote is placed on the same 0→1 scale, so embryos of different
+            absolute duration are comparable.</p></div>
+        <div class="gd-dl" data-fig="01_tau_timeline"></div>
+      </div>
+      <div class="gd-fig" id="fig-timeline"></div>
+      <p class="gd-cap" id="cap-timeline"></p>
+    </section>
+
+    <!-- 2 -->
+    <section class="gd-step" id="gd-2" data-step="2">
+      <div class="gd-head"><span class="gd-n">2</span>
+        <div><h2>The problem: a snapshot has no timestamp</h2>
+          <p class="gd-sub">Our MERFISH zygotes are chemically fixed. We see the geometry, never the
+            clock.</p></div>
+        <div class="gd-dl" data-fig="02_snapshot_question"></div>
+      </div>
+      <div class="gd-ctlbar">
+        <label class="gd-ctl"><span class="gd-ctl-l">Fixed zygote</span>
+          <select id="gd-embryo" title="Selecting an embryo synchronises every panel on this page"></select></label>
+        <span class="gd-note" id="gd-emb-note"></span>
+      </div>
+      <div class="gd-two">
+        <div class="gd-fig gd-fig-3d" id="fig-snapshot3d"></div>
+        <div class="gd-side">
+          <div class="gd-q">Where along the timeline was <b id="gd-q-label">this embryo</b> fixed?</div>
+          <div class="gd-fig gd-fig-short" id="fig-unknown"></div>
+          <p class="gd-cap" id="cap-snapshot"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="gd-step" id="gd-3" data-step="3">
+      <div class="gd-head"><span class="gd-n">3</span>
+        <div><h2>What the model measures</h2>
+          <p class="gd-sub">Two distances from each pronuclear centroid to the cell centre — and
+            only their sum enters the model.</p></div>
+        <div class="gd-dl" data-fig="03_model_inputs_output"></div>
+      </div>
+      <div class="gd-two">
+        <div class="gd-fig gd-fig-3d" id="fig-inputs3d"></div>
+        <div class="gd-side">
+          <div class="gd-eq" id="gd-eq"></div>
+          <div class="gd-flow" id="gd-flow"></div>
+          <p class="gd-cap" id="cap-inputs"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section class="gd-step" id="gd-4" data-step="4">
+      <div class="gd-head"><span class="gd-n">4</span>
+        <div><h2>Where the calibration comes from</h2>
+          <p class="gd-sub" id="gd-4-sub"></p></div>
+        <div class="gd-dl" data-fig="04_training_trajectories"></div>
+      </div>
+      <div class="gd-ctlbar">
+        <label class="gd-ctl gd-ctl-wide"><span class="gd-ctl-l">τ scrubber</span>
+          <input type="range" id="gd-scrub" min="0" max="1" step="0.01" value="0.5"
+                 title="Highlights the measured frame nearest this τ in every trajectory"></label>
+        <span class="gd-note" id="gd-scrub-note"></span>
+      </div>
+      <div class="gd-fig gd-fig-tall" id="fig-training"></div>
+      <p class="gd-cap" id="cap-training"></p>
+    </section>
+
+    <!-- 5 -->
+    <section class="gd-step" id="gd-5" data-step="5">
+      <div class="gd-head"><span class="gd-n">5</span>
+        <div><h2>The learned relationship</h2>
+          <p class="gd-sub">One monotone curve, fitted to the live data and then frozen. Larger
+            distance sum → earlier; smaller → later.</p></div>
+        <div class="gd-dl" data-fig="05_isotonic_model_curve"></div>
+      </div>
+      <div class="gd-ctlbar">
+        <button class="gd-btn gd-btn-go" id="gd-project">▶ Project this embryo onto the curve</button>
+        <span class="gd-note" id="gd-proj-note"></span>
+      </div>
+      <div class="gd-fig gd-fig-tall" id="fig-curve"></div>
+      <p class="gd-cap" id="cap-curve"></p>
+    </section>
+
+    <!-- 6 -->
+    <section class="gd-step" id="gd-6" data-step="6">
+      <div class="gd-head"><span class="gd-n">6</span>
+        <div><h2>How well it does on embryos it never saw</h2>
+          <p class="gd-sub">Nested, embryo-grouped cross-validation: whole embryos are held out, not
+            individual frames.</p></div>
+        <div class="gd-dl" data-fig="06_heldout_validation"></div>
+      </div>
+      <div class="gd-fig gd-fig-short" id="fig-folds"></div>
+      <div class="gd-kpis" id="gd-kpis"></div>
+      <div class="gd-two">
+        <div class="gd-fig" id="fig-heldout"></div>
+        <div class="gd-fig" id="fig-resid"></div>
+      </div>
+      <div class="gd-ctlbar">
+        <label class="gd-ctl"><span class="gd-ctl-l">Replay a held-out embryo</span>
+          <select id="gd-replay-sel"></select></label>
+        <button class="gd-btn gd-btn-go" id="gd-replay">▶ Play</button>
+        <span class="gd-note" id="gd-replay-note"></span>
+      </div>
+      <div class="gd-fig" id="fig-replay"></div>
+      <p class="gd-cap" id="cap-heldout"></p>
+    </section>
+
+    <!-- 7 -->
+    <section class="gd-step" id="gd-7" data-step="7">
+      <div class="gd-head"><span class="gd-n">7</span>
+        <div><h2>Applying the frozen model to our fixed zygotes</h2>
+          <p class="gd-sub">Every retained MERFISH zygote gets an estimate, an interval and a QC
+            status. Nothing is hidden.</p></div>
+        <div class="gd-dl" data-fig="07_fixed_cohort_application"></div>
+      </div>
+      <div class="gd-ctlbar">
+        <label class="gd-tg"><input type="checkbox" id="gd-qc-pass" checked><span>pass</span></label>
+        <label class="gd-tg"><input type="checkbox" id="gd-qc-caution" checked><span>caution</span></label>
+        <label class="gd-tg"><input type="checkbox" id="gd-qc-ood" checked><span>out-of-domain</span></label>
+        <span class="gd-note">Click any embryo to synchronise every panel above.</span>
+      </div>
+      <div class="gd-fig gd-fig-tall" id="fig-fixed"></div>
+      <div class="gd-examples" id="gd-examples"></div>
+      <div class="gd-warn" id="gd-shift-warn"></div>
+      <div class="gd-fig" id="fig-shift"></div>
+      <p class="gd-cap" id="cap-fixed"></p>
+    </section>
+
+    <section class="gd-step gd-step-limits">
+      <h2>What this does and does not tell you</h2>
+      <div class="gd-lims" id="gd-lims"></div>
+      <p class="gd-more">Full diagnostics, model comparison, conformal detail and the R²-attenuation
+        analysis are in <button class="gd-link" id="gd-to-adv">Advanced analysis →</button></p>
+    </section>
+  </main>
 
   <main class="pt-main" id="pt-main">
 
@@ -267,6 +425,7 @@
   </main>
 
   <script src="viewer-core.js"></script>
+  <script src="pseudotime-guided.js"></script>
   <script src="pseudotime-calibration.js"></script>
   <script src="help.js"></script>
   <script src="/analytics.js" defer></script>

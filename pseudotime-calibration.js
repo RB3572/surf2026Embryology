@@ -51,19 +51,35 @@
   // ═════════════════════════════════════ init ═════════════════════════════════════
   (async function init() {
     try {
-      const [cal, frames, traj, fixed, noise] = await Promise.all([
+      const [cal, frames, traj, fixed, noise, geomCsv] = await Promise.all([
         (await fetch("data/pseudotime_calibration/calibration.json")).json(),
         V.loadGz("data/pseudotime_calibration/oof_frames.json.gz"),
         V.loadGz("data/pseudotime_calibration/trajectories.json.gz"),
         fetch("data/pronuclei_pseudotime.json").then((r) => (r.ok ? r.json() : null)).catch(() => null),
         fetch("data/pseudotime_calibration/noise_ceiling.json").then((r) => (r.ok ? r.json() : null)).catch(() => null),
+        fetch("calibration_data/fixed_cohort_geometry.csv").then((r) => (r.ok ? r.text() : null)).catch(() => null),
       ]);
       state.cal = cal; state.frames = frames.frames; state.traj = traj.embryos; state.fixed = fixed;
       // a stale artifact must never be shown as if it matched the frozen clock
       state.noise = (noise && noise.meta.model_version === cal.meta.model_version) ? noise : null;
       state.noiseStale = !!(noise && noise.meta.model_version !== cal.meta.model_version);
       state.rpModel = cal.production.key;
-      buildNav();
+      // measured pronuclear-centroid / cell-centre coordinates for the explanatory 3-D
+      let geom = null;
+      if (geomCsv) {
+        const L = geomCsv.trim().split(/\r?\n/), H = L[0].split(",");
+        geom = {};
+        for (let i = 1; i < L.length; i++) {
+          const c = L[i].split(","), o = {};
+          H.forEach((h, j) => (o[h] = c[j]));
+          if (o.id) geom[o.id] = o;
+        }
+      }
+      buildNav(); buildViewSwitch();
+      if (window.PTGuided && fixed) {
+        try { window.PTGuided.init({ cal, frames: frames.frames, traj: traj.embryos, fixed, geom, V }); }
+        catch (e) { console.error("guided view failed:", e); }
+      }
       $("#pt-subtitle").textContent =
         `${cal.dataset.n_embryos} live-imaged zygotes · ${cal.dataset.n_frames.toLocaleString()} frames · model ${cal.meta.model_version}`;
       renderSummary(); renderLimits();
@@ -75,6 +91,29 @@
          <code>build_pronuclei_pseudotime.py</code>.</div>`;
     }
   })();
+
+  // ── guided ⇄ advanced view switch ──────────────────────────────────────────────────────────
+  // The guided narrative is the default entry point; every existing technical section stays
+  // exactly as it was under "Advanced analysis".
+  function buildViewSwitch() {
+    const gd = $("#gd-main"), adv = $("#pt-main"), nav = $("#pt-nav");
+    const set = (v) => {
+      const guided = v === "guided";
+      if (gd) gd.hidden = !guided;
+      if (adv) adv.hidden = guided;
+      if (nav) nav.hidden = guided;
+      document.querySelectorAll(".pt-vb").forEach((b) =>
+        b.classList.toggle("active", b.dataset.view === v));
+      if (guided) { if (window.PTGuided) setTimeout(() => window.PTGuided.resizeAll(), 60); }
+      else { if (window.PTGuided) window.PTGuided.stopReplay(); resizeIn(state.sec); }
+      window.scrollTo({ top: 0 });
+    };
+    document.querySelectorAll(".pt-vb").forEach((b) =>
+      b.addEventListener("click", () => set(b.dataset.view)));
+    const toAdv = $("#gd-to-adv");
+    if (toAdv) toAdv.addEventListener("click", () => { set("advanced"); show("summary"); });
+    set("guided");
+  }
 
   function buildNav() {
     const nav = $("#pt-nav");

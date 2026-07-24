@@ -102,6 +102,24 @@ def extract_geometry():
             dA = float(np.linalg.norm(centroid_um(pA) - c))
             dB = float(np.linalg.norm(centroid_um(pB) - c))
             near, far = (dA, dB) if dA <= dB else (dB, dA)
+            # Record the MEASURED positions (plot coords, same frame as the scene meshes) so the
+            # explanatory 3-D can draw the actual d_near / d_far segments instead of guessed
+            # markers. These are the very centroids the distances above were computed from, so the
+            # drawing and the reported numbers cannot disagree. No result changes.
+            cA, cB = centroid_um(pA), centroid_um(pB)
+            nearC, farC = (cA, cB) if dA <= dB else (cB, cA)
+            zs = 7.0
+            sp = os.path.join(HERE, "data", "pronuclei", eid + ".json.gz")
+            if os.path.isfile(sp):
+                import gzip as _gz
+                try:
+                    zs = json.load(_gz.open(sp, "rt")).get("z_scale", 7.0)
+                except Exception:                                      # noqa: BLE001
+                    zs = 7.0
+            for tag, pt in (("center", c), ("near", nearC), ("far", farC)):
+                q = BP.um_to_plot(pt, zs)
+                row[f"{tag}_plot_x"], row[f"{tag}_plot_y"], row[f"{tag}_plot_z"] = q[0], q[1], q[2]
+            row["z_scale"] = zs
             vox = (BP.DS_XY * BP.XY_UM) ** 2 * BP.DS_Z * BP.Z_UM
             row.update(nearer_to_center_um=round(near, 4), farther_to_center_um=round(far, 4),
                        distance_sum_um=round(near + far, 4),
@@ -118,6 +136,9 @@ def extract_geometry():
         rows.append(row)
     cols = ["id", "label", "date_short", "legacy_surface_gap_um", *FEATURE_COLS,
             "cell_volume_um3", "cell_radius_equiv_um", "pron_volume_a_um3", "pron_volume_b_um3",
+            "center_plot_x", "center_plot_y", "center_plot_z",
+            "near_plot_x", "near_plot_y", "near_plot_z",
+            "far_plot_x", "far_plot_y", "far_plot_z", "z_scale",
             "extract_error"]
     with open(GEOM_CSV, "w", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=cols); w.writeheader()

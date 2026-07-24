@@ -9,7 +9,7 @@
   "model_class": "empirical geometry-to-time calibration",
   "trained_at_utc": "2026-07-23T23:42:05+00:00",
   "seed": 20260723,
-  "applied_at_utc": "2026-07-23T23:42:05+00:00",
+  "applied_at_utc": "2026-07-24T07:02:50+00:00",
   "halfwidth_95": 0.242,
   "nested_outer_test": {
    "macro_mae": 0.09088,

@@ -267,8 +267,8 @@
         marker: { size: 5, color: FOLD_C[k % 5], opacity: 0.62, line: { width: 0 } },
         text: fr.map((f) => f.embryo_id),
         hovertemplate: "%{text}<br>true τ %{x:.3f}<br>predicted τ %{y:.3f}<extra></extra>" },
-    ], { xaxis: { title: "true τ (untouched outer-test embryos)", range: [-0.03, 1.03], gridcolor: C.grid, zeroline: false },
-         yaxis: { title: "predicted τ", range: [-0.03, 1.03], gridcolor: C.grid, zeroline: false } });
+    ], { xaxis: { title: { text: "true τ (untouched outer-test embryos)" }, range: [-0.03, 1.03], gridcolor: C.grid, zeroline: false },
+         yaxis: { title: { text: "predicted τ" }, range: [-0.03, 1.03], gridcolor: C.grid, zeroline: false } });
 
     // second panel: either the outer-test residuals, or the inner-CV scores of one candidate
     if (state.rpModel === "inner") {
@@ -277,8 +277,8 @@
         { type: "scatter", mode: "markers", x: fr.map((f) => f.tau_true), y: fr.map((f) => f.residual),
           marker: { size: 5, color: FOLD_C[k % 5], opacity: 0.62 }, text: fr.map((f) => f.embryo_id),
           hovertemplate: "%{text}<br>true τ %{x:.3f}<br>residual %{y:+.3f}<extra></extra>" },
-      ], { xaxis: { title: "true τ", range: [-0.03, 1.03], gridcolor: C.grid, zeroline: false },
-           yaxis: { title: "outer-test residual (predicted − true)", gridcolor: C.grid, zeroline: false } });
+      ], { xaxis: { title: { text: "true τ" }, range: [-0.03, 1.03], gridcolor: C.grid, zeroline: false },
+           yaxis: { title: { text: "outer-test residual (predicted − true)" }, gridcolor: C.grid, zeroline: false } });
     } else {
       const keys = Object.keys(pf.inner_scores);
       const vals = keys.map((kk) => pf.inner_scores[kk].macro_mae);
@@ -290,7 +290,7 @@
         textfont: { size: 9.5 },
         hovertemplate: "%{y}<br>inner-CV macro MAE %{x:.4f}<extra></extra>" }],
         { margin: { l: 130, r: 46, t: 8, b: 40 },
-          xaxis: { title: "inner-CV macro MAE (selection only)", gridcolor: C.grid, zeroline: false,
+          xaxis: { title: { text: "inner-CV macro MAE (selection only)" }, gridcolor: C.grid, zeroline: false,
                    range: [0, Math.max(...vals) * 1.25] },
           yaxis: { automargin: true, tickfont: { size: 9.5 } } });
     }
@@ -368,8 +368,8 @@
     traces.push({ type: "scatter", mode: "markers", x: fr.map((f) => f.tau_true),
       y: fr.map((f) => f.tau_pred), marker, text: txt, hovertemplate: hover });
     plot("oof-plot", traces, {
-      xaxis: { title: "true τ (ground truth from live imaging)", range: [-0.03, 1.03], gridcolor: C.grid, zeroline: false },
-      yaxis: { title: "out-of-fold predicted τ", range: [-0.03, 1.03], gridcolor: C.grid, zeroline: false } });
+      xaxis: { title: { text: "true τ (ground truth from live imaging)" }, range: [-0.03, 1.03], gridcolor: C.grid, zeroline: false },
+      yaxis: { title: { text: "out-of-fold predicted τ" }, range: [-0.03, 1.03], gridcolor: C.grid, zeroline: false } });
     const m = state.cal.nested_evaluation.outer_test_metrics;
     $("#oof-note").innerHTML =
       `${fr.length.toLocaleString()} frames from ${state.cal.dataset.n_embryos} embryos, each predicted by a model ` +
@@ -421,8 +421,8 @@
       showlegend: true,
       legend: { orientation: "h", x: 0, y: 1.02, yanchor: "bottom", font: { size: 10 } },
       margin: { l: 58, r: showD ? 58 : 14, t: 54, b: 46 },
-      xaxis: { title: "hours since pronuclear formation", gridcolor: C.grid, zeroline: false },
-      yaxis: { title: "τ", range: [-0.05, 1.05], gridcolor: C.grid, zeroline: false },
+      xaxis: { title: { text: "hours since pronuclear formation" }, gridcolor: C.grid, zeroline: false },
+      yaxis: { title: { text: "τ" }, range: [-0.05, 1.05], gridcolor: C.grid, zeroline: false },
     };
     if (showD) {
       traces.push(
@@ -432,7 +432,7 @@
         { type: "scatter", mode: "lines", name: "farther → centre (µm)", x: t.time_h, y: t.farther_um,
           yaxis: "y2", line: { color: "#b45309", width: 1.4, dash: "dot" },
           hovertemplate: "t = %{x:.2f} h<br>farther %{y:.1f} µm<extra></extra>" });
-      layout.yaxis2 = { title: "distance to cell centre (µm)", overlaying: "y", side: "right",
+      layout.yaxis2 = { title: { text: "distance to cell centre (µm)" }, overlaying: "y", side: "right",
         showgrid: false, zeroline: false, rangemode: "tozero" };
     }
     plot("tj-plot", traces, layout);
@@ -474,7 +474,7 @@
       hovertemplate: "%{y}<br>inner-CV macro MAE %{x:.4f}<extra></extra>",
     }], {
       margin: { l: 250, r: 60, t: 8, b: 44 }, showlegend: false,
-      xaxis: { title: "mean inner-CV macro MAE across outer folds (selection criterion)",
+      xaxis: { title: { text: "mean inner-CV macro MAE across outer folds (selection criterion)" },
                gridcolor: C.grid, zeroline: false,
                range: [0, Math.max(...dep.map((m) => m.inner_cv_macro_mae_mean)) * 1.22] },
       yaxis: { automargin: true, tickfont: { size: 10.5 } },
@@ -543,14 +543,14 @@
         marker: { size: 4.5, opacity: 0.5, color: fr.map((f) => (f.covered ? C.train : C.bad)) },
         text: fr.map((f) => f.embryo_id),
         hovertemplate: "%{text}<br>true τ %{x:.3f}<br>residual %{y:+.3f}<extra></extra>" },
-    ], { xaxis: { title: "true τ", range: [-0.03, 1.03], gridcolor: C.grid, zeroline: false },
-         yaxis: { title: "residual (predicted − true)", gridcolor: C.grid, zeroline: false } });
+    ], { xaxis: { title: { text: "true τ" }, range: [-0.03, 1.03], gridcolor: C.grid, zeroline: false },
+         yaxis: { title: { text: "residual (predicted − true)" }, gridcolor: C.grid, zeroline: false } });
 
     plot("dg-hist", [{ type: "histogram", x: fr.map((f) => f.residual), nbinsx: 46,
       marker: { color: C.train, opacity: 0.82, line: { color: "#fff", width: 0.5 } },
       hovertemplate: "residual %{x}<br>%{y} frames<extra></extra>" }],
-      { xaxis: { title: "residual (predicted − true τ)", gridcolor: C.grid, zeroline: false },
-        yaxis: { title: "frames", gridcolor: C.grid, zeroline: false },
+      { xaxis: { title: { text: "residual (predicted − true τ)" }, gridcolor: C.grid, zeroline: false },
+        yaxis: { title: { text: "frames" }, gridcolor: C.grid, zeroline: false },
         shapes: [{ type: "line", x0: 0, x1: 0, yref: "paper", y0: 0, y1: 1,
                    line: { color: "#64748b", width: 1.4, dash: "dash" } }] });
 
@@ -566,8 +566,8 @@
         text: ph.map((p) => pct(p.mean)), textposition: "outside", textfont: { size: 10.5 },
         hovertemplate: "%{x}<br>coverage %{y:.3f}<extra></extra>" },
     ], { margin: { l: 52, r: 14, t: 8, b: 40 },
-         xaxis: { title: "migration phase (by true τ)", gridcolor: C.grid },
-         yaxis: { title: "95% coverage", range: [0, 1.12], gridcolor: C.grid, zeroline: false },
+         xaxis: { title: { text: "migration phase (by true τ)" }, gridcolor: C.grid },
+         yaxis: { title: { text: "95% coverage" }, range: [0, 1.12], gridcolor: C.grid, zeroline: false },
          shapes: [{ type: "line", xref: "paper", x0: 0, x1: 1, y0: 0.95, y1: 0.95,
                     line: { color: "#64748b", width: 1.4, dash: "dash" } }] });
 
@@ -694,7 +694,7 @@
     }], {
       margin: { l: 108, r: 20, t: 8, b: 46 },
       height: Math.max(420, 15 * ok.length + 70),
-      xaxis: { title: "calibrated τ (0 = pronuclear formation, 1 = NEBD) · bars = empirical interval",
+      xaxis: { title: { text: "calibrated τ (0 = pronuclear formation, 1 = NEBD) · bars = empirical interval" },
                range: [-0.04, 1.04], gridcolor: C.grid, zeroline: false },
       yaxis: { automargin: true, tickfont: { size: 9.5 }, type: "category" },
     });
@@ -708,8 +708,8 @@
       text: both.map((r) => `${r.label}<br>legacy gap ${r.legacy_surface_gap_um} µm<br>calibrated τ ${r.tau.toFixed(3)}<br>QC ${r.qc}`),
       hovertemplate: "%{text}<extra></extra>",
     }], {
-      xaxis: { title: "legacy minimum surface-to-surface pronuclear gap (µm)", gridcolor: C.grid, zeroline: false },
-      yaxis: { title: "calibrated τ", range: [-0.04, 1.04], gridcolor: C.grid, zeroline: false } });
+      xaxis: { title: { text: "legacy minimum surface-to-surface pronuclear gap (µm)" }, gridcolor: C.grid, zeroline: false },
+      yaxis: { title: { text: "calibrated τ" }, range: [-0.04, 1.04], gridcolor: C.grid, zeroline: false } });
 
     const ds = meta.domain_shift || {};
     $("#fx-legacy-note").innerHTML =
@@ -915,9 +915,9 @@
       showlegend: true,
       legend: { orientation: "h", x: 0, y: 1.02, yanchor: "bottom", font: { size: 9.5 } },
       margin: { l: 60, r: 16, t: 66, b: 48 },
-      xaxis: { title: "achieved TRUE-time R² (measured, not the requested target)", range: [0, 1],
+      xaxis: { title: { text: "achieved TRUE-time R² (measured, not the requested target)" }, range: [0, 1],
                gridcolor: C.grid, zeroline: false },
-      yaxis: { title: "observed R² (same trend vs PREDICTED τ)", range: [0, 1], gridcolor: C.grid, zeroline: false },
+      yaxis: { title: { text: "observed R² (same trend vs PREDICTED τ)" }, range: [0, 1], gridcolor: C.grid, zeroline: false },
     });
 
     $("#nc-scenario-note").innerHTML =

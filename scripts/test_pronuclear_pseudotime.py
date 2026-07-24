@@ -307,8 +307,18 @@ def main():
     print("\n[attenuation seed reproducibility]")
     A_PATH = os.path.join(HERE, "scripts", "analyze_pseudotime_noise_ceiling.py")
     asrc = open(A_PATH).read()
+    # AST, not substring: the source deliberately WARNS about hash() in comments and strings, so a
+    # text search false-positives. Only an actual call to the builtin `hash` matters.
+    hash_calls = [n for n in ast.walk(ast.parse(asrc))
+                  if isinstance(n, ast.Call) and getattr(n.func, "id", None) == "hash"]
     check("scenario seeds are NOT derived from hash() (Python randomises it per process)",
-          "hash(" not in asrc.replace("hashlib", ""), "found a hash() call")
+          not hash_calls, f"{len(hash_calls)} literal hash() call(s) at lines "
+                          f"{[n.lineno for n in hash_calls]}")
+    # and prove the guard would fire on the v3 defect it replaces
+    bad_src = "rng = np.random.default_rng(seed + abs(hash(sc_name)) % 10000)"
+    fires = [n for n in ast.walk(ast.parse(bad_src))
+             if isinstance(n, ast.Call) and getattr(n.func, "id", None) == "hash"]
+    check("guard FIRES on the previous hash-derived seed expression", len(fires) == 1)
     check("explicit stable scenario seed offsets are declared",
           "SCENARIO_SEED_OFFSET" in asrc)
     # run the seed computation in FRESH processes under different PYTHONHASHSEED values

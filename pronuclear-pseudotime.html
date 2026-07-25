@@ -29,9 +29,9 @@
   select,button.dl{font:inherit}
   .sel{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;min-width:230px}
   .planes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .plane{background:#0b1220;border:1px solid var(--line);border-radius:9px;overflow:hidden;text-align:center}
-  .plane img{width:100%;display:block;background:#0b1220;aspect-ratio:1/1;object-fit:contain}
-  .plane .cap{font-size:11px;color:#93a2b6;padding:4px}
+  .plane{background:#eef2f7;border:1px solid var(--line);border-radius:9px;overflow:hidden;text-align:center}
+  .plane img{width:100%;display:block;background:#eef2f7;aspect-ratio:1/1;object-fit:contain}
+  .plane .cap{font-size:11px;color:var(--muted);padding:4px}
   .toggles{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}
   .chip{font-size:11.5px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer;background:#fff;font-weight:600;color:var(--muted)}
   .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -51,8 +51,6 @@
   ul.clean{margin:5px 0 0;padding-left:17px}ul.clean li{margin:2px 0}
   .missing{color:var(--muted);font-style:italic;font-size:12px}
   code{font-family:ui-monospace,Menlo,monospace;background:var(--bg);padding:1px 5px;border-radius:5px;font-size:12px}
-  @media(prefers-color-scheme:dark){:root{--ink:#e6edf6;--body:#c2cbd8;--muted:#8b97a7;--line:#22303f;--bg:#0d1520;--card:#111a26}
-    header.top,.back,.vsw button,.sel,.chip,.dl{background:#0f1926}}
 </style>
 </head>
 <body>

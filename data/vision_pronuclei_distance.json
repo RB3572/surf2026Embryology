@@ -1,0 +1,583 @@
+{
+ "meta": {
+  "model_version": "vpt-vision-1.0.0",
+  "seed": 20260725,
+  "trained_at_utc": "2026-07-25T06:11:06+00:00",
+  "n_zygotes": 51,
+  "input": "DAPI image features only",
+  "target": "pronuclei min surface-to-surface distance (pronuclei project metric)",
+  "evaluation": "nested leave-one-embryo-out CV"
+ },
+ "metrics": {
+  "pron_min_distance_um": {
+   "mae": 9.680243557335967,
+   "rmse": 11.669673055992813,
+   "spearman": 0.31443659131752866,
+   "pearson": 0.30730589358016,
+   "pair_order_accuracy": 0.609362389023406,
+   "n": 51
+  }
+ },
+ "final_model": {
+  "feature_names": [
+   "spread_rms",
+   "spread_axis0",
+   "spread_axis1",
+   "spread_axis2",
+   "aniso_01",
+   "aniso_02",
+   "planarity",
+   "blobsep_p95",
+   "blobsep_p98",
+   "blobsep_p99",
+   "blobsep_p99",
+   "blobsep_p95_norm",
+   "blobsep_p98_norm",
+   "blobsep_p99_norm",
+   "blobsep_p99_norm",
+   "blob_count_p98",
+   "top2_massfrac_p98",
+   "principal_bimodality",
+   "dnavol_p95",
+   "dnavol_p98",
+   "dnavol_p99",
+   "dnavol_p99",
+   "radial_0",
+   "radial_1",
+   "radial_2",
+   "radial_3",
+   "radial_4",
+   "radial_5",
+   "radial_6",
+   "radial_7",
+   "radial_8",
+   "radial_9",
+   "intensity_cv",
+   "intensity_p90_over_p50",
+   "dna_extent_rms"
+  ],
+  "scaler_mean": [
+   97.70977946069604,
+   73.293062599576,
+   57.5096289830254,
+   27.18995185871586,
+   1.3211880629029373,
+   2.809728719052979,
+   0.4084537626766225,
+   149.1589448841505,
+   134.10776767285347,
+   135.44402541653162,
+   135.44402541653162,
+   1.5554471640611398,
+   1.366047833043205,
+   1.3460283354431033,
+   1.3460283354431033,
+   5140.490196078431,
+   0.8455945655190028,
+   0.40803141090372524,
+   0.04738800988574977,
+   0.019571075504376916,
+   0.004891164848009171,
+   0.004891164848009171,
+   0.9798515520936295,
+   0.8409829608373808,
+   0.7604540458949564,
+   0.7100545592359873,
+   0.6767587982592065,
+   0.6547293421517947,
+   0.6404534100479763,
+   0.625864834719645,
+   0.6150524897185046,
+   0.6067608070728265,
+   0.34483252451115964,
+   1.1882957687564926,
+   97.70977946069604
+  ],
+  "scaler_scale": [
+   14.622472946257737,
+   12.924604499454086,
+   12.410335569346094,
+   4.629465826736694,
+   0.3504611344742721,
+   0.8547058827555045,
+   0.13193365113142472,
+   49.44690147754591,
+   47.810300349095044,
+   64.54999401499806,
+   64.54999401499806,
+   0.5377610879402888,
+   0.4288351990418757,
+   0.540526633773149,
+   0.540526633773149,
+   5794.573108073263,
+   0.10764784133385366,
+   0.07349469725967069,
+   0.004073304978977734,
+   0.0005850998637102715,
+   0.00020002650929985092,
+   0.00020002650929985092,
+   0.04615131951261302,
+   0.21976817841621601,
+   0.288012847170425,
+   0.30348725656492026,
+   0.3130966740487227,
+   0.31369707592576757,
+   0.3133378777395608,
+   0.31428680703239037,
+   0.3124640359783769,
+   0.30799010380331426,
+   0.2635589104357094,
+   0.14959277169048418,
+   14.622472946257737
+  ],
+  "coef": [
+   0.13630540056175608,
+   -0.051538828628407876,
+   0.24004716926885167,
+   0.7017326706531462,
+   -0.32932533560417065,
+   -0.38014736834965446,
+   -0.005728804726874204,
+   0.14219973320239188,
+   -0.05679765808491749,
+   0.2535074264396212,
+   0.2535074264396212,
+   0.07211055324691226,
+   -0.10284527636256703,
+   0.22814038134013898,
+   0.22814038134013898,
+   -0.24463790330033824,
+   -0.30755892033781645,
+   -0.2630954191299828,
+   -0.1965537459203513,
+   -0.5261304149198498,
+   -0.4752360865364944,
+   -0.4752360865364944,
+   0.40004254588089627,
+   0.06365189988804343,
+   0.01739007168738041,
+   0.08678313176816631,
+   0.15558548127564836,
+   0.2015516516371096,
+   0.21373493081715378,
+   0.22543684498790437,
+   0.22806425582203058,
+   0.22371827608430445,
+   -0.4312786761035242,
+   -0.38549362937977316,
+   0.13630540056175608
+  ],
+  "intercept": 10.968627450980392,
+  "alpha": 177.82794100389228
+ },
+ "per_zygote": [
+  {
+   "id": "20251226_zygote_p1_1",
+   "label": "Z-P1-fov1",
+   "qc": "caution",
+   "true_distance": 38.98,
+   "pred_distance": 10.978,
+   "transcript_total": 158525
+  },
+  {
+   "id": "20251226_zygote_p1_10",
+   "label": "Z-P1-fov10",
+   "qc": "pass",
+   "true_distance": 3.89,
+   "pred_distance": 11.342,
+   "transcript_total": 127694
+  },
+  {
+   "id": "20251226_zygote_p1_2_2",
+   "label": "Z-P1-fov2_2",
+   "qc": "pass",
+   "true_distance": 2.73,
+   "pred_distance": 8.995,
+   "transcript_total": 162294
+  },
+  {
+   "id": "20251226_zygote_p1_4",
+   "label": "Z-P1-fov4",
+   "qc": "pass",
+   "true_distance": 0.3,
+   "pred_distance": 11.558,
+   "transcript_total": 42297
+  },
+  {
+   "id": "20251226_zygote_p1_7",
+   "label": "Z-P1-fov7",
+   "qc": "pass",
+   "true_distance": 17.64,
+   "pred_distance": 10.1,
+   "transcript_total": 181338
+  },
+  {
+   "id": "20251226_zygote_p1_8",
+   "label": "Z-P1-fov8",
+   "qc": "pass",
+   "true_distance": 28.01,
+   "pred_distance": 7.085,
+   "transcript_total": 140000
+  },
+  {
+   "id": "20260407_zygote_p1_0_1",
+   "label": "Z-P1-fov0_1",
+   "qc": "pass",
+   "true_distance": 2.66,
+   "pred_distance": 5.52,
+   "transcript_total": 13780
+  },
+  {
+   "id": "20260407_zygote_p1_0_2",
+   "label": "Z-P1-fov0_2",
+   "qc": "pass",
+   "true_distance": 6.62,
+   "pred_distance": 5.205,
+   "transcript_total": 12683
+  },
+  {
+   "id": "20260407_zygote_p1_1",
+   "label": "Z-P1-fov1",
+   "qc": "pass",
+   "true_distance": 3.86,
+   "pred_distance": 4.984,
+   "transcript_total": 7271
+  },
+  {
+   "id": "20260407_zygote_p1_10",
+   "label": "Z-P1-fov10",
+   "qc": "caution",
+   "true_distance": 1.24,
+   "pred_distance": 4.882,
+   "transcript_total": 21238
+  },
+  {
+   "id": "20260407_zygote_p1_11",
+   "label": "Z-P1-fov11",
+   "qc": "pass",
+   "true_distance": 0.3,
+   "pred_distance": 8.605,
+   "transcript_total": 11653
+  },
+  {
+   "id": "20260407_zygote_p1_12",
+   "label": "Z-P1-fov12",
+   "qc": "pass",
+   "true_distance": 1.35,
+   "pred_distance": 5.271,
+   "transcript_total": 6775
+  },
+  {
+   "id": "20260407_zygote_p1_2",
+   "label": "Z-P1-fov2",
+   "qc": "pass",
+   "true_distance": 12.25,
+   "pred_distance": 5.502,
+   "transcript_total": 53563
+  },
+  {
+   "id": "20260407_zygote_p1_3",
+   "label": "Z-P1-fov3",
+   "qc": "pass",
+   "true_distance": 9.14,
+   "pred_distance": 4.564,
+   "transcript_total": 4586
+  },
+  {
+   "id": "20260407_zygote_p1_4",
+   "label": "Z-P1-fov4",
+   "qc": "pass",
+   "true_distance": 0.42,
+   "pred_distance": 5.492,
+   "transcript_total": 5526
+  },
+  {
+   "id": "20260407_zygote_p1_5",
+   "label": "Z-P1-fov5",
+   "qc": "pass",
+   "true_distance": 5.48,
+   "pred_distance": 6.107,
+   "transcript_total": 4188
+  },
+  {
+   "id": "20260407_zygote_p1_6_0",
+   "label": "Z-P1-fov6_0",
+   "qc": "pass",
+   "true_distance": 1.59,
+   "pred_distance": 5.212,
+   "transcript_total": 11073
+  },
+  {
+   "id": "20260407_zygote_p1_6_1",
+   "label": "Z-P1-fov6_1",
+   "qc": "pass",
+   "true_distance": 1.08,
+   "pred_distance": 5.26,
+   "transcript_total": 8727
+  },
+  {
+   "id": "20260407_zygote_p1_7_0",
+   "label": "Z-P1-fov7_0",
+   "qc": "pass",
+   "true_distance": 1.9,
+   "pred_distance": 7.372,
+   "transcript_total": 11359
+  },
+  {
+   "id": "20260407_zygote_p1_7_1",
+   "label": "Z-P1-fov7_1",
+   "qc": "pass",
+   "true_distance": 0.3,
+   "pred_distance": 7.658,
+   "transcript_total": 9942
+  },
+  {
+   "id": "20260407_zygote_p1_8_0",
+   "label": "Z-P1-fov8_0",
+   "qc": "pass",
+   "true_distance": 0.3,
+   "pred_distance": 4.716,
+   "transcript_total": 5984
+  },
+  {
+   "id": "20260407_zygote_p1_8_1",
+   "label": "Z-P1-fov8_1",
+   "qc": "pass",
+   "true_distance": 0.3,
+   "pred_distance": 4.716,
+   "transcript_total": 4192
+  },
+  {
+   "id": "20260409_zygote_p2_9",
+   "label": "Z-P2-fov9",
+   "qc": "caution",
+   "true_distance": 2.32,
+   "pred_distance": 13.083,
+   "transcript_total": 2661
+  },
+  {
+   "id": "20260425_zygote_p2_0",
+   "label": "Z-P2-fov0",
+   "qc": "pass",
+   "true_distance": 27.89,
+   "pred_distance": 12.837,
+   "transcript_total": 32782
+  },
+  {
+   "id": "20260425_zygote_p2_1",
+   "label": "Z-P2-fov1",
+   "qc": "pass",
+   "true_distance": 22.4,
+   "pred_distance": 14.667,
+   "transcript_total": 147176
+  },
+  {
+   "id": "20260425_zygote_p2_10",
+   "label": "Z-P2-fov10",
+   "qc": "pass",
+   "true_distance": 0.3,
+   "pred_distance": 14.303,
+   "transcript_total": 274612
+  },
+  {
+   "id": "20260425_zygote_p2_12",
+   "label": "Z-P2-fov12",
+   "qc": "pass",
+   "true_distance": 19.76,
+   "pred_distance": 13.537,
+   "transcript_total": 315532
+  },
+  {
+   "id": "20260425_zygote_p2_13",
+   "label": "Z-P2-fov13",
+   "qc": "out-of-domain",
+   "true_distance": 25.05,
+   "pred_distance": 14.374,
+   "transcript_total": 358432
+  },
+  {
+   "id": "20260425_zygote_p2_14",
+   "label": "Z-P2-fov14",
+   "qc": "pass",
+   "true_distance": 2.06,
+   "pred_distance": 11.679,
+   "transcript_total": 338834
+  },
+  {
+   "id": "20260425_zygote_p2_16",
+   "label": "Z-P2-fov16",
+   "qc": "pass",
+   "true_distance": 22.99,
+   "pred_distance": 5.526,
+   "transcript_total": 268890
+  },
+  {
+   "id": "20260425_zygote_p2_17",
+   "label": "Z-P2-fov17",
+   "qc": "caution",
+   "true_distance": 31.31,
+   "pred_distance": 14.024,
+   "transcript_total": 446332
+  },
+  {
+   "id": "20260425_zygote_p2_18_0",
+   "label": "Z-P2-fov18_0",
+   "qc": "caution",
+   "true_distance": 46.59,
+   "pred_distance": 14.515,
+   "transcript_total": 66506
+  },
+  {
+   "id": "20260425_zygote_p2_18_1",
+   "label": "Z-P2-fov18_1",
+   "qc": "pass",
+   "true_distance": 16.77,
+   "pred_distance": 19.253,
+   "transcript_total": 61296
+  },
+  {
+   "id": "20260425_zygote_p2_19_1",
+   "label": "Z-P2-fov19_1",
+   "qc": "caution",
+   "true_distance": 32.7,
+   "pred_distance": 16.49,
+   "transcript_total": 154458
+  },
+  {
+   "id": "20260425_zygote_p2_2",
+   "label": "Z-P2-fov2",
+   "qc": "out-of-domain",
+   "true_distance": 2.1,
+   "pred_distance": 11.79,
+   "transcript_total": 250646
+  },
+  {
+   "id": "20260425_zygote_p2_20",
+   "label": "Z-P2-fov20",
+   "qc": "pass",
+   "true_distance": 0.3,
+   "pred_distance": 18.327,
+   "transcript_total": 95404
+  },
+  {
+   "id": "20260425_zygote_p2_21",
+   "label": "Z-P2-fov21",
+   "qc": "pass",
+   "true_distance": 2.41,
+   "pred_distance": 13.036,
+   "transcript_total": 186592
+  },
+  {
+   "id": "20260425_zygote_p2_22_0",
+   "label": "Z-P2-fov22_0",
+   "qc": "pass",
+   "true_distance": 0.67,
+   "pred_distance": 12.812,
+   "transcript_total": 215774
+  },
+  {
+   "id": "20260425_zygote_p2_22_1",
+   "label": "Z-P2-fov22_1",
+   "qc": "caution",
+   "true_distance": 27.75,
+   "pred_distance": 10.023,
+   "transcript_total": 135479
+  },
+  {
+   "id": "20260425_zygote_p2_23",
+   "label": "Z-P2-fov23",
+   "qc": "pass",
+   "true_distance": 10.98,
+   "pred_distance": 13.913,
+   "transcript_total": 286014
+  },
+  {
+   "id": "20260425_zygote_p2_25_0",
+   "label": "Z-P2-fov25_0",
+   "qc": "pass",
+   "true_distance": 0.3,
+   "pred_distance": 15.739,
+   "transcript_total": 158882
+  },
+  {
+   "id": "20260425_zygote_p2_26",
+   "label": "Z-P2-fov26",
+   "qc": "pass",
+   "true_distance": 0.3,
+   "pred_distance": 13.707,
+   "transcript_total": 331138
+  },
+  {
+   "id": "20260425_zygote_p2_4",
+   "label": "Z-P2-fov4",
+   "qc": "pass",
+   "true_distance": 1.34,
+   "pred_distance": 10.84,
+   "transcript_total": 209628
+  },
+  {
+   "id": "20260425_zygote_p2_5",
+   "label": "Z-P2-fov5",
+   "qc": "pass",
+   "true_distance": 3.35,
+   "pred_distance": 13.816,
+   "transcript_total": 392530
+  },
+  {
+   "id": "20260425_zygote_p2_6",
+   "label": "Z-P2-fov6",
+   "qc": "pass",
+   "true_distance": 18.14,
+   "pred_distance": 13.637,
+   "transcript_total": 258438
+  },
+  {
+   "id": "20260425_zygote_p2_7_0",
+   "label": "Z-P2-fov7_0",
+   "qc": "pass",
+   "true_distance": 10.78,
+   "pred_distance": 14.84,
+   "transcript_total": 400188
+  },
+  {
+   "id": "20260425_zygote_p2_7_1",
+   "label": "Z-P2-fov7_1",
+   "qc": "pass",
+   "true_distance": 7.51,
+   "pred_distance": 15.08,
+   "transcript_total": 489412
+  },
+  {
+   "id": "20260425_zygote_p2_8_0",
+   "label": "Z-P2-fov8_0",
+   "qc": "pass",
+   "true_distance": 5.24,
+   "pred_distance": 21.965,
+   "transcript_total": 171743
+  },
+  {
+   "id": "20260425_zygote_p2_8_1",
+   "label": "Z-P2-fov8_1",
+   "qc": "caution",
+   "true_distance": 25.63,
+   "pred_distance": 16.533,
+   "transcript_total": 161046
+  },
+  {
+   "id": "20260425_zygote_p2_9_0",
+   "label": "Z-P2-fov9_0",
+   "qc": "out-of-domain",
+   "true_distance": 24.82,
+   "pred_distance": 14.658,
+   "transcript_total": 18570
+  },
+  {
+   "id": "20260425_zygote_p2_9_1",
+   "label": "Z-P2-fov9_1",
+   "qc": "pass",
+   "true_distance": 27.3,
+   "pred_distance": 14.464,
+   "transcript_total": 66852
+  }
+ ]
+}

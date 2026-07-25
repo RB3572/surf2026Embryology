@@ -39,6 +39,7 @@
   const xsAlign = $("#xs-align"), xsAlignSub = $("#xs-align-sub"), xsAlignDownload = $("#xs-align-download");
   const xsAlignCells = $("#xs-align-cells"), xsAlignMean = $("#xs-align-mean"), xsAlignOnly = $("#xs-align-only");
   const xsAlignPlane = $("#xs-align-plane"), xsAlignLegend = $("#xs-align-legend"), xsAlignSperm = $("#xs-align-sperm");
+  const xsAlignPb = $("#xs-align-pb");
   const xsSp = $("#xs-sp"), xsSpSub = $("#xs-sp-sub"), xsSpNote = $("#xs-sp-note"), xsSpDownload = $("#xs-sp-download");
   const xsSpDensity = $("#xs-sp-density"), xsGmDensity = $("#xs-gm-density"), xsGmSperm = $("#xs-gm-sperm");
   const xsBody = $("#xs-body"), xsPb = $("#xs-pb"), xsPronuclei = $("#xs-pronuclei");
@@ -619,6 +620,7 @@
     const showLegend = xsAlignLegend ? xsAlignLegend.checked : true;
     const showPlane = xsAlignPlane ? xsAlignPlane.checked : true;
     const showSperm = xsAlignSperm && xsAlignSperm.checked;
+    const showPb = xsAlignPb && xsAlignPb.checked;
     const spById = {}; if (state.spermData) state.spermData.embryos.forEach((r) => (spById[r.id] = r));
     const aligned = [];
     agg.embryos.forEach((e) => {
@@ -629,7 +631,9 @@
       const pts = e.outline.map(xf); pts.push(pts[0]);
       const sp = spById[e.id];                                                   // sperm in the SAME aligned frame
       const sperm = (showSperm && sp && sp.uv) ? xf(sp.uv) : null;
-      aligned.push({ pts, sperm, p: (e.sig && e.sig[key] != null) ? e.sig[key] : 1, id: e.id, label: e.label, isCur: e.id === state.currentId });
+      // polar-body silhouette in the SAME aligned frame (⊥ the polar-body axis, so it sits near centre)
+      const pb = (showPb && e.pb_outline && e.pb_outline.length) ? e.pb_outline.map(xf) : null;
+      aligned.push({ pts, sperm, pb, p: (e.sig && e.sig[key] != null) ? e.sig[key] : 1, id: e.id, label: e.label, isCur: e.id === state.currentId });
     });
     if (!aligned.length) {
       Plotly.purge(xsAlign); xsAlign.classList.remove("js-plotly-plot");
@@ -650,6 +654,24 @@
         line: { color: "#fff", width: 5, shape: "spline" }, hoverinfo: "skip", showlegend: false });
       traces.push({ type: "scatter", mode: "lines", x: cur.pts.map((q) => q[0]), y: cur.pts.map((q) => q[1]),
         name: `${cur.label} (this embryo)`, line: { color: viridis(sigT(cur.p)), width: 2.6, shape: "spline" }, hoverinfo: "skip", showlegend: showLegend }); }
+    // polar-body silhouettes — one per embryo, in the ⊥-axis frame they cluster near the
+    // centre (the polar body lies on the axis this view is built around). Low-opacity fills
+    // accumulate, so the overlap shows how tightly the polar bodies sit on the axis.
+    if (showPb) {
+      const pm = aligned.filter((o) => o.pb && o.pb.length && (!onlyCur || o.isCur));
+      pm.forEach((o) => {
+        if (o.isCur) return;
+        traces.push({ type: "scatter", mode: "lines", x: o.pb.map((q) => q[0]), y: o.pb.map((q) => q[1]),
+          fill: "toself", fillcolor: "rgba(30,58,95,0.10)", line: { color: "rgba(30,58,95,0.55)", width: 0.8 },
+          hoverinfo: "skip", showlegend: false });
+      });
+      const pbCur = pm.find((o) => o.isCur);
+      if (pbCur) traces.push({ type: "scatter", mode: "lines", x: pbCur.pb.map((q) => q[0]), y: pbCur.pb.map((q) => q[1]),
+        fill: "toself", fillcolor: "rgba(30,58,95,0.25)", line: { color: "#1e3a5f", width: 2 },
+        name: `polar body · ${pbCur.label}`, hoverinfo: "name", showlegend: showLegend });
+      if (pm.length) traces.push({ type: "scatter", mode: "lines", x: [null], y: [null],
+        name: `polar bodies (${pm.length})`, line: { color: "#1e3a5f", width: 2 }, showlegend: showLegend && !pbCur });
+    }
     // sperm locations — one diamond per embryo with a located sperm, coloured like its outline
     if (showSperm) {
       const sm = aligned.filter((o) => o.sperm && (!onlyCur || o.isCur));
@@ -1254,7 +1276,7 @@
       xsCrossDotSizeValue.value = xsCrossDotSize.value;
       renderCurrentCrossSection();
     });
-    [xsAlignCells, xsAlignMean, xsAlignOnly, xsAlignPlane, xsAlignLegend, xsAlignSperm]
+    [xsAlignCells, xsAlignMean, xsAlignOnly, xsAlignPlane, xsAlignLegend, xsAlignSperm, xsAlignPb]
       .forEach((el) => el && el.addEventListener("change", renderAlignedOutlines));
     if (xsAlignDownload) xsAlignDownload.addEventListener("click", () => {
       if (xsAlign.classList.contains("js-plotly-plot"))

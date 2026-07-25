@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pseudotime vs Transcripts (3D model) · SURF 2026</title>
+<script src="plotly.min.js" charset="utf-8"></script>
+<style>
+  :root{--ink:#0f172a;--body:#334155;--muted:#64748b;--line:#e5e9f0;--bg:#f6f8fc;--card:#fff;
+        --accent:#7c3aed;--green:#15803d;--amber:#b45309;--red:#b42318;}
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--body);background:var(--bg)}
+  a{color:var(--accent)}
+  header.top{display:flex;align-items:center;gap:13px;padding:14px 24px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:9;flex-wrap:wrap}
+  .back{text-decoration:none;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:5px 11px;font-weight:600}
+  header.top h1{font-size:17px;margin:0;color:var(--ink)}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);display:inline-block}
+  .sub{color:var(--muted);font-size:12px;font-family:ui-monospace,Menlo,monospace}
+  main{max-width:1180px;margin:0 auto;padding:18px 22px 80px}
+  .banner{background:#f5f3ff;border:1px solid #ddd6fe;border-left:4px solid var(--accent);border-radius:10px;padding:12px 15px;margin:14px 0 18px;color:#5b21b6;font-size:13.5px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:13px 0}
+  section h2{margin:0 0 3px;font-size:16px;color:var(--ink)}
+  section .lead{color:var(--muted);font-size:12.5px;margin:0 0 12px}
+  .ctrls{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+  .ctrl{display:flex;gap:6px;align-items:center;font-size:12.5px;color:var(--muted)}
+  select,input[type=search]{font:inherit;padding:6px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  select{min-width:150px}
+  label.tg{display:inline-flex;gap:5px;align-items:center;font-size:12.5px;cursor:pointer;color:var(--muted)}
+  .plot{width:100%;height:440px}
+  .grid2{display:grid;gap:14px}
+  @media(min-width:900px){.grid2{grid-template-columns:1.35fr 1fr}}
+  table{border-collapse:collapse;width:100%;font-size:12.5px}
+  th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;user-select:none}
+  tbody tr{cursor:pointer} tbody tr:hover{background:var(--bg)}
+  tbody tr.on{background:#f5f3ff}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:10.5px;font-weight:700}
+  .t-ok{background:#dcfce7;color:var(--green)}.t-warn{background:#fef3c7;color:var(--amber)}.t-bad{background:#fee2e2;color:var(--red)}
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;font-size:13px}
+  .kv .k{color:var(--muted)}.kv .v{color:var(--ink);font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+  .stat{font-size:13px;color:var(--ink);margin-top:8px}
+  .stat b{font-variant-numeric:tabular-nums}
+  .scroll{max-height:430px;overflow:auto}
+  code{font-family:ui-monospace,Menlo,monospace;background:var(--bg);padding:1px 5px;border-radius:5px;font-size:12px}
+  ul.clean{margin:5px 0 0;padding-left:17px}ul.clean li{margin:2px 0}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="index.html">‹ Projects</a><span class="dot"></span>
+  <h1>Pseudotime vs Transcripts</h1><span class="sub" id="meta">loading…</span>
+</header>
+<main>
+  <div class="banner" id="banner"></div>
+  <div id="root"></div>
+</main>
+<script>
+const $=(s,r=document)=>r.querySelector(s);
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
+const esc=s=>String(s==null?"":s).replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]));
+const f=(v,d=3)=>v==null||Number.isNaN(v)?"—":(+v).toFixed(d);
+let D, state={gene:"__total__", norm:"count", fit:"linear", showOOD:true,
+              scope:"detected", sortKey:"rho_count", sortDir:-1};
+// which gene_stats fields correspond to the current scope + normalisation
+const statKey=(base)=>base+(state.norm==="frac"?"_frac":"_count")+(state.scope==="all"?"_all":"");
+
+const QC={in_domain:'<span class="tag t-ok">in-domain</span>',caution:'<span class="tag t-warn">caution</span>',out_of_domain:'<span class="tag t-bad">OOD</span>'};
+const COL={in_domain:"#7c3aed",caution:"#b45309",out_of_domain:"#b42318"};
+
+fetch("data/pn3d_transcripts.json").then(r=>r.json()).then(d=>{D=d;boot()})
+  .catch(e=>$("#banner").innerHTML=`Could not load <code>data/pn3d_transcripts.json</code> — run <code>python3 scripts/build_pn3d_transcripts.py</code>. ${esc(e.message)}`);
+
+function rows(){
+  let rs=D.embryos.filter(r=>state.showOOD||r.ood!=="out_of_domain");
+  // "detected" scope: for a specific gene, use only embryos where it was detected —
+  // the same subset the ranking table uses, so plot and table always agree.
+  if(state.scope==="detected"&&state.gene!=="__total__") rs=rs.filter(r=>state.gene in r.genes);
+  return rs;
+}
+function yval(r){
+  const c = state.gene==="__total__" ? r.total : (r.genes[state.gene]||0);
+  return state.norm==="frac" ? (r.total? c/r.total : 0) : c;
+}
+function yLabel(){
+  const g = state.gene==="__total__" ? "total transcripts" : state.gene+" transcripts";
+  return state.norm==="frac" ? g.replace("transcripts","fraction of total") : g;
+}
+
+function boot(){
+  const m=D.model, j=D.join;
+  $("#meta").textContent=`${m.package_version} · ${j.n_joined} embryos · clock MAE ${f(m.cv_metrics.mae)}`;
+  $("#banner").innerHTML=`Transcript counts against <b>developmental pseudotime τ</b> from the
+    <a href="pronuclear-pseudotime.html">3D Pronuclear Pseudotime model</a> — segmentation → dimensionless
+    geometry → calibrated clock. Unlike a raw distance proxy, each τ carries a <b>calibrated interval</b>
+    (shown as horizontal error bars). τ is an <b>inferred estimate</b>: fixed stacks have no true time, and
+    the clock is validated only on live imaging.`;
+  const root=$("#root");
+
+  // ── controls + main scatter ──
+  const s1=el("section");
+  s1.appendChild(el("h2",null,"Transcript count vs pseudotime"));
+  s1.appendChild(el("p","lead","Each point is one zygote. Horizontal bars are the τ 95% interval from the clock."));
+  const c=el("div","ctrls");
+  const gsel=el("select");
+  gsel.appendChild(new Option("all transcripts (total)","__total__"));
+  D.gene_stats.forEach(g=>gsel.appendChild(new Option(`${g.gene}  (detected in ${g.n_detected})`,g.gene)));
+  gsel.value=state.gene; gsel.onchange=()=>{state.gene=gsel.value;draw();markRow()};
+  c.appendChild(wrap("gene",gsel));
+  const nsel=el("select");
+  [["count","raw count"],["frac","fraction of total"]].forEach(([v,t])=>nsel.appendChild(new Option(t,v)));
+  nsel.onchange=()=>{state.norm=nsel.value;draw()};
+  c.appendChild(wrap("y-axis",nsel));
+  const fsel=el("select");
+  [["linear","linear"],["log","log(count)"],["power","power"],["none","none"]].forEach(([v,t])=>fsel.appendChild(new Option(t,v)));
+  fsel.onchange=()=>{state.fit=fsel.value;draw()};
+  c.appendChild(wrap("fit",fsel));
+  const ssel=el("select");
+  [["detected","embryos where detected"],["all","all embryos (absent = 0)"]]
+    .forEach(([v,t])=>ssel.appendChild(new Option(t,v)));
+  ssel.value=state.scope;
+  ssel.onchange=()=>{state.scope=ssel.value;draw();buildGeneTable()};
+  c.appendChild(wrap("embryos",ssel));
+  const ood=el("label","tg"); ood.innerHTML=`<input type="checkbox" ${state.showOOD?"checked":""}> include out-of-domain`;
+  ood.querySelector("input").onchange=e=>{state.showOOD=e.target.checked;draw();buildGeneTable()};
+  c.appendChild(ood);
+  s1.appendChild(c);
+  const plot=el("div","plot"); plot.id="scatter"; s1.appendChild(plot);
+  s1.appendChild(el("div","stat","")).id="stat";
+  root.appendChild(s1);
+
+  // ── gene ranking + join provenance ──
+  const g2=el("div","grid2");
+  const s2=el("section");
+  s2.appendChild(el("h2",null,"Genes ranked by correlation with τ"));
+  s2.appendChild(el("p","lead",`Spearman ρ against τ, computed on the same embryos and the same y-axis as the plot above (≥ ${D.min_embryos_per_gene} detected). Click a row to plot it.`));
+  s2.appendChild(el("p","lead",esc(D.gene_stat_note)));
+  const search=el("input"); search.type="search"; search.placeholder="filter genes…";
+  search.oninput=()=>buildGeneTable(search.value);
+  s2.appendChild(search);
+  const tw=el("div","scroll"); tw.id="genetbl"; s2.appendChild(tw);
+  g2.appendChild(s2);
+
+  const s3=el("section");
+  s3.appendChild(el("h2",null,"How the two cohorts were joined"));
+  s3.appendChild(el("p","lead","A field of view can contain several embryos, so matching is spatial, not by name."));
+  s3.appendChild(el("div","kv",
+    `<div class="k">embryos joined</div><div class="v">${j.n_joined}</div>
+     <div class="k">3D-model zygotes</div><div class="v">${j.n_pn3d_zygotes}</div>
+     <div class="k">transcript embryos</div><div class="v">${j.n_transcript_embryos}</div>
+     <div class="k">ambiguous pairings</div><div class="v">${j.n_ambiguous}</div>
+     <div class="k">centroid error (median)</div><div class="v">${f(j.centroid_error_um&&j.centroid_error_um.median,3)} µm</div>
+     <div class="k">centroid error (max)</div><div class="v">${f(j.centroid_error_um&&j.centroid_error_um.max,3)} µm</div>
+     <div class="k">name key agrees</div><div class="v">${j.name_cross_check.name_key_agrees} / ${j.name_cross_check.name_key_agrees+j.name_cross_check.name_key_differs}</div>`));
+  s3.appendChild(el("p","lead",esc(j.method)));
+  s3.appendChild(el("p","lead",esc(j.note)));
+  const qcd=el("div"); qcd.innerHTML="<b>QC of joined embryos:</b> "+Object.entries(D.qc_counts).map(([k,v])=>`${QC[k]||k} ${v}`).join(" · ");
+  s3.appendChild(qcd);
+  s3.appendChild(el("p","lead",`<b>Time supervision:</b> ${esc(D.model.time_supervision)}`));
+  g2.appendChild(s3);
+  root.appendChild(g2);
+
+  buildGeneTable(); draw();
+}
+function wrap(lbl,node){const d=el("div","ctrl");d.appendChild(el("span",null,esc(lbl)));d.appendChild(node);return d}
+
+function linreg(xs,ys){
+  const n=xs.length; if(n<3) return null;
+  const mx=xs.reduce((a,b)=>a+b,0)/n, my=ys.reduce((a,b)=>a+b,0)/n;
+  let sxx=0,syy=0,sxy=0;
+  for(let i=0;i<n;i++){const dx=xs[i]-mx,dy=ys[i]-my;sxx+=dx*dx;syy+=dy*dy;sxy+=dx*dy}
+  if(sxx<=0||syy<=0) return null;
+  const b=sxy/sxx, a=my-b*mx, r=sxy/Math.sqrt(sxx*syy);
+  return {a,b,r};
+}
+function spearman(xs,ys){
+  const rk=v=>{const o=v.map((x,i)=>[x,i]).sort((p,q)=>p[0]-q[0]);const r=new Array(v.length);
+    let i=0;while(i<o.length){let j=i;while(j+1<o.length&&o[j+1][0]===o[i][0])j++;
+    const avg=(i+j)/2+1;for(let k=i;k<=j;k++)r[o[k][1]]=avg;i=j+1}return r};
+  const L=linreg(rk(xs),rk(ys)); return L?L.r:null;
+}
+
+function draw(){
+  const rs=rows();
+  const xs=rs.map(r=>r.tau), ys=rs.map(yval);
+  const traces=[{
+    type:"scatter",mode:"markers",name:"zygote",
+    x:xs,y:ys,
+    error_x:{type:"data",symmetric:false,
+      array:rs.map(r=>r.hi95-r.tau),arrayminus:rs.map(r=>r.tau-r.lo95),
+      color:"rgba(15,23,42,.20)",thickness:1.3,width:0},
+    marker:{size:11,color:rs.map(r=>COL[r.ood]||"#7c3aed"),line:{color:"#fff",width:1.4}},
+    text:rs.map(r=>`${r.label}<br>τ ${f(r.tau,3)} [${f(r.lo95,2)}, ${f(r.hi95,2)}]<br>${state.gene==="__total__"?"total":state.gene} ${(state.gene==="__total__"?r.total:(r.genes[state.gene]||0)).toLocaleString()}<br>${r.ood}`),
+    hovertemplate:"%{text}<extra></extra>"}];
+  // fit
+  let stat="";
+  if(state.fit!=="none"&&xs.length>=3){
+    const tx=xs.slice(), ty=ys.map((y,i)=>state.fit==="log"?Math.log(Math.max(y,1e-9)):y);
+    const xx=state.fit==="power"?xs.map(v=>Math.log(Math.max(v,1e-6))):tx;
+    const L=linreg(xx,ty);
+    if(L){
+      const lo=Math.min(...xs),hi=Math.max(...xs),N=60,fx=[],fy=[];
+      for(let i=0;i<N;i++){const x=lo+(hi-lo)*i/(N-1);
+        const xe=state.fit==="power"?Math.log(Math.max(x,1e-6)):x;
+        let y=L.a+L.b*xe; if(state.fit==="log"||state.fit==="power")y=Math.exp(y);
+        fx.push(x);fy.push(y)}
+      traces.push({type:"scatter",mode:"lines",name:"fit",x:fx,y:fy,
+        line:{color:"#0f172a",width:2},hoverinfo:"skip"});
+      const rho=spearman(xs,ys);
+      stat=`fit <b>${state.fit}</b> · Pearson r = <b>${f(L.r,3)}</b> · R² = <b>${f(L.r*L.r,3)}</b> · Spearman ρ = <b>${f(rho,3)}</b> · n = <b>${xs.length}</b>`;
+    }
+  } else stat=`n = <b>${xs.length}</b> embryos`;
+  $("#stat").innerHTML=stat+` &nbsp;<span style="color:var(--muted)">— correlation with an <i>inferred</i> τ; the interval bars show why single-embryo ordering is uncertain</span>`;
+  Plotly.react("scatter",traces,{
+    margin:{l:70,r:16,t:10,b:48},
+    xaxis:{title:{text:"pseudotime τ  (0 = pronuclear formation → 1 = NEBD)"},range:[-0.05,1.05],gridcolor:"#eef1f5",zeroline:false},
+    yaxis:{title:{text:yLabel()},gridcolor:"#eef1f5",zeroline:false},
+    showlegend:false,paper_bgcolor:"transparent",plot_bgcolor:"transparent",
+  },{responsive:true,displaylogo:false,modeBarButtonsToRemove:["select2d","lasso2d"]});
+}
+
+function buildGeneTable(filter){
+  const q=(filter||"").toLowerCase();
+  let gs=D.gene_stats.filter(g=>!q||g.gene.toLowerCase().includes(q));
+  const k=state.sortKey,dir=state.sortDir;
+  gs=gs.slice().sort((a,b)=>{
+    const av=a[k],bv=b[k];
+    if(av==null)return 1; if(bv==null)return -1;
+    return (typeof av==="string")?dir*av.localeCompare(bv):dir*(av-bv);
+  });
+  const nKey=state.scope==="all"?"n_all":"n_detected";
+  const rhoK=statKey("rho"), rK=statKey("r");
+  const cols=[["gene","gene"],[nKey,"n"],[rhoK,"ρ"],[rK,"r"],["n_detected","detected"],["total_count","total"]];
+  if(state.sortKey==="rho_count") state.sortKey=rhoK;   // keep sort valid across scope/norm
+  const t=el("table");
+  t.innerHTML="<thead><tr>"+cols.map(([key,lab])=>`<th data-k="${key}">${lab}${state.sortKey===key?(dir<0?" ▾":" ▴"):""}</th>`).join("")+"</tr></thead>";
+  const tb=el("tbody");
+  gs.slice(0,300).forEach(g=>{
+    const tr=el("tr");
+    if(g.gene===state.gene)tr.className="on";
+    tr.innerHTML=`<td>${esc(g.gene)}</td><td class="num">${g[nKey]}</td>
+      <td class="num">${f(g[rhoK],3)}</td><td class="num">${f(g[rK],3)}</td>
+      <td class="num">${g.n_detected}</td><td class="num">${g.total_count.toLocaleString()}</td>`;
+    tr.onclick=()=>{state.gene=g.gene;document.querySelector("#root select").value=g.gene;draw();buildGeneTable(filter)};
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb);
+  t.querySelectorAll("th").forEach(th=>th.onclick=()=>{
+    const key=th.dataset.k;
+    if(state.sortKey===key)state.sortDir*=-1; else {state.sortKey=key;state.sortDir=-1}
+    buildGeneTable(filter);
+  });
+  const host=$("#genetbl"); host.innerHTML=""; host.appendChild(t);
+}
+function markRow(){buildGeneTable()}
+</script>
+</body>
+</html>

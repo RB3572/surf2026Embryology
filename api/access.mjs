@@ -25,6 +25,7 @@ export const PROJECTS = [
   { key: "pseudotime-calibration", label: "Pronuclear Pseudotime Calibration" },
   { key: "vision-pseudotime", label: "Fixed-Image Pseudotime (pilot)" },
   { key: "pronuclear-pseudotime", label: "3D Pronuclear Pseudotime" },
+  { key: "pn3d-transcripts", label: "Pseudotime vs Transcripts (3D)" },
 ];
 const KEYS = new Set(PROJECTS.map((p) => p.key));
 const DEFAULTS = { "Kathy Tam": ["pronuclei", "extpt"] };   // seeded on first run

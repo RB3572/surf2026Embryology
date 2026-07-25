@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "package_version": "pn3d-0.1.0",
- "generated_at_utc": "2026-07-25T07:13:05+00:00",
+ "generated_at_utc": "2026-07-25T10:07:22+00:00",
  "audit_params": {
   "z_step": 2,
   "xy_step": 6,
@@ -13,8 +13,8 @@
   "inside_rule": "fill-containment >= 0.6 OR border-ratio > 3",
   "semantics_source": "geometric audit \u2014 NOT segment/file names"
  },
- "n_zygotes_audited": 53,
- "n_zygotes_resolved": 40,
+ "n_zygotes_audited": 63,
+ "n_zygotes_resolved": 48,
  "n_2cell_ood": 10,
  "embryos": [
   {
@@ -512,7 +512,7 @@
    "plate": "p1",
    "fov": "fov0",
    "sub_index": null,
-   "shared_fov": false,
+   "shared_fov": true,
    "n_segments": 4,
    "spacing_grid": [
     1.0000000150184936,
@@ -552,6 +552,59 @@
     "inter_over_R": 0.636,
     "vol_asymmetry": 0.0519,
     "pron_vol_frac": 0.02677,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
+   "is_pronuclear_target": true
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov0/1",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov0",
+   "sub_index": "1",
+   "shared_fov": true,
+   "n_segments": 4,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "status": "resolved",
+   "confidence": 1.0,
+   "flags": [],
+   "cell_body_label": 1,
+   "pronucleus_labels": [
+    3,
+    2
+   ],
+   "polar_body_label": 4,
+   "geometry": {
+    "cell_center_um": [
+     177.39,
+     214.86,
+     96.63
+    ],
+    "cell_volume_um3": 357784.9,
+    "cell_radius_um": 44.04,
+    "nearer_to_center_um": 18.687,
+    "farther_to_center_um": 19.045,
+    "distance_sum_um": 37.732,
+    "inter_pn_um": 25.949,
+    "pron_volume_near_um3": 6972.4,
+    "pron_volume_far_um3": 12005.7,
+    "pron_labels": [
+     3,
+     2
+    ],
+    "near_over_R": 0.4243,
+    "far_over_R": 0.4324,
+    "sum_over_R": 0.8568,
+    "inter_over_R": 0.5892,
+    "vol_asymmetry": 0.2652,
+    "pron_vol_frac": 0.05304,
     "polar_body_present": true,
     "polar_body_external": true
    },
@@ -991,7 +1044,7 @@
    "plate": "p1",
    "fov": "fov6",
    "sub_index": null,
-   "shared_fov": false,
+   "shared_fov": true,
    "n_segments": 4,
    "spacing_grid": [
     1.0000000150184936,
@@ -1037,6 +1090,59 @@
    "is_pronuclear_target": true
   },
   {
+   "embryo_id": "20260407_zygote_p1/fov6/0",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov6",
+   "sub_index": "0",
+   "shared_fov": true,
+   "n_segments": 4,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "status": "resolved",
+   "confidence": 1.0,
+   "flags": [],
+   "cell_body_label": 1,
+   "pronucleus_labels": [
+    3,
+    2
+   ],
+   "polar_body_label": 4,
+   "geometry": {
+    "cell_center_um": [
+     132.86,
+     199.03,
+     96.41
+    ],
+    "cell_volume_um3": 360368.8,
+    "cell_radius_um": 44.15,
+    "nearer_to_center_um": 16.195,
+    "farther_to_center_um": 16.283,
+    "distance_sum_um": 32.477,
+    "inter_pn_um": 24.627,
+    "pron_volume_near_um3": 13747.5,
+    "pron_volume_far_um3": 6885.6,
+    "pron_labels": [
+     3,
+     2
+    ],
+    "near_over_R": 0.3668,
+    "far_over_R": 0.3688,
+    "sum_over_R": 0.7357,
+    "inter_over_R": 0.5579,
+    "vol_asymmetry": 0.3326,
+    "pron_vol_frac": 0.05726,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
+   "is_pronuclear_target": true
+  },
+  {
    "embryo_id": "20260407_zygote_p1/fov7",
    "experiment": "20260407_zygote_p1",
    "batch_date": "20260407",
@@ -1044,7 +1150,7 @@
    "plate": "p1",
    "fov": "fov7",
    "sub_index": null,
-   "shared_fov": false,
+   "shared_fov": true,
    "n_segments": 3,
    "spacing_grid": [
     1.0000000150184936,
@@ -1090,6 +1196,59 @@
    "is_pronuclear_target": true
   },
   {
+   "embryo_id": "20260407_zygote_p1/fov7/0",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov7",
+   "sub_index": "0",
+   "shared_fov": true,
+   "n_segments": 4,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "status": "resolved",
+   "confidence": 1.0,
+   "flags": [],
+   "cell_body_label": 1,
+   "pronucleus_labels": [
+    2,
+    3
+   ],
+   "polar_body_label": 4,
+   "geometry": {
+    "cell_center_um": [
+     82.43,
+     93.43,
+     96.15
+    ],
+    "cell_volume_um3": 371811.4,
+    "cell_radius_um": 44.61,
+    "nearer_to_center_um": 10.693,
+    "farther_to_center_um": 18.314,
+    "distance_sum_um": 29.007,
+    "inter_pn_um": 24.089,
+    "pron_volume_near_um3": 9627.7,
+    "pron_volume_far_um3": 5526.5,
+    "pron_labels": [
+     2,
+     3
+    ],
+    "near_over_R": 0.2397,
+    "far_over_R": 0.4106,
+    "sum_over_R": 0.6503,
+    "inter_over_R": 0.54,
+    "vol_asymmetry": 0.2706,
+    "pron_vol_frac": 0.04076,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
+   "is_pronuclear_target": true
+  },
+  {
    "embryo_id": "20260407_zygote_p1/fov8",
    "experiment": "20260407_zygote_p1",
    "batch_date": "20260407",
@@ -1097,7 +1256,7 @@
    "plate": "p1",
    "fov": "fov8",
    "sub_index": null,
-   "shared_fov": false,
+   "shared_fov": true,
    "n_segments": 3,
    "spacing_grid": [
     1.0000000150184936,
@@ -1139,6 +1298,59 @@
     "pron_vol_frac": 0.05293,
     "polar_body_present": false,
     "polar_body_external": false
+   },
+   "is_pronuclear_target": true
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov8/0",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov8",
+   "sub_index": "0",
+   "shared_fov": true,
+   "n_segments": 4,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "status": "resolved",
+   "confidence": 1.0,
+   "flags": [],
+   "cell_body_label": 1,
+   "pronucleus_labels": [
+    3,
+    2
+   ],
+   "polar_body_label": 4,
+   "geometry": {
+    "cell_center_um": [
+     107.07,
+     136.1,
+     96.76
+    ],
+    "cell_volume_um3": 355970.0,
+    "cell_radius_um": 43.97,
+    "nearer_to_center_um": 12.093,
+    "farther_to_center_um": 17.437,
+    "distance_sum_um": 29.53,
+    "inter_pn_um": 23.709,
+    "pron_volume_near_um3": 8096.8,
+    "pron_volume_far_um3": 12533.0,
+    "pron_labels": [
+     3,
+     2
+    ],
+    "near_over_R": 0.2751,
+    "far_over_R": 0.3966,
+    "sum_over_R": 0.6717,
+    "inter_over_R": 0.5393,
+    "vol_asymmetry": 0.215,
+    "pron_vol_frac": 0.05795,
+    "polar_body_present": true,
+    "polar_body_external": true
    },
    "is_pronuclear_target": true
   },
@@ -1660,7 +1872,7 @@
    "plate": "p2",
    "fov": "fov18",
    "sub_index": null,
-   "shared_fov": false,
+   "shared_fov": true,
    "n_segments": 4,
    "spacing_grid": [
     1.0000000150184936,
@@ -1703,6 +1915,35 @@
     "polar_body_present": true,
     "polar_body_external": true
    },
+   "is_pronuclear_target": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov18/0",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov18",
+   "sub_index": "0",
+   "shared_fov": true,
+   "n_segments": 4,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "status": "unresolved",
+   "confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "cell_body_label": 1,
+   "pronucleus_labels": [
+    2
+   ],
+   "polar_body_label": 4,
+   "geometry": null,
    "is_pronuclear_target": true
   },
   {
@@ -1955,7 +2196,7 @@
    "plate": "p2",
    "fov": "fov22",
    "sub_index": null,
-   "shared_fov": false,
+   "shared_fov": true,
    "n_segments": 4,
    "spacing_grid": [
     1.0000000150184936,
@@ -1997,6 +2238,59 @@
     "pron_vol_frac": 0.01467,
     "polar_body_present": true,
     "polar_body_external": true
+   },
+   "is_pronuclear_target": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov22/0",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov22",
+   "sub_index": "0",
+   "shared_fov": true,
+   "n_segments": 3,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "status": "resolved",
+   "confidence": 1.0,
+   "flags": [],
+   "cell_body_label": 1,
+   "pronucleus_labels": [
+    3,
+    2
+   ],
+   "polar_body_label": null,
+   "geometry": {
+    "cell_center_um": [
+     94.33,
+     235.04,
+     159.42
+    ],
+    "cell_volume_um3": 285118.2,
+    "cell_radius_um": 40.83,
+    "nearer_to_center_um": 11.039,
+    "farther_to_center_um": 13.169,
+    "distance_sum_um": 24.208,
+    "inter_pn_um": 22.711,
+    "pron_volume_near_um3": 6948.6,
+    "pron_volume_far_um3": 10660.2,
+    "pron_labels": [
+     3,
+     2
+    ],
+    "near_over_R": 0.2704,
+    "far_over_R": 0.3225,
+    "sum_over_R": 0.5929,
+    "inter_over_R": 0.5562,
+    "vol_asymmetry": 0.2108,
+    "pron_vol_frac": 0.06176,
+    "polar_body_present": false,
+    "polar_body_external": false
    },
    "is_pronuclear_target": true
   },
@@ -2089,7 +2383,7 @@
    "plate": "p2",
    "fov": "fov25",
    "sub_index": null,
-   "shared_fov": false,
+   "shared_fov": true,
    "n_segments": 2,
    "spacing_grid": [
     1.0000000150184936,
@@ -2107,6 +2401,59 @@
    ],
    "polar_body_label": null,
    "geometry": null,
+   "is_pronuclear_target": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov25/0",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov25",
+   "sub_index": "0",
+   "shared_fov": true,
+   "n_segments": 4,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "status": "resolved",
+   "confidence": 1.0,
+   "flags": [],
+   "cell_body_label": 1,
+   "pronucleus_labels": [
+    2,
+    3
+   ],
+   "polar_body_label": 4,
+   "geometry": {
+    "cell_center_um": [
+     156.52,
+     208.52,
+     167.97
+    ],
+    "cell_volume_um3": 281563.1,
+    "cell_radius_um": 40.66,
+    "nearer_to_center_um": 12.752,
+    "farther_to_center_um": 14.558,
+    "distance_sum_um": 27.31,
+    "inter_pn_um": 21.768,
+    "pron_volume_near_um3": 5831.0,
+    "pron_volume_far_um3": 9787.6,
+    "pron_labels": [
+     2,
+     3
+    ],
+    "near_over_R": 0.3136,
+    "far_over_R": 0.358,
+    "sum_over_R": 0.6717,
+    "inter_over_R": 0.5354,
+    "vol_asymmetry": 0.2533,
+    "pron_vol_frac": 0.05547,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": true
   },
   {
@@ -2358,7 +2705,7 @@
    "plate": "p2",
    "fov": "fov7",
    "sub_index": null,
-   "shared_fov": false,
+   "shared_fov": true,
    "n_segments": 4,
    "spacing_grid": [
     1.0,
@@ -2404,6 +2751,59 @@
    "is_pronuclear_target": true
   },
   {
+   "embryo_id": "20260425_zygote_p2/fov7/0",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov7",
+   "sub_index": "0",
+   "shared_fov": true,
+   "n_segments": 4,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "status": "resolved",
+   "confidence": 1.0,
+   "flags": [],
+   "cell_body_label": 1,
+   "pronucleus_labels": [
+    3,
+    2
+   ],
+   "polar_body_label": 4,
+   "geometry": {
+    "cell_center_um": [
+     135.48,
+     186.15,
+     152.24
+    ],
+    "cell_volume_um3": 263644.8,
+    "cell_radius_um": 39.78,
+    "nearer_to_center_um": 25.593,
+    "farther_to_center_um": 25.783,
+    "distance_sum_um": 51.376,
+    "inter_pn_um": 29.648,
+    "pron_volume_near_um3": 3104.3,
+    "pron_volume_far_um3": 3316.9,
+    "pron_labels": [
+     3,
+     2
+    ],
+    "near_over_R": 0.6434,
+    "far_over_R": 0.6482,
+    "sum_over_R": 1.2916,
+    "inter_over_R": 0.7453,
+    "vol_asymmetry": 0.0331,
+    "pron_vol_frac": 0.02436,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
+   "is_pronuclear_target": true
+  },
+  {
    "embryo_id": "20260425_zygote_p2/fov8",
    "experiment": "20260425_zygote_p2",
    "batch_date": "20260425",
@@ -2411,7 +2811,7 @@
    "plate": "p2",
    "fov": "fov8",
    "sub_index": null,
-   "shared_fov": false,
+   "shared_fov": true,
    "n_segments": 4,
    "spacing_grid": [
     1.0000000150184936,
@@ -2457,6 +2857,59 @@
    "is_pronuclear_target": true
   },
   {
+   "embryo_id": "20260425_zygote_p2/fov8/0",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov8",
+   "sub_index": "0",
+   "shared_fov": true,
+   "n_segments": 4,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "status": "resolved",
+   "confidence": 1.0,
+   "flags": [],
+   "cell_body_label": 1,
+   "pronucleus_labels": [
+    3,
+    2
+   ],
+   "polar_body_label": 4,
+   "geometry": {
+    "cell_center_um": [
+     69.33,
+     256.3,
+     153.32
+    ],
+    "cell_volume_um3": 287712.2,
+    "cell_radius_um": 40.95,
+    "nearer_to_center_um": 21.973,
+    "farther_to_center_um": 25.249,
+    "distance_sum_um": 47.222,
+    "inter_pn_um": 22.155,
+    "pron_volume_near_um3": 2949.5,
+    "pron_volume_far_um3": 3464.9,
+    "pron_labels": [
+     3,
+     2
+    ],
+    "near_over_R": 0.5365,
+    "far_over_R": 0.6165,
+    "sum_over_R": 1.1531,
+    "inter_over_R": 0.541,
+    "vol_asymmetry": 0.0804,
+    "pron_vol_frac": 0.02229,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
+   "is_pronuclear_target": true
+  },
+  {
    "embryo_id": "20260425_zygote_p2/fov9",
    "experiment": "20260425_zygote_p2",
    "batch_date": "20260425",
@@ -2464,7 +2917,7 @@
    "plate": "p2",
    "fov": "fov9",
    "sub_index": null,
-   "shared_fov": false,
+   "shared_fov": true,
    "n_segments": 4,
    "spacing_grid": [
     1.0000000150184936,
@@ -2510,6 +2963,35 @@
    "is_pronuclear_target": true
   },
   {
+   "embryo_id": "20260425_zygote_p2/fov9/0",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov9",
+   "sub_index": "0",
+   "shared_fov": true,
+   "n_segments": 4,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "status": "unresolved",
+   "confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "cell_body_label": 1,
+   "pronucleus_labels": [
+    2
+   ],
+   "polar_body_label": 4,
+   "geometry": null,
+   "is_pronuclear_target": true
+  },
+  {
    "embryo_id": "20260212_sample4_l2c_p2/fov0",
    "experiment": "20260212_sample4_l2c_p2",
    "batch_date": "20260212",
@@ -2517,7 +2999,7 @@
    "plate": "p2",
    "fov": "fov0",
    "sub_index": null,
-   "shared_fov": false,
+   "shared_fov": true,
    "n_segments": 5,
    "spacing_grid": [
     1.0000000150184936,
@@ -2535,6 +3017,35 @@
     4
    ],
    "polar_body_label": 1,
+   "geometry": null,
+   "is_pronuclear_target": false
+  },
+  {
+   "embryo_id": "20260212_sample4_l2c_p2/fov0/0_1",
+   "experiment": "20260212_sample4_l2c_p2",
+   "batch_date": "20260212",
+   "stage": "l2c",
+   "plate": "p2",
+   "fov": "fov0",
+   "sub_index": "0_1",
+   "shared_fov": true,
+   "n_segments": 4,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "status": "unresolved",
+   "confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "cell_body_label": 1,
+   "pronucleus_labels": [
+    3
+   ],
+   "polar_body_label": 2,
    "geometry": null,
    "is_pronuclear_target": false
   },
@@ -2767,35 +3278,6 @@
     3
    ],
    "polar_body_label": 2,
-   "geometry": null,
-   "is_pronuclear_target": false
-  },
-  {
-   "embryo_id": "20260408_e2c_p2/fov15",
-   "experiment": "20260408_e2c_p2",
-   "batch_date": "20260408",
-   "stage": "e2c",
-   "plate": "p2",
-   "fov": "fov15",
-   "sub_index": null,
-   "shared_fov": false,
-   "n_segments": 4,
-   "spacing_grid": [
-    1.0000000150184936,
-    1.0000000150184936,
-    7.0
-   ],
-   "status": "unresolved",
-   "confidence": 0.0,
-   "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
-    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
-   ],
-   "cell_body_label": 2,
-   "pronucleus_labels": [
-    4
-   ],
-   "polar_body_label": 1,
    "geometry": null,
    "is_pronuclear_target": false
   }

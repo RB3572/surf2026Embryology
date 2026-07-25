@@ -64,11 +64,32 @@ def _nrrd_header(path: str) -> dict:
     return out
 
 
+SKIP_DIR_RE = re.compile(r"old|incomplete|can_delete|delete", re.I)
+
+
+def _has_image(d: str) -> bool:
+    return any(os.path.isfile(os.path.join(d, n)) for n in
+               ("all.tif", "all.tiff", "dapi.tif", "dapi_1.tif"))
+
+
+def _has_seg(d: str) -> bool:
+    return bool(glob.glob(os.path.join(d, "Segmentation-label*.tif")))
+
+
 def _is_embryo_dir(d: str) -> bool:
-    has_img = any(os.path.isfile(os.path.join(d, n)) for n in
-                  ("all.tif", "all.tiff", "dapi.tif", "dapi_1.tif"))
-    has_seg = bool(glob.glob(os.path.join(d, "Segmentation-label*.tif")))
-    return has_img and has_seg
+    return _has_image(d) and _has_seg(d)
+
+
+def _is_sub_embryo_dir(d: str) -> bool:
+    """
+    A nested directory holding a SEGMENTATION but no image of its own.
+
+    When a field of view contains several embryos, each extra embryo is
+    segmented into its own sub-directory while the (large) image stays at the
+    FOV level. These are real, distinct embryos — they must be inventoried as
+    separate samples, inheriting the parent FOV's image, not dropped.
+    """
+    return _has_seg(d) and not _has_image(d) and not SKIP_DIR_RE.search(os.path.basename(d))
 
 
 def _first(d: str, *names) -> str:
@@ -85,9 +106,10 @@ def _first(d: str, *names) -> str:
 
 
 def _embryo_record(exp: str, date: str, stage: str, plate: str,
-                   fov: str, sub: str, d: str) -> dict:
-    dna = _first(d, "dapi.tif", "dapi_1.tif")
-    allc = _first(d, "all.tif", "all.tiff", "all_1.tiff", "all_1.tif")
+                   fov: str, sub: str, d: str, image_dir: str | None = None) -> dict:
+    idir = image_dir or d                      # sub-embryos share the parent FOV's image
+    dna = _first(idir, "dapi.tif", "dapi_1.tif")
+    allc = _first(idir, "all.tif", "all.tiff", "all_1.tiff", "all_1.tif")
     labels = sorted(glob.glob(os.path.join(d, "Segmentation-label*.tif")))
     seg_nrrd = _first(d, "Segmentation.seg.nrrd")
     scene = _first(d, "*.mrml")
@@ -144,11 +166,20 @@ def build(include_paths: bool = False) -> dict:
             if _is_embryo_dir(fd):
                 embryos.append(_embryo_record(exp, date, stage, plate, fov, "", fd))
                 exp_embryos += 1
-            # nested sub-embryo dirs (multiple cells / re-segmentations in a FOV)
+            # nested sub-embryos: a further segmented embryo in the same field of view.
+            # It may carry its own image, or (usually) only a segmentation — in which
+            # case it shares the parent FOV's image. Both are distinct samples.
             for sub in sorted(os.listdir(fd)):
                 sd = os.path.join(fd, sub)
-                if os.path.isdir(sd) and _is_embryo_dir(sd):
+                if not os.path.isdir(sd):
+                    continue
+                if _is_embryo_dir(sd):
                     embryos.append(_embryo_record(exp, date, stage, plate, fov, sub, sd))
+                    exp_embryos += 1
+                elif _is_sub_embryo_dir(sd):
+                    rec = _embryo_record(exp, date, stage, plate, fov, sub, sd, image_dir=fd)
+                    rec["shares_parent_image"] = True
+                    embryos.append(rec)
                     exp_embryos += 1
         experiments.append({"experiment": exp, "batch_date": date, "stage": stage,
                             "plate": plate, "n_embryos": exp_embryos})

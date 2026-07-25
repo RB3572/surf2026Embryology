@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "package_version": "pn3d-0.1.0",
- "generated_at_utc": "2026-07-25T07:18:31+00:00",
+ "generated_at_utc": "2026-07-25T10:07:43+00:00",
  "reference_radius_um": 41.315,
  "clock": {
   "kind": "IsotonicProbabilisticClock",
@@ -2893,17 +2893,17 @@
  },
  "domain_shift": {
   "physical_distance_sum": {
-   "fixed_median": 42.87,
+   "fixed_median": 41.51,
    "live_median": 27.64,
-   "ks_statistic": 0.443
+   "ks_statistic": 0.389
   },
   "dimensionless_sum_over_R": {
-   "fixed_median": 1.017,
+   "fixed_median": 0.976,
    "live_median": 0.669,
-   "ks_statistic": 0.446
+   "ks_statistic": 0.384
   },
   "n_fixed_above_live_support": 2,
-  "verdict": "Dimensionless features are scale-invariant by construction (a safeguard against \u00b5m/pixel differences between cohorts). They do NOT close the fixed\u2194live gap here (KS 0.44\u21920.45): the fixed snapshots sample more-separated (earlier) pronuclear configurations than the live trajectory range, so part of the fixed cohort sits beyond live support and is flagged out-of-distribution rather than given false confidence."
+  "verdict": "Dimensionless features are scale-invariant by construction (a safeguard against \u00b5m/pixel differences between cohorts). They do NOT close the fixed\u2194live gap here (KS 0.39\u21920.38): the fixed snapshots sample more-separated (earlier) pronuclear configurations than the live trajectory range, so part of the fixed cohort sits beyond live support and is flagged out-of-distribution rather than given false confidence."
  },
  "canonical_trajectory": [
   {
@@ -3101,14 +3101,14 @@
   {
    "claim": "segmentation resolves 2 pronuclei inside the cell + polar body externally",
    "evidence_type": "segmentation / structural validation",
-   "data": "53 fixed zygote segmentations, geometric audit",
-   "result": "40 resolved with biological constraints satisfied; 13 marked unresolved (not forced)"
+   "data": "63 fixed zygote segmentations, geometric audit",
+   "result": "48 resolved with biological constraints satisfied; 15 marked unresolved (not forced)"
   },
   {
    "claim": "the fixed domain is handled by scale-invariant features + OOD gating",
    "evidence_type": "domain adaptation (partial)",
    "data": "fixed vs live feature distributions",
-   "result": "dimensionless features are scale-invariant by construction; KS 0.44\u21920.45 (unchanged) \u2014 the residual gap is stage-sampling, and out-of-support fixed stacks are flagged OOD, not forced"
+   "result": "dimensionless features are scale-invariant by construction; KS 0.39\u21920.38 (unchanged) \u2014 the residual gap is stage-sampling, and out-of-support fixed stacks are flagged OOD, not forced"
   },
   {
    "claim": "image-only tau prediction from raw pixels",
@@ -3120,14 +3120,14 @@
    "claim": "per-embryo tau for the fixed MERFISH cohort",
    "evidence_type": "reference output (NOT independent validation)",
    "data": "fixed stacks have no true time; agreement with prior cached pseudotime is not treated as validation",
-   "result": "40 zygotes assigned a calibrated tau posterior + interval + QC"
+   "result": "48 zygotes assigned a calibrated tau posterior + interval + QC"
   }
  ],
  "counts": {
-  "zygotes_audited": 53,
-  "zygotes_resolved": 40,
-  "zygotes_inferable": 40,
-  "zygotes_ood": 15,
+  "zygotes_audited": 63,
+  "zygotes_resolved": 48,
+  "zygotes_inferable": 48,
+  "zygotes_ood": 17,
   "two_cell_reference": 10
  }
 }

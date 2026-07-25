@@ -2,3 +2,17 @@
 .vercel
 node_modules/
 .env*
+
+# vision pseudotime pilot — large pixels / derived artifacts NEVER enter git.
+# Ignore the CONTENTS (not the dir) so the README marker stays tracked; git will
+# not descend into a fully-ignored directory, which would drop the negation.
+calibration_data/vision_pseudotime/derived/*
+!calibration_data/vision_pseudotime/derived/README.txt
+vision_local.json
+*.tif
+*.tiff
+*.avi
+*.mov
+*.mp4
+__pycache__/
+*.pyc

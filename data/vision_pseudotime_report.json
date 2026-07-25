@@ -1,0 +1,373 @@
+{
+ "meta": {
+  "package_version": "vpt-0.1.0-pilot",
+  "geometry_baseline_model": "pnpt-3.0.0",
+  "generated_at_utc": "2026-07-25T01:33:04+00:00",
+  "status": "PILOT \u2014 data pipeline + feasibility, not a validated image clock",
+  "no_absolute_paths": true,
+  "no_raw_pixels_in_report": true
+ },
+ "manifest": {
+  "ok": true,
+  "sources": [
+   {
+    "source_id": "scheffler_numeric",
+    "source_kind": "derived_numeric",
+    "location_redacted": "<user-local>/scheffler_2021_control_zygote_trajectories.csv",
+    "independent_embryos": "53",
+    "supervised_tau_use": "yes",
+    "intended_use": "production geometry baseline",
+    "available_on_this_machine": true,
+    "is_placeholder": false
+   },
+   {
+    "source_id": "scheffler_movies",
+    "source_kind": "rendered_movies",
+    "location_redacted": "<icloud-vault>/Movies",
+    "independent_embryos": "unknown",
+    "supervised_tau_use": "pilot_only",
+    "intended_use": "segmentation visualization controls and OOD",
+    "available_on_this_machine": true,
+    "is_placeholder": false
+   },
+   {
+    "source_id": "target_intensity_example",
+    "source_kind": "confocal_stack",
+    "location_redacted": "<user-local>/all.tif",
+    "independent_embryos": "1",
+    "supervised_tau_use": "no",
+    "intended_use": "target-domain preprocessing segmentation and OOD",
+    "available_on_this_machine": true,
+    "is_placeholder": false
+   },
+   {
+    "source_id": "target_labels_example",
+    "source_kind": "segmentation_stack",
+    "location_redacted": "<user-local>/Segmentation-label_1.tif",
+    "independent_embryos": "1",
+    "supervised_tau_use": "no",
+    "intended_use": "segmentation supervision and projection QC",
+    "available_on_this_machine": true,
+    "is_placeholder": false
+   },
+   {
+    "source_id": "scheffler_raw_requested",
+    "source_kind": "raw_3d_timelapse",
+    "location_redacted": "not_yet_available",
+    "independent_embryos": "unknown",
+    "supervised_tau_use": "yes",
+    "intended_use": "required for final image-clock training and external validation",
+    "available_on_this_machine": false,
+    "is_placeholder": true
+   }
+  ],
+  "movies_summary": {
+   "n": 20,
+   "errors": []
+  }
+ },
+ "tiff_audits": [
+  {
+   "source_id": "target_intensity_example",
+   "basename": "all.tif",
+   "path_redacted": "<user-local>/all.tif",
+   "exists": true,
+   "shape": [
+    251,
+    2303,
+    2304
+   ],
+   "axes": "IYX",
+   "dtype": "uint16",
+   "stack_role": "intensity",
+   "est_full_load_bytes": 2663668224,
+   "spacing_trustworthy": false,
+   "needs_sidecar": true,
+   "sidecar_present": true,
+   "spacing_status": "missing",
+   "metadata_sufficient": false,
+   "voxel_um": null,
+   "channels": null,
+   "label_classes": null,
+   "software": "InsightToolkit"
+  },
+  {
+   "source_id": "target_labels_example",
+   "basename": "Segmentation-label_1.tif",
+   "path_redacted": "<user-local>/Segmentation-label_1.tif",
+   "exists": true,
+   "shape": [
+    251,
+    2303,
+    2304
+   ],
+   "axes": "IYX",
+   "dtype": "int16",
+   "stack_role": "labels",
+   "est_full_load_bytes": 2663668224,
+   "spacing_trustworthy": false,
+   "needs_sidecar": true,
+   "sidecar_present": true,
+   "spacing_status": "missing",
+   "metadata_sufficient": false,
+   "voxel_um": null,
+   "channels": null,
+   "label_classes": {
+    "1": "unverified_region_a",
+    "2": "unverified_region_b"
+   },
+   "software": "InsightToolkit"
+  }
+ ],
+ "preprocessing": {
+  "available": true,
+  "channels": [
+   "mip_norm",
+   "robust_mean_norm",
+   "seg_occupancy"
+  ],
+  "bbox": [
+   878,
+   1534,
+   964,
+   1687
+  ],
+  "out": 256,
+  "z_extent_labels": [
+   100,
+   193
+  ],
+  "no_raw_sum": true,
+  "n_pages_read": 251,
+  "peak_memory_note": "streamed one z-page at a time; full-volume load avoided",
+  "channel_stats": {
+   "mip_norm": {
+    "mean": 0.7802,
+    "p05": 0.5278,
+    "p95": 0.9996
+   },
+   "robust_mean_norm": {
+    "mean": 0.8078,
+    "p05": 0.6159,
+    "p95": 0.9644
+   },
+   "seg_occupancy": {
+    "mean": 0.1466,
+    "p05": 0.0,
+    "p95": 0.3586
+   }
+  },
+  "preview_pngs_dir_redacted": "<user-local>/derived",
+  "previews_published": false
+ },
+ "movies": {
+  "n_movies": 20,
+  "inclusion_counts": {
+   "pilot_normal_dev": 1,
+   "ood": 3,
+   "excluded": 12,
+   "needs_panel_isolation": 4
+  },
+  "normal_dev_pilot_movies": [
+   "SM01"
+  ],
+  "tau_from_frame_index": "forbidden without annotated pn-formation + NEBD",
+  "inventory": [
+   {
+    "movie_id": "SM01",
+    "default_role": "single_embryo_pilot",
+    "inclusion": "pilot_normal_dev",
+    "frames": "64",
+    "condition": "Untreated H2B-mCherry DNA and MyrGFP cell surface; pronuclear formatio"
+   },
+   {
+    "movie_id": "SM02",
+    "default_role": "split_control_and_ood",
+    "inclusion": "needs_panel_isolation",
+    "frames": "9",
+    "condition": "DMSO control versus 1 uM nocodazole"
+   },
+   {
+    "movie_id": "SM03",
+    "default_role": "split_control_and_ood",
+    "inclusion": "needs_panel_isolation",
+    "frames": "51",
+    "condition": "SNAP-Rab11a control versus SNAP-Rab11aS25N"
+   },
+   {
+    "movie_id": "SM04",
+    "default_role": "exclude_from_tau_training",
+    "inclusion": "excluded",
+    "frames": "21",
+    "condition": "Oil-droplet motion near male pronucleus"
+   },
+   {
+    "movie_id": "SM05",
+    "default_role": "exclude_from_tau_training",
+    "inclusion": "excluded",
+    "frames": "18",
+    "condition": "Cortical Rab11a enrichment behind male pronucleus"
+   },
+   {
+    "movie_id": "SM06",
+    "default_role": "exclude_from_tau_training",
+    "inclusion": "excluded",
+    "frames": "17",
+    "condition": "Cortical Spire2 enrichment behind male pronucleus"
+   },
+   {
+    "movie_id": "SM07",
+    "default_role": "exclude_from_tau_training",
+    "inclusion": "excluded",
+    "frames": "420",
+    "condition": "Cortical F-actin enrichment behind male pronucleus"
+   },
+   {
+    "movie_id": "SM08",
+    "default_role": "exclude_from_tau_training",
+    "inclusion": "excluded",
+    "frames": "49",
+    "condition": "Cortical F-actin enrichment with Spire2 expression"
+   },
+   {
+    "movie_id": "SM09",
+    "default_role": "split_control_and_ood",
+    "inclusion": "needs_panel_isolation",
+    "frames": "44",
+    "condition": "SNAP control versus SNAP-Spire2 overexpression"
+   },
+   {
+    "movie_id": "SM10",
+    "default_role": "ood_only",
+    "inclusion": "ood",
+    "frames": "22",
+    "condition": "Pronuclear overshoot with EGFP-Spire2 overexpression; 13-slice MIP"
+   },
+   {
+    "movie_id": "SM11",
+    "default_role": "ood_only",
+    "inclusion": "ood",
+    "frames": "34",
+    "condition": "Pronuclear overshoot and migration reversion with EGFP-Spire2 overexpr"
+   },
+   {
+    "movie_id": "SM12",
+    "default_role": "exclude_from_tau_training",
+    "inclusion": "excluded",
+    "frames": "16",
+    "condition": "Oil-droplet motion with EGFP-Spire2 overexpression; 13-slice MIP"
+   },
+   {
+    "movie_id": "SM13",
+    "default_role": "exclude_from_tau_training",
+    "inclusion": "excluded",
+    "frames": "40",
+    "condition": "Female-pronuclear cortical F-actin; DMSO versus 1 uM nocodazole"
+   },
+   {
+    "movie_id": "SM14",
+    "default_role": "exclude_from_tau_training",
+    "inclusion": "excluded",
+    "frames": "30",
+    "condition": "Microtubule-network formation during pronuclear stage"
+   },
+   {
+    "movie_id": "SM15",
+    "default_role": "split_control_and_ood",
+    "inclusion": "needs_panel_isolation",
+    "frames": "49",
+    "condition": "DMSO control versus 10 uM nocodazole"
+   },
+   {
+    "movie_id": "SM16",
+    "default_role": "exclude_from_tau_training",
+    "inclusion": "excluded",
+    "frames": "19",
+    "condition": "Microtubule network; MBP control versus p150-CC1"
+   },
+   {
+    "movie_id": "SM17",
+    "default_role": "exclude_from_tau_training",
+    "inclusion": "excluded",
+    "frames": "30",
+    "condition": "Microtubule contact with cell cortex"
+   },
+   {
+    "movie_id": "SM18",
+    "default_role": "exclude_from_tau_training",
+    "inclusion": "excluded",
+    "frames": "12",
+    "condition": "aMTOC-originating microtubule contact with cortex"
+   },
+   {
+    "movie_id": "SM19",
+    "default_role": "exclude_from_tau_training",
+    "inclusion": "excluded",
+    "frames": "9",
+    "condition": "DMSO control versus cytochalasin D panels"
+   },
+   {
+    "movie_id": "SM20",
+    "default_role": "ood_only",
+    "inclusion": "ood",
+    "frames": "41",
+    "condition": "Rab11a or Rab11aS25N with DMSO or 10 uM nocodazole"
+   }
+  ]
+ },
+ "hybrid_geometry_clock": {
+  "clock_reused": "pnpt-3.0.0",
+  "validated_zygotes": 6,
+  "max_feature_error_um": 0.0,
+  "max_tau_error": 0.0,
+  "verdict": "hybrid reproduces the deployed pipeline exactly",
+  "example_stack": {
+   "status": "blocked",
+   "blockers": [
+    "fewer than two pronuclei inside the cytoplasm"
+   ],
+   "spacing_status": "missing",
+   "classes_verified": false
+  }
+ },
+ "exploratory_encoder": {
+  "status": "exploratory-feasibility",
+  "data": "SYNTHETIC phantoms (labelled synthetic)",
+  "min_independent_embryos_required": 3,
+  "held_out_embryo_grouped_mae": 0.0255,
+  "held_out_spearman": 0.9955,
+  "held_out_pair_order_accuracy": 1.0,
+  "overlay_baseline_mae": 0.0586,
+  "saliency_corner_mass_after_strip": 0.0022,
+  "saliency_embryo_contrast": 0.893,
+  "real_data_refusal": "1 independent embryo(s) < required 3; a direct image clock cannot be trained or validated. Movie 1 is one embryo.",
+  "interpretation": "harness learns synthetic tau and ignores the stripped overlay; on the REAL material it refuses \u2014 1 embryo, no per-frame tau."
+ },
+ "evaluation_metrics_available": [
+  "embryo_grouped_mae",
+  "spearman",
+  "pair_order_accuracy",
+  "interval_coverage",
+  "segmentation_dice",
+  "segmentation_iou",
+  "centroid_error",
+  "ood_rejection",
+  "trivial_baselines(constant/brightness/corner-overlay)",
+  "occlusion_saliency"
+ ],
+ "warnings": [
+  "PILOT: no independently validated end-to-end image clock exists yet.",
+  "Fixed snapshots have no true tau; they support segmentation/OOD, not supervised labels.",
+  "Augmented views of one embryo are NOT independent samples.",
+  "Public rendered movies cannot be reliably mapped to the 53 numeric trajectories.",
+  "The example lab stack is BLOCKED: unverified voxel spacing and unverified label classes."
+ ],
+ "data_blockers": [
+  "Verified voxel spacing (xy pixel size + z step) for the lab stacks.",
+  "Verified label-class semantics (which ID is cell / pronucleus).",
+  "Multiple independent untreated RAW time-lapse embryos with pn-formation + NEBD frames.",
+  "A held-out embryo/batch test set and frozen preprocessing."
+ ],
+ "acquisition_checklist": "calibration_data/vision_pseudotime/ACQUISITION_CHECKLIST.md",
+ "model_card": "calibration_data/vision_pseudotime/MODEL_CARD.md"
+}

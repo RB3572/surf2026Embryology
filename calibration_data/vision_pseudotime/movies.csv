@@ -1,0 +1,22 @@
+movie_id,file_name,width_px,height_px,frames,condition_or_subject,default_role
+SM01,Supplementary Movie 01.avi,435,442,64,"Untreated H2B-mCherry DNA and MyrGFP cell surface; pronuclear formation and migration",single_embryo_pilot
+SM02,Supplementary Movie 02.avi,512,1024,9,"DMSO control versus 1 uM nocodazole",split_control_and_ood
+SM03,Supplementary Movie 03.avi,448,896,51,"SNAP-Rab11a control versus SNAP-Rab11aS25N",split_control_and_ood
+SM04,Supplementary Movie 04.avi,320,320,21,"Oil-droplet motion near male pronucleus",exclude_from_tau_training
+SM05,Supplementary Movie 05.avi,487,418,18,"Cortical Rab11a enrichment behind male pronucleus",exclude_from_tau_training
+SM06,Supplementary Movie 06.avi,302,400,17,"Cortical Spire2 enrichment behind male pronucleus",exclude_from_tau_training
+SM07,Supplementary Movie 07.avi,500,500,420,"Cortical F-actin enrichment behind male pronucleus",exclude_from_tau_training
+SM08,Supplementary Movie 08.avi,230,290,49,"Cortical F-actin enrichment with Spire2 expression",exclude_from_tau_training
+SM09,Supplementary Movie 09.avi,512,1024,44,"SNAP control versus SNAP-Spire2 overexpression",split_control_and_ood
+SM10,Supplementary Movie 10.avi,512,512,22,"Pronuclear overshoot with EGFP-Spire2 overexpression; 13-slice MIP",ood_only
+SM11,Supplementary Movie 11.avi,512,512,34,"Pronuclear overshoot and migration reversion with EGFP-Spire2 overexpression; 13-slice MIP",ood_only
+SM12,Supplementary Movie 12.avi,512,512,16,"Oil-droplet motion with EGFP-Spire2 overexpression; 13-slice MIP",exclude_from_tau_training
+SM13,Supplementary Movie 13.avi,476,300,40,"Female-pronuclear cortical F-actin; DMSO versus 1 uM nocodazole",exclude_from_tau_training
+SM14,Supplementary Movie 14.avi,1274,1274,30,"Microtubule-network formation during pronuclear stage",exclude_from_tau_training
+SM15,Supplementary Movie 15.avi,512,1024,49,"DMSO control versus 10 uM nocodazole",split_control_and_ood
+SM16,Supplementary Movie 16.avi,1450,2900,19,"Microtubule network; MBP control versus p150-CC1",exclude_from_tau_training
+SM17,Supplementary Movie 17.avi,353,250,30,"Microtubule contact with cell cortex",exclude_from_tau_training
+SM18,Supplementary Movie 18.avi,799,400,12,"aMTOC-originating microtubule contact with cortex",exclude_from_tau_training
+SM19,Supplementary Movie 19.avi,1270,3810,9,"DMSO control versus cytochalasin D panels",exclude_from_tau_training
+SM20,Supplementary Movie 20.avi,1016,1016,41,"Rab11a or Rab11aS25N with DMSO or 10 uM nocodazole",ood_only
+

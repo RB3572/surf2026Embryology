@@ -1,0 +1,17 @@
+{
+  "embryo_id": "target_intensity_example_01",
+  "source_id": "target_labels_example",
+  "stack_role": "labels",
+  "voxel_um": null,
+  "voxel_um_verified": false,
+  "voxel_um_note": "Same unknown spacing as the matched intensity stack all.tif. No physical scale until the lab confirms xy pixel size and z spacing.",
+  "label_classes": {
+    "1": "unverified_region_a",
+    "2": "unverified_region_b"
+  },
+  "label_classes_verified": false,
+  "label_classes_note": "The stack contains integer IDs 1 and 2 but their biological meaning (cytoplasm / pronucleus / other) is NOT recorded and has not been confirmed with the lab. Class semantics must be verified before any pronucleus-vs-cell geometry is trusted. Do not assume ID 1 = cytoplasm the way the MERFISH pipeline does; that convention belongs to a different dataset.",
+  "acquisition_time": null,
+  "treatment": "unknown",
+  "notes": "Matched by dimensions to all.tif. int16 label stack. Usable for segmentation supervision and projection QC once class semantics are confirmed."
+}

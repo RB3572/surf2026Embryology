@@ -1,0 +1,13 @@
+{
+  "embryo_id": "target_intensity_example_01",
+  "source_id": "target_intensity_example",
+  "stack_role": "intensity",
+  "voxel_um": null,
+  "voxel_um_verified": false,
+  "voxel_um_note": "Physical voxel spacing is NOT known for this stack. The TIFF carries only a bogus inch-based XResolution (InsightToolkit default) and no Z step. Do not assume the MERFISH project spacing (0.15 um xy, 1.0 um z) applies here — that is a different acquisition. Projections and segmentation may run in VOXEL space; physical-um geometry and the um clock are blocked until the lab provides verified xy pixel size and z spacing.",
+  "channels": null,
+  "channels_note": "Channel identity (e.g. DNA vs cell-surface) is not recorded in the file and has not been confirmed. Treated as a single unnamed intensity channel until confirmed.",
+  "acquisition_time": null,
+  "treatment": "unknown",
+  "notes": "Matched by dimensions (251 x 2303 x 2304) to Segmentation-label_1.tif. One embryo. Fixed-style snapshot with no true tau. Usable for target-domain preprocessing, segmentation QC and OOD; not a supervised tau label."
+}

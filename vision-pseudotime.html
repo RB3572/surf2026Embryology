@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fixed-Image Pseudotime (pilot) · SURF 2026</title>
+<style>
+  :root { --ink:#0f172a; --body:#334155; --muted:#64748b; --line:#e5e9f0; --bg:#f7f9fc;
+          --accent:#0ea5e9; --amber:#b45309; --amber-bg:#fffbeb; --red:#b42318; --green:#15803d;
+          --card:#ffffff; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--body);
+         background:var(--bg); }
+  a { color:var(--accent); }
+  header.vp-top { display:flex; align-items:center; gap:14px; padding:16px 26px; background:#fff;
+                  border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5; flex-wrap:wrap; }
+  .vp-back { text-decoration:none; color:var(--muted); border:1px solid var(--line); border-radius:8px;
+             padding:5px 11px; font-weight:600; }
+  header.vp-top h1 { font-size:18px; margin:0; color:var(--ink); }
+  .vp-dot { width:11px; height:11px; border-radius:50%; background:var(--accent); display:inline-block; }
+  .vp-sub { color:var(--muted); font-size:12.5px; font-family:ui-monospace,Menlo,monospace; }
+  main { max-width:1120px; margin:0 auto; padding:22px 24px 80px; }
+  .vp-banner { background:var(--amber-bg); border:1px solid #fde68a; border-left:4px solid var(--amber);
+               border-radius:10px; padding:14px 16px; margin:18px 0 26px; color:#7c2d12; }
+  .vp-banner b { color:var(--amber); }
+  section { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px;
+            margin:16px 0; }
+  section h2 { margin:0 0 4px; font-size:17px; color:var(--ink); }
+  section .lead { color:var(--muted); font-size:13px; margin:0 0 14px; }
+  .vp-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; }
+  .kv { background:var(--bg); border:1px solid var(--line); border-radius:9px; padding:11px 13px; }
+  .kv .k { font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
+  .kv .v { font-size:19px; font-weight:700; color:var(--ink); margin-top:3px; }
+  .kv .n { font-size:12px; color:var(--muted); margin-top:2px; }
+  table { border-collapse:collapse; width:100%; font-size:13px; }
+  th,td { text-align:left; padding:7px 9px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--muted); font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.03em; }
+  .tag { display:inline-block; padding:1px 8px; border-radius:999px; font-size:11px; font-weight:700; }
+  .t-pass { background:#dcfce7; color:var(--green); } .t-warn { background:#fef3c7; color:var(--amber); }
+  .t-bad { background:#fee2e2; color:var(--red); } .t-info { background:#e0f2fe; color:#0369a1; }
+  .previews { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
+  .previews figure { margin:0; background:var(--bg); border:1px solid var(--line); border-radius:9px;
+                     padding:8px; text-align:center; }
+  .previews img { width:100%; border-radius:6px; background:#000; display:block; }
+  .previews figcaption { font-size:11.5px; color:var(--muted); margin-top:6px; }
+  .missing { color:var(--muted); font-style:italic; font-size:12.5px; padding:8px; }
+  ul.clean { margin:6px 0 0; padding-left:18px; } ul.clean li { margin:3px 0; }
+  code { font-family:ui-monospace,Menlo,monospace; background:var(--bg); padding:1px 5px; border-radius:5px;
+         font-size:12.5px; }
+  .foot { color:var(--muted); font-size:12px; margin-top:18px; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink:#e6edf6; --body:#c2cbd8; --muted:#8b97a7; --line:#22303f; --bg:#0d1520; --card:#111a26;
+            --amber-bg:#2a1f08; }
+    body { background:var(--bg); } header.vp-top,.vp-back { background:#0f1926; }
+  }
+</style>
+</head>
+<body>
+<header class="vp-top">
+  <a class="vp-back" href="index.html">‹ Projects</a>
+  <span class="vp-dot"></span>
+  <h1>Fixed-Image Pseudotime</h1>
+  <span class="vp-sub" id="vp-meta">loading…</span>
+</header>
+<main>
+  <div class="vp-banner" id="vp-status">Loading pilot report…</div>
+  <div id="vp-root"></div>
+  <p class="foot" id="vp-foot"></p>
+</main>
+
+<script>
+const $ = (s, r=document) => r.querySelector(s);
+const el = (t, c, h) => { const e=document.createElement(t); if(c) e.className=c; if(h!=null) e.innerHTML=h; return e; };
+const esc = s => String(s==null?"":s).replace(/[&<>]/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]));
+const num = (v,d=3) => (v==null||Number.isNaN(v)) ? "—" : (typeof v==="number" ? (Math.abs(v)>=100?v.toFixed(0):v.toFixed(d)) : v);
+
+function qcTag(status){
+  const m = {pass:"t-pass", caution:"t-warn", "out-of-domain":"t-bad", predicted:"t-pass",
+             blocked:"t-bad", pilot_normal_dev:"t-info", ood:"t-warn", excluded:"t-bad",
+             needs_panel_isolation:"t-warn"};
+  return `<span class="tag ${m[status]||"t-info"}">${esc(status)}</span>`;
+}
+function section(title, lead){ const s=el("section"); s.appendChild(el("h2",null,esc(title)));
+  if(lead) s.appendChild(el("p","lead",lead)); return s; }
+function kv(k,v,n){ return `<div class="kv"><div class="k">${esc(k)}</div><div class="v">${v}</div>${n?`<div class="n">${esc(n)}</div>`:""}</div>`; }
+
+// preview images: present when viewing locally (gitignored derived dir), absent in production.
+const PREVIEWS = [
+  ["calibration_data/vision_pseudotime/derived/target01_ch0_mip_norm.png","channel 0 · normalized MIP"],
+  ["calibration_data/vision_pseudotime/derived/target01_ch1_robust_mean_norm.png","channel 1 · robust nonzero mean"],
+  ["calibration_data/vision_pseudotime/derived/target01_ch2_seg_occupancy.png","channel 2 · segmentation occupancy"],
+  ["calibration_data/vision_pseudotime/derived/target01_boundary.png","segmentation boundary (QC)"],
+  ["calibration_data/vision_pseudotime/derived/target01_mip_baseline.png","single-channel MIP baseline"],
+];
+
+fetch("data/vision_pseudotime_report.json").then(r=>r.json()).then(render).catch(e=>{
+  $("#vp-status").innerHTML = "Could not load <code>data/vision_pseudotime_report.json</code> — run <code>python3 -m scripts.vision_pseudotime.report</code>.";
+});
+
+function render(R){
+  const m = R.meta || {};
+  $("#vp-meta").textContent = `${m.package_version} · baseline ${m.geometry_baseline_model} · ${m.generated_at_utc}`;
+  $("#vp-status").innerHTML = `<b>PILOT.</b> ${esc(m.status)}. This page shows the data pipeline, a hybrid path that reuses the validated geometry clock, and a feasibility-only image encoder. No end-to-end image clock is validated yet.`;
+  const root = $("#vp-root");
+
+  // ---- provenance ----
+  let s = section("Source & provenance", "Every large source stays outside git; paths are redacted. Fixed snapshots have no true τ.");
+  let t = el("table"); t.innerHTML = "<tr><th>source</th><th>kind</th><th>supervised τ</th><th>available</th><th>location (redacted)</th></tr>";
+  (R.manifest.sources||[]).forEach(e=>{
+    t.innerHTML += `<tr><td><b>${esc(e.source_id)}</b></td><td>${esc(e.source_kind)}</td>
+      <td>${e.supervised_tau_use==="yes"?qcTag("pass"):qcTag(e.supervised_tau_use||"no")}</td>
+      <td>${e.available_on_this_machine?"✓":"—"}</td><td><code>${esc(e.location_redacted)}</code></td></tr>`;
+  });
+  s.appendChild(t); root.appendChild(s);
+
+  // ---- TIFF audits ----
+  s = section("Metadata-only TIFF audit", "Read from tags without loading the volume. A sidecar is required where spacing/classes are not trustworthy.");
+  t = el("table"); t.innerHTML = "<tr><th>stack</th><th>shape</th><th>dtype</th><th>role</th><th>full load</th><th>spacing</th><th>metadata sufficient</th></tr>";
+  (R.tiff_audits||[]).forEach(a=>{
+    const gb = a.est_full_load_bytes ? (a.est_full_load_bytes/1e9).toFixed(2)+" GB" : "—";
+    t.innerHTML += `<tr><td><b>${esc(a.basename)}</b></td><td>${(a.shape||[]).join("×")||"—"}</td>
+      <td>${esc(a.dtype)}</td><td>${esc(a.stack_role)}</td><td>${gb} <span class="tag t-info">not loaded</span></td>
+      <td>${a.spacing_status?qcTag(a.spacing_status==="verified"?"pass":a.spacing_status==="provisional"?"caution":"out-of-domain"):"—"}</td>
+      <td>${a.metadata_sufficient?qcTag("pass"):qcTag("out-of-domain")}</td></tr>`;
+  });
+  s.appendChild(t); root.appendChild(s);
+
+  // ---- preprocessing / projections ----
+  s = section("Preprocessing · deterministic 2.5D projections", "Streamed one z-page at a time; the full volume is never resident. No raw sum projection.");
+  const pp = R.preprocessing || {};
+  if(pp.available){
+    let g = el("div","vp-grid");
+    g.innerHTML = kv("crop bbox", (pp.bbox||[]).join(", "), "embryo-cropped")
+      + kv("z-extent (labels)", (pp.z_extent_labels||[]).join("–"), "signal-bearing slices")
+      + kv("output", pp.out+"²", "channels: "+(pp.channels||[]).join(", "))
+      + kv("raw sum used", pp.no_raw_sum?"no":"YES", "README rule");
+    s.appendChild(g);
+    // channel stats
+    if(pp.channel_stats){ t=el("table"); t.innerHTML="<tr><th>channel</th><th>mean</th><th>p05</th><th>p95</th></tr>";
+      Object.entries(pp.channel_stats).forEach(([k,v])=>{ t.innerHTML+=`<tr><td>${esc(k)}</td><td>${num(v.mean)}</td><td>${num(v.p05)}</td><td>${num(v.p95)}</td></tr>`; });
+      s.appendChild(t); }
+    // previews (local only)
+    const pv = el("div","previews"); s.appendChild(el("p","lead","Derived previews (downsampled, generated locally; not published in production):"));
+    PREVIEWS.forEach(([src,cap])=>{ const fig=el("figure"); const img=new Image(); img.src=src; img.alt=cap;
+      img.onerror=()=>{ fig.innerHTML=`<div class="missing">${esc(cap)} — preview not published</div>`; };
+      fig.appendChild(img); fig.appendChild(el("figcaption",null,esc(cap))); pv.appendChild(fig); });
+    s.appendChild(pv);
+  } else { s.appendChild(el("p","missing", esc(pp.note||"matched stacks not present on this machine"))); }
+  root.appendChild(s);
+
+  // ---- hybrid geometry -> clock ----
+  s = section("Hybrid path · image → segmentation → geometry → frozen clock",
+    "The deployable route. Reuses the validated clock unchanged; emits τ only with verified microns + verified classes.");
+  const H = R.hybrid_geometry_clock || {};
+  let g = el("div","vp-grid");
+  g.innerHTML = kv("clock reused", H.clock_reused||"—", "unchanged")
+    + kv("zygotes cross-checked", H.validated_zygotes ?? "—", "against deployed cache")
+    + kv("max |Δτ|", num(H.max_tau_error,6), "vs published τ")
+    + kv("max feature error", num(H.max_feature_error_um,6)+" µm", "vs cached geometry");
+  s.appendChild(g);
+  if(H.verdict) s.appendChild(el("p","lead", "✓ "+esc(H.verdict)));
+  if(H.example_stack){ const ex=H.example_stack;
+    s.appendChild(el("p",null, `Example lab stack → ${qcTag(ex.status)} `
+      + `spacing ${qcTag(ex.spacing_status==="verified"?"pass":"out-of-domain")} `
+      + `classes ${ex.classes_verified?qcTag("pass"):qcTag("out-of-domain")}`));
+    if(ex.blockers) s.appendChild(el("ul","clean", ex.blockers.map(b=>`<li>${esc(b)}</li>`).join(""))); }
+  root.appendChild(s);
+
+  // ---- movies ----
+  s = section("Movie inventory · inclusion status", "τ is never inferred from frame index. Perturbation/overshoot movies are OOD/excluded.");
+  const M = R.movies || {};
+  g = el("div","vp-grid");
+  const ic = M.inclusion_counts||{};
+  g.innerHTML = kv("movies", M.n_movies??"—")
+    + kv("normal-dev pilot", ic.pilot_normal_dev??0, (M.normal_dev_pilot_movies||[]).join(", "))
+    + kv("OOD", ic.ood??0, "perturbation/overshoot")
+    + kv("excluded", ic.excluded??0, "specialised channels");
+  s.appendChild(g); root.appendChild(s);
+
+  // ---- exploratory encoder ----
+  s = section("Exploratory image encoder — FEASIBILITY ONLY (synthetic)",
+    "Not a production model. Demonstrated on labelled-synthetic phantoms; refuses on the real material.");
+  const E = R.exploratory_encoder || {};
+  g = el("div","vp-grid");
+  g.innerHTML = kv("status", `<span class="tag t-warn">${esc(E.status)}</span>`, E.data)
+    + kv("held-out grouped MAE", num(E.held_out_embryo_grouped_mae), "synthetic")
+    + kv("Spearman", num(E.held_out_spearman), "synthetic")
+    + kv("corner saliency", num(E.saliency_corner_mass_after_strip,4), "≈0 ⇒ ignores overlay");
+  s.appendChild(g);
+  s.appendChild(el("p","lead", esc(E.interpretation||"")));
+  if(E.real_data_refusal) s.appendChild(el("p",null, `Real-data behaviour: ${qcTag("blocked")} <code>${esc(E.real_data_refusal)}</code>`));
+  root.appendChild(s);
+
+  // ---- warnings + blockers ----
+  s = section("Pilot / OOD warnings & data blockers", "Nothing here is hidden.");
+  s.appendChild(el("p",null,"<b>Warnings</b>"));
+  s.appendChild(el("ul","clean",(R.warnings||[]).map(w=>`<li>${esc(w)}</li>`).join("")));
+  s.appendChild(el("p",null,"<b>Blocked until obtained</b>"));
+  s.appendChild(el("ul","clean",(R.data_blockers||[]).map(w=>`<li>${esc(w)}</li>`).join("")));
+  s.appendChild(el("p","lead", `Acquisition checklist: <code>${esc(R.acquisition_checklist)}</code> · Model card: <code>${esc(R.model_card)}</code>`));
+  root.appendChild(s);
+
+  $("#vp-foot").textContent = "Generated by scripts/vision_pseudotime/report.py — redacted, no absolute paths, no raw pixels.";
+}
+</script>
+</body>
+</html>

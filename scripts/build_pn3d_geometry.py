@@ -64,11 +64,11 @@ def main() -> int:
         }
         records.append(rec)
         g = au.get("geometry")
-        tag = f"sum/R={g['sum_over_R']}" if g else au["status"]
+        tag = f"rms/R={g['rms_over_R']} nPN={g['n_pronuclei']}" if g else au["status"]
         print(f"  [{k}/{len(todo)}] {e['embryo_id']:40s} {au['status']:10s} "
               f"conf={au['confidence']:.2f} {tag} ({time.time()-t0:.1f}s)")
 
-    zres = [r for r in records if r["stage"] == "zygote" and r["status"] == "resolved"]
+    zres = [r for r in records if r["stage"] == "zygote" and r.get("geometry")]
     payload = {
         "schema_version": 1, "package_version": "pn3d-0.1.0",
         "generated_at_utc": __import__("datetime").datetime.now(
@@ -83,7 +83,7 @@ def main() -> int:
         "embryos": records,
     }
     json.dump(payload, open(OUT, "w"), indent=1)
-    print(f"\nresolved {len(zres)}/{sum(r['stage']=='zygote' for r in records)} zygotes")
+    print(f"\nscored {len(zres)}/{sum(r['stage']=='zygote' for r in records)} zygotes (geometry computed)")
     print(f"wrote {os.path.relpath(OUT, HERE)}")
     return 0
 

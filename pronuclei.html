@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pronuclei Distance vs Transcripts · SURF 2026</title>
+  <title>Transcripts vs Pronuclear Distance · SURF 2026</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="pronuclei.css" />
   <script src="plotly.min.js" charset="utf-8"></script>
@@ -14,7 +14,7 @@
     <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
     <div class="brand">
       <span class="brand-dot" style="background:#0891b2;box-shadow:0 0 0 4px color-mix(in srgb,#0891b2 18%,transparent)"></span>
-      <span class="brand-name">Pronuclei&nbsp;Distance&nbsp;vs&nbsp;Transcripts</span>
+      <span class="brand-name">Transcripts&nbsp;vs&nbsp;Pronuclear&nbsp;Distance</span>
       <span class="brand-sub" id="embryo-count"></span>
     </div>
     <nav class="tabs" id="tabs" aria-label="Zygotes"></nav>
@@ -130,7 +130,7 @@
           </select>
         </label>
         <label class="pn-reg-label">Region
-          <select id="region-sel" title="Which part of the embryo to count transcripts in. Pronuclei are auto-detected (the same segments used for the distance); polar bodies = every labelled segment that is not segment 1 or a pronucleus. Maternal / paternal pronucleus = the female / male call from the Pronuclei Assignments consensus (only zygotes with an assignment).">
+          <select id="region-sel" title="Which part of the embryo to count transcripts in. Pronuclei are auto-detected (the same segments used for the distance); polar bodies = every labelled segment that is not segment 1 or a pronucleus. Maternal / paternal pronucleus = the female / male call from the Maternal / Paternal Pronucleus ID consensus (only zygotes with an assignment).">
             <option value="all">Whole embryo</option>
             <option value="seg1">Segment 1 · cytoplasm</option>
             <option value="pron">Pronuclei (both)</option>
@@ -146,7 +146,7 @@
             <option value="vol">÷ volume (density /µm³)</option>
           </select>
         </label>
-        <label class="pn-ctl" title="Which developmental axis the graphs below use. Legacy is the historical surface-gap ordering; calibrated τ comes from the frozen Pronuclear Pseudotime Calibration model.">
+        <label class="pn-ctl" title="Which developmental axis the graphs below use. Legacy is the historical surface-gap ordering; calibrated τ comes from the frozen Pronuclear Distance Clock.">
           <span class="pn-ctl-l">Time axis</span>
           <select id="pn-clock">
             <option value="legacy">Legacy surface-gap ordering score (default)</option>

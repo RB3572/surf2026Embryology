@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "n": 14,
+ "n": 63,
  "note": "previews are gitignored derived pixels; absent in production",
  "colors": {
   "cell": [
@@ -44,164 +44,38 @@
    }
   },
   {
-   "embryo_id": "20260425_zygote_p2/fov22",
-   "safe": "20260425_zygote_p2__fov22",
+   "embryo_id": "20251226_sample1_zygote_p1/fov2/2_1",
+   "safe": "20251226_sample1_zygote_p1__fov2__2_1",
    "planes": {
     "xy": {
-     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22_xy.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22_xy_seg.png"
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_1_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_1_xy_seg.png"
     },
     "xz": {
-     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22_xz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22_xz_seg.png"
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_1_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_1_xz_seg.png"
     },
     "yz": {
-     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22_yz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22_yz_seg.png"
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_1_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_1_yz_seg.png"
     }
    }
   },
   {
-   "embryo_id": "20260425_zygote_p2/fov9",
-   "safe": "20260425_zygote_p2__fov9",
+   "embryo_id": "20251226_sample1_zygote_p1/fov9",
+   "safe": "20251226_sample1_zygote_p1__fov9",
    "planes": {
     "xy": {
-     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9_xy.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9_xy_seg.png"
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov9_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov9_xy_seg.png"
     },
     "xz": {
-     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9_xz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9_xz_seg.png"
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov9_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov9_xz_seg.png"
     },
     "yz": {
-     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9_yz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9_yz_seg.png"
-    }
-   }
-  },
-  {
-   "embryo_id": "20260425_zygote_p2/fov7",
-   "safe": "20260425_zygote_p2__fov7",
-   "planes": {
-    "xy": {
-     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7_xy.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7_xy_seg.png"
-    },
-    "xz": {
-     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7_xz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7_xz_seg.png"
-    },
-    "yz": {
-     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7_yz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7_yz_seg.png"
-    }
-   }
-  },
-  {
-   "embryo_id": "20251226_sample1_zygote_p1/fov2/2_2",
-   "safe": "20251226_sample1_zygote_p1__fov2__2_2",
-   "planes": {
-    "xy": {
-     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_2_xy.png",
-     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_2_xy_seg.png"
-    },
-    "xz": {
-     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_2_xz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_2_xz_seg.png"
-    },
-    "yz": {
-     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_2_yz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_2_yz_seg.png"
-    }
-   }
-  },
-  {
-   "embryo_id": "20251226_sample1_zygote_p1/fov7",
-   "safe": "20251226_sample1_zygote_p1__fov7",
-   "planes": {
-    "xy": {
-     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov7_xy.png",
-     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov7_xy_seg.png"
-    },
-    "xz": {
-     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov7_xz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov7_xz_seg.png"
-    },
-    "yz": {
-     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov7_yz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov7_yz_seg.png"
-    }
-   }
-  },
-  {
-   "embryo_id": "20260407_zygote_p1/fov4",
-   "safe": "20260407_zygote_p1__fov4",
-   "planes": {
-    "xy": {
-     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov4_xy.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov4_xy_seg.png"
-    },
-    "xz": {
-     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov4_xz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov4_xz_seg.png"
-    },
-    "yz": {
-     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov4_yz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov4_yz_seg.png"
-    }
-   }
-  },
-  {
-   "embryo_id": "20260425_zygote_p2/fov14",
-   "safe": "20260425_zygote_p2__fov14",
-   "planes": {
-    "xy": {
-     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov14_xy.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov14_xy_seg.png"
-    },
-    "xz": {
-     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov14_xz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov14_xz_seg.png"
-    },
-    "yz": {
-     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov14_yz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov14_yz_seg.png"
-    }
-   }
-  },
-  {
-   "embryo_id": "20260407_zygote_p1/fov6",
-   "safe": "20260407_zygote_p1__fov6",
-   "planes": {
-    "xy": {
-     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6_xy.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6_xy_seg.png"
-    },
-    "xz": {
-     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6_xz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6_xz_seg.png"
-    },
-    "yz": {
-     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6_yz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6_yz_seg.png"
-    }
-   }
-  },
-  {
-   "embryo_id": "20260425_zygote_p2/fov26",
-   "safe": "20260425_zygote_p2__fov26",
-   "planes": {
-    "xy": {
-     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov26_xy.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov26_xy_seg.png"
-    },
-    "xz": {
-     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov26_xz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov26_xz_seg.png"
-    },
-    "yz": {
-     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov26_yz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov26_yz_seg.png"
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov9_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov9_yz_seg.png"
     }
    }
   },
@@ -224,6 +98,24 @@
    }
   },
   {
+   "embryo_id": "20260425_zygote_p2/fov17",
+   "safe": "20260425_zygote_p2__fov17",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov17_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov17_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov17_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov17_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov17_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov17_yz_seg.png"
+    }
+   }
+  },
+  {
    "embryo_id": "20260425_zygote_p2/fov2",
    "safe": "20260425_zygote_p2__fov2",
    "planes": {
@@ -238,6 +130,150 @@
     "yz": {
      "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov2_yz.png",
      "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov2_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov22",
+   "safe": "20260425_zygote_p2__fov22",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov24",
+   "safe": "20260425_zygote_p2__fov24",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov24_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov24_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov24_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov24_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov24_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov24_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov25",
+   "safe": "20260425_zygote_p2__fov25",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov25_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov25_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov25_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov25_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov25_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov25_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov8",
+   "safe": "20260425_zygote_p2__fov8",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov8_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov8_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov8_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov8_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov8_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov8_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov11",
+   "safe": "20260425_zygote_p2__fov11",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov11_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov11_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov11_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov11_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov11_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov11_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov19/0",
+   "safe": "20260425_zygote_p2__fov19__0",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov19__0_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov19__0_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov19__0_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov19__0_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov19__0_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov19__0_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov5",
+   "safe": "20251226_sample1_zygote_p1__fov5",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov5_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov5_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov5_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov5_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov5_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov5_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov6",
+   "safe": "20251226_sample1_zygote_p1__fov6",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov6_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov6_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov6_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov6_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov6_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov6_yz_seg.png"
     }
    }
   },
@@ -260,20 +296,866 @@
    }
   },
   {
-   "embryo_id": "20251226_sample1_zygote_p1/fov2/2_1",
-   "safe": "20251226_sample1_zygote_p1__fov2__2_1",
+   "embryo_id": "20251226_sample1_zygote_p1/fov3",
+   "safe": "20251226_sample1_zygote_p1__fov3",
    "planes": {
     "xy": {
-     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_1_xy.png",
-     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_1_xy_seg.png"
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov3_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov3_xy_seg.png"
     },
     "xz": {
-     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_1_xz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_1_xz_seg.png"
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov3_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov3_xz_seg.png"
     },
     "yz": {
-     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_1_yz.png",
-     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_1_yz_seg.png"
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov3_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov3_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov4",
+   "safe": "20251226_sample1_zygote_p1__fov4",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov4_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov4_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov4_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov4_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov4_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov4_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov18/0",
+   "safe": "20260425_zygote_p2__fov18__0",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov18__0_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov18__0_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov18__0_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov18__0_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov18__0_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov18__0_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov19",
+   "safe": "20260425_zygote_p2__fov19",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov19_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov19_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov19_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov19_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov19_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov19_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov7/0",
+   "safe": "20260425_zygote_p2__fov7__0",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7__0_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7__0_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7__0_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7__0_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7__0_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7__0_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov9",
+   "safe": "20260425_zygote_p2__fov9",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov0",
+   "safe": "20260425_zygote_p2__fov0",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov0_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov0_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov0_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov0_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov0_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov0_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov16",
+   "safe": "20260425_zygote_p2__fov16",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov16_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov16_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov16_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov16_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov16_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov16_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov6",
+   "safe": "20260425_zygote_p2__fov6",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov6_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov6_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov6_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov6_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov6_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov6_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov23",
+   "safe": "20260425_zygote_p2__fov23",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov23_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov23_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov23_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov23_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov23_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov23_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov7",
+   "safe": "20260425_zygote_p2__fov7",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov7_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov8",
+   "safe": "20251226_sample1_zygote_p1__fov8",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov8_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov8_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov8_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov8_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov8_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov8_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov12",
+   "safe": "20260425_zygote_p2__fov12",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov12_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov12_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov12_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov12_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov12_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov12_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov8/0",
+   "safe": "20260425_zygote_p2__fov8__0",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov8__0_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov8__0_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov8__0_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov8__0_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov8__0_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov8__0_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov1",
+   "safe": "20260425_zygote_p2__fov1",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov1_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov1_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov1_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov1_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov1_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov1_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov2/2_2",
+   "safe": "20251226_sample1_zygote_p1__fov2__2_2",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_2_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_2_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_2_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_2_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_2_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov2__2_2_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov15",
+   "safe": "20260425_zygote_p2__fov15",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov15_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov15_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov15_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov15_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov15_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov15_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov18",
+   "safe": "20260425_zygote_p2__fov18",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov18_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov18_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov18_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov18_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov18_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov18_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov7",
+   "safe": "20251226_sample1_zygote_p1__fov7",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov7_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov7_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov7_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov7_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov7_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov7_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov0",
+   "safe": "20260407_zygote_p1__fov0",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov0_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov0_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov0_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov0_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov0_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov0_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov5",
+   "safe": "20260407_zygote_p1__fov5",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov5_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov5_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov5_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov5_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov5_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov5_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov10",
+   "safe": "20251226_sample1_zygote_p1__fov10",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov10_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov10_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov10_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov10_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov10_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20251226_sample1_zygote_p1__fov10_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov5",
+   "safe": "20260425_zygote_p2__fov5",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov5_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov5_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov5_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov5_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov5_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov5_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov9/0",
+   "safe": "20260425_zygote_p2__fov9__0",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9__0_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9__0_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9__0_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9__0_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9__0_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov9__0_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov20",
+   "safe": "20260425_zygote_p2__fov20",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov20_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov20_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov20_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov20_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov20_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov20_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov3_oocyte",
+   "safe": "20260425_zygote_p2__fov3_oocyte",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov3_oocyte_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov3_oocyte_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov3_oocyte_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov3_oocyte_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov3_oocyte_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov3_oocyte_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov8",
+   "safe": "20260407_zygote_p1__fov8",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov8_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov8_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov8_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov8_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov8_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov8_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov2",
+   "safe": "20260407_zygote_p1__fov2",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov2_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov2_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov2_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov2_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov2_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov2_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov4",
+   "safe": "20260407_zygote_p1__fov4",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov4_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov4_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov4_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov4_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov4_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov4_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov4",
+   "safe": "20260425_zygote_p2__fov4",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov4_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov4_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov4_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov4_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov4_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov4_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov0/1",
+   "safe": "20260407_zygote_p1__fov0__1",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov0__1_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov0__1_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov0__1_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov0__1_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov0__1_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov0__1_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov3",
+   "safe": "20260407_zygote_p1__fov3",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov3_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov3_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov3_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov3_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov3_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov3_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov14",
+   "safe": "20260425_zygote_p2__fov14",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov14_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov14_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov14_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov14_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov14_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov14_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov1",
+   "safe": "20260407_zygote_p1__fov1",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov1_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov1_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov1_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov1_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov1_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov1_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov10",
+   "safe": "20260425_zygote_p2__fov10",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov10_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov10_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov10_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov10_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov10_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov10_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov11",
+   "safe": "20260407_zygote_p1__fov11",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov11_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov11_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov11_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov11_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov11_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov11_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov6",
+   "safe": "20260407_zygote_p1__fov6",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov6/0",
+   "safe": "20260407_zygote_p1__fov6__0",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6__0_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6__0_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6__0_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6__0_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6__0_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov6__0_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov10",
+   "safe": "20260407_zygote_p1__fov10",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov10_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov10_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov10_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov10_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov10_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov10_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov7/0",
+   "safe": "20260407_zygote_p1__fov7__0",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov7__0_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov7__0_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov7__0_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov7__0_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov7__0_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov7__0_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov8/0",
+   "safe": "20260407_zygote_p1__fov8__0",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov8__0_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov8__0_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov8__0_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov8__0_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov8__0_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov8__0_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov25/0",
+   "safe": "20260425_zygote_p2__fov25__0",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov25__0_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov25__0_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov25__0_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov25__0_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov25__0_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov25__0_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov21",
+   "safe": "20260425_zygote_p2__fov21",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov21_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov21_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov21_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov21_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov21_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov21_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov12",
+   "safe": "20260407_zygote_p1__fov12",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov12_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov12_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov12_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov12_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov12_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov12_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov7",
+   "safe": "20260407_zygote_p1__fov7",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov7_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov7_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov7_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov7_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov7_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov7_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov26",
+   "safe": "20260425_zygote_p2__fov26",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov26_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov26_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov26_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov26_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov26_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov26_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov22/0",
+   "safe": "20260425_zygote_p2__fov22__0",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22__0_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22__0_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22__0_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22__0_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22__0_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260425_zygote_p2__fov22__0_yz_seg.png"
+    }
+   }
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov9",
+   "safe": "20260407_zygote_p1__fov9",
+   "planes": {
+    "xy": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov9_xy.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov9_xy_seg.png"
+    },
+    "xz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov9_xz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov9_xz_seg.png"
+    },
+    "yz": {
+     "raw": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov9_yz.png",
+     "seg": "calibration_data/pn3d/derived/previews/20260407_zygote_p1__fov9_yz_seg.png"
     }
    }
   }

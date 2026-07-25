@@ -312,7 +312,7 @@
   const hasSeg = (id) => {                                        // can this embryo be plotted for the region?
     if (state.region === "all") return true;
     const sd = segOf(id); if (!sd) return false;
-    // maternal/paternal only exist for zygotes with a Pronuclei Assignments call
+    // maternal/paternal only exist for zygotes with a Maternal / Paternal Pronucleus ID call
     if (state.region === "pron_mat" || state.region === "pron_pat") return sd.vol[state.region] != null;
     return true;
   };

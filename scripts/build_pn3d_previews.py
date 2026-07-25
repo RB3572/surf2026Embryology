@@ -56,8 +56,16 @@ def _crop_bbox(mask, pad=6):
     return b
 
 
-def _project(vol, axis):
-    return vol.max(axis=axis)
+def _project(vol, axis, q=90.0):
+    """
+    Percentile-through-depth projection.
+
+    A plain maximum projection is unusable here: the DAPI stacks are already
+    clipped at the sensor ceiling, so ~24% of a max-projected pixel field sits at
+    65535 and the embryo renders as a white blob. The 90th percentile keeps the
+    same structure visible (≈2% saturated) without inventing anything.
+    """
+    return np.percentile(vol, q, axis=axis).astype(np.float32)
 
 
 def _overlay(gray01, structures, axis, bbox):
@@ -121,7 +129,7 @@ def render_embryo(eid, dna_path, label_path, audit):
 def main() -> int:
     import argparse
     ap = argparse.ArgumentParser()
-    ap.add_argument("--n", type=int, default=14)
+    ap.add_argument("--n", type=int, default=0, help="0 = every embryo (default)")
     a = ap.parse_args()
     config.ensure_dirs()
 
@@ -131,19 +139,14 @@ def main() -> int:
     geo = {e["embryo_id"]: e for e in json.load(
         open(os.path.join(config.DATA_DIR, "segmentation_geometry.json")))["embryos"]}
 
-    resolved = [e for e in inf if e["stage"] == "zygote" and e["inferable"]]
-    resolved.sort(key=lambda e: e["pseudotime"]["tau_mean"])
-    # curated: spread across tau + a couple OOD + a couple unresolved (failure cases)
-    pick = []
-    if resolved:
-        idx = np.linspace(0, len(resolved) - 1, min(a.n - 4, len(resolved))).astype(int)
-        pick += [resolved[i]["embryo_id"] for i in sorted(set(idx))]
-    ood = [e["embryo_id"] for e in inf if e["stage"] == "zygote"
-           and e["ood_level"] == "out_of_domain" and e["inferable"]][:2]
-    unres = [e["embryo_id"] for e in inf if e["stage"] == "zygote" and not e["inferable"]][:2]
-    for x in ood + unres:
-        if x not in pick:
-            pick.append(x)
+    # EVERY embryo the model can see gets previews — including single-pronucleus and
+    # out-of-domain ones. The point of showing the input is that nothing is hidden.
+    cand = [e for e in inf if e["stage"] == "zygote"]
+    cand.sort(key=lambda e: (e["pseudotime"]["tau_mean"] if e.get("pseudotime") else 9e9,
+                             e["embryo_id"]))
+    pick = [e["embryo_id"] for e in cand]
+    if a.n:
+        pick = pick[:a.n]
 
     index = []
     for k, eid in enumerate(pick, 1):

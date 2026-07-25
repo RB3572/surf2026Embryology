@@ -125,55 +125,79 @@ def audit(L: np.ndarray, vox=None) -> dict:
     if polar and polar["compactness"] < 0.2:
         flags.append("external segment is not compact (uncertain polar body)")
 
-    status = "resolved"
-    if len(pron) < 2:
+    # A pronuclear-stage zygote should show TWO pronuclei. One is still a real,
+    # measurable configuration (a late/merged mass, or an incompletely annotated
+    # pair), so it is measured and clearly labelled rather than refused — the
+    # model returns an answer for every input, with the uncertainty and QC that
+    # the input deserves. Zero DNA inside the cell body is genuinely unmeasurable.
+    if len(pron) >= 2:
+        status = "resolved"
+    elif len(pron) == 1:
+        status = "single_pronucleus"
+        flags.append("only 1 pronucleus inside the cell body — geometry uses the single "
+                     "annotated mass, so tau is an extrapolation (flagged, not hidden)")
+    else:
         status = "unresolved"
-        flags.append(f"only {len(pron)} pronucleus/pronuclei inside the cell body (need 2)")
+        flags.append("no pronucleus inside the cell body — nothing to measure")
     # a would-be pronucleus that actually sits outside must never be substituted
     if len(inside) < 2 and outside:
         flags.append("a candidate lies OUTSIDE the cell body; not substituted for a pronucleus")
 
-    # ---- geometry (only when resolved) ----
+    # ---- geometry (whenever at least one pronucleus was found) ----
     geom = None
-    if status == "resolved":
-        pA, pB = pron[0]["label"], pron[1]["label"]
-        mA, mB = L == pA, L == pB
-        filled = ndi.binary_fill_holes(cell_mask | mA | mB)
+    if pron:
+        masks = [L == p["label"] for p in pron]
+        filled = ndi.binary_fill_holes(cell_mask | np.logical_or.reduce(masks))
         c = _centroid_um(filled, vox)
-        cA, cB = _centroid_um(mA, vox), _centroid_um(mB, vox)
-        dA = float(np.linalg.norm(cA - c)); dB = float(np.linalg.norm(cB - c))
-        near, far = (dA, dB) if dA <= dB else (dB, dA)
+        cens = [_centroid_um(m, vox) for m in masks]
+        dists = [float(np.linalg.norm(x - c)) for x in cens]
         vox_um3 = float(np.prod(vox))
         cell_vol = float(filled.sum()) * vox_um3
         cell_r = float((3 * cell_vol / (4 * np.pi)) ** (1 / 3))
-        volA = float(mA.sum()) * vox_um3; volB = float(mB.sum()) * vox_um3
-        inter = float(np.linalg.norm(cA - cB))
+        vols = [float(m.sum()) * vox_um3 for m in masks]
+        # GENERALIZED feature — the RMS distance of pronuclear DNA from the cell
+        # centre. For two pronuclei this is sqrt((d_near² + d_far²)/2), which is
+        # equally computable from the live-imaging cohort, so the clock is trained
+        # on the identical quantity. For one it is that mass's distance. Defined
+        # for any pronucleus count, which is what lets every embryo get a tau.
+        rms = float(np.sqrt(np.mean(np.square(dists))))
         geom = {
+            "n_pronuclei": len(pron),
             "cell_center_um": [round(float(x), 2) for x in c],
             "cell_volume_um3": round(cell_vol, 1), "cell_radius_um": round(cell_r, 2),
-            "nearer_to_center_um": round(near, 3), "farther_to_center_um": round(far, 3),
-            "distance_sum_um": round(near + far, 3),
-            "inter_pn_um": round(inter, 3),
-            "pron_volume_near_um3": round(min(volA, volB) if dA <= dB else max(volA, volB), 1),
-            "pron_volume_far_um3": round(max(volA, volB) if dA <= dB else min(volA, volB), 1),
-            "pron_labels": [int(pA), int(pB)],
-            # DIMENSIONLESS features (÷ cell radius) — scale/anisotropy-robust
-            "near_over_R": round(near / cell_r, 4), "far_over_R": round(far / cell_r, 4),
-            "sum_over_R": round((near + far) / cell_r, 4),
-            "inter_over_R": round(inter / cell_r, 4),
-            "vol_asymmetry": round(abs(volA - volB) / (volA + volB + 1e-6), 4),
-            "pron_vol_frac": round((volA + volB) / (cell_vol + 1e-6), 5),
+            "pron_labels": [int(p["label"]) for p in pron],
+            "pron_distances_um": [round(d, 3) for d in dists],
+            "pron_volumes_um3": [round(v, 1) for v in vols],
+            "rms_to_center_um": round(rms, 3),
+            "rms_over_R": round(rms / cell_r, 4),          # ← the universal model input
+            "pron_vol_frac": round(sum(vols) / (cell_vol + 1e-6), 5),
             "polar_body_present": polar is not None,
-            "polar_body_external": polar is not None,     # by construction (outside score)
+            "polar_body_external": polar is not None,      # by construction (outside score)
         }
+        if len(pron) >= 2:                                  # two-pronucleus extras
+            near, far = sorted(dists)[:2]
+            inter = float(np.linalg.norm(cens[0] - cens[1]))
+            vA, vB = vols[0], vols[1]
+            geom.update({
+                "nearer_to_center_um": round(near, 3), "farther_to_center_um": round(far, 3),
+                "distance_sum_um": round(near + far, 3), "inter_pn_um": round(inter, 3),
+                "near_over_R": round(near / cell_r, 4), "far_over_R": round(far / cell_r, 4),
+                "sum_over_R": round((near + far) / cell_r, 4),
+                "inter_over_R": round(inter / cell_r, 4),
+                "vol_asymmetry": round(abs(vA - vB) / (vA + vB + 1e-6), 4),
+            })
 
-    # confidence: clean two-inside + compact + a clear inside/outside margin
+    # confidence: compact instances + a clear inside/outside margin + the expected
+    # count. A single-pronucleus read is capped, so downstream uncertainty widens
+    # for it rather than the sample being dropped.
     conf = 0.0
-    if status == "resolved":
-        comp_ok = np.mean([p["compactness"] for p in pron])
+    if pron:
+        comp_ok = float(np.mean([p["compactness"] for p in pron]))
         margin = min(p["inside_score"] for p in pron)
         conf = float(np.clip(0.4 * min(comp_ok / 0.5, 1) + 0.4 * min(margin / 3, 1)
                              + 0.2 * (len(extra_inside) == 0), 0, 1))
+        if status == "single_pronucleus":
+            conf = round(min(conf, 0.45), 3)
     out.update({
         "status": status, "cell_body_label": cell,
         "pronucleus_labels": [p["label"] for p in pron],

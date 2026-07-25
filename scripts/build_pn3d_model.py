@@ -36,10 +36,14 @@ INFER_OUT = os.path.join(config.DATA_DIR, "inference.json")
 def main() -> int:
     geo = json.load(open(GEOM))
     zyg = [e for e in geo["embryos"] if e["stage"] == "zygote"]
-    res = [e for e in zyg if e["status"] == "resolved" and e.get("geometry")]
+    # every embryo with measurable geometry (one OR two pronuclei) is scored
+    scored = [e for e in zyg if e.get("geometry")]
+    res = [e for e in scored if e["status"] == "resolved"]          # two-pronucleus subset
+    single = [e for e in scored if e["status"] == "single_pronucleus"]
     radii = np.array([e["geometry"]["cell_radius_um"] for e in res], float)
     R0 = float(np.median(radii))
-    print(f"resolved zygotes: {len(res)}/{len(zyg)}  reference radius R0 = {R0:.2f} µm (median measured)")
+    print(f"scored {len(scored)}/{len(zyg)} zygotes  (two-PN {len(res)}, single-PN {len(single)})  "
+          f"R0 = {R0:.2f} µm")
 
     # --- clock on live-imaging tau, aligned to the fixed feature scale ---
     xs, ys, gs = C.load_scheffler(R0)
@@ -48,10 +52,14 @@ def main() -> int:
     print(f"clock CV: MAE {cv['mae']:.3f}  Spearman {cv['spearman']:.3f}  "
           f"coverage 50/80/95 {cv['coverage_50']:.2f}/{cv['coverage_80']:.2f}/{cv['coverage_95']:.2f}")
 
-    support = INF.scheffler_support(R0)
+    support = INF.scheffler_support(R0, "rms")
 
     # --- apply to every fixed zygote (+ the 2-cell OOD reference) ---
-    infer = [INF.infer_record(e, clk, support) for e in geo["embryos"]]
+    peer_dR = []
+    for e in res:
+        gg = e["geometry"]; R = gg.get("cell_radius_um") or 1.0
+        peer_dR += [d / R for d in (gg.get("pron_distances_um") or [])]
+    infer = [INF.infer_record(e, clk, support, peer_dR) for e in geo["embryos"]]
     n_inf = sum(r["inferable"] for r in infer if r["stage"] == "zygote")
     ood = sum(r["ood_level"] == "out_of_domain" for r in infer if r["stage"] == "zygote")
     two_ood = [r for r in infer if r["stage"] != "zygote"]
@@ -60,8 +68,8 @@ def main() -> int:
 
     # --- domain shift: dimensionless normalization aligns fixed <-> live ---
     from scipy.stats import ks_2samp
-    fixed_sumR = np.array([e["geometry"]["sum_over_R"] for e in res])
-    fixed_phys = np.array([e["geometry"]["distance_sum_um"] for e in res])
+    fixed_sumR = np.array([e["geometry"]["rms_over_R"] for e in scored])
+    fixed_phys = np.array([e["geometry"]["rms_to_center_um"] for e in scored])
     live_sumR = xs
     def support_max_for(x):
         return float(np.max(x))
@@ -73,7 +81,7 @@ def main() -> int:
         "physical_distance_sum": {"fixed_median": round(float(np.median(fixed_phys)), 2),
                                   "live_median": round(float(np.median(live_phys)), 2),
                                   "ks_statistic": round(ks_phys, 3)},
-        "dimensionless_sum_over_R": {"fixed_median": round(float(np.median(fixed_sumR)), 3),
+        "dimensionless_rms_over_R": {"fixed_median": round(float(np.median(fixed_sumR)), 3),
                                      "live_median": round(float(np.median(live_sumR)), 3),
                                      "ks_statistic": round(ks_dimless, 3)},
         "n_fixed_above_live_support": int((fixed_sumR > support_max_for(xs)).sum()),
@@ -96,7 +104,7 @@ def main() -> int:
     known = [(t, s) for t, s in zip(taus, med_sumR) if s is not None]
     kt, ks_ = np.array([k[0] for k in known]), np.array([k[1] for k in known])
     traj = [{"tau": round(float(t), 3),
-             "sum_over_R": round(float(np.interp(t, kt, ks_)), 4)} for t in taus]
+             "rms_over_R": round(float(np.interp(t, kt, ks_)), 4)} for t in taus]
 
     # --- baselines / evidence table ---
     evidence = [
@@ -147,7 +155,8 @@ def main() -> int:
                            "adds": ["calibrated intervals", "domain adaptation", "QC/OOD"]},
         },
         "evidence_table": evidence,
-        "counts": {"zygotes_audited": len(zyg), "zygotes_resolved": len(res),
+        "counts": {"zygotes_audited": len(zyg), "zygotes_resolved": len(res), "zygotes_single_pronucleus": len(single),
+                   "zygotes_scored": len(scored),
                    "zygotes_inferable": n_inf, "zygotes_ood": ood,
                    "two_cell_reference": len(two_ood)},
     }

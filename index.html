@@ -38,7 +38,7 @@
 
       <a class="lp-card" href="pronuclear-pseudotime.html" style="--accent:#4338ca">
         <span class="lp-card-tag">3D MERFISH · calibrated τ + uncertainty</span>
-        <h2>3D Pronuclear Pseudotime</h2>
+        <h2>Pronuclear Structure Clock (3D)</h2>
         <p>From a static 3D zygote stack: audited segmentation (cell body · 2
            pronuclei · polar body) → dimensionless geometry → a monotonic
            probabilistic clock calibrated on live-imaging trajectories. Returns a
@@ -49,7 +49,7 @@
 
       <a class="lp-card" href="pseudotime-calibration.html" style="--accent:#4f46e5">
         <span class="lp-card-tag">53 live-imaged zygotes · 2,057 frames</span>
-        <h2>Pronuclear Pseudotime Calibration</h2>
+        <h2>Pronuclear Distance Clock</h2>
         <p>Train a leakage-safe geometric clock on public live-imaging data
            (Scheffler 2021), validate it with embryo-grouped cross-validation,
            then apply the frozen model to this project's fixed zygotes to give
@@ -59,7 +59,7 @@
 
       <a class="lp-card" href="vision-pseudotime.html" style="--accent:#0ea5e9">
         <span class="lp-card-tag">Pilot · fixed-image pipeline</span>
-        <h2>Fixed-Image Pseudotime (pilot)</h2>
+        <h2>Pronuclear Image Clock (pilot)</h2>
         <p>A reproducible data pipeline toward estimating pseudotime τ from a
            fixed zygote image: metadata-only TIFF audit, streaming 2.5D
            projections, a hybrid image→segmentation→geometry→frozen-clock path,
@@ -80,9 +80,9 @@
 
       <a class="lp-card" href="pn3d-transcripts.html" style="--accent:#7c3aed">
         <span class="lp-card-tag">τ from the 3D model · per-gene</span>
-        <h2>Pseudotime vs Transcripts (3D)</h2>
+        <h2>Transcripts vs Pseudotime (structure clock)</h2>
         <p>Transcript counts against calibrated developmental pseudotime τ from
-           the 3D Pronuclear Pseudotime model — the same question as the
+           the Pronuclear Structure Clock — the same question as the
            pronuclei-distance project, but on a validated time axis with real
            uncertainty. Per-gene correlation ranking, τ intervals, and QC/OOD.</p>
         <span class="lp-card-go">Open model →</span>
@@ -90,7 +90,7 @@
 
       <a class="lp-card" href="pronuclei.html" style="--accent:#0891b2">
         <span class="lp-card-tag">Zygotes with 2 pronuclei</span>
-        <h2>Pronuclei Distance vs Transcripts</h2>
+        <h2>Transcripts vs Pronuclear Distance</h2>
         <p>For each zygote, the minimum distance between the two pronuclei
            (shortest line between the segments) against its total transcript
            count — a scatter plot with a regression fit. Switchable between the
@@ -100,7 +100,7 @@
 
       <a class="lp-card" href="extpt.html" style="--accent:#14b8a6">
         <span class="lp-card-tag">51 zygote + 55 early + 38 late 2-cell</span>
-        <h2>Extended Pseudotime Analysis</h2>
+        <h2>Transcripts Across Stages (zygote → 2-cell)</h2>
         <p>The pronuclei clock, extended past the first division: zygote → early-
            2-cell → late-2-cell laid along one pseudotime axis. Watch any gene (or
            gene set) rise and fall across the maternal-to-zygotic transition, with
@@ -121,7 +121,7 @@
 
       <a class="lp-card" href="alphabeta.html" style="--accent:#db2777">
         <span class="lp-card-tag">55 early + 36 late 2-cell</span>
-        <h2>Sperm α/β · 2-cell Blastomeres</h2>
+        <h2>2-Cell Blastomere α/β Labelling</h2>
         <p>Which blastomere is alpha? A method-vs-embryo grid: the sperm-entry
            blastomere (and higher total transcript, with more methods to come) label
            one blastomere alpha. Flip rows to align them, read the consensus, and
@@ -131,7 +131,7 @@
 
       <a class="lp-card" href="sperm-pca.html" style="--accent:#16a34a">
         <span class="lp-card-tag">46 sperm-positive embryos</span>
-        <h2>Sperm Prediction from Transcript PCA</h2>
+        <h2>Sperm Location Prediction (PCA)</h2>
         <p>Locate each embryo's sperm, analyze how gene point-clouds align with the
            sperm axis (PCA &amp; COM), rank genes by consistency, and predict the
            sperm location from the ranked-gene axis→sperm mapping — with a
@@ -141,7 +141,7 @@
 
       <a class="lp-card" href="zygote-planes.html" style="--accent:#f97316">
         <span class="lp-card-tag">60 zygotes</span>
-        <h2>Zygote Division Planes</h2>
+        <h2>Division Plane Sweep (18 candidates)</h2>
         <p>Test whether a single division plane (through the embryo → polar-body
            axis) describes each gene's spatial distribution. 18 candidate planes,
            per-gene side counts, a coin-flip null, permutation p-values, and the
@@ -151,8 +151,8 @@
 
       <a class="lp-card" href="sperm-division.html" style="--accent:#0d9488">
         <span class="lp-card-tag">23 sperm-positive zygotes</span>
-        <h2>Sperm Division Plane</h2>
-        <p>The same per-gene analysis as Zygote Division Planes, but at a single
+        <h2>Sperm-Defined Division Plane</h2>
+        <p>The same per-gene analysis as the Division Plane Sweep, but at a single
            plane fixed by the geometry: through the sperm, the polar-body centre of
            mass and the cell centre of mass. Per-side counts, a coin-flip null,
            permutation p-values, and the γ/μ density concordance.</p>
@@ -161,7 +161,7 @@
 
       <a class="lp-card" href="axes.html" style="--accent:#e11d48">
         <span class="lp-card-tag">26 zygotes + 19 two-cell · sperm-positive</span>
-        <h2>Fertilization Geometry &amp; the First Axis</h2>
+        <h2>Fertilization Geometry vs First Cleavage</h2>
         <p>Does the sperm entry position (GFP midpiece) and the polar body (animal
            pole) predict the first cleavage plane? A shape-controlled, null-tested
            re-examination of the pre-patterning question — plus whether the
@@ -181,7 +181,7 @@
 
       <a class="lp-card" href="segments.html" style="--accent:#7c3aed">
         <span class="lp-card-tag">All embryos · 4 stages</span>
-        <h2>Segment Gene Enrichment</h2>
+        <h2>Gene Enrichment by Segment</h2>
         <p>For every embryo (oocyte → late 2-cell), assign transcripts to each
            segmentation label and rank the genes most enriched in each segment
            (density fold-change vs the embryo-wide average). One tab per segment.</p>
@@ -190,7 +190,7 @@
 
       <a class="lp-card" href="diffusion.html" style="--accent:#0284c7">
         <span class="lp-card-tag">Zygotes · passive-diffusion null</span>
-        <h2>Gene Diffusion Rates</h2>
+        <h2>mRNA Diffusion Rates</h2>
         <p>If a gene's mRNA simply diffused out of the nucleus, how long would it take to reach
            its observed spread? An animated Brownian null model clocked by each mRNA's size —
            genes far from the null hint at active transport or anchoring. Per-gene times, an
@@ -200,7 +200,7 @@
 
       <a class="lp-card" href="pronuclei-assignments.html" style="--accent:#db2777">
         <span class="lp-card-tag">Zygotes with 2 pronuclei</span>
-        <h2>Pronuclei Assignments</h2>
+        <h2>Maternal / Paternal Pronucleus ID</h2>
         <p>Which pronucleus is male and which is female? Several tests — distance to the
            polar body (centre-of-mass and shell), relative size, and distance to the sperm —
            each vote, and a consensus is taken. A ♀/♂ concordance grid per zygote, with the

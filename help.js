@@ -105,7 +105,7 @@
         <div class="help-callout">The <b>p-value</b> asks: could a split this lopsided happen by chance if each
         molecule flipped a fair coin for its side? Low p = unlikely to be luck.</div>` },
 
-    "sperm-division": { eyebrow: "Sperm Division Plane · the method", title: "One plane, fixed by the sperm",
+    "sperm-division": { eyebrow: "Sperm-Defined Division Plane · the method", title: "One plane, fixed by the sperm",
       html: `<p class="lede">Same question as Division Planes — is a gene's transcriptome lopsided across a plane? — but
         here we don't sweep 18 candidate planes. We test the <b>single</b> plane the geometry hands us: the one that
         passes through the <b>sperm</b>, the <b>polar-body centre of mass</b>, and the <b>cell centre of mass</b>.</p>
@@ -122,7 +122,7 @@
         <div class="help-callout">The sperm lies <i>in</i> this plane by construction, so it has no side — there is no
         sperm-concordance read-out here (unlike Division Planes, where the plane is free of the sperm).</div>` },
 
-    "diffusion": { eyebrow: "Gene Diffusion Rates · the model", title: "Could it just be diffusion?",
+    "diffusion": { eyebrow: "mRNA Diffusion Rates · the model", title: "Could it just be diffusion?",
       html: `<p class="lede">Every mRNA is born at the nucleus and spreads out. The simplest possible explanation for
         where a gene ends up is <b>passive diffusion</b> — no motors, no anchoring, just random Brownian jostling. This
         project builds that null model <i>explicitly</i> and asks one question: <b>how long</b> would pure diffusion need
@@ -226,7 +226,7 @@
         inert globules, whereas real mRNAs travel inside RNP granules through a crowded, structured, and partly flowing
         cytoplasm.</div>` },
 
-    "pseudotime-calibration": { eyebrow: "Pronuclear Pseudotime Calibration · the method", title: "How old is this fixed zygote?",
+    "pseudotime-calibration": { eyebrow: "Pronuclear Distance Clock · the method", title: "How old is this fixed zygote?",
       html: `<p class="lede">A fixed zygote is a single frozen snapshot — there is no clock in the image. But the
         two pronuclei <b>migrate toward the cell centre</b> at a fairly reproducible pace, so their positions carry
         information about how far the embryo has travelled between <b>pronuclear formation</b> and <b>NEBD</b>.
@@ -406,7 +406,7 @@
         high-res download. The right drawer ranks genes by their correlation with pseudotime across all three stages
         (405 genes appear in every stage, so trajectories are data-rich).</p>` },
 
-    "pronuclei-assignments": { eyebrow: "Pronuclei Assignments · the idea", title: "Which pronucleus is which?",
+    "pronuclei-assignments": { eyebrow: "Maternal / Paternal Pronucleus ID · the idea", title: "Which pronucleus is which?",
       html: `<p class="lede">A fertilised zygote has two pronuclei — one <b>maternal (female)</b>, one <b>paternal
         (male)</b> — but they look alike. Several independent clues each point to which is which; we let them vote.</p>
         <h3>The tests</h3>

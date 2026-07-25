@@ -12,20 +12,20 @@ import { cookieVal, accountByToken, allAccounts } from "../accounts.mjs";
 // The canonical project list (key = the page's basename without .html). Keep in sync with the
 // landing cards + middleware PROJECT_OF.
 export const PROJECTS = [
-  { key: "pronuclei", label: "Pronuclei Distance vs Transcripts" },
-  { key: "extpt", label: "Extended Pseudotime Analysis" },
-  { key: "segments", label: "Segment Gene Enrichment" },
-  { key: "zygote-planes", label: "Zygote Division Planes" },
-  { key: "sperm-division", label: "Sperm Division Plane" },
-  { key: "pronuclei-assignments", label: "Pronuclei Assignments" },
-  { key: "diffusion", label: "Gene Diffusion Rates" },
-  { key: "sperm-pca", label: "Sperm Prediction (PCA)" },
-  { key: "axes", label: "Fertilization Geometry" },
-  { key: "alphabeta", label: "Sperm α/β · 2-cell" },
-  { key: "pseudotime-calibration", label: "Pronuclear Pseudotime Calibration" },
-  { key: "vision-pseudotime", label: "Fixed-Image Pseudotime (pilot)" },
-  { key: "pronuclear-pseudotime", label: "3D Pronuclear Pseudotime" },
-  { key: "pn3d-transcripts", label: "Pseudotime vs Transcripts (3D)" },
+  { key: "pronuclei", label: "Transcripts vs Pronuclear Distance" },
+  { key: "extpt", label: "Transcripts Across Stages (zygote → 2-cell)" },
+  { key: "segments", label: "Gene Enrichment by Segment" },
+  { key: "zygote-planes", label: "Division Plane Sweep (18 candidates)" },
+  { key: "sperm-division", label: "Sperm-Defined Division Plane" },
+  { key: "pronuclei-assignments", label: "Maternal / Paternal Pronucleus ID" },
+  { key: "diffusion", label: "mRNA Diffusion Rates" },
+  { key: "sperm-pca", label: "Sperm Location Prediction (PCA)" },
+  { key: "axes", label: "Fertilization Geometry vs First Cleavage" },
+  { key: "alphabeta", label: "2-Cell Blastomere α/β Labelling" },
+  { key: "pseudotime-calibration", label: "Pronuclear Distance Clock" },
+  { key: "vision-pseudotime", label: "Pronuclear Image Clock (pilot)" },
+  { key: "pronuclear-pseudotime", label: "Pronuclear Structure Clock (3D)" },
+  { key: "pn3d-transcripts", label: "Transcripts vs Pseudotime (structure clock)" },
 ];
 const KEYS = new Set(PROJECTS.map((p) => p.key));
 const DEFAULTS = { "Kathy Tam": ["pronuclei", "extpt"] };   // seeded on first run

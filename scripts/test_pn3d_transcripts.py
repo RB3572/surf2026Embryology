@@ -22,6 +22,7 @@ sys.path.insert(0, HERE)
 from scripts.pn3d import crosswalk  # noqa: E402
 
 DATA = os.path.join(HERE, "data", "pn3d_transcripts.json")
+INFER = None
 FAILED, PASSED = [], []
 
 
@@ -37,6 +38,8 @@ def main():
         return 1
     D = json.load(open(DATA))
     rows, j = D["embryos"], D["join"]
+    global INFER
+    INFER = json.load(open(os.path.join(HERE, "data", "pn3d", "inference.json")))
 
     # ───────── join integrity ─────────
     print("[join integrity]")
@@ -62,8 +65,14 @@ def main():
     check("multi-embryo fields are present", len(multi) > 0, f"{len(multi)} fields")
     ok_distinct = all(len({x["tx_id"] for x in v}) == len(v) for v in multi.values())
     check("each embryo in a shared field has its OWN transcripts", ok_distinct)
-    ok_tau = all(len({x["tau"] for x in v}) > 1 or len(v) == 1 for v in multi.values())
-    check("embryos in a shared field have distinct tau (not collapsed)", ok_tau)
+    # Distinct embryos may legitimately land on the same isotonic step, so equal tau
+    # is NOT evidence of collapse. What must differ is the underlying measurement and
+    # the transcripts each one was given.
+    def geom_of(pid):
+        e = next((x for x in INFER["embryos"] if x["embryo_id"] == pid), None)
+        return ((e or {}).get("geometry") or {}).get("rms_over_R")
+    ok_geom = all(len({geom_of(x["pn3d_id"]) for x in v}) == len(v) for v in multi.values())
+    check("embryos in a shared field have distinct measured geometry", ok_geom)
     # every match must stay inside its own field of view
     same_field = all(crosswalk.field_key(r["pn3d_id"], "pn3d")
                      == crosswalk.field_key(r["tx_id"], "tx") for r in rows)

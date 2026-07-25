@@ -29,13 +29,28 @@ import train_pronuclear_pseudotime as T  # noqa: E402
 Z_50, Z_80, Z_95 = 0.6744898, 1.2815516, 1.9599640
 
 
-def load_scheffler(reference_radius_um: float):
-    """Return dimensionless sum/R, tau, and embryo groups from the live-imaging cohort."""
+def load_scheffler(reference_radius_um: float, feature: str = "rms"):
+    """
+    Dimensionless geometry, tau and embryo groups from the live-imaging cohort.
+
+    feature="rms" (default)  RMS distance of the pronuclei from the cell centre,
+                             sqrt((d_near² + d_far²)/2) / R. Defined for ANY
+                             number of pronuclei on the fixed side, so every
+                             embryo can be scored; on this two-pronucleus cohort
+                             it is the identical quantity, so the clock is
+                             trained on exactly what it is later asked to predict.
+    feature="sum"            the earlier (d_near + d_far) / R, kept for comparison.
+    """
     df, _ = T.load_and_validate()
-    s_over_R = (df["distance_sum_um"].to_numpy(float) / reference_radius_um)
+    near = df["nearer_to_center_um"].to_numpy(float)
+    far = df["farther_to_center_um"].to_numpy(float)
+    if feature == "sum":
+        x = (near + far) / reference_radius_um
+    else:
+        x = np.sqrt((near ** 2 + far ** 2) / 2.0) / reference_radius_um
     tau = df[T.TARGET].to_numpy(float)
     groups = df[T.GROUP].to_numpy()
-    return s_over_R, tau, groups
+    return x, tau, groups
 
 
 def _iso_fit(x, y):
@@ -74,8 +89,9 @@ def _sd_vs_tau(pred, resid, n_bins=8):
 class ProbClock:
     """Isotonic mean + heteroscedastic, calibrated Gaussian posterior on [0,1]."""
 
-    def __init__(self, reference_radius_um: float = 42.0):
+    def __init__(self, reference_radius_um: float = 42.0, feature: str = "rms"):
         self.R0 = float(reference_radius_um)
+        self.feature = feature
         self.iso = None
         self.sd_x = None
         self.sd_y = None
@@ -162,6 +178,9 @@ class ProbClock:
 
     def to_dict(self) -> dict:
         return {"kind": "IsotonicProbabilisticClock", "reference_radius_um": self.R0,
+                "input_feature": ("rms_over_R — RMS pronucleus→cell-centre distance ÷ cell radius; "
+                                  "defined for any pronucleus count"
+                                  if self.feature == "rms" else "sum_over_R"),
                 "iso_x": self.iso.f_.x.tolist(), "iso_y": self.iso.f_.y.tolist(),
                 "sd_x": self.sd_x.tolist(), "sd_y": self.sd_y.tolist(),
                 "calibration_scale": self.calib_c, "cv_metrics": self.cv,
@@ -171,6 +190,6 @@ class ProbClock:
                 "z_levels": {"50": Z_50, "80": Z_80, "95": Z_95}}
 
 
-def fit_default(reference_radius_um: float = 42.0) -> ProbClock:
-    x, y, g = load_scheffler(reference_radius_um)
-    return ProbClock(reference_radius_um).fit(x, y, g)
+def fit_default(reference_radius_um: float = 42.0, feature: str = "rms") -> ProbClock:
+    x, y, g = load_scheffler(reference_radius_um, feature)
+    return ProbClock(reference_radius_um, feature).fit(x, y, g)

@@ -1,0 +1,42 @@
+/* Pronuclear Structure Clock — page-specific bits.
+   Everything structural (.gd-*, .pt-*) comes from pseudotime-calibration.css so the
+   two pseudotime projects look identical. */
+
+/* orthogonal-plane strip (the model's visual input) */
+.pn-planes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 720px) { .pn-planes { grid-template-columns: 1fr; } }
+.pn-plane {
+  background: #eef2f7; border: 1px solid var(--line, #e5e9f0);
+  border-radius: 10px; overflow: hidden; text-align: center;
+}
+.pn-plane img { width: 100%; display: block; aspect-ratio: 1/1; object-fit: contain; background: #eef2f7; }
+.pn-plane .pn-cap { font-size: 11px; color: #64748b; padding: 5px 4px; }
+.pn-plane.pn-missing { display: flex; align-items: center; justify-content: center;
+  min-height: 150px; color: #94a3b8; font-size: 12px; font-style: italic; }
+
+/* structure legend */
+.pn-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11.5px; color: #64748b; margin-top: 8px; }
+.pn-sw { display: inline-block; width: 11px; height: 11px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; }
+
+/* constraint checklist */
+.pn-checks { display: grid; gap: 6px; font-size: 12.5px; }
+.pn-check { display: flex; gap: 8px; align-items: flex-start; }
+.pn-check .pn-mark { flex: 0 0 auto; font-weight: 800; width: 16px; text-align: center; }
+.pn-ok   { color: #15803d; }
+.pn-warn { color: #b45309; }
+.pn-bad  { color: #b42318; }
+
+/* per-embryo QC pills */
+.pn-pill { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 10.5px; font-weight: 700; }
+.pn-pill-ok   { background: #dcfce7; color: #15803d; }
+.pn-pill-warn { background: #fef3c7; color: #b45309; }
+.pn-pill-bad  { background: #fee2e2; color: #b42318; }
+
+/* advanced view: embryo table */
+.pn-table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+.pn-table th, .pn-table td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line, #e5e9f0); }
+.pn-table th { color: #64748b; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .03em; }
+.pn-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.pn-table tbody tr { cursor: pointer; }
+.pn-table tbody tr:hover { background: #f6f8fc; }
+.pn-scroll { max-height: 520px; overflow: auto; }

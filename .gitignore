@@ -20,4 +20,7 @@ __pycache__/
 # 3D pronuclear pseudotime — large/derived artifacts and resolved-path files out of git
 calibration_data/pn3d/derived/*
 !calibration_data/pn3d/derived/README.txt
+# per-embryo orthogonal previews ARE published: they are the model's visible input,
+# and the site shows them for every embryo (small downsampled PNGs, ~15 MB total)
+!calibration_data/pn3d/derived/previews/
 pn3d_local.json

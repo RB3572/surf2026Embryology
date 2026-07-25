@@ -73,11 +73,24 @@ def main():
     a_narrow = SA.audit(phantom(sep=8), vox)
     check("wider pronuclei → larger sum/R",
           a_wide["geometry"]["sum_over_R"] > a_narrow["geometry"]["sum_over_R"])
-    # only ONE pronucleus inside → must NOT be forced to resolved
+    # ONE pronucleus inside → still measured (a vision model should answer for
+    # atypical input) but labelled single_pronucleus, never silently called a pair
     one = phantom(with_polar=False)
     one[one == 3] = 0                                # delete the second pronucleus
     a1 = SA.audit(one, vox)
-    check("one pronucleus inside → unresolved (not forced)", a1["status"] == "unresolved")
+    check("one pronucleus inside → scored, not refused", a1["geometry"] is not None)
+    check("one pronucleus inside → labelled single_pronucleus",
+          a1["status"] == "single_pronucleus", a1["status"])
+    check("one pronucleus inside → never reported as two",
+          a1["geometry"]["n_pronuclei"] == 1)
+    check("single-pronucleus confidence is capped", a1["confidence"] <= 0.45)
+    check("generalized feature is defined for one pronucleus",
+          a1["geometry"].get("rms_over_R") is not None)
+    # ZERO pronuclei inside → genuinely unmeasurable
+    none_in = phantom(with_polar=False)
+    none_in[(none_in == 2) | (none_in == 3)] = 0
+    a0 = SA.audit(none_in, vox)
+    check("no pronucleus inside → unresolved (nothing to measure)", a0["status"] == "unresolved")
     check("audit records it never uses names",
           "geometric" in "".join(str(v) for v in [SA.__doc__]).lower() or True)
 
@@ -91,12 +104,20 @@ def main():
           f"cov95={cv['coverage_95']}")
     check("within-embryo monotonicity high (>0.9)", cv["within_embryo_mono_median"] > 0.9)
     # monotone: larger sum/R -> smaller (or equal) tau, never larger
-    taus = [clk.predict(s)["tau_mean"] for s in (0.4, 0.7, 1.0, 1.3, 1.6)]
-    check("clock is monotone non-increasing in sum/R",
+    taus = [clk.predict(s)["tau_mean"] for s in (0.25, 0.4, 0.55, 0.7, 0.85)]
+    check("clock is monotone non-increasing in the geometry feature",
           all(taus[i] >= taus[i + 1] - 1e-9 for i in range(len(taus) - 1)), str(taus))
-    # heteroscedastic: mid-range interval wider than the extremes
-    sd_mid = clk.predict(0.7)["tau_sd"]; sd_lo = clk.predict(1.6)["tau_sd"]
-    check("uncertainty is heteroscedastic (mid wider than extreme)", sd_mid > sd_lo)
+    # heteroscedastic: mid-tau interval wider than the extremes. Probe INSIDE the
+    # feature's real support (the rms feature spans a different range than the old
+    # sum feature, so hard-coded probes would silently clamp).
+    xs_sup, _, _ = CK.load_scheffler(42.0)
+    lo_x, hi_x = float(np.min(xs_sup)), float(np.max(xs_sup))
+    grid = np.linspace(lo_x, hi_x, 40)
+    preds = [(clk.predict(float(x)), float(x)) for x in grid]
+    mid = min(preds, key=lambda pr: abs(pr[0]["tau_mean"] - 0.5))[0]
+    extreme = min(preds, key=lambda pr: pr[0]["tau_mean"])[0]
+    check("uncertainty is heteroscedastic (mid-tau wider than extreme)",
+          mid["tau_sd"] > extreme["tau_sd"], f'mid={mid["tau_sd"]} extreme={extreme["tau_sd"]}')
     # deterministic
     clk2 = CK.fit_default(42.0)
     check("clock fit is deterministic", clk.predict(0.8) == clk2.predict(0.8))
@@ -137,8 +158,14 @@ def main():
           any(e["ood_level"] == "out_of_domain" for e in zy))
     check("2-cell references are all OOD (wrong stage)",
           all(e["ood_level"] == "out_of_domain" for e in inf["embryos"] if e["stage"] != "zygote"))
-    check("unresolved zygotes carry no tau (model refuses)",
-          all(e["pseudotime"] is None for e in zy if not e["inferable"]))
+    check("every zygote with measurable geometry is scored (nothing dropped)",
+          all(e["inferable"] for e in zy if e.get("geometry")))
+    one = [e for e in zy if (e.get("geometry") or {}).get("n_pronuclei") == 1]
+    check("single-pronucleus zygotes are scored", all(e["inferable"] for e in one), f"n={len(one)}")
+    check("single-pronucleus zygotes are all flagged out-of-domain",
+          all(e["ood_level"] == "out_of_domain" for e in one))
+    check("single-pronucleus zygotes carry an annotation-sensitivity range",
+          all("if_second_pronucleus_present" in (e["pseudotime"] or {}) for e in one))
     check("every inferable zygote has 50/80/95 intervals",
           all(all(k in e["pseudotime"] for k in ("interval_50", "interval_80", "interval_95"))
               for e in zy if e["inferable"]))

@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "generated_at_utc": "2026-07-25T10:07:43+00:00",
+ "generated_at_utc": "2026-07-25T19:06:22+00:00",
  "reference_radius_um": 41.315,
  "n": 73,
  "embryos": [
@@ -11,38 +11,43 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "caution",
    "ood_reasons": [
-    "sum/R 1.56 outside live p01-p99 [0.42, 1.49]"
+    "sum/R 0.79 outside live p01-p99 [0.21, 0.76]"
    ],
-   "feature_zscore_vs_live": 3.21,
+   "feature_zscore_vs_live": 3.23,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.793,
+    "rms_to_center_um": 36.23,
+    "cell_radius_um": 45.69,
+    "pron_vol_frac": 0.01329,
+    "polar_body_present": true,
     "sum_over_R": 1.5633,
     "near_over_R": 0.6477,
     "far_over_R": 0.9156,
     "inter_over_R": 1.2567,
-    "cell_radius_um": 45.69,
     "distance_sum_um": 71.419,
-    "vol_asymmetry": 0.0144,
-    "polar_body_present": true
+    "vol_asymmetry": 0.0144
    },
    "pseudotime": {
     "tau_mean": 0.0,
-    "tau_sd": 0.0262,
+    "tau_sd": 0.0253,
     "interval_50": [
      0.0,
-     0.0177
+     0.0171
     ],
     "interval_80": [
      0.0,
-     0.0335
+     0.0324
     ],
     "interval_95": [
      0.0,
-     0.0513
+     0.0496
     ],
-    "confidence": 0.925
+    "confidence": 0.928
    },
    "inferable": true
   },
@@ -53,36 +58,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.89,
+   "feature_zscore_vs_live": 0.94,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.4932,
+    "rms_to_center_um": 21.443,
+    "cell_radius_um": 43.48,
+    "pron_vol_frac": 0.03681,
+    "polar_body_present": true,
     "sum_over_R": 0.968,
     "near_over_R": 0.3893,
     "far_over_R": 0.5788,
     "inter_over_R": 0.5894,
-    "cell_radius_um": 43.48,
     "distance_sum_um": 42.087,
-    "vol_asymmetry": 0.2215,
-    "polar_body_present": true
+    "vol_asymmetry": 0.2215
    },
    "pseudotime": {
-    "tau_mean": 0.2003,
-    "tau_sd": 0.0717,
+    "tau_mean": 0.1809,
+    "tau_sd": 0.0673,
     "interval_50": [
-     0.152,
-     0.2486
+     0.1355,
+     0.2263
     ],
     "interval_80": [
-     0.1085,
-     0.2921
+     0.0946,
+     0.2671
     ],
     "interval_95": [
-     0.0599,
-     0.3407
+     0.049,
+     0.3128
     ],
-    "confidence": 0.795
+    "confidence": 0.808
    },
    "inferable": true
   },
@@ -91,37 +101,102 @@
    "experiment": "20251226_sample1_zygote_p1",
    "batch_date": "20251226",
    "stage": "zygote",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 2.57,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.7063,
+    "rms_to_center_um": 31.52,
+    "cell_radius_um": 44.63,
+    "pron_vol_frac": 0.00592,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0118,
+    "tau_sd": 0.0253,
+    "interval_50": [
+     0.0,
+     0.0289
+    ],
+    "interval_80": [
+     0.0,
+     0.0442
+    ],
+    "interval_95": [
+     0.0,
+     0.0614
+    ],
+    "confidence": 0.928,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0,
+     "tau_hi": 0.1408,
+     "tau_median": 0.0513,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20251226_sample1_zygote_p1/fov2/2_1",
    "experiment": "20251226_sample1_zygote_p1",
    "batch_date": "20251226",
    "stage": "zygote",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 1.06 outside live-training range [0.20, 0.88]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 5.28,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 1.0602,
+    "rms_to_center_um": 49.332,
+    "cell_radius_um": 46.53,
+    "pron_vol_frac": 0.01073,
+    "polar_body_present": false
+   },
+   "pseudotime": {
+    "tau_mean": 0.0,
+    "tau_sd": 0.0253,
+    "interval_50": [
+     0.0,
+     0.0171
+    ],
+    "interval_80": [
+     0.0,
+     0.0324
+    ],
+    "interval_95": [
+     0.0,
+     0.0496
+    ],
+    "confidence": 0.928,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0,
+     "tau_hi": 0.0047,
+     "tau_median": 0.0,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20251226_sample1_zygote_p1/fov2/2_2",
@@ -130,36 +205,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
    "feature_zscore_vs_live": 1.23,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.5322,
+    "rms_to_center_um": 24.481,
+    "cell_radius_um": 46.0,
+    "pron_vol_frac": 0.04086,
+    "polar_body_present": true,
     "sum_over_R": 1.0549,
     "near_over_R": 0.4563,
     "far_over_R": 0.5985,
     "inter_over_R": 0.6325,
-    "cell_radius_um": 46.0,
     "distance_sum_um": 48.522,
-    "vol_asymmetry": 0.1268,
-    "polar_body_present": true
+    "vol_asymmetry": 0.1268
    },
    "pseudotime": {
-    "tau_mean": 0.1401,
-    "tau_sd": 0.0538,
+    "tau_mean": 0.1137,
+    "tau_sd": 0.0435,
     "interval_50": [
-     0.1038,
-     0.1763
+     0.0844,
+     0.1431
     ],
     "interval_80": [
-     0.0712,
-     0.209
+     0.058,
+     0.1695
     ],
     "interval_95": [
-     0.0347,
-     0.2455
+     0.0285,
+     0.199
     ],
-    "confidence": 0.846
+    "confidence": 0.876
    },
    "inferable": true
   },
@@ -168,18 +248,50 @@
    "experiment": "20251226_sample1_zygote_p1",
    "batch_date": "20251226",
    "stage": "zygote",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 2.5,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.6968,
+    "rms_to_center_um": 33.2,
+    "cell_radius_um": 47.64,
+    "pron_vol_frac": 0.01051,
+    "polar_body_present": false
+   },
+   "pseudotime": {
+    "tau_mean": 0.0118,
+    "tau_sd": 0.0253,
+    "interval_50": [
+     0.0,
+     0.0289
+    ],
+    "interval_80": [
+     0.0,
+     0.0442
+    ],
+    "interval_95": [
+     0.0,
+     0.0614
+    ],
+    "confidence": 0.928,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0,
+     "tau_hi": 0.1408,
+     "tau_median": 0.0513,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20251226_sample1_zygote_p1/fov4",
@@ -188,36 +300,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 2.39,
+   "feature_zscore_vs_live": 2.5,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.6968,
+    "rms_to_center_um": 24.712,
+    "cell_radius_um": 35.46,
+    "pron_vol_frac": 0.11043,
+    "polar_body_present": true,
     "sum_over_R": 1.3531,
     "near_over_R": 0.5098,
     "far_over_R": 0.8433,
     "inter_over_R": 0.6973,
-    "cell_radius_um": 35.46,
     "distance_sum_um": 47.988,
-    "vol_asymmetry": 0.2524,
-    "polar_body_present": true
+    "vol_asymmetry": 0.2524
    },
    "pseudotime": {
-    "tau_mean": 0.0244,
-    "tau_sd": 0.0262,
+    "tau_mean": 0.0118,
+    "tau_sd": 0.0253,
     "interval_50": [
-     0.0067,
-     0.042
+     0.0,
+     0.0289
     ],
     "interval_80": [
      0.0,
-     0.0579
+     0.0442
     ],
     "interval_95": [
      0.0,
-     0.0757
+     0.0614
     ],
-    "confidence": 0.925
+    "confidence": 0.928
    },
    "inferable": true
   },
@@ -226,36 +343,100 @@
    "experiment": "20251226_sample1_zygote_p1",
    "batch_date": "20251226",
    "stage": "zygote",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 2.6,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.7102,
+    "rms_to_center_um": 31.767,
+    "cell_radius_um": 44.73,
+    "pron_vol_frac": 0.01416,
+    "polar_body_present": false
+   },
+   "pseudotime": {
+    "tau_mean": 0.0063,
+    "tau_sd": 0.0253,
+    "interval_50": [
+     0.0,
+     0.0233
+    ],
+    "interval_80": [
+     0.0,
+     0.0387
+    ],
+    "interval_95": [
+     0.0,
+     0.0559
+    ],
+    "confidence": 0.928,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0,
+     "tau_hi": 0.1408,
+     "tau_median": 0.0513,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20251226_sample1_zygote_p1/fov6",
    "experiment": "20251226_sample1_zygote_p1",
    "batch_date": "20251226",
    "stage": "zygote",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 2.81,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.737,
+    "rms_to_center_um": 32.515,
+    "cell_radius_um": 44.12,
+    "pron_vol_frac": 0.01522,
+    "polar_body_present": false
+   },
+   "pseudotime": {
+    "tau_mean": 0.0063,
+    "tau_sd": 0.0253,
+    "interval_50": [
+     0.0,
+     0.0233
+    ],
+    "interval_80": [
+     0.0,
+     0.0387
+    ],
+    "interval_95": [
+     0.0,
+     0.0559
+    ],
+    "confidence": 0.928,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0,
+     "tau_hi": 0.1137,
+     "tau_median": 0.0494,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20251226_sample1_zygote_p1/fov7",
@@ -264,36 +445,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.95,
+   "feature_zscore_vs_live": 1.04,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.5067,
+    "rms_to_center_um": 22.496,
+    "cell_radius_um": 44.4,
+    "pron_vol_frac": 0.02544,
+    "polar_body_present": true,
     "sum_over_R": 0.983,
     "near_over_R": 0.3685,
     "far_over_R": 0.6145,
     "inter_over_R": 0.8594,
-    "cell_radius_um": 44.4,
     "distance_sum_um": 43.647,
-    "vol_asymmetry": 0.1484,
-    "polar_body_present": true
+    "vol_asymmetry": 0.1484
    },
    "pseudotime": {
-    "tau_mean": 0.1897,
-    "tau_sd": 0.0708,
+    "tau_mean": 0.1408,
+    "tau_sd": 0.0531,
     "interval_50": [
-     0.1419,
-     0.2375
+     0.105,
+     0.1766
     ],
     "interval_80": [
-     0.0989,
-     0.2804
+     0.0728,
+     0.2088
     ],
     "interval_95": [
-     0.0509,
-     0.3285
+     0.0368,
+     0.2448
     ],
-    "confidence": 0.798
+    "confidence": 0.848
    },
    "inferable": true
   },
@@ -304,36 +490,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 1.68,
+   "feature_zscore_vs_live": 1.64,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.5847,
+    "rms_to_center_um": 25.237,
+    "cell_radius_um": 43.16,
+    "pron_vol_frac": 0.01213,
+    "polar_body_present": true,
     "sum_over_R": 1.1694,
     "near_over_R": 0.5811,
     "far_over_R": 0.5883,
     "inter_over_R": 1.0645,
-    "cell_radius_um": 43.16,
     "distance_sum_um": 50.474,
-    "vol_asymmetry": 0.3356,
-    "polar_body_present": true
+    "vol_asymmetry": 0.3356
    },
    "pseudotime": {
-    "tau_mean": 0.0867,
-    "tau_sd": 0.0348,
+    "tau_mean": 0.0789,
+    "tau_sd": 0.0311,
     "interval_50": [
-     0.0632,
-     0.1102
+     0.0579,
+     0.0999
     ],
     "interval_80": [
-     0.0421,
-     0.1313
+     0.039,
+     0.1188
     ],
     "interval_95": [
-     0.0185,
-     0.1549
+     0.0179,
+     0.1399
     ],
-    "confidence": 0.901
+    "confidence": 0.911
    },
    "inferable": true
   },
@@ -342,18 +533,51 @@
    "experiment": "20251226_sample1_zygote_p1",
    "batch_date": "20251226",
    "stage": "zygote",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 0.87 outside live p01-p99 [0.21, 0.76]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 3.82,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.8687,
+    "rms_to_center_um": 37.971,
+    "cell_radius_um": 43.71,
+    "pron_vol_frac": 0.01309,
+    "polar_body_present": false
+   },
+   "pseudotime": {
+    "tau_mean": 0.0,
+    "tau_sd": 0.0253,
+    "interval_50": [
+     0.0,
+     0.0171
+    ],
+    "interval_80": [
+     0.0,
+     0.0324
+    ],
+    "interval_95": [
+     0.0,
+     0.0496
+    ],
+    "confidence": 0.928,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0,
+     "tau_hi": 0.0494,
+     "tau_median": 0.0063,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260407_zygote_p1/fov0",
@@ -362,36 +586,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 1.08,
+   "feature_zscore_vs_live": 1.06,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.5099,
+    "rms_to_center_um": 22.166,
+    "cell_radius_um": 43.47,
+    "pron_vol_frac": 0.02677,
+    "polar_body_present": true,
     "sum_over_R": 1.0164,
     "near_over_R": 0.4662,
     "far_over_R": 0.5502,
     "inter_over_R": 0.636,
-    "cell_radius_um": 43.47,
     "distance_sum_um": 44.182,
-    "vol_asymmetry": 0.0519,
-    "polar_body_present": true
+    "vol_asymmetry": 0.0519
    },
    "pseudotime": {
-    "tau_mean": 0.1405,
-    "tau_sd": 0.0539,
+    "tau_mean": 0.1408,
+    "tau_sd": 0.0531,
     "interval_50": [
-     0.1041,
-     0.1769
+     0.105,
+     0.1766
     ],
     "interval_80": [
-     0.0714,
-     0.2096
+     0.0728,
+     0.2088
     ],
     "interval_95": [
-     0.0348,
-     0.2462
+     0.0368,
+     0.2448
     ],
-    "confidence": 0.846
+    "confidence": 0.848
    },
    "inferable": true
   },
@@ -402,36 +631,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.46,
+   "feature_zscore_vs_live": 0.44,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.4284,
+    "rms_to_center_um": 18.867,
+    "cell_radius_um": 44.04,
+    "pron_vol_frac": 0.05304,
+    "polar_body_present": true,
     "sum_over_R": 0.8568,
     "near_over_R": 0.4243,
     "far_over_R": 0.4324,
     "inter_over_R": 0.5892,
-    "cell_radius_um": 44.04,
     "distance_sum_um": 37.732,
-    "vol_asymmetry": 0.2652,
-    "polar_body_present": true
+    "vol_asymmetry": 0.2652
    },
    "pseudotime": {
-    "tau_mean": 0.2695,
-    "tau_sd": 0.0771,
+    "tau_mean": 0.2706,
+    "tau_sd": 0.0774,
     "interval_50": [
-     0.2175,
-     0.3215
+     0.2184,
+     0.3229
     ],
     "interval_80": [
-     0.1707,
-     0.3683
+     0.1715,
+     0.3698
     ],
     "interval_95": [
-     0.1184,
-     0.4206
+     0.119,
+     0.4223
     ],
-    "confidence": 0.78
+    "confidence": 0.779
    },
    "inferable": true
   },
@@ -442,36 +676,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 0.982,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.12,
+   "feature_zscore_vs_live": 0.22,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.4,
+    "rms_to_center_um": 11.635,
+    "cell_radius_um": 29.08,
+    "pron_vol_frac": 0.02996,
+    "polar_body_present": true,
     "sum_over_R": 0.7693,
     "near_over_R": 0.2748,
     "far_over_R": 0.4945,
     "inter_over_R": 0.7106,
-    "cell_radius_um": 29.08,
     "distance_sum_um": 22.376,
-    "vol_asymmetry": 0.4248,
-    "polar_body_present": true
+    "vol_asymmetry": 0.4248
    },
    "pseudotime": {
-    "tau_mean": 0.3842,
-    "tau_sd": 0.1037,
+    "tau_mean": 0.3377,
+    "tau_sd": 0.0885,
     "interval_50": [
-     0.3143,
-     0.4541
+     0.278,
+     0.3974
     ],
     "interval_80": [
-     0.2513,
-     0.517
+     0.2243,
+     0.4511
     ],
     "interval_95": [
-     0.181,
-     0.5874
+     0.1642,
+     0.5112
     ],
-    "confidence": 0.704
+    "confidence": 0.747
    },
    "inferable": true
   },
@@ -482,36 +721,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.46,
+   "feature_zscore_vs_live": 0.27,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.3362,
+    "rms_to_center_um": 14.626,
+    "cell_radius_um": 43.5,
+    "pron_vol_frac": 0.05539,
+    "polar_body_present": true,
     "sum_over_R": 0.6212,
     "near_over_R": 0.1817,
     "far_over_R": 0.4394,
     "inter_over_R": 0.5524,
-    "cell_radius_um": 43.5,
     "distance_sum_um": 27.019,
-    "vol_asymmetry": 0.3605,
-    "polar_body_present": true
+    "vol_asymmetry": 0.3605
    },
    "pseudotime": {
-    "tau_mean": 0.5895,
-    "tau_sd": 0.191,
+    "tau_mean": 0.5327,
+    "tau_sd": 0.166,
     "interval_50": [
-     0.4606,
-     0.7183
+     0.4207,
+     0.6447
     ],
     "interval_80": [
-     0.3447,
-     0.8343
+     0.32,
+     0.7455
     ],
     "interval_95": [
-     0.2151,
-     0.9638
+     0.2073,
+     0.8582
     ],
-    "confidence": 0.454
+    "confidence": 0.526
    },
    "inferable": true
   },
@@ -522,36 +766,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.01,
+   "feature_zscore_vs_live": 0.0,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.3716,
+    "rms_to_center_um": 14.712,
+    "cell_radius_um": 39.59,
+    "pron_vol_frac": 0.03332,
+    "polar_body_present": true,
     "sum_over_R": 0.7369,
     "near_over_R": 0.32,
     "far_over_R": 0.4169,
     "inter_over_R": 0.4788,
-    "cell_radius_um": 39.59,
     "distance_sum_um": 29.172,
-    "vol_asymmetry": 0.2183,
-    "polar_body_present": true
+    "vol_asymmetry": 0.2183
    },
    "pseudotime": {
-    "tau_mean": 0.425,
-    "tau_sd": 0.1169,
+    "tau_mean": 0.4256,
+    "tau_sd": 0.1137,
     "interval_50": [
-     0.3462,
-     0.5039
+     0.3489,
+     0.5023
     ],
     "interval_80": [
-     0.2753,
-     0.5748
+     0.2799,
+     0.5713
     ],
     "interval_95": [
-     0.196,
-     0.6541
+     0.2028,
+     0.6484
     ],
-    "confidence": 0.666
+    "confidence": 0.675
    },
    "inferable": true
   },
@@ -562,36 +811,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.5,
+   "feature_zscore_vs_live": 0.45,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.312,
+    "rms_to_center_um": 14.042,
+    "cell_radius_um": 45.01,
+    "pron_vol_frac": 0.05582,
+    "polar_body_present": true,
     "sum_over_R": 0.6108,
     "near_over_R": 0.2416,
     "far_over_R": 0.3692,
     "inter_over_R": 0.5953,
-    "cell_radius_um": 45.01,
     "distance_sum_um": 27.49,
-    "vol_asymmetry": 0.2404,
-    "polar_body_present": true
+    "vol_asymmetry": 0.2404
    },
    "pseudotime": {
-    "tau_mean": 0.6263,
-    "tau_sd": 0.1718,
+    "tau_mean": 0.6014,
+    "tau_sd": 0.1685,
     "interval_50": [
-     0.5105,
-     0.7422
+     0.4877,
+     0.7151
     ],
     "interval_80": [
-     0.4062,
-     0.8464
+     0.3854,
+     0.8174
     ],
     "interval_95": [
-     0.2897,
-     0.963
+     0.2711,
+     0.9317
     ],
-    "confidence": 0.509
+    "confidence": 0.518
    },
    "inferable": true
   },
@@ -602,36 +856,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.52,
+   "feature_zscore_vs_live": 0.6,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.4493,
+    "rms_to_center_um": 19.484,
+    "cell_radius_um": 43.37,
+    "pron_vol_frac": 0.03356,
+    "polar_body_present": true,
     "sum_over_R": 0.8725,
     "near_over_R": 0.3287,
     "far_over_R": 0.5438,
     "inter_over_R": 0.8004,
-    "cell_radius_um": 43.37,
     "distance_sum_um": 37.835,
-    "vol_asymmetry": 0.2255,
-    "polar_body_present": true
+    "vol_asymmetry": 0.2255
    },
    "pseudotime": {
-    "tau_mean": 0.2571,
-    "tau_sd": 0.0761,
+    "tau_mean": 0.239,
+    "tau_sd": 0.0744,
     "interval_50": [
-     0.2058,
-     0.3085
+     0.1888,
+     0.2892
     ],
     "interval_80": [
-     0.1596,
-     0.3547
+     0.1436,
+     0.3344
     ],
     "interval_95": [
-     0.1079,
-     0.4064
+     0.0931,
+     0.3849
     ],
-    "confidence": 0.782
+    "confidence": 0.787
    },
    "inferable": true
   },
@@ -642,36 +901,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.43,
+   "feature_zscore_vs_live": 0.46,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.4315,
+    "rms_to_center_um": 17.49,
+    "cell_radius_um": 40.53,
+    "pron_vol_frac": 0.0311,
+    "polar_body_present": true,
     "sum_over_R": 0.8475,
     "near_over_R": 0.3425,
     "far_over_R": 0.505,
     "inter_over_R": 0.7261,
-    "cell_radius_um": 40.53,
     "distance_sum_um": 34.354,
-    "vol_asymmetry": 0.1907,
-    "polar_body_present": true
+    "vol_asymmetry": 0.1907
    },
    "pseudotime": {
-    "tau_mean": 0.2695,
-    "tau_sd": 0.0771,
+    "tau_mean": 0.2706,
+    "tau_sd": 0.0774,
     "interval_50": [
-     0.2175,
-     0.3215
+     0.2184,
+     0.3229
     ],
     "interval_80": [
-     0.1707,
-     0.3683
+     0.1715,
+     0.3698
     ],
     "interval_95": [
-     0.1184,
-     0.4206
+     0.119,
+     0.4223
     ],
-    "confidence": 0.78
+    "confidence": 0.779
    },
    "inferable": true
   },
@@ -682,38 +946,43 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 0.8,
+   "n_pronuclei": 2,
    "flags": [
     "1 extra inside segment(s) beyond two pronuclei"
    ],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.55,
+   "feature_zscore_vs_live": 0.54,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.4412,
+    "rms_to_center_um": 20.056,
+    "cell_radius_um": 45.46,
+    "pron_vol_frac": 0.05518,
+    "polar_body_present": true,
     "sum_over_R": 0.8797,
     "near_over_R": 0.4059,
     "far_over_R": 0.4738,
     "inter_over_R": 0.5393,
-    "cell_radius_um": 45.46,
     "distance_sum_um": 39.993,
-    "vol_asymmetry": 0.2082,
-    "polar_body_present": true
+    "vol_asymmetry": 0.2082
    },
    "pseudotime": {
-    "tau_mean": 0.2528,
-    "tau_sd": 0.0758,
+    "tau_mean": 0.2529,
+    "tau_sd": 0.0757,
     "interval_50": [
-     0.2017,
+     0.2018,
      0.304
     ],
     "interval_80": [
-     0.1557,
+     0.1559,
      0.35
     ],
     "interval_95": [
-     0.1043,
+     0.1045,
      0.4014
     ],
-    "confidence": 0.783
+    "confidence": 0.784
    },
    "inferable": true
   },
@@ -724,36 +993,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 1.09,
+   "feature_zscore_vs_live": 1.07,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.5102,
+    "rms_to_center_um": 21.083,
+    "cell_radius_um": 41.32,
+    "pron_vol_frac": 0.05826,
+    "polar_body_present": false,
     "sum_over_R": 1.0177,
     "near_over_R": 0.4716,
     "far_over_R": 0.5461,
     "inter_over_R": 0.7341,
-    "cell_radius_um": 41.32,
     "distance_sum_um": 42.054,
-    "vol_asymmetry": 0.1501,
-    "polar_body_present": false
+    "vol_asymmetry": 0.1501
    },
    "pseudotime": {
-    "tau_mean": 0.1405,
-    "tau_sd": 0.0539,
+    "tau_mean": 0.1408,
+    "tau_sd": 0.0531,
     "interval_50": [
-     0.1041,
-     0.1769
+     0.105,
+     0.1766
     ],
     "interval_80": [
-     0.0714,
-     0.2096
+     0.0728,
+     0.2088
     ],
     "interval_95": [
-     0.0348,
-     0.2462
+     0.0368,
+     0.2448
     ],
-    "confidence": 0.846
+    "confidence": 0.848
    },
    "inferable": true
   },
@@ -764,36 +1038,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.26,
+   "feature_zscore_vs_live": 0.1,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.358,
+    "rms_to_center_um": 15.242,
+    "cell_radius_um": 42.58,
+    "pron_vol_frac": 0.06234,
+    "polar_body_present": true,
     "sum_over_R": 0.6718,
     "near_over_R": 0.2122,
     "far_over_R": 0.4597,
     "inter_over_R": 0.5446,
-    "cell_radius_um": 42.58,
     "distance_sum_um": 28.605,
-    "vol_asymmetry": 0.2463,
-    "polar_body_present": true
+    "vol_asymmetry": 0.2463
    },
    "pseudotime": {
-    "tau_mean": 0.5336,
-    "tau_sd": 0.1856,
+    "tau_mean": 0.4256,
+    "tau_sd": 0.1137,
     "interval_50": [
-     0.4084,
-     0.6588
+     0.3489,
+     0.5023
     ],
     "interval_80": [
-     0.2957,
-     0.7715
+     0.2799,
+     0.5713
     ],
     "interval_95": [
-     0.1698,
-     0.8974
+     0.2028,
+     0.6484
     ],
-    "confidence": 0.47
+    "confidence": 0.675
    },
    "inferable": true
   },
@@ -804,36 +1083,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.01,
+   "feature_zscore_vs_live": 0.03,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.3678,
+    "rms_to_center_um": 16.239,
+    "cell_radius_um": 44.15,
+    "pron_vol_frac": 0.05726,
+    "polar_body_present": true,
     "sum_over_R": 0.7357,
     "near_over_R": 0.3668,
     "far_over_R": 0.3688,
     "inter_over_R": 0.5579,
-    "cell_radius_um": 44.15,
     "distance_sum_um": 32.477,
-    "vol_asymmetry": 0.3326,
-    "polar_body_present": true
+    "vol_asymmetry": 0.3326
    },
    "pseudotime": {
-    "tau_mean": 0.425,
-    "tau_sd": 0.1169,
+    "tau_mean": 0.4256,
+    "tau_sd": 0.1137,
     "interval_50": [
-     0.3462,
-     0.5039
+     0.3489,
+     0.5023
     ],
     "interval_80": [
-     0.2753,
-     0.5748
+     0.2799,
+     0.5713
     ],
     "interval_95": [
-     0.196,
-     0.6541
+     0.2028,
+     0.6484
     ],
-    "confidence": 0.666
+    "confidence": 0.675
    },
    "inferable": true
   },
@@ -844,36 +1128,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.52,
+   "feature_zscore_vs_live": 0.53,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.3026,
+    "rms_to_center_um": 12.101,
+    "cell_radius_um": 39.98,
+    "pron_vol_frac": 0.07094,
+    "polar_body_present": false,
     "sum_over_R": 0.6039,
     "near_over_R": 0.2811,
     "far_over_R": 0.3228,
     "inter_over_R": 0.4878,
-    "cell_radius_um": 39.98,
     "distance_sum_um": 24.144,
-    "vol_asymmetry": 0.1555,
-    "polar_body_present": false
+    "vol_asymmetry": 0.1555
    },
    "pseudotime": {
-    "tau_mean": 0.6263,
-    "tau_sd": 0.1718,
+    "tau_mean": 0.6152,
+    "tau_sd": 0.164,
     "interval_50": [
-     0.5105,
-     0.7422
+     0.5046,
+     0.7258
     ],
     "interval_80": [
-     0.4062,
-     0.8464
+     0.405,
+     0.8254
     ],
     "interval_95": [
-     0.2897,
-     0.963
+     0.2938,
+     0.9367
     ],
-    "confidence": 0.509
+    "confidence": 0.531
    },
    "inferable": true
   },
@@ -884,36 +1173,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.34,
+   "feature_zscore_vs_live": 0.27,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.3362,
+    "rms_to_center_um": 14.996,
+    "cell_radius_um": 44.61,
+    "pron_vol_frac": 0.04076,
+    "polar_body_present": true,
     "sum_over_R": 0.6503,
     "near_over_R": 0.2397,
     "far_over_R": 0.4106,
     "inter_over_R": 0.54,
-    "cell_radius_um": 44.61,
     "distance_sum_um": 29.007,
-    "vol_asymmetry": 0.2706,
-    "polar_body_present": true
+    "vol_asymmetry": 0.2706
    },
    "pseudotime": {
-    "tau_mean": 0.5482,
-    "tau_sd": 0.1954,
+    "tau_mean": 0.5327,
+    "tau_sd": 0.166,
     "interval_50": [
-     0.4163,
-     0.68
+     0.4207,
+     0.6447
     ],
     "interval_80": [
-     0.2977,
-     0.7986
+     0.32,
+     0.7455
     ],
     "interval_95": [
-     0.1651,
-     0.9312
+     0.2073,
+     0.8582
     ],
-    "confidence": 0.442
+    "confidence": 0.526
    },
    "inferable": true
   },
@@ -924,36 +1218,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.73,
+   "feature_zscore_vs_live": 0.72,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.4645,
+    "rms_to_center_um": 18.548,
+    "cell_radius_um": 39.93,
+    "pron_vol_frac": 0.05293,
+    "polar_body_present": false,
     "sum_over_R": 0.9264,
     "near_over_R": 0.4283,
     "far_over_R": 0.4981,
     "inter_over_R": 0.5401,
-    "cell_radius_um": 39.93,
     "distance_sum_um": 36.991,
-    "vol_asymmetry": 0.0782,
-    "polar_body_present": false
+    "vol_asymmetry": 0.0782
    },
    "pseudotime": {
     "tau_mean": 0.2218,
-    "tau_sd": 0.0733,
+    "tau_sd": 0.0728,
     "interval_50": [
-     0.1723,
-     0.2712
+     0.1726,
+     0.2709
     ],
     "interval_80": [
-     0.1278,
-     0.3158
+     0.1284,
+     0.3151
     ],
     "interval_95": [
-     0.078,
-     0.3655
+     0.079,
+     0.3645
     ],
-    "confidence": 0.79
+    "confidence": 0.792
    },
    "inferable": true
   },
@@ -964,36 +1263,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.26,
+   "feature_zscore_vs_live": 0.23,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.3413,
+    "rms_to_center_um": 15.005,
+    "cell_radius_um": 43.97,
+    "pron_vol_frac": 0.05795,
+    "polar_body_present": true,
     "sum_over_R": 0.6717,
     "near_over_R": 0.2751,
     "far_over_R": 0.3966,
     "inter_over_R": 0.5393,
-    "cell_radius_um": 43.97,
     "distance_sum_um": 29.53,
-    "vol_asymmetry": 0.215,
-    "polar_body_present": true
+    "vol_asymmetry": 0.215
    },
    "pseudotime": {
-    "tau_mean": 0.5336,
-    "tau_sd": 0.1856,
+    "tau_mean": 0.5327,
+    "tau_sd": 0.166,
     "interval_50": [
-     0.4084,
-     0.6588
+     0.4207,
+     0.6447
     ],
     "interval_80": [
-     0.2957,
-     0.7715
+     0.32,
+     0.7455
     ],
     "interval_95": [
-     0.1698,
-     0.8974
+     0.2073,
+     0.8582
     ],
-    "confidence": 0.47
+    "confidence": 0.526
    },
    "inferable": true
   },
@@ -1002,19 +1306,52 @@
    "experiment": "20260407_zygote_p1",
    "batch_date": "20260407",
    "stage": "zygote",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 0.13 outside live-training range [0.20, 0.88]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 1.86,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.1291,
+    "rms_to_center_um": 4.679,
+    "cell_radius_um": 36.23,
+    "pron_vol_frac": 0.05535,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.9722,
+    "tau_sd": 0.0501,
+    "interval_50": [
+     0.9384,
+     1.0
+    ],
+    "interval_80": [
+     0.908,
+     1.0
+    ],
+    "interval_95": [
+     0.8739,
+     1.0
+    ],
+    "confidence": 0.857,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0084,
+     "tau_hi": 0.9722,
+     "tau_median": 0.4256,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260425_zygote_p2/fov0",
@@ -1023,36 +1360,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 2.0,
+   "feature_zscore_vs_live": 1.97,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.6284,
+    "rms_to_center_um": 25.205,
+    "cell_radius_um": 40.11,
+    "pron_vol_frac": 0.03516,
+    "polar_body_present": true,
     "sum_over_R": 1.2513,
     "near_over_R": 0.5672,
     "far_over_R": 0.6841,
     "inter_over_R": 1.1835,
-    "cell_radius_um": 40.11,
     "distance_sum_um": 50.192,
-    "vol_asymmetry": 0.1399,
-    "polar_body_present": true
+    "vol_asymmetry": 0.1399
    },
    "pseudotime": {
-    "tau_mean": 0.0525,
-    "tau_sd": 0.0262,
+    "tau_mean": 0.0494,
+    "tau_sd": 0.0253,
     "interval_50": [
-     0.0348,
-     0.0701
+     0.0323,
+     0.0664
     ],
     "interval_80": [
-     0.0189,
-     0.086
+     0.0169,
+     0.0818
     ],
     "interval_95": [
-     0.0012,
-     0.1038
+     0.0,
+     0.099
     ],
-    "confidence": 0.925
+    "confidence": 0.928
    },
    "inferable": true
   },
@@ -1063,36 +1405,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 1.5,
+   "feature_zscore_vs_live": 1.48,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.5638,
+    "rms_to_center_um": 23.67,
+    "cell_radius_um": 41.98,
+    "pron_vol_frac": 0.03952,
+    "polar_body_present": true,
     "sum_over_R": 1.1228,
     "near_over_R": 0.5092,
     "far_over_R": 0.6135,
     "inter_over_R": 1.0966,
-    "cell_radius_um": 41.98,
     "distance_sum_um": 47.137,
-    "vol_asymmetry": 0.1166,
-    "polar_body_present": true
+    "vol_asymmetry": 0.1166
    },
    "pseudotime": {
-    "tau_mean": 0.109,
-    "tau_sd": 0.0427,
+    "tau_mean": 0.1052,
+    "tau_sd": 0.0405,
     "interval_50": [
-     0.0802,
-     0.1378
+     0.0779,
+     0.1325
     ],
     "interval_80": [
-     0.0543,
-     0.1637
+     0.0534,
+     0.157
     ],
     "interval_95": [
-     0.0253,
-     0.1927
+     0.0259,
+     0.1845
     ],
-    "confidence": 0.878
+    "confidence": 0.884
    },
    "inferable": true
   },
@@ -1103,36 +1450,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.06,
+   "feature_zscore_vs_live": 0.05,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.3775,
+    "rms_to_center_um": 15.719,
+    "cell_radius_um": 41.64,
+    "pron_vol_frac": 0.07711,
+    "polar_body_present": true,
     "sum_over_R": 0.7527,
     "near_over_R": 0.3469,
     "far_over_R": 0.4059,
     "inter_over_R": 0.5694,
-    "cell_radius_um": 41.64,
     "distance_sum_um": 31.342,
-    "vol_asymmetry": 0.2023,
-    "polar_body_present": true
+    "vol_asymmetry": 0.2023
    },
    "pseudotime": {
-    "tau_mean": 0.4143,
-    "tau_sd": 0.1134,
+    "tau_mean": 0.4201,
+    "tau_sd": 0.1121,
     "interval_50": [
-     0.3378,
-     0.4908
+     0.3444,
+     0.4957
     ],
     "interval_80": [
-     0.269,
-     0.5597
+     0.2764,
+     0.5637
     ],
     "interval_95": [
-     0.192,
-     0.6366
+     0.2003,
+     0.6398
     ],
-    "confidence": 0.676
+    "confidence": 0.68
    },
    "inferable": true
   },
@@ -1141,18 +1493,51 @@
    "experiment": "20260425_zygote_p2",
    "batch_date": "20260425",
    "stage": "zygote",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 0.77 outside live p01-p99 [0.21, 0.76]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 3.02,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.7655,
+    "rms_to_center_um": 30.768,
+    "cell_radius_um": 40.19,
+    "pron_vol_frac": 0.02962,
+    "polar_body_present": false
+   },
+   "pseudotime": {
+    "tau_mean": 0.0047,
+    "tau_sd": 0.0253,
+    "interval_50": [
+     0.0,
+     0.0217
+    ],
+    "interval_80": [
+     0.0,
+     0.0371
+    ],
+    "interval_95": [
+     0.0,
+     0.0543
+    ],
+    "confidence": 0.928,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0,
+     "tau_hi": 0.1048,
+     "tau_median": 0.0404,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260425_zygote_p2/fov12",
@@ -1161,36 +1546,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 1.68,
+   "feature_zscore_vs_live": 1.65,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.5864,
+    "rms_to_center_um": 24.347,
+    "cell_radius_um": 41.52,
+    "pron_vol_frac": 0.04123,
+    "polar_body_present": true,
     "sum_over_R": 1.1691,
     "near_over_R": 0.5377,
     "far_over_R": 0.6315,
     "inter_over_R": 1.0272,
-    "cell_radius_um": 41.52,
     "distance_sum_um": 48.538,
-    "vol_asymmetry": 0.0531,
-    "polar_body_present": true
+    "vol_asymmetry": 0.0531
    },
    "pseudotime": {
-    "tau_mean": 0.0867,
-    "tau_sd": 0.0348,
+    "tau_mean": 0.0789,
+    "tau_sd": 0.0311,
     "interval_50": [
-     0.0632,
-     0.1102
+     0.0579,
+     0.0999
     ],
     "interval_80": [
-     0.0421,
-     0.1313
+     0.039,
+     0.1188
     ],
     "interval_95": [
-     0.0185,
-     0.1549
+     0.0179,
+     0.1399
     ],
-    "confidence": 0.901
+    "confidence": 0.911
    },
    "inferable": true
   },
@@ -1201,38 +1591,43 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 0.825,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "sum/R 1.79 outside live-training range [0.39, 1.76]"
+    "sum/R 0.92 outside live-training range [0.20, 0.88]"
    ],
-   "feature_zscore_vs_live": 4.09,
+   "feature_zscore_vs_live": 4.2,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.9188,
+    "rms_to_center_um": 37.623,
+    "cell_radius_um": 40.95,
+    "pron_vol_frac": 0.02346,
+    "polar_body_present": true,
     "sum_over_R": 1.7888,
     "near_over_R": 0.684,
     "far_over_R": 1.1048,
     "inter_over_R": 1.0535,
-    "cell_radius_um": 40.95,
     "distance_sum_um": 73.248,
-    "vol_asymmetry": 0.0797,
-    "polar_body_present": true
+    "vol_asymmetry": 0.0797
    },
    "pseudotime": {
     "tau_mean": 0.0,
-    "tau_sd": 0.0262,
+    "tau_sd": 0.0253,
     "interval_50": [
      0.0,
-     0.0177
+     0.0171
     ],
     "interval_80": [
      0.0,
-     0.0335
+     0.0324
     ],
     "interval_95": [
      0.0,
-     0.0513
+     0.0496
     ],
-    "confidence": 0.925
+    "confidence": 0.928
    },
    "inferable": true
   },
@@ -1243,36 +1638,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.2,
+   "feature_zscore_vs_live": 0.3,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.4104,
+    "rms_to_center_um": 16.777,
+    "cell_radius_um": 40.88,
+    "pron_vol_frac": 0.05767,
+    "polar_body_present": true,
     "sum_over_R": 0.7889,
     "near_over_R": 0.2812,
     "far_over_R": 0.5077,
     "inter_over_R": 0.6132,
-    "cell_radius_um": 40.88,
     "distance_sum_um": 32.25,
-    "vol_asymmetry": 0.1606,
-    "polar_body_present": true
+    "vol_asymmetry": 0.1606
    },
    "pseudotime": {
-    "tau_mean": 0.3693,
-    "tau_sd": 0.0989,
+    "tau_mean": 0.3241,
+    "tau_sd": 0.0846,
     "interval_50": [
-     0.3026,
-     0.436
+     0.267,
+     0.3812
     ],
     "interval_80": [
-     0.2426,
-     0.496
+     0.2157,
+     0.4326
     ],
     "interval_95": [
-     0.1756,
-     0.5631
+     0.1583,
+     0.49
     ],
-    "confidence": 0.718
+    "confidence": 0.758
    },
    "inferable": true
   },
@@ -1281,19 +1681,51 @@
    "experiment": "20260425_zygote_p2",
    "batch_date": "20260425",
    "stage": "zygote",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 1.41,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.5552,
+    "rms_to_center_um": 23.148,
+    "cell_radius_um": 41.69,
+    "pron_vol_frac": 0.01458,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.1137,
+    "tau_sd": 0.0435,
+    "interval_50": [
+     0.0844,
+     0.1431
+    ],
+    "interval_80": [
+     0.058,
+     0.1695
+    ],
+    "interval_95": [
+     0.0285,
+     0.199
+    ],
+    "confidence": 0.876,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0,
+     "tau_hi": 0.2973,
+     "tau_median": 0.133,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260425_zygote_p2/fov16",
@@ -1302,36 +1734,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 2.01,
+   "feature_zscore_vs_live": 1.96,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.6271,
+    "rms_to_center_um": 25.282,
+    "cell_radius_um": 40.31,
+    "pron_vol_frac": 0.04229,
+    "polar_body_present": true,
     "sum_over_R": 1.2543,
     "near_over_R": 0.6258,
     "far_over_R": 0.6285,
     "inter_over_R": 1.1793,
-    "cell_radius_um": 40.31,
     "distance_sum_um": 50.565,
-    "vol_asymmetry": 0.107,
-    "polar_body_present": true
+    "vol_asymmetry": 0.107
    },
    "pseudotime": {
-    "tau_mean": 0.0525,
-    "tau_sd": 0.0262,
+    "tau_mean": 0.0494,
+    "tau_sd": 0.0253,
     "interval_50": [
-     0.0348,
-     0.0701
+     0.0323,
+     0.0664
     ],
     "interval_80": [
-     0.0189,
-     0.086
+     0.0169,
+     0.0818
     ],
     "interval_95": [
-     0.0012,
-     0.1038
+     0.0,
+     0.099
     ],
-    "confidence": 0.925
+    "confidence": 0.928
    },
    "inferable": true
   },
@@ -1342,38 +1779,43 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 0.921,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "caution",
    "ood_reasons": [
-    "sum/R 1.57 outside live p01-p99 [0.42, 1.49]"
+    "sum/R 0.80 outside live p01-p99 [0.21, 0.76]"
    ],
-   "feature_zscore_vs_live": 3.24,
+   "feature_zscore_vs_live": 3.26,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.7967,
+    "rms_to_center_um": 34.188,
+    "cell_radius_um": 42.91,
+    "pron_vol_frac": 0.02252,
+    "polar_body_present": true,
     "sum_over_R": 1.5714,
     "near_over_R": 0.6536,
     "far_over_R": 0.9177,
     "inter_over_R": 1.211,
-    "cell_radius_um": 42.91,
     "distance_sum_um": 67.431,
-    "vol_asymmetry": 0.1079,
-    "polar_body_present": true
+    "vol_asymmetry": 0.1079
    },
    "pseudotime": {
     "tau_mean": 0.0,
-    "tau_sd": 0.0262,
+    "tau_sd": 0.0253,
     "interval_50": [
      0.0,
-     0.0177
+     0.0171
     ],
     "interval_80": [
      0.0,
-     0.0335
+     0.0324
     ],
     "interval_95": [
      0.0,
-     0.0513
+     0.0496
     ],
-    "confidence": 0.925
+    "confidence": 0.928
    },
    "inferable": true
   },
@@ -1384,36 +1826,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 1.19,
+   "feature_zscore_vs_live": 1.26,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.5361,
+    "rms_to_center_um": 21.031,
+    "cell_radius_um": 39.23,
+    "pron_vol_frac": 0.0505,
+    "polar_body_present": true,
     "sum_over_R": 1.0442,
     "near_over_R": 0.4006,
     "far_over_R": 0.6437,
     "inter_over_R": 1.0304,
-    "cell_radius_um": 39.23,
     "distance_sum_um": 40.967,
-    "vol_asymmetry": 0.0803,
-    "polar_body_present": true
+    "vol_asymmetry": 0.0803
    },
    "pseudotime": {
-    "tau_mean": 0.1401,
-    "tau_sd": 0.0538,
+    "tau_mean": 0.1137,
+    "tau_sd": 0.0435,
     "interval_50": [
-     0.1038,
-     0.1763
+     0.0844,
+     0.1431
     ],
     "interval_80": [
-     0.0712,
-     0.209
+     0.058,
+     0.1695
     ],
     "interval_95": [
-     0.0347,
-     0.2455
+     0.0285,
+     0.199
     ],
-    "confidence": 0.846
+    "confidence": 0.876
    },
    "inferable": true
   },
@@ -1422,19 +1869,51 @@
    "experiment": "20260425_zygote_p2",
    "batch_date": "20260425",
    "stage": "zygote",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 2.38,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.6812,
+    "rms_to_center_um": 27.441,
+    "cell_radius_um": 40.28,
+    "pron_vol_frac": 0.01228,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0301,
+    "tau_sd": 0.0253,
+    "interval_50": [
+     0.013,
+     0.0471
+    ],
+    "interval_80": [
+     0.0,
+     0.0625
+    ],
+    "interval_95": [
+     0.0,
+     0.0797
+    ],
+    "confidence": 0.928,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0,
+     "tau_hi": 0.1539,
+     "tau_median": 0.0577,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260425_zygote_p2/fov19",
@@ -1443,36 +1922,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 2.33,
+   "feature_zscore_vs_live": 2.28,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.6681,
+    "rms_to_center_um": 26.801,
+    "cell_radius_um": 40.12,
+    "pron_vol_frac": 0.03119,
+    "polar_body_present": true,
     "sum_over_R": 1.3359,
     "near_over_R": 0.6572,
     "far_over_R": 0.6788,
     "inter_over_R": 1.3326,
-    "cell_radius_um": 40.12,
     "distance_sum_um": 53.595,
-    "vol_asymmetry": 0.0494,
-    "polar_body_present": true
+    "vol_asymmetry": 0.0494
    },
    "pseudotime": {
-    "tau_mean": 0.0358,
-    "tau_sd": 0.0262,
+    "tau_mean": 0.0381,
+    "tau_sd": 0.0253,
     "interval_50": [
-     0.0181,
-     0.0534
+     0.021,
+     0.0552
     ],
     "interval_80": [
-     0.0022,
-     0.0693
+     0.0057,
+     0.0705
     ],
     "interval_95": [
      0.0,
-     0.0871
+     0.0877
     ],
-    "confidence": 0.925
+    "confidence": 0.928
    },
    "inferable": true
   },
@@ -1481,18 +1965,50 @@
    "experiment": "20260425_zygote_p2",
    "batch_date": "20260425",
    "stage": "zygote",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 2.95,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.756,
+    "rms_to_center_um": 30.825,
+    "cell_radius_um": 40.78,
+    "pron_vol_frac": 0.02416,
+    "polar_body_present": false
+   },
+   "pseudotime": {
+    "tau_mean": 0.0047,
+    "tau_sd": 0.0253,
+    "interval_50": [
+     0.0,
+     0.0217
+    ],
+    "interval_80": [
+     0.0,
+     0.0371
+    ],
+    "interval_95": [
+     0.0,
+     0.0543
+    ],
+    "confidence": 0.928,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0,
+     "tau_hi": 0.1137,
+     "tau_median": 0.0404,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260425_zygote_p2/fov2",
@@ -1501,40 +2017,45 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 0.8,
+   "n_pronuclei": 2,
    "flags": [
     "1 extra inside segment(s) beyond two pronuclei"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "sum/R 2.02 outside live-training range [0.39, 1.76]"
+    "sum/R 1.01 outside live-training range [0.20, 0.88]"
    ],
-   "feature_zscore_vs_live": 4.99,
+   "feature_zscore_vs_live": 4.91,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 1.0118,
+    "rms_to_center_um": 41.823,
+    "cell_radius_um": 41.33,
+    "pron_vol_frac": 0.02747,
+    "polar_body_present": false,
     "sum_over_R": 2.019,
     "near_over_R": 0.9408,
     "far_over_R": 1.0782,
     "inter_over_R": 0.5961,
-    "cell_radius_um": 41.33,
     "distance_sum_um": 83.452,
-    "vol_asymmetry": 0.0316,
-    "polar_body_present": false
+    "vol_asymmetry": 0.0316
    },
    "pseudotime": {
     "tau_mean": 0.0,
-    "tau_sd": 0.0262,
+    "tau_sd": 0.0253,
     "interval_50": [
      0.0,
-     0.0177
+     0.0171
     ],
     "interval_80": [
      0.0,
-     0.0335
+     0.0324
     ],
     "interval_95": [
      0.0,
-     0.0513
+     0.0496
     ],
-    "confidence": 0.925
+    "confidence": 0.928
    },
    "inferable": true
   },
@@ -1545,36 +2066,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.86,
+   "feature_zscore_vs_live": 0.89,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.4869,
+    "rms_to_center_um": 19.651,
+    "cell_radius_um": 40.36,
+    "pron_vol_frac": 0.07313,
+    "polar_body_present": true,
     "sum_over_R": 0.9596,
     "near_over_R": 0.3967,
     "far_over_R": 0.5629,
     "inter_over_R": 0.5862,
-    "cell_radius_um": 40.36,
     "distance_sum_um": 38.724,
-    "vol_asymmetry": 0.0785,
-    "polar_body_present": true
+    "vol_asymmetry": 0.0785
    },
    "pseudotime": {
-    "tau_mean": 0.2003,
-    "tau_sd": 0.0717,
+    "tau_mean": 0.2021,
+    "tau_sd": 0.071,
     "interval_50": [
-     0.152,
-     0.2486
+     0.1542,
+     0.2499
     ],
     "interval_80": [
-     0.1085,
-     0.2921
+     0.1111,
+     0.2931
     ],
     "interval_95": [
-     0.0599,
-     0.3407
+     0.0629,
+     0.3412
     ],
-    "confidence": 0.795
+    "confidence": 0.797
    },
    "inferable": true
   },
@@ -1585,36 +2111,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.36,
+   "feature_zscore_vs_live": 0.33,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.3277,
+    "rms_to_center_um": 13.07,
+    "cell_radius_um": 39.89,
+    "pron_vol_frac": 0.06033,
+    "polar_body_present": true,
     "sum_over_R": 0.6456,
     "near_over_R": 0.2666,
     "far_over_R": 0.379,
     "inter_over_R": 0.626,
-    "cell_radius_um": 39.89,
     "distance_sum_um": 25.753,
-    "vol_asymmetry": 0.1713,
-    "polar_body_present": true
+    "vol_asymmetry": 0.1713
    },
    "pseudotime": {
-    "tau_mean": 0.55,
-    "tau_sd": 0.1967,
+    "tau_mean": 0.5521,
+    "tau_sd": 0.176,
     "interval_50": [
-     0.4174,
-     0.6827
+     0.4334,
+     0.6708
     ],
     "interval_80": [
-     0.298,
-     0.8021
+     0.3266,
+     0.7776
     ],
     "interval_95": [
-     0.1645,
-     0.9355
+     0.2072,
+     0.897
     ],
-    "confidence": 0.438
+    "confidence": 0.497
    },
    "inferable": true
   },
@@ -1625,38 +2156,43 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "caution",
    "ood_reasons": [
-    "sum/R 1.70 outside live p01-p99 [0.42, 1.49]"
+    "sum/R 0.86 outside live p01-p99 [0.21, 0.76]"
    ],
-   "feature_zscore_vs_live": 3.74,
+   "feature_zscore_vs_live": 3.76,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.8616,
+    "rms_to_center_um": 34.119,
+    "cell_radius_um": 39.6,
+    "pron_vol_frac": 0.01467,
+    "polar_body_present": true,
     "sum_over_R": 1.7,
     "near_over_R": 0.7093,
     "far_over_R": 0.9907,
     "inter_over_R": 1.1784,
-    "cell_radius_um": 39.6,
     "distance_sum_um": 67.322,
-    "vol_asymmetry": 0.033,
-    "polar_body_present": true
+    "vol_asymmetry": 0.033
    },
    "pseudotime": {
     "tau_mean": 0.0,
-    "tau_sd": 0.0262,
+    "tau_sd": 0.0253,
     "interval_50": [
      0.0,
-     0.0177
+     0.0171
     ],
     "interval_80": [
      0.0,
-     0.0335
+     0.0324
     ],
     "interval_95": [
      0.0,
-     0.0513
+     0.0496
     ],
-    "confidence": 0.925
+    "confidence": 0.928
    },
    "inferable": true
   },
@@ -1667,36 +2203,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.57,
+   "feature_zscore_vs_live": 0.56,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.2976,
+    "rms_to_center_um": 12.151,
+    "cell_radius_um": 40.83,
+    "pron_vol_frac": 0.06176,
+    "polar_body_present": false,
     "sum_over_R": 0.5929,
     "near_over_R": 0.2704,
     "far_over_R": 0.3225,
     "inter_over_R": 0.5562,
-    "cell_radius_um": 40.83,
     "distance_sum_um": 24.208,
-    "vol_asymmetry": 0.2108,
-    "polar_body_present": false
+    "vol_asymmetry": 0.2108
    },
    "pseudotime": {
-    "tau_mean": 0.6314,
-    "tau_sd": 0.1691,
+    "tau_mean": 0.6509,
+    "tau_sd": 0.1523,
     "interval_50": [
-     0.5173,
-     0.7454
+     0.5482,
+     0.7536
     ],
     "interval_80": [
-     0.4147,
-     0.8481
+     0.4557,
+     0.8461
     ],
     "interval_95": [
-     0.2999,
-     0.9628
+     0.3524,
+     0.9494
     ],
-    "confidence": 0.517
+    "confidence": 0.565
    },
    "inferable": true
   },
@@ -1707,36 +2248,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 1.82,
+   "feature_zscore_vs_live": 1.8,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.6057,
+    "rms_to_center_um": 25.634,
+    "cell_radius_um": 42.32,
+    "pron_vol_frac": 0.04649,
+    "polar_body_present": true,
     "sum_over_R": 1.2061,
     "near_over_R": 0.5467,
     "far_over_R": 0.6594,
     "inter_over_R": 0.8361,
-    "cell_radius_um": 42.32,
     "distance_sum_um": 51.046,
-    "vol_asymmetry": 0.0745,
-    "polar_body_present": true
+    "vol_asymmetry": 0.0745
    },
    "pseudotime": {
-    "tau_mean": 0.0525,
-    "tau_sd": 0.0262,
+    "tau_mean": 0.0577,
+    "tau_sd": 0.0253,
     "interval_50": [
-     0.0348,
-     0.0701
+     0.0407,
+     0.0748
     ],
     "interval_80": [
-     0.0189,
-     0.086
+     0.0253,
+     0.0902
     ],
     "interval_95": [
-     0.0012,
-     0.1038
+     0.0081,
+     0.1073
     ],
-    "confidence": 0.925
+    "confidence": 0.928
    },
    "inferable": true
   },
@@ -1745,36 +2291,102 @@
    "experiment": "20260425_zygote_p2",
    "batch_date": "20260425",
    "stage": "zygote",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 0.83 outside live p01-p99 [0.21, 0.76]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 3.52,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.8304,
+    "rms_to_center_um": 34.24,
+    "cell_radius_um": 41.24,
+    "pron_vol_frac": 0.02411,
+    "polar_body_present": false
+   },
+   "pseudotime": {
+    "tau_mean": 0.0,
+    "tau_sd": 0.0253,
+    "interval_50": [
+     0.0,
+     0.0171
+    ],
+    "interval_80": [
+     0.0,
+     0.0324
+    ],
+    "interval_95": [
+     0.0,
+     0.0496
+    ],
+    "confidence": 0.928,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0,
+     "tau_hi": 0.0553,
+     "tau_median": 0.0228,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260425_zygote_p2/fov25",
    "experiment": "20260425_zygote_p2",
    "batch_date": "20260425",
    "stage": "zygote",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 0.86 outside live p01-p99 [0.21, 0.76]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 3.72,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.856,
+    "rms_to_center_um": 34.638,
+    "cell_radius_um": 40.47,
+    "pron_vol_frac": 0.0187,
+    "polar_body_present": false
+   },
+   "pseudotime": {
+    "tau_mean": 0.0,
+    "tau_sd": 0.0253,
+    "interval_50": [
+     0.0,
+     0.0171
+    ],
+    "interval_80": [
+     0.0,
+     0.0324
+    ],
+    "interval_95": [
+     0.0,
+     0.0496
+    ],
+    "confidence": 0.928,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0,
+     "tau_hi": 0.0506,
+     "tau_median": 0.0118,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260425_zygote_p2/fov25/0",
@@ -1783,36 +2395,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.26,
+   "feature_zscore_vs_live": 0.27,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.3366,
+    "rms_to_center_um": 13.685,
+    "cell_radius_um": 40.66,
+    "pron_vol_frac": 0.05547,
+    "polar_body_present": true,
     "sum_over_R": 0.6717,
     "near_over_R": 0.3136,
     "far_over_R": 0.358,
     "inter_over_R": 0.5354,
-    "cell_radius_um": 40.66,
     "distance_sum_um": 27.31,
-    "vol_asymmetry": 0.2533,
-    "polar_body_present": true
+    "vol_asymmetry": 0.2533
    },
    "pseudotime": {
-    "tau_mean": 0.5336,
-    "tau_sd": 0.1856,
+    "tau_mean": 0.5327,
+    "tau_sd": 0.166,
     "interval_50": [
-     0.4084,
-     0.6588
+     0.4207,
+     0.6447
     ],
     "interval_80": [
-     0.2957,
-     0.7715
+     0.32,
+     0.7455
     ],
     "interval_95": [
-     0.1698,
-     0.8974
+     0.2073,
+     0.8582
     ],
-    "confidence": 0.47
+    "confidence": 0.526
    },
    "inferable": true
   },
@@ -1823,36 +2440,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.63,
+   "feature_zscore_vs_live": 0.53,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.3021,
+    "rms_to_center_um": 12.476,
+    "cell_radius_um": 41.3,
+    "pron_vol_frac": 0.06394,
+    "polar_body_present": false,
     "sum_over_R": 0.5756,
     "near_over_R": 0.196,
     "far_over_R": 0.3796,
     "inter_over_R": 0.5147,
-    "cell_radius_um": 41.3,
     "distance_sum_um": 23.773,
-    "vol_asymmetry": 0.2313,
-    "polar_body_present": false
+    "vol_asymmetry": 0.2313
    },
    "pseudotime": {
-    "tau_mean": 0.6434,
-    "tau_sd": 0.1628,
+    "tau_mean": 0.6152,
+    "tau_sd": 0.164,
     "interval_50": [
-     0.5336,
-     0.7532
+     0.5046,
+     0.7258
     ],
     "interval_80": [
-     0.4348,
-     0.8521
+     0.405,
+     0.8254
     ],
     "interval_95": [
-     0.3243,
-     0.9626
+     0.2938,
+     0.9367
     ],
-    "confidence": 0.535
+    "confidence": 0.531
    },
    "inferable": true
   },
@@ -1861,19 +2483,51 @@
    "experiment": "20260425_zygote_p2",
    "batch_date": "20260425",
    "stage": "zygote",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 0.9,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.4888,
+    "rms_to_center_um": 19.162,
+    "cell_radius_um": 39.2,
+    "pron_vol_frac": 0.01193,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.2021,
+    "tau_sd": 0.071,
+    "interval_50": [
+     0.1542,
+     0.2499
+    ],
+    "interval_80": [
+     0.1111,
+     0.2931
+    ],
+    "interval_95": [
+     0.0629,
+     0.3412
+    ],
+    "confidence": 0.797,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0,
+     "tau_hi": 0.403,
+     "tau_median": 0.1713,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260425_zygote_p2/fov4",
@@ -1882,34 +2536,39 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
    "feature_zscore_vs_live": 0.49,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.4357,
+    "rms_to_center_um": 17.966,
+    "cell_radius_um": 41.24,
+    "pron_vol_frac": 0.07125,
+    "polar_body_present": true,
     "sum_over_R": 0.8649,
     "near_over_R": 0.3796,
     "far_over_R": 0.4853,
     "inter_over_R": 0.6131,
-    "cell_radius_um": 41.24,
     "distance_sum_um": 35.666,
-    "vol_asymmetry": 0.2076,
-    "polar_body_present": true
+    "vol_asymmetry": 0.2076
    },
    "pseudotime": {
-    "tau_mean": 0.2671,
-    "tau_sd": 0.0769,
+    "tau_mean": 0.2682,
+    "tau_sd": 0.0772,
     "interval_50": [
-     0.2152,
-     0.319
+     0.2162,
+     0.3203
     ],
     "interval_80": [
-     0.1685,
-     0.3656
+     0.1693,
+     0.3671
     ],
     "interval_95": [
-     0.1163,
-     0.4178
+     0.117,
+     0.4195
     ],
     "confidence": 0.78
    },
@@ -1922,36 +2581,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 0.81,
+   "feature_zscore_vs_live": 0.92,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.4915,
+    "rms_to_center_um": 20.69,
+    "cell_radius_um": 42.1,
+    "pron_vol_frac": 0.03317,
+    "polar_body_present": true,
     "sum_over_R": 0.9454,
     "near_over_R": 0.3382,
     "far_over_R": 0.6072,
     "inter_over_R": 0.5591,
-    "cell_radius_um": 42.1,
     "distance_sum_um": 39.8,
-    "vol_asymmetry": 0.1596,
-    "polar_body_present": true
+    "vol_asymmetry": 0.1596
    },
    "pseudotime": {
-    "tau_mean": 0.2003,
-    "tau_sd": 0.0717,
+    "tau_mean": 0.199,
+    "tau_sd": 0.0707,
     "interval_50": [
-     0.152,
-     0.2486
+     0.1513,
+     0.2467
     ],
     "interval_80": [
-     0.1085,
-     0.2921
+     0.1084,
+     0.2896
     ],
     "interval_95": [
-     0.0599,
-     0.3407
+     0.0604,
+     0.3376
     ],
-    "confidence": 0.795
+    "confidence": 0.798
    },
    "inferable": true
   },
@@ -1962,36 +2626,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 1.96,
+   "feature_zscore_vs_live": 1.94,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.6244,
+    "rms_to_center_um": 26.085,
+    "cell_radius_um": 41.78,
+    "pron_vol_frac": 0.0334,
+    "polar_body_present": true,
     "sum_over_R": 1.243,
     "near_over_R": 0.5615,
     "far_over_R": 0.6815,
     "inter_over_R": 0.9508,
-    "cell_radius_um": 41.78,
     "distance_sum_um": 51.928,
-    "vol_asymmetry": 0.1793,
-    "polar_body_present": true
+    "vol_asymmetry": 0.1793
    },
    "pseudotime": {
-    "tau_mean": 0.0525,
-    "tau_sd": 0.0262,
+    "tau_mean": 0.0509,
+    "tau_sd": 0.0253,
     "interval_50": [
-     0.0348,
-     0.0701
+     0.0338,
+     0.0679
     ],
     "interval_80": [
-     0.0189,
-     0.086
+     0.0184,
+     0.0833
     ],
     "interval_95": [
-     0.0012,
-     0.1038
+     0.0013,
+     0.1004
     ],
-    "confidence": 0.925
+    "confidence": 0.928
    },
    "inferable": true
   },
@@ -2002,36 +2671,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 1.76,
+   "feature_zscore_vs_live": 1.73,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.597,
+    "rms_to_center_um": 24.666,
+    "cell_radius_um": 41.31,
+    "pron_vol_frac": 0.02991,
+    "polar_body_present": true,
     "sum_over_R": 1.1906,
     "near_over_R": 0.5497,
     "far_over_R": 0.6409,
     "inter_over_R": 0.6755,
-    "cell_radius_um": 41.31,
     "distance_sum_um": 49.188,
-    "vol_asymmetry": 0.1305,
-    "polar_body_present": true
+    "vol_asymmetry": 0.1305
    },
    "pseudotime": {
-    "tau_mean": 0.0525,
-    "tau_sd": 0.0262,
+    "tau_mean": 0.0577,
+    "tau_sd": 0.0253,
     "interval_50": [
-     0.0348,
-     0.0701
+     0.0407,
+     0.0748
     ],
     "interval_80": [
-     0.0189,
-     0.086
+     0.0253,
+     0.0902
     ],
     "interval_95": [
-     0.0012,
-     0.1038
+     0.0081,
+     0.1073
     ],
-    "confidence": 0.925
+    "confidence": 0.928
    },
    "inferable": true
   },
@@ -2042,36 +2716,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 2.15,
+   "feature_zscore_vs_live": 2.11,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.6458,
+    "rms_to_center_um": 25.688,
+    "cell_radius_um": 39.78,
+    "pron_vol_frac": 0.02436,
+    "polar_body_present": true,
     "sum_over_R": 1.2916,
     "near_over_R": 0.6434,
     "far_over_R": 0.6482,
     "inter_over_R": 0.7453,
-    "cell_radius_um": 39.78,
     "distance_sum_um": 51.376,
-    "vol_asymmetry": 0.0331,
-    "polar_body_present": true
+    "vol_asymmetry": 0.0331
    },
    "pseudotime": {
-    "tau_mean": 0.0374,
-    "tau_sd": 0.0262,
+    "tau_mean": 0.0404,
+    "tau_sd": 0.0253,
     "interval_50": [
-     0.0197,
-     0.055
+     0.0234,
+     0.0575
     ],
     "interval_80": [
-     0.0038,
-     0.0709
+     0.008,
+     0.0729
     ],
     "interval_95": [
      0.0,
-     0.0887
+     0.09
     ],
-    "confidence": 0.925
+    "confidence": 0.928
    },
    "inferable": true
   },
@@ -2082,38 +2761,43 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 0.877,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "caution",
    "ood_reasons": [
-    "sum/R 1.62 outside live p01-p99 [0.42, 1.49]"
+    "sum/R 0.84 outside live p01-p99 [0.21, 0.76]"
    ],
-   "feature_zscore_vs_live": 3.44,
+   "feature_zscore_vs_live": 3.59,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.8392,
+    "rms_to_center_um": 33.585,
+    "cell_radius_um": 40.02,
+    "pron_vol_frac": 0.02858,
+    "polar_body_present": true,
     "sum_over_R": 1.6227,
     "near_over_R": 0.597,
     "far_over_R": 1.0257,
     "inter_over_R": 1.2049,
-    "cell_radius_um": 40.02,
     "distance_sum_um": 64.943,
-    "vol_asymmetry": 0.1352,
-    "polar_body_present": true
+    "vol_asymmetry": 0.1352
    },
    "pseudotime": {
     "tau_mean": 0.0,
-    "tau_sd": 0.0262,
+    "tau_sd": 0.0253,
     "interval_50": [
      0.0,
-     0.0177
+     0.0171
     ],
     "interval_80": [
      0.0,
-     0.0335
+     0.0324
     ],
     "interval_95": [
      0.0,
-     0.0513
+     0.0496
     ],
-    "confidence": 0.925
+    "confidence": 0.928
    },
    "inferable": true
   },
@@ -2124,36 +2808,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 1.61,
+   "feature_zscore_vs_live": 1.59,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.5779,
+    "rms_to_center_um": 23.668,
+    "cell_radius_um": 40.95,
+    "pron_vol_frac": 0.02229,
+    "polar_body_present": true,
     "sum_over_R": 1.1531,
     "near_over_R": 0.5365,
     "far_over_R": 0.6165,
     "inter_over_R": 0.541,
-    "cell_radius_um": 40.95,
     "distance_sum_um": 47.222,
-    "vol_asymmetry": 0.0804,
-    "polar_body_present": true
+    "vol_asymmetry": 0.0804
    },
    "pseudotime": {
-    "tau_mean": 0.0867,
-    "tau_sd": 0.0348,
+    "tau_mean": 0.0899,
+    "tau_sd": 0.035,
     "interval_50": [
-     0.0632,
-     0.1102
+     0.0663,
+     0.1135
     ],
     "interval_80": [
-     0.0421,
-     0.1313
+     0.045,
+     0.1348
     ],
     "interval_95": [
-     0.0185,
-     0.1549
+     0.0213,
+     0.1585
     ],
-    "confidence": 0.901
+    "confidence": 0.9
    },
    "inferable": true
   },
@@ -2164,36 +2853,41 @@
    "stage": "zygote",
    "segmentation_status": "resolved",
    "segmentation_confidence": 1.0,
+   "n_pronuclei": 2,
    "flags": [],
    "ood_level": "in_domain",
    "ood_reasons": [],
-   "feature_zscore_vs_live": 2.13,
+   "feature_zscore_vs_live": 2.15,
    "geometry": {
+    "n_pronuclei": 2,
+    "rms_over_R": 0.6515,
+    "rms_to_center_um": 26.821,
+    "cell_radius_um": 41.17,
+    "pron_vol_frac": 0.03414,
+    "polar_body_present": true,
     "sum_over_R": 1.2858,
     "near_over_R": 0.5375,
     "far_over_R": 0.7483,
     "inter_over_R": 1.2211,
-    "cell_radius_um": 41.17,
     "distance_sum_um": 52.934,
-    "vol_asymmetry": 0.0626,
-    "polar_body_present": true
+    "vol_asymmetry": 0.0626
    },
    "pseudotime": {
-    "tau_mean": 0.0374,
-    "tau_sd": 0.0262,
+    "tau_mean": 0.0404,
+    "tau_sd": 0.0253,
     "interval_50": [
-     0.0197,
-     0.055
+     0.0234,
+     0.0575
     ],
     "interval_80": [
-     0.0038,
-     0.0709
+     0.008,
+     0.0729
     ],
     "interval_95": [
      0.0,
-     0.0887
+     0.09
     ],
-    "confidence": 0.925
+    "confidence": 0.928
    },
    "inferable": true
   },
@@ -2202,219 +2896,581 @@
    "experiment": "20260425_zygote_p2",
    "batch_date": "20260425",
    "stage": "zygote",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 0.92,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.4907,
+    "rms_to_center_um": 20.35,
+    "cell_radius_um": 41.47,
+    "pron_vol_frac": 0.01048,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.199,
+    "tau_sd": 0.0707,
+    "interval_50": [
+     0.1513,
+     0.2467
+    ],
+    "interval_80": [
+     0.1084,
+     0.2896
+    ],
+    "interval_95": [
+     0.0604,
+     0.3376
+    ],
+    "confidence": 0.798,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0,
+     "tau_hi": 0.3889,
+     "tau_median": 0.1617,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260212_sample4_l2c_p2/fov0",
    "experiment": "20260212_sample4_l2c_p2",
    "batch_date": "20260212",
    "stage": "l2c",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
     "stage l2c is not a pronuclear zygote",
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 0.07 outside live-training range [0.20, 0.88]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 2.34,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.066,
+    "rms_to_center_um": 1.949,
+    "cell_radius_um": 29.56,
+    "pron_vol_frac": 0.08037,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.9722,
+    "tau_sd": 0.0501,
+    "interval_50": [
+     0.9384,
+     1.0
+    ],
+    "interval_80": [
+     0.908,
+     1.0
+    ],
+    "interval_95": [
+     0.8739,
+     1.0
+    ],
+    "confidence": 0.857,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0084,
+     "tau_hi": 0.9722,
+     "tau_median": 0.4256,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260212_sample4_l2c_p2/fov0/0_1",
    "experiment": "20260212_sample4_l2c_p2",
    "batch_date": "20260212",
    "stage": "l2c",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
     "stage l2c is not a pronuclear zygote",
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 0.06 outside live-training range [0.20, 0.88]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 2.37,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.0618,
+    "rms_to_center_um": 1.929,
+    "cell_radius_um": 31.23,
+    "pron_vol_frac": 0.08857,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.9722,
+    "tau_sd": 0.0501,
+    "interval_50": [
+     0.9384,
+     1.0
+    ],
+    "interval_80": [
+     0.908,
+     1.0
+    ],
+    "interval_95": [
+     0.8739,
+     1.0
+    ],
+    "confidence": 0.857,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0084,
+     "tau_hi": 0.9722,
+     "tau_median": 0.4256,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260212_sample4_l2c_p2/fov1",
    "experiment": "20260212_sample4_l2c_p2",
    "batch_date": "20260212",
    "stage": "l2c",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
     "stage l2c is not a pronuclear zygote",
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 0.06 outside live-training range [0.20, 0.88]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 2.4,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.0583,
+    "rms_to_center_um": 1.874,
+    "cell_radius_um": 32.12,
+    "pron_vol_frac": 0.06943,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.9722,
+    "tau_sd": 0.0501,
+    "interval_50": [
+     0.9384,
+     1.0
+    ],
+    "interval_80": [
+     0.908,
+     1.0
+    ],
+    "interval_95": [
+     0.8739,
+     1.0
+    ],
+    "confidence": 0.857,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0084,
+     "tau_hi": 0.9722,
+     "tau_median": 0.4256,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260408_e2c_p2/fov0",
    "experiment": "20260408_e2c_p2",
    "batch_date": "20260408",
    "stage": "e2c",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
     "stage e2c is not a pronuclear zygote",
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 0.04 outside live-training range [0.20, 0.88]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 2.52,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.0432,
+    "rms_to_center_um": 1.44,
+    "cell_radius_um": 33.31,
+    "pron_vol_frac": 0.05213,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.9722,
+    "tau_sd": 0.0501,
+    "interval_50": [
+     0.9384,
+     1.0
+    ],
+    "interval_80": [
+     0.908,
+     1.0
+    ],
+    "interval_95": [
+     0.8739,
+     1.0
+    ],
+    "confidence": 0.857,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0084,
+     "tau_hi": 0.9722,
+     "tau_median": 0.4256,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260408_e2c_p2/fov1",
    "experiment": "20260408_e2c_p2",
    "batch_date": "20260408",
    "stage": "e2c",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
     "stage e2c is not a pronuclear zygote",
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 0.01 outside live-training range [0.20, 0.88]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 2.77,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.0105,
+    "rms_to_center_um": 0.356,
+    "cell_radius_um": 33.94,
+    "pron_vol_frac": 0.05695,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.9722,
+    "tau_sd": 0.0501,
+    "interval_50": [
+     0.9384,
+     1.0
+    ],
+    "interval_80": [
+     0.908,
+     1.0
+    ],
+    "interval_95": [
+     0.8739,
+     1.0
+    ],
+    "confidence": 0.857,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0084,
+     "tau_hi": 0.9722,
+     "tau_median": 0.4341,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260408_e2c_p2/fov10",
    "experiment": "20260408_e2c_p2",
    "batch_date": "20260408",
    "stage": "e2c",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
     "stage e2c is not a pronuclear zygote",
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 0.08 outside live-training range [0.20, 0.88]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 2.23,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.0806,
+    "rms_to_center_um": 3.106,
+    "cell_radius_um": 38.52,
+    "pron_vol_frac": 0.05286,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.9722,
+    "tau_sd": 0.0501,
+    "interval_50": [
+     0.9384,
+     1.0
+    ],
+    "interval_80": [
+     0.908,
+     1.0
+    ],
+    "interval_95": [
+     0.8739,
+     1.0
+    ],
+    "confidence": 0.857,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0084,
+     "tau_hi": 0.9722,
+     "tau_median": 0.4256,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260408_e2c_p2/fov11",
    "experiment": "20260408_e2c_p2",
    "batch_date": "20260408",
    "stage": "e2c",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
     "stage e2c is not a pronuclear zygote",
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 0.04 outside live-training range [0.20, 0.88]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 2.54,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.0395,
+    "rms_to_center_um": 1.282,
+    "cell_radius_um": 32.42,
+    "pron_vol_frac": 0.06045,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.9722,
+    "tau_sd": 0.0501,
+    "interval_50": [
+     0.9384,
+     1.0
+    ],
+    "interval_80": [
+     0.908,
+     1.0
+    ],
+    "interval_95": [
+     0.8739,
+     1.0
+    ],
+    "confidence": 0.857,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0084,
+     "tau_hi": 0.9722,
+     "tau_median": 0.4256,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260408_e2c_p2/fov12",
    "experiment": "20260408_e2c_p2",
    "batch_date": "20260408",
    "stage": "e2c",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
     "stage e2c is not a pronuclear zygote",
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 0.09 outside live-training range [0.20, 0.88]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 2.13,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.0935,
+    "rms_to_center_um": 3.137,
+    "cell_radius_um": 33.55,
+    "pron_vol_frac": 0.06203,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.9722,
+    "tau_sd": 0.0501,
+    "interval_50": [
+     0.9384,
+     1.0
+    ],
+    "interval_80": [
+     0.908,
+     1.0
+    ],
+    "interval_95": [
+     0.8739,
+     1.0
+    ],
+    "confidence": 0.857,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0084,
+     "tau_hi": 0.9722,
+     "tau_median": 0.4256,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260408_e2c_p2/fov13",
    "experiment": "20260408_e2c_p2",
    "batch_date": "20260408",
    "stage": "e2c",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
     "stage e2c is not a pronuclear zygote",
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 0.13 outside live-training range [0.20, 0.88]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 1.87,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.1271,
+    "rms_to_center_um": 4.42,
+    "cell_radius_um": 34.78,
+    "pron_vol_frac": 0.05992,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.9722,
+    "tau_sd": 0.0501,
+    "interval_50": [
+     0.9384,
+     1.0
+    ],
+    "interval_80": [
+     0.908,
+     1.0
+    ],
+    "interval_95": [
+     0.8739,
+     1.0
+    ],
+    "confidence": 0.857,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0084,
+     "tau_hi": 0.9722,
+     "tau_median": 0.4256,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   },
   {
    "embryo_id": "20260408_e2c_p2/fov14",
    "experiment": "20260408_e2c_p2",
    "batch_date": "20260408",
    "stage": "e2c",
-   "segmentation_status": "unresolved",
-   "segmentation_confidence": 0.0,
+   "segmentation_status": "single_pronucleus",
+   "segmentation_confidence": 0.45,
+   "n_pronuclei": 1,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "ood_level": "out_of_domain",
    "ood_reasons": [
     "stage e2c is not a pronuclear zygote",
-    "segmentation unresolved"
+    "single annotated pronucleus \u2014 geometry extrapolates beyond the two-pronucleus configuration the clock was calibrated on",
+    "sum/R 0.07 outside live-training range [0.20, 0.88]"
    ],
-   "feature_zscore_vs_live": null,
-   "inferable": false,
-   "pseudotime": null
+   "feature_zscore_vs_live": 2.33,
+   "geometry": {
+    "n_pronuclei": 1,
+    "rms_over_R": 0.0671,
+    "rms_to_center_um": 2.173,
+    "cell_radius_um": 32.37,
+    "pron_vol_frac": 0.06992,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.9722,
+    "tau_sd": 0.0501,
+    "interval_50": [
+     0.9384,
+     1.0
+    ],
+    "interval_80": [
+     0.908,
+     1.0
+    ],
+    "interval_95": [
+     0.8739,
+     1.0
+    ],
+    "confidence": 0.857,
+    "if_second_pronucleus_present": {
+     "tau_lo": 0.0084,
+     "tau_hi": 0.9722,
+     "tau_median": 0.4256,
+     "n_hypotheses": 96,
+     "note": "range of tau if the unlabelled second pronucleus sat at any distance observed in the two-pronucleus cohort; this is annotation uncertainty, which the calibrated clock interval does NOT cover"
+    }
+   },
+   "inferable": true
   }
  ]
 }

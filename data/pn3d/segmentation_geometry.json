@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "package_version": "pn3d-0.1.0",
- "generated_at_utc": "2026-07-25T10:07:22+00:00",
+ "generated_at_utc": "2026-07-25T19:04:37+00:00",
  "audit_params": {
   "z_step": 2,
   "xy_step": 6,
@@ -14,7 +14,7 @@
   "semantics_source": "geometric audit \u2014 NOT segment/file names"
  },
  "n_zygotes_audited": 63,
- "n_zygotes_resolved": 48,
+ "n_zygotes_resolved": 63,
  "n_2cell_ood": 10,
  "embryos": [
   {
@@ -42,6 +42,7 @@
    ],
    "polar_body_label": 2,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      220.91,
      187.39,
@@ -49,24 +50,32 @@
     ],
     "cell_volume_um3": 399406.7,
     "cell_radius_um": 45.69,
-    "nearer_to_center_um": 29.59,
-    "farther_to_center_um": 41.829,
-    "distance_sum_um": 71.419,
-    "inter_pn_um": 57.413,
-    "pron_volume_near_um3": 2616.1,
-    "pron_volume_far_um3": 2692.7,
     "pron_labels": [
      4,
      5
     ],
+    "pron_distances_um": [
+     29.59,
+     41.829
+    ],
+    "pron_volumes_um3": [
+     2692.7,
+     2616.1
+    ],
+    "rms_to_center_um": 36.23,
+    "rms_over_R": 0.793,
+    "pron_vol_frac": 0.01329,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 29.59,
+    "farther_to_center_um": 41.829,
+    "distance_sum_um": 71.419,
+    "inter_pn_um": 57.413,
     "near_over_R": 0.6477,
     "far_over_R": 0.9156,
     "sum_over_R": 1.5633,
     "inter_over_R": 1.2567,
-    "vol_asymmetry": 0.0144,
-    "pron_vol_frac": 0.01329,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.0144
    },
    "is_pronuclear_target": true
   },
@@ -95,6 +104,7 @@
    ],
    "polar_body_label": 2,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      194.98,
      198.86,
@@ -102,24 +112,32 @@
     ],
     "cell_volume_um3": 344234.8,
     "cell_radius_um": 43.48,
-    "nearer_to_center_um": 16.924,
-    "farther_to_center_um": 25.163,
-    "distance_sum_um": 42.087,
-    "inter_pn_um": 25.626,
-    "pron_volume_near_um3": 4932.9,
-    "pron_volume_far_um3": 7739.5,
     "pron_labels": [
      5,
      4
     ],
+    "pron_distances_um": [
+     16.924,
+     25.163
+    ],
+    "pron_volumes_um3": [
+     7739.5,
+     4932.9
+    ],
+    "rms_to_center_um": 21.443,
+    "rms_over_R": 0.4932,
+    "pron_vol_frac": 0.03681,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 16.924,
+    "farther_to_center_um": 25.163,
+    "distance_sum_um": 42.087,
+    "inter_pn_um": 25.626,
     "near_over_R": 0.3893,
     "far_over_R": 0.5788,
     "sum_over_R": 0.968,
     "inter_over_R": 0.5894,
-    "vol_asymmetry": 0.2215,
-    "pron_vol_frac": 0.03681,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.2215
    },
    "is_pronuclear_target": true
   },
@@ -138,10 +156,10 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 1,
@@ -149,7 +167,30 @@
     3
    ],
    "polar_body_label": 2,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     210.32,
+     171.29,
+     136.79
+    ],
+    "cell_volume_um3": 372263.8,
+    "cell_radius_um": 44.63,
+    "pron_labels": [
+     3
+    ],
+    "pron_distances_um": [
+     31.52
+    ],
+    "pron_volumes_um3": [
+     2204.5
+    ],
+    "rms_to_center_um": 31.52,
+    "rms_over_R": 0.7063,
+    "pron_vol_frac": 0.00592,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": true
   },
   {
@@ -167,17 +208,40 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "cell_body_label": 1,
    "pronucleus_labels": [
     2
    ],
    "polar_body_label": null,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     195.61,
+     219.76,
+     142.3
+    ],
+    "cell_volume_um3": 421953.5,
+    "cell_radius_um": 46.53,
+    "pron_labels": [
+     2
+    ],
+    "pron_distances_um": [
+     49.332
+    ],
+    "pron_volumes_um3": [
+     4528.1
+    ],
+    "rms_to_center_um": 49.332,
+    "rms_over_R": 1.0602,
+    "pron_vol_frac": 0.01073,
+    "polar_body_present": false,
+    "polar_body_external": false
+   },
    "is_pronuclear_target": true
   },
   {
@@ -205,6 +269,7 @@
    ],
    "polar_body_label": 2,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      227.44,
      100.96,
@@ -212,24 +277,32 @@
     ],
     "cell_volume_um3": 407677.0,
     "cell_radius_um": 46.0,
-    "nearer_to_center_um": 20.99,
-    "farther_to_center_um": 27.532,
-    "distance_sum_um": 48.522,
-    "inter_pn_um": 29.096,
-    "pron_volume_near_um3": 7273.5,
-    "pron_volume_far_um3": 9386.1,
     "pron_labels": [
      3,
      4
     ],
+    "pron_distances_um": [
+     20.99,
+     27.532
+    ],
+    "pron_volumes_um3": [
+     9386.1,
+     7273.5
+    ],
+    "rms_to_center_um": 24.481,
+    "rms_over_R": 0.5322,
+    "pron_vol_frac": 0.04086,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 20.99,
+    "farther_to_center_um": 27.532,
+    "distance_sum_um": 48.522,
+    "inter_pn_um": 29.096,
     "near_over_R": 0.4563,
     "far_over_R": 0.5985,
     "sum_over_R": 1.0549,
     "inter_over_R": 0.6325,
-    "vol_asymmetry": 0.1268,
-    "pron_vol_frac": 0.04086,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.1268
    },
    "is_pronuclear_target": true
   },
@@ -248,17 +321,40 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "cell_body_label": 1,
    "pronucleus_labels": [
     2
    ],
    "polar_body_label": null,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     219.26,
+     168.16,
+     143.3
+    ],
+    "cell_volume_um3": 453042.6,
+    "cell_radius_um": 47.64,
+    "pron_labels": [
+     2
+    ],
+    "pron_distances_um": [
+     33.2
+    ],
+    "pron_volumes_um3": [
+     4759.4
+    ],
+    "rms_to_center_um": 33.2,
+    "rms_over_R": 0.6968,
+    "pron_vol_frac": 0.01051,
+    "polar_body_present": false,
+    "polar_body_external": false
+   },
    "is_pronuclear_target": true
   },
   {
@@ -286,6 +382,7 @@
    ],
    "polar_body_label": 2,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      200.5,
      166.06,
@@ -293,24 +390,32 @@
     ],
     "cell_volume_um3": 186832.7,
     "cell_radius_um": 35.46,
-    "nearer_to_center_um": 18.081,
-    "farther_to_center_um": 29.907,
-    "distance_sum_um": 47.988,
-    "inter_pn_um": 24.728,
-    "pron_volume_near_um3": 12919.1,
-    "pron_volume_far_um3": 7712.3,
     "pron_labels": [
      4,
      3
     ],
+    "pron_distances_um": [
+     29.907,
+     18.081
+    ],
+    "pron_volumes_um3": [
+     12919.1,
+     7712.3
+    ],
+    "rms_to_center_um": 24.712,
+    "rms_over_R": 0.6968,
+    "pron_vol_frac": 0.11043,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 18.081,
+    "farther_to_center_um": 29.907,
+    "distance_sum_um": 47.988,
+    "inter_pn_um": 24.728,
     "near_over_R": 0.5098,
     "far_over_R": 0.8433,
     "sum_over_R": 1.3531,
     "inter_over_R": 0.6973,
-    "vol_asymmetry": 0.2524,
-    "pron_vol_frac": 0.11043,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.2524
    },
    "is_pronuclear_target": true
   },
@@ -329,17 +434,40 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "cell_body_label": 1,
    "pronucleus_labels": [
     2
    ],
    "polar_body_label": null,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     212.49,
+     174.15,
+     139.25
+    ],
+    "cell_volume_um3": 374789.8,
+    "cell_radius_um": 44.73,
+    "pron_labels": [
+     2
+    ],
+    "pron_distances_um": [
+     31.767
+    ],
+    "pron_volumes_um3": [
+     5308.8
+    ],
+    "rms_to_center_um": 31.767,
+    "rms_over_R": 0.7102,
+    "pron_vol_frac": 0.01416,
+    "polar_body_present": false,
+    "polar_body_external": false
+   },
    "is_pronuclear_target": true
   },
   {
@@ -357,17 +485,40 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "cell_body_label": 1,
    "pronucleus_labels": [
     2
    ],
    "polar_body_label": null,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     202.97,
+     182.01,
+     132.53
+    ],
+    "cell_volume_um3": 359661.1,
+    "cell_radius_um": 44.12,
+    "pron_labels": [
+     2
+    ],
+    "pron_distances_um": [
+     32.515
+    ],
+    "pron_volumes_um3": [
+     5475.5
+    ],
+    "rms_to_center_um": 32.515,
+    "rms_over_R": 0.737,
+    "pron_vol_frac": 0.01522,
+    "polar_body_present": false,
+    "polar_body_external": false
+   },
    "is_pronuclear_target": true
   },
   {
@@ -395,6 +546,7 @@
    ],
    "polar_body_label": 2,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      202.47,
      183.2,
@@ -402,24 +554,32 @@
     ],
     "cell_volume_um3": 366669.3,
     "cell_radius_um": 44.4,
-    "nearer_to_center_um": 16.363,
-    "farther_to_center_um": 27.284,
-    "distance_sum_um": 43.647,
-    "inter_pn_um": 38.157,
-    "pron_volume_near_um3": 5356.4,
-    "pron_volume_far_um3": 3971.8,
     "pron_labels": [
      4,
      3
     ],
+    "pron_distances_um": [
+     27.284,
+     16.363
+    ],
+    "pron_volumes_um3": [
+     5356.4,
+     3971.8
+    ],
+    "rms_to_center_um": 22.496,
+    "rms_over_R": 0.5067,
+    "pron_vol_frac": 0.02544,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 16.363,
+    "farther_to_center_um": 27.284,
+    "distance_sum_um": 43.647,
+    "inter_pn_um": 38.157,
     "near_over_R": 0.3685,
     "far_over_R": 0.6145,
     "sum_over_R": 0.983,
     "inter_over_R": 0.8594,
-    "vol_asymmetry": 0.1484,
-    "pron_vol_frac": 0.02544,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.1484
    },
    "is_pronuclear_target": true
   },
@@ -448,6 +608,7 @@
    ],
    "polar_body_label": 2,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      216.82,
      164.29,
@@ -455,24 +616,32 @@
     ],
     "cell_volume_um3": 336828.6,
     "cell_radius_um": 43.16,
-    "nearer_to_center_um": 25.083,
-    "farther_to_center_um": 25.391,
-    "distance_sum_um": 50.474,
-    "inter_pn_um": 45.947,
-    "pron_volume_near_um3": 1357.4,
-    "pron_volume_far_um3": 2728.4,
     "pron_labels": [
      4,
      3
     ],
+    "pron_distances_um": [
+     25.083,
+     25.391
+    ],
+    "pron_volumes_um3": [
+     2728.4,
+     1357.4
+    ],
+    "rms_to_center_um": 25.237,
+    "rms_over_R": 0.5847,
+    "pron_vol_frac": 0.01213,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 25.083,
+    "farther_to_center_um": 25.391,
+    "distance_sum_um": 50.474,
+    "inter_pn_um": 45.947,
     "near_over_R": 0.5811,
     "far_over_R": 0.5883,
     "sum_over_R": 1.1694,
     "inter_over_R": 1.0645,
-    "vol_asymmetry": 0.3356,
-    "pron_vol_frac": 0.01213,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.3356
    },
    "is_pronuclear_target": true
   },
@@ -491,17 +660,40 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "cell_body_label": 1,
    "pronucleus_labels": [
     2
    ],
    "polar_body_label": null,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     207.21,
+     173.41,
+     142.02
+    ],
+    "cell_volume_um3": 349860.0,
+    "cell_radius_um": 43.71,
+    "pron_labels": [
+     2
+    ],
+    "pron_distances_um": [
+     37.971
+    ],
+    "pron_volumes_um3": [
+     4580.8
+    ],
+    "rms_to_center_um": 37.971,
+    "rms_over_R": 0.8687,
+    "pron_vol_frac": 0.01309,
+    "polar_body_present": false,
+    "polar_body_external": false
+   },
    "is_pronuclear_target": true
   },
   {
@@ -529,6 +721,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      172.86,
      102.14,
@@ -536,24 +729,32 @@
     ],
     "cell_volume_um3": 344090.2,
     "cell_radius_um": 43.47,
-    "nearer_to_center_um": 20.265,
-    "farther_to_center_um": 23.917,
-    "distance_sum_um": 44.182,
-    "inter_pn_um": 27.646,
-    "pron_volume_near_um3": 4844.4,
-    "pron_volume_far_um3": 4366.5,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     23.917,
+     20.265
+    ],
+    "pron_volumes_um3": [
+     4844.4,
+     4366.5
+    ],
+    "rms_to_center_um": 22.166,
+    "rms_over_R": 0.5099,
+    "pron_vol_frac": 0.02677,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 20.265,
+    "farther_to_center_um": 23.917,
+    "distance_sum_um": 44.182,
+    "inter_pn_um": 27.646,
     "near_over_R": 0.4662,
     "far_over_R": 0.5502,
     "sum_over_R": 1.0164,
     "inter_over_R": 0.636,
-    "vol_asymmetry": 0.0519,
-    "pron_vol_frac": 0.02677,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.0519
    },
    "is_pronuclear_target": true
   },
@@ -582,6 +783,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      177.39,
      214.86,
@@ -589,24 +791,32 @@
     ],
     "cell_volume_um3": 357784.9,
     "cell_radius_um": 44.04,
-    "nearer_to_center_um": 18.687,
-    "farther_to_center_um": 19.045,
-    "distance_sum_um": 37.732,
-    "inter_pn_um": 25.949,
-    "pron_volume_near_um3": 6972.4,
-    "pron_volume_far_um3": 12005.7,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     18.687,
+     19.045
+    ],
+    "pron_volumes_um3": [
+     12005.7,
+     6972.4
+    ],
+    "rms_to_center_um": 18.867,
+    "rms_over_R": 0.4284,
+    "pron_vol_frac": 0.05304,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 18.687,
+    "farther_to_center_um": 19.045,
+    "distance_sum_um": 37.732,
+    "inter_pn_um": 25.949,
     "near_over_R": 0.4243,
     "far_over_R": 0.4324,
     "sum_over_R": 0.8568,
     "inter_over_R": 0.5892,
-    "vol_asymmetry": 0.2652,
-    "pron_vol_frac": 0.05304,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.2652
    },
    "is_pronuclear_target": true
   },
@@ -635,6 +845,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      158.64,
      179.84,
@@ -642,24 +853,32 @@
     ],
     "cell_volume_um3": 103060.2,
     "cell_radius_um": 29.08,
-    "nearer_to_center_um": 7.992,
-    "farther_to_center_um": 14.383,
-    "distance_sum_um": 22.376,
-    "inter_pn_um": 20.666,
-    "pron_volume_near_um3": 2199.4,
-    "pron_volume_far_um3": 887.9,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     14.383,
+     7.992
+    ],
+    "pron_volumes_um3": [
+     2199.4,
+     887.9
+    ],
+    "rms_to_center_um": 11.635,
+    "rms_over_R": 0.4,
+    "pron_vol_frac": 0.02996,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 7.992,
+    "farther_to_center_um": 14.383,
+    "distance_sum_um": 22.376,
+    "inter_pn_um": 20.666,
     "near_over_R": 0.2748,
     "far_over_R": 0.4945,
     "sum_over_R": 0.7693,
     "inter_over_R": 0.7106,
-    "vol_asymmetry": 0.4248,
-    "pron_vol_frac": 0.02996,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.4248
    },
    "is_pronuclear_target": true
   },
@@ -688,6 +907,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      151.87,
      163.59,
@@ -695,24 +915,32 @@
     ],
     "cell_volume_um3": 344748.5,
     "cell_radius_um": 43.5,
-    "nearer_to_center_um": 7.905,
-    "farther_to_center_um": 19.114,
-    "distance_sum_um": 27.019,
-    "inter_pn_um": 24.029,
-    "pron_volume_near_um3": 6106.6,
-    "pron_volume_far_um3": 12990.5,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     7.905,
+     19.114
+    ],
+    "pron_volumes_um3": [
+     12990.5,
+     6106.6
+    ],
+    "rms_to_center_um": 14.626,
+    "rms_over_R": 0.3362,
+    "pron_vol_frac": 0.05539,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 7.905,
+    "farther_to_center_um": 19.114,
+    "distance_sum_um": 27.019,
+    "inter_pn_um": 24.029,
     "near_over_R": 0.1817,
     "far_over_R": 0.4394,
     "sum_over_R": 0.6212,
     "inter_over_R": 0.5524,
-    "vol_asymmetry": 0.3605,
-    "pron_vol_frac": 0.05539,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.3605
    },
    "is_pronuclear_target": true
   },
@@ -741,6 +969,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      178.4,
      163.99,
@@ -748,24 +977,32 @@
     ],
     "cell_volume_um3": 259826.0,
     "cell_radius_um": 39.59,
-    "nearer_to_center_um": 12.667,
-    "farther_to_center_um": 16.505,
-    "distance_sum_um": 29.172,
-    "inter_pn_um": 18.954,
-    "pron_volume_near_um3": 5273.1,
-    "pron_volume_far_um3": 3383.3,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     16.505,
+     12.667
+    ],
+    "pron_volumes_um3": [
+     5273.1,
+     3383.3
+    ],
+    "rms_to_center_um": 14.712,
+    "rms_over_R": 0.3716,
+    "pron_vol_frac": 0.03332,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 12.667,
+    "farther_to_center_um": 16.505,
+    "distance_sum_um": 29.172,
+    "inter_pn_um": 18.954,
     "near_over_R": 0.32,
     "far_over_R": 0.4169,
     "sum_over_R": 0.7369,
     "inter_over_R": 0.4788,
-    "vol_asymmetry": 0.2183,
-    "pron_vol_frac": 0.03332,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.2183
    },
    "is_pronuclear_target": true
   },
@@ -794,6 +1031,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      179.07,
      169.07,
@@ -801,24 +1039,32 @@
     ],
     "cell_volume_um3": 381928.9,
     "cell_radius_um": 45.01,
-    "nearer_to_center_um": 10.874,
-    "farther_to_center_um": 16.616,
-    "distance_sum_um": 27.49,
-    "inter_pn_um": 26.792,
-    "pron_volume_near_um3": 8096.8,
-    "pron_volume_far_um3": 13221.9,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     10.874,
+     16.616
+    ],
+    "pron_volumes_um3": [
+     13221.9,
+     8096.8
+    ],
+    "rms_to_center_um": 14.042,
+    "rms_over_R": 0.312,
+    "pron_vol_frac": 0.05582,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 10.874,
+    "farther_to_center_um": 16.616,
+    "distance_sum_um": 27.49,
+    "inter_pn_um": 26.792,
     "near_over_R": 0.2416,
     "far_over_R": 0.3692,
     "sum_over_R": 0.6108,
     "inter_over_R": 0.5953,
-    "vol_asymmetry": 0.2404,
-    "pron_vol_frac": 0.05582,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.2404
    },
    "is_pronuclear_target": true
   },
@@ -847,6 +1093,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      176.55,
      184.11,
@@ -854,24 +1101,32 @@
     ],
     "cell_volume_um3": 341594.8,
     "cell_radius_um": 43.37,
-    "nearer_to_center_um": 14.253,
-    "farther_to_center_um": 23.582,
-    "distance_sum_um": 37.835,
-    "inter_pn_um": 34.708,
-    "pron_volume_near_um3": 7025.1,
-    "pron_volume_far_um3": 4439.6,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     23.582,
+     14.253
+    ],
+    "pron_volumes_um3": [
+     7025.1,
+     4439.6
+    ],
+    "rms_to_center_um": 19.484,
+    "rms_over_R": 0.4493,
+    "pron_vol_frac": 0.03356,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 14.253,
+    "farther_to_center_um": 23.582,
+    "distance_sum_um": 37.835,
+    "inter_pn_um": 34.708,
     "near_over_R": 0.3287,
     "far_over_R": 0.5438,
     "sum_over_R": 0.8725,
     "inter_over_R": 0.8004,
-    "vol_asymmetry": 0.2255,
-    "pron_vol_frac": 0.03356,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.2255
    },
    "is_pronuclear_target": true
   },
@@ -900,6 +1155,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      220.27,
      168.74,
@@ -907,24 +1163,32 @@
     ],
     "cell_volume_um3": 278958.9,
     "cell_radius_um": 40.53,
-    "nearer_to_center_um": 13.883,
-    "farther_to_center_um": 20.471,
-    "distance_sum_um": 34.354,
-    "inter_pn_um": 29.431,
-    "pron_volume_near_um3": 3510.9,
-    "pron_volume_far_um3": 5165.9,
     "pron_labels": [
      2,
      3
     ],
+    "pron_distances_um": [
+     13.883,
+     20.471
+    ],
+    "pron_volumes_um3": [
+     5165.9,
+     3510.9
+    ],
+    "rms_to_center_um": 17.49,
+    "rms_over_R": 0.4315,
+    "pron_vol_frac": 0.0311,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 13.883,
+    "farther_to_center_um": 20.471,
+    "distance_sum_um": 34.354,
+    "inter_pn_um": 29.431,
     "near_over_R": 0.3425,
     "far_over_R": 0.505,
     "sum_over_R": 0.8475,
     "inter_over_R": 0.7261,
-    "vol_asymmetry": 0.1907,
-    "pron_vol_frac": 0.0311,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.1907
    },
    "is_pronuclear_target": true
   },
@@ -955,6 +1219,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      166.66,
      197.22,
@@ -962,24 +1227,32 @@
     ],
     "cell_volume_um3": 393604.6,
     "cell_radius_um": 45.46,
-    "nearer_to_center_um": 18.452,
-    "farther_to_center_um": 21.541,
-    "distance_sum_um": 39.993,
-    "inter_pn_um": 24.516,
-    "pron_volume_near_um3": 8598.6,
-    "pron_volume_far_um3": 13121.5,
     "pron_labels": [
      2,
      3
     ],
+    "pron_distances_um": [
+     18.452,
+     21.541
+    ],
+    "pron_volumes_um3": [
+     13121.5,
+     8598.6
+    ],
+    "rms_to_center_um": 20.056,
+    "rms_over_R": 0.4412,
+    "pron_vol_frac": 0.05518,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 18.452,
+    "farther_to_center_um": 21.541,
+    "distance_sum_um": 39.993,
+    "inter_pn_um": 24.516,
     "near_over_R": 0.4059,
     "far_over_R": 0.4738,
     "sum_over_R": 0.8797,
     "inter_over_R": 0.5393,
-    "vol_asymmetry": 0.2082,
-    "pron_vol_frac": 0.05518,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.2082
    },
    "is_pronuclear_target": true
   },
@@ -1008,6 +1281,7 @@
    ],
    "polar_body_label": null,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      226.9,
      134.99,
@@ -1015,24 +1289,32 @@
     ],
     "cell_volume_um3": 295547.0,
     "cell_radius_um": 41.32,
-    "nearer_to_center_um": 19.487,
-    "farther_to_center_um": 22.567,
-    "distance_sum_um": 42.054,
-    "inter_pn_um": 30.335,
-    "pron_volume_near_um3": 9901.5,
-    "pron_volume_far_um3": 7317.7,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     22.567,
+     19.487
+    ],
+    "pron_volumes_um3": [
+     9901.5,
+     7317.7
+    ],
+    "rms_to_center_um": 21.083,
+    "rms_over_R": 0.5102,
+    "pron_vol_frac": 0.05826,
+    "polar_body_present": false,
+    "polar_body_external": false,
+    "nearer_to_center_um": 19.487,
+    "farther_to_center_um": 22.567,
+    "distance_sum_um": 42.054,
+    "inter_pn_um": 30.335,
     "near_over_R": 0.4716,
     "far_over_R": 0.5461,
     "sum_over_R": 1.0177,
     "inter_over_R": 0.7341,
-    "vol_asymmetry": 0.1501,
-    "pron_vol_frac": 0.05826,
-    "polar_body_present": false,
-    "polar_body_external": false
+    "vol_asymmetry": 0.1501
    },
    "is_pronuclear_target": true
   },
@@ -1061,6 +1343,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      228.14,
      169.69,
@@ -1068,24 +1351,32 @@
     ],
     "cell_volume_um3": 323300.6,
     "cell_radius_um": 42.58,
-    "nearer_to_center_um": 9.034,
-    "farther_to_center_um": 19.571,
-    "distance_sum_um": 28.605,
-    "inter_pn_um": 23.186,
-    "pron_volume_near_um3": 7595.0,
-    "pron_volume_far_um3": 12560.2,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     9.034,
+     19.571
+    ],
+    "pron_volumes_um3": [
+     12560.2,
+     7595.0
+    ],
+    "rms_to_center_um": 15.242,
+    "rms_over_R": 0.358,
+    "pron_vol_frac": 0.06234,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 9.034,
+    "farther_to_center_um": 19.571,
+    "distance_sum_um": 28.605,
+    "inter_pn_um": 23.186,
     "near_over_R": 0.2122,
     "far_over_R": 0.4597,
     "sum_over_R": 0.6718,
     "inter_over_R": 0.5446,
-    "vol_asymmetry": 0.2463,
-    "pron_vol_frac": 0.06234,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.2463
    },
    "is_pronuclear_target": true
   },
@@ -1114,6 +1405,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      132.86,
      199.03,
@@ -1121,24 +1413,32 @@
     ],
     "cell_volume_um3": 360368.8,
     "cell_radius_um": 44.15,
-    "nearer_to_center_um": 16.195,
-    "farther_to_center_um": 16.283,
-    "distance_sum_um": 32.477,
-    "inter_pn_um": 24.627,
-    "pron_volume_near_um3": 13747.5,
-    "pron_volume_far_um3": 6885.6,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     16.283,
+     16.195
+    ],
+    "pron_volumes_um3": [
+     13747.5,
+     6885.6
+    ],
+    "rms_to_center_um": 16.239,
+    "rms_over_R": 0.3678,
+    "pron_vol_frac": 0.05726,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 16.195,
+    "farther_to_center_um": 16.283,
+    "distance_sum_um": 32.477,
+    "inter_pn_um": 24.627,
     "near_over_R": 0.3668,
     "far_over_R": 0.3688,
     "sum_over_R": 0.7357,
     "inter_over_R": 0.5579,
-    "vol_asymmetry": 0.3326,
-    "pron_vol_frac": 0.05726,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.3326
    },
    "is_pronuclear_target": true
   },
@@ -1167,6 +1467,7 @@
    ],
    "polar_body_label": null,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      243.21,
      227.69,
@@ -1174,24 +1475,32 @@
     ],
     "cell_volume_um3": 267745.9,
     "cell_radius_um": 39.98,
-    "nearer_to_center_um": 11.239,
-    "farther_to_center_um": 12.905,
-    "distance_sum_um": 24.144,
-    "inter_pn_um": 19.505,
-    "pron_volume_near_um3": 8020.2,
-    "pron_volume_far_um3": 10974.9,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     11.239,
+     12.905
+    ],
+    "pron_volumes_um3": [
+     10974.9,
+     8020.2
+    ],
+    "rms_to_center_um": 12.101,
+    "rms_over_R": 0.3026,
+    "pron_vol_frac": 0.07094,
+    "polar_body_present": false,
+    "polar_body_external": false,
+    "nearer_to_center_um": 11.239,
+    "farther_to_center_um": 12.905,
+    "distance_sum_um": 24.144,
+    "inter_pn_um": 19.505,
     "near_over_R": 0.2811,
     "far_over_R": 0.3228,
     "sum_over_R": 0.6039,
     "inter_over_R": 0.4878,
-    "vol_asymmetry": 0.1555,
-    "pron_vol_frac": 0.07094,
-    "polar_body_present": false,
-    "polar_body_external": false
+    "vol_asymmetry": 0.1555
    },
    "is_pronuclear_target": true
   },
@@ -1220,6 +1529,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      82.43,
      93.43,
@@ -1227,24 +1537,32 @@
     ],
     "cell_volume_um3": 371811.4,
     "cell_radius_um": 44.61,
-    "nearer_to_center_um": 10.693,
-    "farther_to_center_um": 18.314,
-    "distance_sum_um": 29.007,
-    "inter_pn_um": 24.089,
-    "pron_volume_near_um3": 9627.7,
-    "pron_volume_far_um3": 5526.5,
     "pron_labels": [
      2,
      3
     ],
+    "pron_distances_um": [
+     18.314,
+     10.693
+    ],
+    "pron_volumes_um3": [
+     9627.7,
+     5526.5
+    ],
+    "rms_to_center_um": 14.996,
+    "rms_over_R": 0.3362,
+    "pron_vol_frac": 0.04076,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 10.693,
+    "farther_to_center_um": 18.314,
+    "distance_sum_um": 29.007,
+    "inter_pn_um": 24.089,
     "near_over_R": 0.2397,
     "far_over_R": 0.4106,
     "sum_over_R": 0.6503,
     "inter_over_R": 0.54,
-    "vol_asymmetry": 0.2706,
-    "pron_vol_frac": 0.04076,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.2706
    },
    "is_pronuclear_target": true
   },
@@ -1273,6 +1591,7 @@
    ],
    "polar_body_label": null,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      224.98,
      191.17,
@@ -1280,24 +1599,32 @@
     ],
     "cell_volume_um3": 266720.2,
     "cell_radius_um": 39.93,
-    "nearer_to_center_um": 17.101,
-    "farther_to_center_um": 19.89,
-    "distance_sum_um": 36.991,
-    "inter_pn_um": 21.567,
-    "pron_volume_near_um3": 6506.3,
-    "pron_volume_far_um3": 7610.3,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     17.101,
+     19.89
+    ],
+    "pron_volumes_um3": [
+     7610.3,
+     6506.3
+    ],
+    "rms_to_center_um": 18.548,
+    "rms_over_R": 0.4645,
+    "pron_vol_frac": 0.05293,
+    "polar_body_present": false,
+    "polar_body_external": false,
+    "nearer_to_center_um": 17.101,
+    "farther_to_center_um": 19.89,
+    "distance_sum_um": 36.991,
+    "inter_pn_um": 21.567,
     "near_over_R": 0.4283,
     "far_over_R": 0.4981,
     "sum_over_R": 0.9264,
     "inter_over_R": 0.5401,
-    "vol_asymmetry": 0.0782,
-    "pron_vol_frac": 0.05293,
-    "polar_body_present": false,
-    "polar_body_external": false
+    "vol_asymmetry": 0.0782
    },
    "is_pronuclear_target": true
   },
@@ -1326,6 +1653,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      107.07,
      136.1,
@@ -1333,24 +1661,32 @@
     ],
     "cell_volume_um3": 355970.0,
     "cell_radius_um": 43.97,
-    "nearer_to_center_um": 12.093,
-    "farther_to_center_um": 17.437,
-    "distance_sum_um": 29.53,
-    "inter_pn_um": 23.709,
-    "pron_volume_near_um3": 8096.8,
-    "pron_volume_far_um3": 12533.0,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     12.093,
+     17.437
+    ],
+    "pron_volumes_um3": [
+     12533.0,
+     8096.8
+    ],
+    "rms_to_center_um": 15.005,
+    "rms_over_R": 0.3413,
+    "pron_vol_frac": 0.05795,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 12.093,
+    "farther_to_center_um": 17.437,
+    "distance_sum_um": 29.53,
+    "inter_pn_um": 23.709,
     "near_over_R": 0.2751,
     "far_over_R": 0.3966,
     "sum_over_R": 0.6717,
     "inter_over_R": 0.5393,
-    "vol_asymmetry": 0.215,
-    "pron_vol_frac": 0.05795,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.215
    },
    "is_pronuclear_target": true
   },
@@ -1369,10 +1705,10 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 1,
@@ -1380,7 +1716,30 @@
     3
    ],
    "polar_body_label": 2,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     149.37,
+     169.0,
+     102.62
+    ],
+    "cell_volume_um3": 199280.7,
+    "cell_radius_um": 36.23,
+    "pron_labels": [
+     3
+    ],
+    "pron_distances_um": [
+     4.679
+    ],
+    "pron_volumes_um3": [
+     11029.3
+    ],
+    "rms_to_center_um": 4.679,
+    "rms_over_R": 0.1291,
+    "pron_vol_frac": 0.05535,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": true
   },
   {
@@ -1408,6 +1767,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      152.9,
      149.5,
@@ -1415,24 +1775,32 @@
     ],
     "cell_volume_um3": 270338.2,
     "cell_radius_um": 40.11,
-    "nearer_to_center_um": 22.753,
-    "farther_to_center_um": 27.439,
-    "distance_sum_um": 50.192,
-    "inter_pn_um": 47.473,
-    "pron_volume_near_um3": 4087.5,
-    "pron_volume_far_um3": 5417.7,
     "pron_labels": [
      2,
      3
     ],
+    "pron_distances_um": [
+     22.753,
+     27.439
+    ],
+    "pron_volumes_um3": [
+     5417.7,
+     4087.5
+    ],
+    "rms_to_center_um": 25.205,
+    "rms_over_R": 0.6284,
+    "pron_vol_frac": 0.03516,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 22.753,
+    "farther_to_center_um": 27.439,
+    "distance_sum_um": 50.192,
+    "inter_pn_um": 47.473,
     "near_over_R": 0.5672,
     "far_over_R": 0.6841,
     "sum_over_R": 1.2513,
     "inter_over_R": 1.1835,
-    "vol_asymmetry": 0.1399,
-    "pron_vol_frac": 0.03516,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.1399
    },
    "is_pronuclear_target": true
   },
@@ -1461,6 +1829,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      162.43,
      158.94,
@@ -1468,24 +1837,32 @@
     ],
     "cell_volume_um3": 309968.1,
     "cell_radius_um": 41.98,
-    "nearer_to_center_um": 21.379,
-    "farther_to_center_um": 25.758,
-    "distance_sum_um": 47.137,
-    "inter_pn_um": 46.037,
-    "pron_volume_near_um3": 6839.7,
-    "pron_volume_far_um3": 5410.9,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     25.758,
+     21.379
+    ],
+    "pron_volumes_um3": [
+     6839.7,
+     5410.9
+    ],
+    "rms_to_center_um": 23.67,
+    "rms_over_R": 0.5638,
+    "pron_vol_frac": 0.03952,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 21.379,
+    "farther_to_center_um": 25.758,
+    "distance_sum_um": 47.137,
+    "inter_pn_um": 46.037,
     "near_over_R": 0.5092,
     "far_over_R": 0.6135,
     "sum_over_R": 1.1228,
     "inter_over_R": 1.0966,
-    "vol_asymmetry": 0.1166,
-    "pron_vol_frac": 0.03952,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.1166
    },
    "is_pronuclear_target": true
   },
@@ -1514,6 +1891,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      152.75,
      152.61,
@@ -1521,24 +1899,32 @@
     ],
     "cell_volume_um3": 302385.1,
     "cell_radius_um": 41.64,
-    "nearer_to_center_um": 14.443,
-    "farther_to_center_um": 16.9,
-    "distance_sum_um": 31.342,
-    "inter_pn_um": 23.71,
-    "pron_volume_near_um3": 14016.2,
-    "pron_volume_far_um3": 9299.4,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     16.9,
+     14.443
+    ],
+    "pron_volumes_um3": [
+     14016.2,
+     9299.4
+    ],
+    "rms_to_center_um": 15.719,
+    "rms_over_R": 0.3775,
+    "pron_vol_frac": 0.07711,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 14.443,
+    "farther_to_center_um": 16.9,
+    "distance_sum_um": 31.342,
+    "inter_pn_um": 23.71,
     "near_over_R": 0.3469,
     "far_over_R": 0.4059,
     "sum_over_R": 0.7527,
     "inter_over_R": 0.5694,
-    "vol_asymmetry": 0.2023,
-    "pron_vol_frac": 0.07711,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.2023
    },
    "is_pronuclear_target": true
   },
@@ -1557,17 +1943,40 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "cell_body_label": 1,
    "pronucleus_labels": [
     2
    ],
    "polar_body_label": null,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     146.72,
+     151.82,
+     156.2
+    ],
+    "cell_volume_um3": 271942.3,
+    "cell_radius_um": 40.19,
+    "pron_labels": [
+     2
+    ],
+    "pron_distances_um": [
+     30.768
+    ],
+    "pron_volumes_um3": [
+     8055.9
+    ],
+    "rms_to_center_um": 30.768,
+    "rms_over_R": 0.7655,
+    "pron_vol_frac": 0.02962,
+    "polar_body_present": false,
+    "polar_body_external": false
+   },
    "is_pronuclear_target": true
   },
   {
@@ -1595,6 +2004,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      158.11,
      149.54,
@@ -1602,24 +2012,32 @@
     ],
     "cell_volume_um3": 299736.6,
     "cell_radius_um": 41.52,
-    "nearer_to_center_um": 22.322,
-    "farther_to_center_um": 26.216,
-    "distance_sum_um": 48.538,
-    "inter_pn_um": 42.647,
-    "pron_volume_near_um3": 6508.0,
-    "pron_volume_far_um3": 5851.4,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     26.216,
+     22.322
+    ],
+    "pron_volumes_um3": [
+     6508.0,
+     5851.4
+    ],
+    "rms_to_center_um": 24.347,
+    "rms_over_R": 0.5864,
+    "pron_vol_frac": 0.04123,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 22.322,
+    "farther_to_center_um": 26.216,
+    "distance_sum_um": 48.538,
+    "inter_pn_um": 42.647,
     "near_over_R": 0.5377,
     "far_over_R": 0.6315,
     "sum_over_R": 1.1691,
     "inter_over_R": 1.0272,
-    "vol_asymmetry": 0.0531,
-    "pron_vol_frac": 0.04123,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.0531
    },
    "is_pronuclear_target": true
   },
@@ -1648,6 +2066,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      166.52,
      151.97,
@@ -1655,24 +2074,32 @@
     ],
     "cell_volume_um3": 287605.1,
     "cell_radius_um": 40.95,
-    "nearer_to_center_um": 28.009,
-    "farther_to_center_um": 45.239,
-    "distance_sum_um": 73.248,
-    "inter_pn_um": 43.139,
-    "pron_volume_near_um3": 3641.8,
-    "pron_volume_far_um3": 3104.3,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     45.239,
+     28.009
+    ],
+    "pron_volumes_um3": [
+     3641.8,
+     3104.3
+    ],
+    "rms_to_center_um": 37.623,
+    "rms_over_R": 0.9188,
+    "pron_vol_frac": 0.02346,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 28.009,
+    "farther_to_center_um": 45.239,
+    "distance_sum_um": 73.248,
+    "inter_pn_um": 43.139,
     "near_over_R": 0.684,
     "far_over_R": 1.1048,
     "sum_over_R": 1.7888,
     "inter_over_R": 1.0535,
-    "vol_asymmetry": 0.0797,
-    "pron_vol_frac": 0.02346,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.0797
    },
    "is_pronuclear_target": true
   },
@@ -1701,6 +2128,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      156.14,
      154.98,
@@ -1708,24 +2136,32 @@
     ],
     "cell_volume_um3": 286176.2,
     "cell_radius_um": 40.88,
-    "nearer_to_center_um": 11.495,
-    "farther_to_center_um": 20.755,
-    "distance_sum_um": 32.25,
-    "inter_pn_um": 25.067,
-    "pron_volume_near_um3": 6926.5,
-    "pron_volume_far_um3": 9576.6,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     11.495,
+     20.755
+    ],
+    "pron_volumes_um3": [
+     9576.6,
+     6926.5
+    ],
+    "rms_to_center_um": 16.777,
+    "rms_over_R": 0.4104,
+    "pron_vol_frac": 0.05767,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 11.495,
+    "farther_to_center_um": 20.755,
+    "distance_sum_um": 32.25,
+    "inter_pn_um": 25.067,
     "near_over_R": 0.2812,
     "far_over_R": 0.5077,
     "sum_over_R": 0.7889,
     "inter_over_R": 0.6132,
-    "vol_asymmetry": 0.1606,
-    "pron_vol_frac": 0.05767,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.1606
    },
    "is_pronuclear_target": true
   },
@@ -1744,10 +2180,10 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 1,
@@ -1755,7 +2191,30 @@
     2
    ],
    "polar_body_label": 3,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     161.6,
+     150.11,
+     154.83
+    ],
+    "cell_volume_um3": 303586.0,
+    "cell_radius_um": 41.69,
+    "pron_labels": [
+     2
+    ],
+    "pron_distances_um": [
+     23.148
+    ],
+    "pron_volumes_um3": [
+     4427.7
+    ],
+    "rms_to_center_um": 23.148,
+    "rms_over_R": 0.5552,
+    "pron_vol_frac": 0.01458,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": true
   },
   {
@@ -1783,6 +2242,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      160.37,
      142.78,
@@ -1790,24 +2250,32 @@
     ],
     "cell_volume_um3": 274449.5,
     "cell_radius_um": 40.31,
-    "nearer_to_center_um": 25.228,
-    "farther_to_center_um": 25.336,
-    "distance_sum_um": 50.565,
-    "inter_pn_um": 47.544,
-    "pron_volume_near_um3": 6424.7,
-    "pron_volume_far_um3": 5182.9,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     25.336,
+     25.228
+    ],
+    "pron_volumes_um3": [
+     6424.7,
+     5182.9
+    ],
+    "rms_to_center_um": 25.282,
+    "rms_over_R": 0.6271,
+    "pron_vol_frac": 0.04229,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 25.228,
+    "farther_to_center_um": 25.336,
+    "distance_sum_um": 50.565,
+    "inter_pn_um": 47.544,
     "near_over_R": 0.6258,
     "far_over_R": 0.6285,
     "sum_over_R": 1.2543,
     "inter_over_R": 1.1793,
-    "vol_asymmetry": 0.107,
-    "pron_vol_frac": 0.04229,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.107
    },
    "is_pronuclear_target": true
   },
@@ -1836,6 +2304,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      168.84,
      143.29,
@@ -1843,24 +2312,32 @@
     ],
     "cell_volume_um3": 331012.9,
     "cell_radius_um": 42.91,
-    "nearer_to_center_um": 28.049,
-    "farther_to_center_um": 39.382,
-    "distance_sum_um": 67.431,
-    "inter_pn_um": 51.966,
-    "pron_volume_near_um3": 3325.5,
-    "pron_volume_far_um3": 4130.0,
     "pron_labels": [
      2,
      3
     ],
+    "pron_distances_um": [
+     28.049,
+     39.382
+    ],
+    "pron_volumes_um3": [
+     4130.0,
+     3325.5
+    ],
+    "rms_to_center_um": 34.188,
+    "rms_over_R": 0.7967,
+    "pron_vol_frac": 0.02252,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 28.049,
+    "farther_to_center_um": 39.382,
+    "distance_sum_um": 67.431,
+    "inter_pn_um": 51.966,
     "near_over_R": 0.6536,
     "far_over_R": 0.9177,
     "sum_over_R": 1.5714,
     "inter_over_R": 1.211,
-    "vol_asymmetry": 0.1079,
-    "pron_vol_frac": 0.02252,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.1079
    },
    "is_pronuclear_target": true
   },
@@ -1889,6 +2366,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      220.31,
      182.81,
@@ -1896,24 +2374,32 @@
     ],
     "cell_volume_um3": 252943.8,
     "cell_radius_um": 39.23,
-    "nearer_to_center_um": 15.715,
-    "farther_to_center_um": 25.252,
-    "distance_sum_um": 40.967,
-    "inter_pn_um": 40.427,
-    "pron_volume_near_um3": 6899.3,
-    "pron_volume_far_um3": 5873.6,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     25.252,
+     15.715
+    ],
+    "pron_volumes_um3": [
+     6899.3,
+     5873.6
+    ],
+    "rms_to_center_um": 21.031,
+    "rms_over_R": 0.5361,
+    "pron_vol_frac": 0.0505,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 15.715,
+    "farther_to_center_um": 25.252,
+    "distance_sum_um": 40.967,
+    "inter_pn_um": 40.427,
     "near_over_R": 0.4006,
     "far_over_R": 0.6437,
     "sum_over_R": 1.0442,
     "inter_over_R": 1.0304,
-    "vol_asymmetry": 0.0803,
-    "pron_vol_frac": 0.0505,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.0803
    },
    "is_pronuclear_target": true
   },
@@ -1932,10 +2418,10 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 1,
@@ -1943,7 +2429,30 @@
     2
    ],
    "polar_body_label": 4,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     134.17,
+     137.93,
+     153.87
+    ],
+    "cell_volume_um3": 273755.5,
+    "cell_radius_um": 40.28,
+    "pron_labels": [
+     2
+    ],
+    "pron_distances_um": [
+     27.441
+    ],
+    "pron_volumes_um3": [
+     3361.2
+    ],
+    "rms_to_center_um": 27.441,
+    "rms_over_R": 0.6812,
+    "pron_vol_frac": 0.01228,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": true
   },
   {
@@ -1971,6 +2480,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      208.75,
      163.72,
@@ -1978,24 +2488,32 @@
     ],
     "cell_volume_um3": 270459.0,
     "cell_radius_um": 40.12,
-    "nearer_to_center_um": 26.364,
-    "farther_to_center_um": 27.23,
-    "distance_sum_um": 53.595,
-    "inter_pn_um": 53.461,
-    "pron_volume_near_um3": 4009.3,
-    "pron_volume_far_um3": 4426.0,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     26.364,
+     27.23
+    ],
+    "pron_volumes_um3": [
+     4426.0,
+     4009.3
+    ],
+    "rms_to_center_um": 26.801,
+    "rms_over_R": 0.6681,
+    "pron_vol_frac": 0.03119,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 26.364,
+    "farther_to_center_um": 27.23,
+    "distance_sum_um": 53.595,
+    "inter_pn_um": 53.461,
     "near_over_R": 0.6572,
     "far_over_R": 0.6788,
     "sum_over_R": 1.3359,
     "inter_over_R": 1.3326,
-    "vol_asymmetry": 0.0494,
-    "pron_vol_frac": 0.03119,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.0494
    },
    "is_pronuclear_target": true
   },
@@ -2014,17 +2532,40 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "cell_body_label": 1,
    "pronucleus_labels": [
     2
    ],
    "polar_body_label": null,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     79.88,
+     108.51,
+     158.86
+    ],
+    "cell_volume_um3": 283987.1,
+    "cell_radius_um": 40.78,
+    "pron_labels": [
+     2
+    ],
+    "pron_distances_um": [
+     30.825
+    ],
+    "pron_volumes_um3": [
+     6861.8
+    ],
+    "rms_to_center_um": 30.825,
+    "rms_over_R": 0.756,
+    "pron_vol_frac": 0.02416,
+    "polar_body_present": false,
+    "polar_body_external": false
+   },
    "is_pronuclear_target": true
   },
   {
@@ -2054,6 +2595,7 @@
    ],
    "polar_body_label": null,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      157.8,
      143.45,
@@ -2061,24 +2603,32 @@
     ],
     "cell_volume_um3": 295810.7,
     "cell_radius_um": 41.33,
-    "nearer_to_center_um": 38.886,
-    "farther_to_center_um": 44.567,
-    "distance_sum_um": 83.452,
-    "inter_pn_um": 24.641,
-    "pron_volume_near_um3": 3934.4,
-    "pron_volume_far_um3": 4191.3,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     38.886,
+     44.567
+    ],
+    "pron_volumes_um3": [
+     4191.3,
+     3934.4
+    ],
+    "rms_to_center_um": 41.823,
+    "rms_over_R": 1.0118,
+    "pron_vol_frac": 0.02747,
+    "polar_body_present": false,
+    "polar_body_external": false,
+    "nearer_to_center_um": 38.886,
+    "farther_to_center_um": 44.567,
+    "distance_sum_um": 83.452,
+    "inter_pn_um": 24.641,
     "near_over_R": 0.9408,
     "far_over_R": 1.0782,
     "sum_over_R": 2.019,
     "inter_over_R": 0.5961,
-    "vol_asymmetry": 0.0316,
-    "pron_vol_frac": 0.02747,
-    "polar_body_present": false,
-    "polar_body_external": false
+    "vol_asymmetry": 0.0316
    },
    "is_pronuclear_target": true
   },
@@ -2107,6 +2657,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      150.2,
      147.89,
@@ -2114,24 +2665,32 @@
     ],
     "cell_volume_um3": 275294.9,
     "cell_radius_um": 40.36,
-    "nearer_to_center_um": 16.007,
-    "farther_to_center_um": 22.717,
-    "distance_sum_um": 38.724,
-    "inter_pn_um": 23.657,
-    "pron_volume_near_um3": 9275.6,
-    "pron_volume_far_um3": 10855.8,
     "pron_labels": [
      2,
      3
     ],
+    "pron_distances_um": [
+     16.007,
+     22.717
+    ],
+    "pron_volumes_um3": [
+     10855.8,
+     9275.6
+    ],
+    "rms_to_center_um": 19.651,
+    "rms_over_R": 0.4869,
+    "pron_vol_frac": 0.07313,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 16.007,
+    "farther_to_center_um": 22.717,
+    "distance_sum_um": 38.724,
+    "inter_pn_um": 23.657,
     "near_over_R": 0.3967,
     "far_over_R": 0.5629,
     "sum_over_R": 0.9596,
     "inter_over_R": 0.5862,
-    "vol_asymmetry": 0.0785,
-    "pron_vol_frac": 0.07313,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.0785
    },
    "is_pronuclear_target": true
   },
@@ -2160,6 +2719,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      143.68,
      145.65,
@@ -2167,24 +2727,32 @@
     ],
     "cell_volume_um3": 265861.2,
     "cell_radius_um": 39.89,
-    "nearer_to_center_um": 10.635,
-    "farther_to_center_um": 15.118,
-    "distance_sum_um": 25.753,
-    "inter_pn_um": 24.971,
-    "pron_volume_near_um3": 9392.9,
-    "pron_volume_far_um3": 6645.8,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     15.118,
+     10.635
+    ],
+    "pron_volumes_um3": [
+     9392.9,
+     6645.8
+    ],
+    "rms_to_center_um": 13.07,
+    "rms_over_R": 0.3277,
+    "pron_vol_frac": 0.06033,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 10.635,
+    "farther_to_center_um": 15.118,
+    "distance_sum_um": 25.753,
+    "inter_pn_um": 24.971,
     "near_over_R": 0.2666,
     "far_over_R": 0.379,
     "sum_over_R": 0.6456,
     "inter_over_R": 0.626,
-    "vol_asymmetry": 0.1713,
-    "pron_vol_frac": 0.06033,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.1713
    },
    "is_pronuclear_target": true
   },
@@ -2213,6 +2781,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      212.46,
      66.81,
@@ -2220,24 +2789,32 @@
     ],
     "cell_volume_um3": 260127.1,
     "cell_radius_um": 39.6,
-    "nearer_to_center_um": 28.09,
-    "farther_to_center_um": 39.232,
-    "distance_sum_um": 67.322,
-    "inter_pn_um": 46.666,
-    "pron_volume_near_um3": 1971.5,
-    "pron_volume_far_um3": 1845.6,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     39.232,
+     28.09
+    ],
+    "pron_volumes_um3": [
+     1971.5,
+     1845.6
+    ],
+    "rms_to_center_um": 34.119,
+    "rms_over_R": 0.8616,
+    "pron_vol_frac": 0.01467,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 28.09,
+    "farther_to_center_um": 39.232,
+    "distance_sum_um": 67.322,
+    "inter_pn_um": 46.666,
     "near_over_R": 0.7093,
     "far_over_R": 0.9907,
     "sum_over_R": 1.7,
     "inter_over_R": 1.1784,
-    "vol_asymmetry": 0.033,
-    "pron_vol_frac": 0.01467,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.033
    },
    "is_pronuclear_target": true
   },
@@ -2266,6 +2843,7 @@
    ],
    "polar_body_label": null,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      94.33,
      235.04,
@@ -2273,24 +2851,32 @@
     ],
     "cell_volume_um3": 285118.2,
     "cell_radius_um": 40.83,
-    "nearer_to_center_um": 11.039,
-    "farther_to_center_um": 13.169,
-    "distance_sum_um": 24.208,
-    "inter_pn_um": 22.711,
-    "pron_volume_near_um3": 6948.6,
-    "pron_volume_far_um3": 10660.2,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     11.039,
+     13.169
+    ],
+    "pron_volumes_um3": [
+     10660.2,
+     6948.6
+    ],
+    "rms_to_center_um": 12.151,
+    "rms_over_R": 0.2976,
+    "pron_vol_frac": 0.06176,
+    "polar_body_present": false,
+    "polar_body_external": false,
+    "nearer_to_center_um": 11.039,
+    "farther_to_center_um": 13.169,
+    "distance_sum_um": 24.208,
+    "inter_pn_um": 22.711,
     "near_over_R": 0.2704,
     "far_over_R": 0.3225,
     "sum_over_R": 0.5929,
     "inter_over_R": 0.5562,
-    "vol_asymmetry": 0.2108,
-    "pron_vol_frac": 0.06176,
-    "polar_body_present": false,
-    "polar_body_external": false
+    "vol_asymmetry": 0.2108
    },
    "is_pronuclear_target": true
   },
@@ -2319,6 +2905,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      164.94,
      165.72,
@@ -2326,24 +2913,32 @@
     ],
     "cell_volume_um3": 317546.1,
     "cell_radius_um": 42.32,
-    "nearer_to_center_um": 23.137,
-    "farther_to_center_um": 27.909,
-    "distance_sum_um": 51.046,
-    "inter_pn_um": 35.385,
-    "pron_volume_near_um3": 7931.8,
-    "pron_volume_far_um3": 6831.2,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     27.909,
+     23.137
+    ],
+    "pron_volumes_um3": [
+     7931.8,
+     6831.2
+    ],
+    "rms_to_center_um": 25.634,
+    "rms_over_R": 0.6057,
+    "pron_vol_frac": 0.04649,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 23.137,
+    "farther_to_center_um": 27.909,
+    "distance_sum_um": 51.046,
+    "inter_pn_um": 35.385,
     "near_over_R": 0.5467,
     "far_over_R": 0.6594,
     "sum_over_R": 1.2061,
     "inter_over_R": 0.8361,
-    "vol_asymmetry": 0.0745,
-    "pron_vol_frac": 0.04649,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.0745
    },
    "is_pronuclear_target": true
   },
@@ -2362,17 +2957,40 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "cell_body_label": 1,
    "pronucleus_labels": [
     2
    ],
    "polar_body_label": null,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     153.2,
+     147.53,
+     151.84
+    ],
+    "cell_volume_um3": 293696.4,
+    "cell_radius_um": 41.24,
+    "pron_labels": [
+     2
+    ],
+    "pron_distances_um": [
+     34.24
+    ],
+    "pron_volumes_um3": [
+     7081.3
+    ],
+    "rms_to_center_um": 34.24,
+    "rms_over_R": 0.8304,
+    "pron_vol_frac": 0.02411,
+    "polar_body_present": false,
+    "polar_body_external": false
+   },
    "is_pronuclear_target": true
   },
   {
@@ -2390,17 +3008,40 @@
     1.0000000150184936,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)"
    ],
    "cell_body_label": 1,
    "pronucleus_labels": [
     2
    ],
    "polar_body_label": null,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     165.9,
+     96.22,
+     168.94
+    ],
+    "cell_volume_um3": 277565.8,
+    "cell_radius_um": 40.47,
+    "pron_labels": [
+     2
+    ],
+    "pron_distances_um": [
+     34.638
+    ],
+    "pron_volumes_um3": [
+     5189.8
+    ],
+    "rms_to_center_um": 34.638,
+    "rms_over_R": 0.856,
+    "pron_vol_frac": 0.0187,
+    "polar_body_present": false,
+    "polar_body_external": false
+   },
    "is_pronuclear_target": true
   },
   {
@@ -2428,6 +3069,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      156.52,
      208.52,
@@ -2435,24 +3077,32 @@
     ],
     "cell_volume_um3": 281563.1,
     "cell_radius_um": 40.66,
-    "nearer_to_center_um": 12.752,
-    "farther_to_center_um": 14.558,
-    "distance_sum_um": 27.31,
-    "inter_pn_um": 21.768,
-    "pron_volume_near_um3": 5831.0,
-    "pron_volume_far_um3": 9787.6,
     "pron_labels": [
      2,
      3
     ],
+    "pron_distances_um": [
+     12.752,
+     14.558
+    ],
+    "pron_volumes_um3": [
+     9787.6,
+     5831.0
+    ],
+    "rms_to_center_um": 13.685,
+    "rms_over_R": 0.3366,
+    "pron_vol_frac": 0.05547,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 12.752,
+    "farther_to_center_um": 14.558,
+    "distance_sum_um": 27.31,
+    "inter_pn_um": 21.768,
     "near_over_R": 0.3136,
     "far_over_R": 0.358,
     "sum_over_R": 0.6717,
     "inter_over_R": 0.5354,
-    "vol_asymmetry": 0.2533,
-    "pron_vol_frac": 0.05547,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.2533
    },
    "is_pronuclear_target": true
   },
@@ -2481,6 +3131,7 @@
    ],
    "polar_body_label": null,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      161.42,
      161.3,
@@ -2488,24 +3139,32 @@
     ],
     "cell_volume_um3": 295067.4,
     "cell_radius_um": 41.3,
-    "nearer_to_center_um": 8.096,
-    "farther_to_center_um": 15.677,
-    "distance_sum_um": 23.773,
-    "inter_pn_um": 21.255,
-    "pron_volume_near_um3": 7251.4,
-    "pron_volume_far_um3": 11616.1,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     8.096,
+     15.677
+    ],
+    "pron_volumes_um3": [
+     11616.1,
+     7251.4
+    ],
+    "rms_to_center_um": 12.476,
+    "rms_over_R": 0.3021,
+    "pron_vol_frac": 0.06394,
+    "polar_body_present": false,
+    "polar_body_external": false,
+    "nearer_to_center_um": 8.096,
+    "farther_to_center_um": 15.677,
+    "distance_sum_um": 23.773,
+    "inter_pn_um": 21.255,
     "near_over_R": 0.196,
     "far_over_R": 0.3796,
     "sum_over_R": 0.5756,
     "inter_over_R": 0.5147,
-    "vol_asymmetry": 0.2313,
-    "pron_vol_frac": 0.06394,
-    "polar_body_present": false,
-    "polar_body_external": false
+    "vol_asymmetry": 0.2313
    },
    "is_pronuclear_target": true
   },
@@ -2524,10 +3183,10 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 1,
@@ -2535,7 +3194,30 @@
     2
    ],
    "polar_body_label": 3,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     157.44,
+     156.3,
+     160.24
+    ],
+    "cell_volume_um3": 252322.9,
+    "cell_radius_um": 39.2,
+    "pron_labels": [
+     2
+    ],
+    "pron_distances_um": [
+     19.162
+    ],
+    "pron_volumes_um3": [
+     3010.8
+    ],
+    "rms_to_center_um": 19.162,
+    "rms_over_R": 0.4888,
+    "pron_vol_frac": 0.01193,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": true
   },
   {
@@ -2563,6 +3245,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      162.89,
      167.84,
@@ -2570,24 +3253,32 @@
     ],
     "cell_volume_um3": 293745.7,
     "cell_radius_um": 41.24,
-    "nearer_to_center_um": 15.652,
-    "farther_to_center_um": 20.014,
-    "distance_sum_um": 35.666,
-    "inter_pn_um": 25.282,
-    "pron_volume_near_um3": 8292.4,
-    "pron_volume_far_um3": 12636.7,
     "pron_labels": [
      2,
      3
     ],
+    "pron_distances_um": [
+     15.652,
+     20.014
+    ],
+    "pron_volumes_um3": [
+     12636.7,
+     8292.4
+    ],
+    "rms_to_center_um": 17.966,
+    "rms_over_R": 0.4357,
+    "pron_vol_frac": 0.07125,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 15.652,
+    "farther_to_center_um": 20.014,
+    "distance_sum_um": 35.666,
+    "inter_pn_um": 25.282,
     "near_over_R": 0.3796,
     "far_over_R": 0.4853,
     "sum_over_R": 0.8649,
     "inter_over_R": 0.6131,
-    "vol_asymmetry": 0.2076,
-    "pron_vol_frac": 0.07125,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.2076
    },
    "is_pronuclear_target": true
   },
@@ -2616,6 +3307,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      175.91,
      170.06,
@@ -2623,24 +3315,32 @@
     ],
     "cell_volume_um3": 312553.6,
     "cell_radius_um": 42.1,
-    "nearer_to_center_um": 14.237,
-    "farther_to_center_um": 25.563,
-    "distance_sum_um": 39.8,
-    "inter_pn_um": 23.537,
-    "pron_volume_near_um3": 6011.3,
-    "pron_volume_far_um3": 4356.3,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     25.563,
+     14.237
+    ],
+    "pron_volumes_um3": [
+     6011.3,
+     4356.3
+    ],
+    "rms_to_center_um": 20.69,
+    "rms_over_R": 0.4915,
+    "pron_vol_frac": 0.03317,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 14.237,
+    "farther_to_center_um": 25.563,
+    "distance_sum_um": 39.8,
+    "inter_pn_um": 23.537,
     "near_over_R": 0.3382,
     "far_over_R": 0.6072,
     "sum_over_R": 0.9454,
     "inter_over_R": 0.5591,
-    "vol_asymmetry": 0.1596,
-    "pron_vol_frac": 0.03317,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.1596
    },
    "is_pronuclear_target": true
   },
@@ -2669,6 +3369,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      155.51,
      143.96,
@@ -2676,24 +3377,32 @@
     ],
     "cell_volume_um3": 305438.4,
     "cell_radius_um": 41.78,
-    "nearer_to_center_um": 23.457,
-    "farther_to_center_um": 28.471,
-    "distance_sum_um": 51.928,
-    "inter_pn_um": 39.724,
-    "pron_volume_near_um3": 6014.7,
-    "pron_volume_far_um3": 4186.2,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     28.471,
+     23.457
+    ],
+    "pron_volumes_um3": [
+     6014.7,
+     4186.2
+    ],
+    "rms_to_center_um": 26.085,
+    "rms_over_R": 0.6244,
+    "pron_vol_frac": 0.0334,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 23.457,
+    "farther_to_center_um": 28.471,
+    "distance_sum_um": 51.928,
+    "inter_pn_um": 39.724,
     "near_over_R": 0.5615,
     "far_over_R": 0.6815,
     "sum_over_R": 1.243,
     "inter_over_R": 0.9508,
-    "vol_asymmetry": 0.1793,
-    "pron_vol_frac": 0.0334,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.1793
    },
    "is_pronuclear_target": true
   },
@@ -2722,6 +3431,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      206.76,
      123.59,
@@ -2729,24 +3439,32 @@
     ],
     "cell_volume_um3": 295380.4,
     "cell_radius_um": 41.31,
-    "nearer_to_center_um": 22.709,
-    "farther_to_center_um": 26.478,
-    "distance_sum_um": 49.188,
-    "inter_pn_um": 27.91,
-    "pron_volume_near_um3": 4994.1,
-    "pron_volume_far_um3": 3840.9,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     26.478,
+     22.709
+    ],
+    "pron_volumes_um3": [
+     4994.1,
+     3840.9
+    ],
+    "rms_to_center_um": 24.666,
+    "rms_over_R": 0.597,
+    "pron_vol_frac": 0.02991,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 22.709,
+    "farther_to_center_um": 26.478,
+    "distance_sum_um": 49.188,
+    "inter_pn_um": 27.91,
     "near_over_R": 0.5497,
     "far_over_R": 0.6409,
     "sum_over_R": 1.1906,
     "inter_over_R": 0.6755,
-    "vol_asymmetry": 0.1305,
-    "pron_vol_frac": 0.02991,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.1305
    },
    "is_pronuclear_target": true
   },
@@ -2775,6 +3493,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      135.48,
      186.15,
@@ -2782,24 +3501,32 @@
     ],
     "cell_volume_um3": 263644.8,
     "cell_radius_um": 39.78,
-    "nearer_to_center_um": 25.593,
-    "farther_to_center_um": 25.783,
-    "distance_sum_um": 51.376,
-    "inter_pn_um": 29.648,
-    "pron_volume_near_um3": 3104.3,
-    "pron_volume_far_um3": 3316.9,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     25.593,
+     25.783
+    ],
+    "pron_volumes_um3": [
+     3316.9,
+     3104.3
+    ],
+    "rms_to_center_um": 25.688,
+    "rms_over_R": 0.6458,
+    "pron_vol_frac": 0.02436,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 25.593,
+    "farther_to_center_um": 25.783,
+    "distance_sum_um": 51.376,
+    "inter_pn_um": 29.648,
     "near_over_R": 0.6434,
     "far_over_R": 0.6482,
     "sum_over_R": 1.2916,
     "inter_over_R": 0.7453,
-    "vol_asymmetry": 0.0331,
-    "pron_vol_frac": 0.02436,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.0331
    },
    "is_pronuclear_target": true
   },
@@ -2828,6 +3555,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      218.38,
      78.24,
@@ -2835,24 +3563,32 @@
     ],
     "cell_volume_um3": 268513.1,
     "cell_radius_um": 40.02,
-    "nearer_to_center_um": 23.894,
-    "farther_to_center_um": 41.049,
-    "distance_sum_um": 64.943,
-    "inter_pn_um": 48.222,
-    "pron_volume_near_um3": 3318.7,
-    "pron_volume_far_um3": 4356.3,
     "pron_labels": [
      2,
      3
     ],
+    "pron_distances_um": [
+     23.894,
+     41.049
+    ],
+    "pron_volumes_um3": [
+     4356.3,
+     3318.7
+    ],
+    "rms_to_center_um": 33.585,
+    "rms_over_R": 0.8392,
+    "pron_vol_frac": 0.02858,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 23.894,
+    "farther_to_center_um": 41.049,
+    "distance_sum_um": 64.943,
+    "inter_pn_um": 48.222,
     "near_over_R": 0.597,
     "far_over_R": 1.0257,
     "sum_over_R": 1.6227,
     "inter_over_R": 1.2049,
-    "vol_asymmetry": 0.1352,
-    "pron_vol_frac": 0.02858,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.1352
    },
    "is_pronuclear_target": true
   },
@@ -2881,6 +3617,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      69.33,
      256.3,
@@ -2888,24 +3625,32 @@
     ],
     "cell_volume_um3": 287712.2,
     "cell_radius_um": 40.95,
-    "nearer_to_center_um": 21.973,
-    "farther_to_center_um": 25.249,
-    "distance_sum_um": 47.222,
-    "inter_pn_um": 22.155,
-    "pron_volume_near_um3": 2949.5,
-    "pron_volume_far_um3": 3464.9,
     "pron_labels": [
      3,
      2
     ],
+    "pron_distances_um": [
+     21.973,
+     25.249
+    ],
+    "pron_volumes_um3": [
+     3464.9,
+     2949.5
+    ],
+    "rms_to_center_um": 23.668,
+    "rms_over_R": 0.5779,
+    "pron_vol_frac": 0.02229,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 21.973,
+    "farther_to_center_um": 25.249,
+    "distance_sum_um": 47.222,
+    "inter_pn_um": 22.155,
     "near_over_R": 0.5365,
     "far_over_R": 0.6165,
     "sum_over_R": 1.1531,
     "inter_over_R": 0.541,
-    "vol_asymmetry": 0.0804,
-    "pron_vol_frac": 0.02229,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.0804
    },
    "is_pronuclear_target": true
   },
@@ -2934,6 +3679,7 @@
    ],
    "polar_body_label": 4,
    "geometry": {
+    "n_pronuclei": 2,
     "cell_center_um": [
      185.48,
      76.84,
@@ -2941,24 +3687,32 @@
     ],
     "cell_volume_um3": 292298.1,
     "cell_radius_um": 41.17,
-    "nearer_to_center_um": 22.128,
-    "farther_to_center_um": 30.806,
-    "distance_sum_um": 52.934,
-    "inter_pn_um": 50.271,
-    "pron_volume_near_um3": 4677.7,
-    "pron_volume_far_um3": 5302.0,
     "pron_labels": [
      2,
      3
     ],
+    "pron_distances_um": [
+     22.128,
+     30.806
+    ],
+    "pron_volumes_um3": [
+     5302.0,
+     4677.7
+    ],
+    "rms_to_center_um": 26.821,
+    "rms_over_R": 0.6515,
+    "pron_vol_frac": 0.03414,
+    "polar_body_present": true,
+    "polar_body_external": true,
+    "nearer_to_center_um": 22.128,
+    "farther_to_center_um": 30.806,
+    "distance_sum_um": 52.934,
+    "inter_pn_um": 50.271,
     "near_over_R": 0.5375,
     "far_over_R": 0.7483,
     "sum_over_R": 1.2858,
     "inter_over_R": 1.2211,
-    "vol_asymmetry": 0.0626,
-    "pron_vol_frac": 0.03414,
-    "polar_body_present": true,
-    "polar_body_external": true
+    "vol_asymmetry": 0.0626
    },
    "is_pronuclear_target": true
   },
@@ -2977,10 +3731,10 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 1,
@@ -2988,7 +3742,30 @@
     2
    ],
    "polar_body_label": 4,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     149.63,
+     215.01,
+     151.63
+    ],
+    "cell_volume_um3": 298736.4,
+    "cell_radius_um": 41.47,
+    "pron_labels": [
+     2
+    ],
+    "pron_distances_um": [
+     20.35
+    ],
+    "pron_volumes_um3": [
+     3129.8
+    ],
+    "rms_to_center_um": 20.35,
+    "rms_over_R": 0.4907,
+    "pron_vol_frac": 0.01048,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": true
   },
   {
@@ -3006,10 +3783,10 @@
     1.0000000150184936,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 2,
@@ -3017,7 +3794,30 @@
     4
    ],
    "polar_body_label": 1,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     270.84,
+     122.84,
+     142.43
+    ],
+    "cell_volume_um3": 108173.4,
+    "cell_radius_um": 29.56,
+    "pron_labels": [
+     4
+    ],
+    "pron_distances_um": [
+     1.949
+    ],
+    "pron_volumes_um3": [
+     8693.8
+    ],
+    "rms_to_center_um": 1.949,
+    "rms_over_R": 0.066,
+    "pron_vol_frac": 0.08037,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": false
   },
   {
@@ -3035,10 +3835,10 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 1,
@@ -3046,7 +3846,30 @@
     3
    ],
    "polar_body_label": 2,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     138.29,
+     252.85,
+     132.81
+    ],
+    "cell_volume_um3": 127566.5,
+    "cell_radius_um": 31.23,
+    "pron_labels": [
+     3
+    ],
+    "pron_distances_um": [
+     1.929
+    ],
+    "pron_volumes_um3": [
+     11298.0
+    ],
+    "rms_to_center_um": 1.929,
+    "rms_over_R": 0.0618,
+    "pron_vol_frac": 0.08857,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": false
   },
   {
@@ -3064,10 +3887,10 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 2,
@@ -3075,7 +3898,30 @@
     4
    ],
    "polar_body_label": 1,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     149.36,
+     192.07,
+     139.82
+    ],
+    "cell_volume_um3": 138743.8,
+    "cell_radius_um": 32.12,
+    "pron_labels": [
+     4
+    ],
+    "pron_distances_um": [
+     1.874
+    ],
+    "pron_volumes_um3": [
+     9632.8
+    ],
+    "rms_to_center_um": 1.874,
+    "rms_over_R": 0.0583,
+    "pron_vol_frac": 0.06943,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": false
   },
   {
@@ -3093,10 +3939,10 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 2,
@@ -3104,7 +3950,30 @@
     4
    ],
    "polar_body_label": 1,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     215.7,
+     167.85,
+     112.02
+    ],
+    "cell_volume_um3": 154874.3,
+    "cell_radius_um": 33.31,
+    "pron_labels": [
+     4
+    ],
+    "pron_distances_um": [
+     1.44
+    ],
+    "pron_volumes_um3": [
+     8072.9
+    ],
+    "rms_to_center_um": 1.44,
+    "rms_over_R": 0.0432,
+    "pron_vol_frac": 0.05213,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": false
   },
   {
@@ -3122,10 +3991,10 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 1,
@@ -3133,7 +4002,30 @@
     3
    ],
    "polar_body_label": 2,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     201.47,
+     171.23,
+     114.0
+    ],
+    "cell_volume_um3": 163734.9,
+    "cell_radius_um": 33.94,
+    "pron_labels": [
+     3
+    ],
+    "pron_distances_um": [
+     0.356
+    ],
+    "pron_volumes_um3": [
+     9324.9
+    ],
+    "rms_to_center_um": 0.356,
+    "rms_over_R": 0.0105,
+    "pron_vol_frac": 0.05695,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": false
   },
   {
@@ -3151,10 +4043,10 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 2,
@@ -3162,7 +4054,30 @@
     4
    ],
    "polar_body_label": 1,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     220.12,
+     187.34,
+     114.38
+    ],
+    "cell_volume_um3": 239344.3,
+    "cell_radius_um": 38.52,
+    "pron_labels": [
+     4
+    ],
+    "pron_distances_um": [
+     3.106
+    ],
+    "pron_volumes_um3": [
+     12652.0
+    ],
+    "rms_to_center_um": 3.106,
+    "rms_over_R": 0.0806,
+    "pron_vol_frac": 0.05286,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": false
   },
   {
@@ -3180,10 +4095,10 @@
     1.0,
     1.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 2,
@@ -3191,7 +4106,30 @@
     4
    ],
    "polar_body_label": 1,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     198.98,
+     174.6,
+     112.97
+    ],
+    "cell_volume_um3": 142683.3,
+    "cell_radius_um": 32.42,
+    "pron_labels": [
+     4
+    ],
+    "pron_distances_um": [
+     1.282
+    ],
+    "pron_volumes_um3": [
+     8625.8
+    ],
+    "rms_to_center_um": 1.282,
+    "rms_over_R": 0.0395,
+    "pron_vol_frac": 0.06045,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": false
   },
   {
@@ -3209,10 +4147,10 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 1,
@@ -3220,7 +4158,30 @@
     3
    ],
    "polar_body_label": 2,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     156.65,
+     228.09,
+     97.35
+    ],
+    "cell_volume_um3": 158135.2,
+    "cell_radius_um": 33.55,
+    "pron_labels": [
+     3
+    ],
+    "pron_distances_um": [
+     3.137
+    ],
+    "pron_volumes_um3": [
+     9809.7
+    ],
+    "rms_to_center_um": 3.137,
+    "rms_over_R": 0.0935,
+    "pron_vol_frac": 0.06203,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": false
   },
   {
@@ -3238,10 +4199,10 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 1,
@@ -3249,7 +4210,30 @@
     3
    ],
    "polar_body_label": 2,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     165.81,
+     153.62,
+     106.08
+    ],
+    "cell_volume_um3": 176261.0,
+    "cell_radius_um": 34.78,
+    "pron_labels": [
+     3
+    ],
+    "pron_distances_um": [
+     4.42
+    ],
+    "pron_volumes_um3": [
+     10561.5
+    ],
+    "rms_to_center_um": 4.42,
+    "rms_over_R": 0.1271,
+    "pron_vol_frac": 0.05992,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": false
   },
   {
@@ -3267,10 +4251,10 @@
     1.0,
     7.0
    ],
-   "status": "unresolved",
-   "confidence": 0.0,
+   "status": "single_pronucleus",
+   "confidence": 0.45,
    "flags": [
-    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "only 1 pronucleus inside the cell body \u2014 geometry uses the single annotated mass, so tau is an extrapolation (flagged, not hidden)",
     "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
    ],
    "cell_body_label": 1,
@@ -3278,7 +4262,30 @@
     3
    ],
    "polar_body_label": 2,
-   "geometry": null,
+   "geometry": {
+    "n_pronuclei": 1,
+    "cell_center_um": [
+     162.38,
+     145.22,
+     106.7
+    ],
+    "cell_volume_um3": 142137.3,
+    "cell_radius_um": 32.37,
+    "pron_labels": [
+     3
+    ],
+    "pron_distances_um": [
+     2.173
+    ],
+    "pron_volumes_um3": [
+     9938.9
+    ],
+    "rms_to_center_um": 2.173,
+    "rms_over_R": 0.0671,
+    "pron_vol_frac": 0.06992,
+    "polar_body_present": true,
+    "polar_body_external": true
+   },
    "is_pronuclear_target": false
   }
  ]

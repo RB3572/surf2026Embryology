@@ -592,10 +592,28 @@
     }, XS_CFG);
   }
   // ---------- cross-embryo ALIGNED outlines, coloured by significance (p-value) ----------
-  // Every zygote's cell-body cross-section (aggregate `outline`, in u,v ⊥ the polar-body axis),
-  // rotated so its best plane (current mode) is vertical and flipped so the selected gene's higher
-  // side is on +x, coloured by viridis(sigT(p)) — dark = significant split, yellow = n.s.
+  // Every CARRIER zygote's cell-body cross-section (aggregate `outline`, in u,v ⊥ the polar-body
+  // axis), rotated so THE SELECTED GENE's best plane (current mode) is vertical and flipped so that
+  // gene's higher side is on +x, coloured by viridis(sigT(p)) — dark = significant split, yellow = n.s.
   const sigT = (p) => Math.max(0, Math.min(1, (Math.log10(Math.max(p, 1e-12)) + 3) / 3));
+
+  // ---------- gene-specific alignment ----------
+  // The stored `best` / `sig` are TRANSCRIPT-WEIGHTED OVER ALL GENES, so aligning by them
+  // would rotate every zygote to a plane chosen from OTHER genes (they disagree with the
+  // per-gene plane 91% of the time). `gb[gene]` carries that gene's own answer, lifted
+  // straight out of the build — best plane, side-A count there, permutation p there — for
+  // each of the 4 modes, so this figure uses the same numbers the rest of the page reports.
+  // Returns null when the zygote never detected the gene, which is what excludes it.
+  function geneAlign(e, g, key) {
+    const row = e.g && e.g[g];
+    if (!row || !row[0]) return null;                   // gene absent from this zygote
+    const ki = bestKeyIndex(), n = row[0], gbRow = e.gb && e.gb[g];
+    if (!gbRow) {                                       // aggregate predates gb — fall back
+      return { plane: e.best[ki], aAt: row[1 + ki], n,
+               p: (e.sig && e.sig[key] != null) ? e.sig[key] : 1, geneSpecific: false };
+    }
+    return { plane: gbRow[ki], aAt: gbRow[4 + ki], n, p: gbRow[8 + ki], geneSpecific: true };
+  }
   function meanOutline(aligned) {
     const K = 120, sum = new Float64Array(K), cnt = new Int32Array(K);
     aligned.forEach((o) => {
@@ -613,7 +631,7 @@
   function renderAlignedOutlines() {
     if (!xsAlign || !xsAlign.offsetParent) return;               // skip when its tab is hidden
     const agg = curAGG(); if (!agg) return;
-    const ki = bestKeyIndex(), g = gene(), step = state.step || 10, key = state.crossKey;
+    const g = gene(), step = state.step || 10, key = state.crossKey;
     const onlyCur = xsAlignOnly && xsAlignOnly.checked;
     const showCells = (xsAlignCells ? xsAlignCells.checked : true) && !onlyCur;
     const showMean = (xsAlignMean ? xsAlignMean.checked : true) && !onlyCur;
@@ -623,22 +641,29 @@
     const showPb = xsAlignPb && xsAlignPb.checked;
     const spById = {}; if (state.spermData) state.spermData.embryos.forEach((r) => (spById[r.id] = r));
     const aligned = [];
+    let nSkipped = 0;
     agg.embryos.forEach((e) => {
       if (!e.outline || !e.outline.length) return;
-      const th = e.best[ki] * step * Math.PI / 180, c = Math.cos(th), s = Math.sin(th);
-      const gRow = e.g[g], flip = gRow ? gRow[1 + ki] * 2 < gRow[0] : false;   // higher gene side → +x
+      // Alignment is per-GENE: the rotation, the flip and the colour all come from
+      // the selected gene's own split. A zygote that never detected this gene has
+      // nothing to align to, so it is excluded rather than drawn at an unrelated angle.
+      const ga = geneAlign(e, g, key);
+      if (!ga) { nSkipped++; return; }
+      const th = ga.plane * step * Math.PI / 180, c = Math.cos(th), s = Math.sin(th);
+      const flip = ga.aAt * 2 < ga.n;                                            // higher gene side → +x
       const xf = ([u, v]) => { let nx = u * c + v * s; const ny = -u * s + v * c; if (flip) nx = -nx; return [nx, ny]; };
       const pts = e.outline.map(xf); pts.push(pts[0]);
       const sp = spById[e.id];                                                   // sperm in the SAME aligned frame
       const sperm = (showSperm && sp && sp.uv) ? xf(sp.uv) : null;
       // polar-body silhouette in the SAME aligned frame (⊥ the polar-body axis, so it sits near centre)
       const pb = (showPb && e.pb_outline && e.pb_outline.length) ? e.pb_outline.map(xf) : null;
-      aligned.push({ pts, sperm, pb, p: (e.sig && e.sig[key] != null) ? e.sig[key] : 1, id: e.id, label: e.label, isCur: e.id === state.currentId });
+      aligned.push({ pts, sperm, pb, p: ga.p, n: ga.n, id: e.id, label: e.label, isCur: e.id === state.currentId });
     });
     if (!aligned.length) {
       Plotly.purge(xsAlign); xsAlign.classList.remove("js-plotly-plot");
-      xsAlign.innerHTML = `<div class="xs-empty"><div>No aligned outlines for this selection.</div></div>`;
-      if (xsAlignSub) xsAlignSub.textContent = `· ${g}`; return;
+      xsAlign.innerHTML = `<div class="xs-empty"><div>No zygote detected <b>${g}</b>, so there is no `
+        + `gene-specific plane to align to.</div></div>`;
+      if (xsAlignSub) xsAlignSub.textContent = `· ${g} · 0 of ${agg.embryos.length} zygotes carry this gene`; return;
     }
     const traces = []; let lim = 20;
     const bump = (o) => o.pts.forEach(([x, y]) => { const m = Math.max(Math.abs(x), Math.abs(y)); if (m > lim) lim = m; });
@@ -684,7 +709,8 @@
     lim *= 1.08;
     if (showPlane) traces.push({ type: "scatter", mode: "lines", x: [0, 0], y: [-lim, lim], name: "Division plane",
       line: { color: "#111827", width: 1.4, dash: "dash" }, hoverinfo: "skip", showlegend: showLegend });
-    if (xsAlignSub) xsAlignSub.textContent = `· ${g} · ${aligned.length} zygotes · ${BESTKEY_LABEL[key]} plane`;
+    if (xsAlignSub) xsAlignSub.textContent = `· ${g} · ${aligned.length} of ${aligned.length + nSkipped} zygotes carry `
+      + `this gene · per-gene ${BESTKEY_LABEL[key]} plane`;
     plotInto(xsAlign, traces, {
       dragmode: "pan", margin: { l: 42, r: 10, t: 8, b: 38 }, autosize: true, showlegend: showLegend,
       xaxis: { title: { text: "Distance from division plane (µm)", font: { size: 10 } }, range: [-lim, lim],

@@ -683,8 +683,21 @@ def agg_entry(eid, label, A):
     # cross-section outlines by how significantly that embryo's transcriptome splits.
     _sigk = {"pVol": "wpVol", "pCnt": "wpCnt", "diffVol": "wpVol", "diffCnt": "wpCnt"}
     sig = {k: round(float(plns[bp[k]][_sigk[k]]), 5) for k in BEST_KEYS}
+    # `best`/`sig` above are transcript-weighted over ALL genes. The aligned-outlines
+    # figure aligns by ONE gene, so it also needs each gene's OWN best plane, the side-A
+    # count there (which side to flip) and the permutation p there (outline colour).
+    _bestf = {"pVol": "bestP_vol", "pCnt": "bestP_cnt",
+              "diffVol": "bestDiff_vol", "diffCnt": "bestDiff_cnt"}
+    _pf = {"pVol": "pVol", "pCnt": "pCnt", "diffVol": "pVol", "diffCnt": "pCnt"}
+    gb = {}
+    for row in A["genes"]:
+        planes = row["planes"]
+        bps = [int(row[_bestf[k]]) for k in BEST_KEYS]
+        gb[row["gene"]] = (bps
+                           + [int(planes[i]["a"]) for i in bps]
+                           + [round(float(planes[i][_pf[k]]), 5) for i, k in zip(bps, BEST_KEYS)])
     return {"id": eid, "label": label, "outline": A["cross_section"]["outline"],
-            "best": best, "sig": sig, "g": g}
+            "best": best, "sig": sig, "g": g, "gb": gb}
 
 
 def write_cross_aggregate(entries, path):

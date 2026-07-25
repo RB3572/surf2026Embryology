@@ -592,10 +592,25 @@
     }, XS_CFG);
   }
   // ---------- cross-embryo ALIGNED outlines, coloured by significance (p-value) ----------
-  // Every zygote's cell-body cross-section (aggregate `outline`, in u,v ⊥ the polar-body axis),
-  // rotated so its best plane (current mode) is vertical and flipped so the selected gene's higher
-  // side is on +x, coloured by viridis(sigT(p)) — dark = significant split, yellow = n.s.
+  // Every CARRIER zygote's cell-body cross-section (aggregate `outline`, in u,v ⊥ the polar-body
+  // axis), rotated so THE SPERM PLANE is vertical — unlike the plane-sweep project this angle is
+  // fixed by geometry (sperm + polar-body + cell centre), not chosen per gene, which is the whole
+  // point of this analysis. The flip and the colour are still gene-specific, so a zygote that never
+  // detected the selected gene is excluded rather than drawn with an arbitrary flip and an
+  // all-gene colour. Colour = viridis(sigT(p)) — dark = significant split, yellow = n.s.
   const sigT = (p) => Math.max(0, Math.min(1, (Math.log10(Math.max(p, 1e-12)) + 3) / 3));
+  // This gene's own split at the sperm plane. `gb[gene]` holds each gene's best plane,
+  // its side-A count there and its permutation p there (4 modes, in best_keys order),
+  // exported from the build — so the colour is this GENE's significance, not the
+  // all-gene aggregate in `sig`. null ⇒ the zygote never detected the gene, so it has
+  // nothing to contribute to this gene's figure and is excluded.
+  function geneSplit(e, g, key) {
+    const row = e.g && e.g[g];
+    if (!row || !row[0]) return null;
+    const ki = bestKeyIndex(), n = row[0], gbRow = e.gb && e.gb[g];
+    if (!gbRow) return { aAt: row[1 + ki], n, p: (e.sig && e.sig[key] != null) ? e.sig[key] : 1 };
+    return { aAt: gbRow[4 + ki], n, p: gbRow[8 + ki] };
+  }
   function meanOutline(aligned) {
     const K = 120, sum = new Float64Array(K), cnt = new Int32Array(K);
     aligned.forEach((o) => {
@@ -622,20 +637,23 @@
     const showSperm = xsAlignSperm && xsAlignSperm.checked;
     const spById = {}; if (state.spermData) state.spermData.embryos.forEach((r) => (spById[r.id] = r));
     const aligned = [];
+    let nSkipped = 0;
     agg.embryos.forEach((e) => {
       if (!e.outline || !e.outline.length) return;
+      const gs = geneSplit(e, g, key);
+      if (!gs) { nSkipped++; return; }              // this zygote never detected the selected gene
       const th = e.best[ki] * step * Math.PI / 180, c = Math.cos(th), s = Math.sin(th);
-      const gRow = e.g[g], flip = gRow ? gRow[1 + ki] * 2 < gRow[0] : false;   // higher gene side → +x
+      const flip = gs.aAt * 2 < gs.n;                                            // higher gene side → +x
       const xf = ([u, v]) => { let nx = u * c + v * s; const ny = -u * s + v * c; if (flip) nx = -nx; return [nx, ny]; };
       const pts = e.outline.map(xf); pts.push(pts[0]);
       const sp = spById[e.id];                                                   // sperm in the SAME aligned frame
       const sperm = (showSperm && sp && sp.uv) ? xf(sp.uv) : null;
-      aligned.push({ pts, sperm, p: (e.sig && e.sig[key] != null) ? e.sig[key] : 1, id: e.id, label: e.label, isCur: e.id === state.currentId });
+      aligned.push({ pts, sperm, p: gs.p, id: e.id, label: e.label, isCur: e.id === state.currentId });
     });
     if (!aligned.length) {
       Plotly.purge(xsAlign); xsAlign.classList.remove("js-plotly-plot");
-      xsAlign.innerHTML = `<div class="xs-empty"><div>No aligned outlines for this selection.</div></div>`;
-      if (xsAlignSub) xsAlignSub.textContent = `· ${g}`; return;
+      xsAlign.innerHTML = `<div class="xs-empty"><div>No zygote detected <b>${g}</b>.</div></div>`;
+      if (xsAlignSub) xsAlignSub.textContent = `· ${g} · 0 of ${agg.embryos.length} zygotes carry this gene`; return;
     }
     const traces = []; let lim = 20;
     const bump = (o) => o.pts.forEach(([x, y]) => { const m = Math.max(Math.abs(x), Math.abs(y)); if (m > lim) lim = m; });
@@ -663,7 +681,8 @@
     lim *= 1.08;
     if (showPlane) traces.push({ type: "scatter", mode: "lines", x: [0, 0], y: [-lim, lim], name: "Division plane",
       line: { color: "#111827", width: 1.4, dash: "dash" }, hoverinfo: "skip", showlegend: showLegend });
-    if (xsAlignSub) xsAlignSub.textContent = `· ${g} · ${aligned.length} zygotes · ${BESTKEY_LABEL[key]} plane`;
+    if (xsAlignSub) xsAlignSub.textContent = `· ${g} · ${aligned.length} of ${aligned.length + nSkipped} zygotes carry `
+      + `this gene · sperm plane`;
     plotInto(xsAlign, traces, {
       dragmode: "pan", margin: { l: 42, r: 10, t: 8, b: 38 }, autosize: true, showlegend: showLegend,
       xaxis: { title: { text: "Distance from division plane (µm)", font: { size: 10 } }, range: [-lim, lim],

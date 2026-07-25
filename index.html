@@ -19,7 +19,106 @@
       <h1>Analysis models</h1>
     </section>
 
-    <section class="lp-grid">
+    <!-- admin console card is injected here (gated; empty grids collapse via CSS) -->
+    <section class="lp-grid" id="lp-admin-grid"></section>
+
+    <!-- ══════════════════ PSEUDOTIME ══════════════════ -->
+    <section class="lp-group" style="--accent:#4338ca">
+      <h2 class="lp-group-h">Pseudotime</h2>
+      <p class="lp-group-note">Placing a fixed embryo on a developmental time axis. The clock is
+         built and validated on public live-imaging data, then applied to this project's fixed
+         MERFISH embryos — those two things are kept separate below.</p>
+
+      <div class="lp-sub">
+        <h3 class="lp-sub-h">Model development &amp; calibration
+          <span class="lp-sub-count">trained + validated on live-imaged embryos</span></h3>
+        <p class="lp-sub-note">Building the clock and measuring how well it works. Validation is on
+           Scheffler 2021 live imaging, where developmental time is actually known.</p>
+        <div class="lp-grid">
+
+      <a class="lp-card" href="pronuclear-pseudotime.html" style="--accent:#4338ca">
+        <span class="lp-card-tag">3D MERFISH · calibrated τ + uncertainty</span>
+        <h2>3D Pronuclear Pseudotime</h2>
+        <p>From a static 3D zygote stack: audited segmentation (cell body · 2
+           pronuclei · polar body) → dimensionless geometry → a monotonic
+           probabilistic clock calibrated on live-imaging trajectories. Returns a
+           τ distribution with 50/80/95% intervals, QC/OOD badges, and 3D
+           orthogonal exploration — not an unjustified point estimate.</p>
+        <span class="lp-card-go">Open model →</span>
+      </a>
+
+      <a class="lp-card" href="pseudotime-calibration.html" style="--accent:#4f46e5">
+        <span class="lp-card-tag">53 live-imaged zygotes · 2,057 frames</span>
+        <h2>Pronuclear Pseudotime Calibration</h2>
+        <p>Train a leakage-safe geometric clock on public live-imaging data
+           (Scheffler 2021), validate it with embryo-grouped cross-validation,
+           then apply the frozen model to this project's fixed zygotes to give
+           each one a calibrated pseudotime τ with a 95% interval.</p>
+        <span class="lp-card-go">Open model →</span>
+      </a>
+
+      <a class="lp-card" href="vision-pseudotime.html" style="--accent:#0ea5e9">
+        <span class="lp-card-tag">Pilot · fixed-image pipeline</span>
+        <h2>Fixed-Image Pseudotime (pilot)</h2>
+        <p>A reproducible data pipeline toward estimating pseudotime τ from a
+           fixed zygote image: metadata-only TIFF audit, streaming 2.5D
+           projections, a hybrid image→segmentation→geometry→frozen-clock path,
+           and honest pilot/OOD/data-blocker warnings. Not yet a validated image
+           clock.</p>
+        <span class="lp-card-go">Open pilot →</span>
+      </a>
+
+        </div>
+      </div>
+
+      <div class="lp-sub">
+        <h3 class="lp-sub-h">Applied to our dataset
+          <span class="lp-sub-count">τ used as an axis on our MERFISH embryos</span></h3>
+        <p class="lp-sub-note">Using the clock to ask biological questions. τ here is an inferred
+           estimate — the fixed embryos have no measured time of their own.</p>
+        <div class="lp-grid">
+
+      <a class="lp-card" href="pn3d-transcripts.html" style="--accent:#7c3aed">
+        <span class="lp-card-tag">τ from the 3D model · per-gene</span>
+        <h2>Pseudotime vs Transcripts (3D)</h2>
+        <p>Transcript counts against calibrated developmental pseudotime τ from
+           the 3D Pronuclear Pseudotime model — the same question as the
+           pronuclei-distance project, but on a validated time axis with real
+           uncertainty. Per-gene correlation ranking, τ intervals, and QC/OOD.</p>
+        <span class="lp-card-go">Open model →</span>
+      </a>
+
+      <a class="lp-card" href="pronuclei.html" style="--accent:#0891b2">
+        <span class="lp-card-tag">Zygotes with 2 pronuclei</span>
+        <h2>Pronuclei Distance vs Transcripts</h2>
+        <p>For each zygote, the minimum distance between the two pronuclei
+           (shortest line between the segments) against its total transcript
+           count — a scatter plot with a regression fit. Switchable between the
+           legacy distance proxy and the calibrated clock.</p>
+        <span class="lp-card-go">Open model →</span>
+      </a>
+
+      <a class="lp-card" href="extpt.html" style="--accent:#14b8a6">
+        <span class="lp-card-tag">51 zygote + 55 early + 38 late 2-cell</span>
+        <h2>Extended Pseudotime Analysis</h2>
+        <p>The pronuclei clock, extended past the first division: zygote → early-
+           2-cell → late-2-cell laid along one pseudotime axis. Watch any gene (or
+           gene set) rise and fall across the maternal-to-zygotic transition, with
+           the same regression, statistics, and gene-ranking tools.</p>
+        <span class="lp-card-go">Open model →</span>
+      </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════ SPERM, DIVISION & AXES ══════════════════ -->
+    <section class="lp-group" style="--accent:#0d9488">
+      <h2 class="lp-group-h">Sperm, division &amp; body axes</h2>
+      <p class="lp-group-note">Where the sperm enters, which plane the embryo divides along, and
+         whether either predicts how the transcriptome is arranged.</p>
+      <div class="lp-grid">
+
       <a class="lp-card" href="alphabeta.html" style="--accent:#db2777">
         <span class="lp-card-tag">55 early + 36 late 2-cell</span>
         <h2>Sperm α/β · 2-cell Blastomeres</h2>
@@ -60,73 +159,32 @@
         <span class="lp-card-go">Open model →</span>
       </a>
 
+      <a class="lp-card" href="axes.html" style="--accent:#e11d48">
+        <span class="lp-card-tag">26 zygotes + 19 two-cell · sperm-positive</span>
+        <h2>Fertilization Geometry &amp; the First Axis</h2>
+        <p>Does the sperm entry position (GFP midpiece) and the polar body (animal
+           pole) predict the first cleavage plane? A shape-controlled, null-tested
+           re-examination of the pre-patterning question — plus whether the
+           transcriptome is asymmetric along that axis.</p>
+        <span class="lp-card-go">Open model →</span>
+      </a>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════ GENE EXPRESSION & EMBRYO STRUCTURE ══════════════════ -->
+    <section class="lp-group" style="--accent:#7c3aed">
+      <h2 class="lp-group-h">Gene expression &amp; embryo structure</h2>
+      <p class="lp-group-note">Where transcripts sit inside the embryo, how they got there, and
+         which structure is which.</p>
+      <div class="lp-grid">
+
       <a class="lp-card" href="segments.html" style="--accent:#7c3aed">
         <span class="lp-card-tag">All embryos · 4 stages</span>
         <h2>Segment Gene Enrichment</h2>
         <p>For every embryo (oocyte → late 2-cell), assign transcripts to each
            segmentation label and rank the genes most enriched in each segment
            (density fold-change vs the embryo-wide average). One tab per segment.</p>
-        <span class="lp-card-go">Open model →</span>
-      </a>
-
-      <a class="lp-card" href="pseudotime-calibration.html" style="--accent:#4f46e5">
-        <span class="lp-card-tag">53 live-imaged zygotes · 2,057 frames</span>
-        <h2>Pronuclear Pseudotime Calibration</h2>
-        <p>Train a leakage-safe geometric clock on public live-imaging data
-           (Scheffler 2021), validate it with embryo-grouped cross-validation,
-           then apply the frozen model to this project's fixed zygotes to give
-           each one a calibrated pseudotime τ with a 95% interval.</p>
-        <span class="lp-card-go">Open model →</span>
-      </a>
-
-      <a class="lp-card" href="pn3d-transcripts.html" style="--accent:#7c3aed">
-        <span class="lp-card-tag">τ from the 3D model · per-gene</span>
-        <h2>Pseudotime vs Transcripts (3D)</h2>
-        <p>Transcript counts against calibrated developmental pseudotime τ from
-           the 3D Pronuclear Pseudotime model — the same question as the
-           pronuclei-distance project, but on a validated time axis with real
-           uncertainty. Per-gene correlation ranking, τ intervals, and QC/OOD.</p>
-        <span class="lp-card-go">Open model →</span>
-      </a>
-
-      <a class="lp-card" href="pronuclear-pseudotime.html" style="--accent:#4338ca">
-        <span class="lp-card-tag">3D MERFISH · calibrated τ + uncertainty</span>
-        <h2>3D Pronuclear Pseudotime</h2>
-        <p>From a static 3D zygote stack: audited segmentation (cell body · 2
-           pronuclei · polar body) → dimensionless geometry → a monotonic
-           probabilistic clock calibrated on live-imaging trajectories. Returns a
-           τ distribution with 50/80/95% intervals, QC/OOD badges, and 3D
-           orthogonal exploration — not an unjustified point estimate.</p>
-        <span class="lp-card-go">Open model →</span>
-      </a>
-
-      <a class="lp-card" href="vision-pseudotime.html" style="--accent:#0ea5e9">
-        <span class="lp-card-tag">Pilot · fixed-image pipeline</span>
-        <h2>Fixed-Image Pseudotime (pilot)</h2>
-        <p>A reproducible data pipeline toward estimating pseudotime τ from a
-           fixed zygote image: metadata-only TIFF audit, streaming 2.5D
-           projections, a hybrid image→segmentation→geometry→frozen-clock path,
-           and honest pilot/OOD/data-blocker warnings. Not yet a validated image
-           clock.</p>
-        <span class="lp-card-go">Open pilot →</span>
-      </a>
-
-      <a class="lp-card" href="pronuclei.html" style="--accent:#0891b2">
-        <span class="lp-card-tag">Zygotes with 2 pronuclei</span>
-        <h2>Pronuclei Distance vs Transcripts</h2>
-        <p>For each zygote, the minimum distance between the two pronuclei
-           (shortest line between the segments) against its total transcript
-           count — a scatter plot with a regression fit.</p>
-        <span class="lp-card-go">Open model →</span>
-      </a>
-
-      <a class="lp-card" href="pronuclei-assignments.html" style="--accent:#db2777">
-        <span class="lp-card-tag">Zygotes with 2 pronuclei</span>
-        <h2>Pronuclei Assignments</h2>
-        <p>Which pronucleus is male and which is female? Several tests — distance to the
-           polar body (centre-of-mass and shell), relative size, and distance to the sperm —
-           each vote, and a consensus is taken. A ♀/♂ concordance grid per zygote, with the
-           distance lines drawn in 3-D.</p>
         <span class="lp-card-go">Open model →</span>
       </a>
 
@@ -140,25 +198,17 @@
         <span class="lp-card-go">Open model →</span>
       </a>
 
-      <a class="lp-card" href="extpt.html" style="--accent:#14b8a6">
-        <span class="lp-card-tag">51 zygote + 55 early + 38 late 2-cell</span>
-        <h2>Extended Pseudotime Analysis</h2>
-        <p>The pronuclei clock, extended past the first division: zygote → early-
-           2-cell → late-2-cell laid along one pseudotime axis. Watch any gene (or
-           gene set) rise and fall across the maternal-to-zygotic transition, with
-           the same regression, statistics, and gene-ranking tools.</p>
+      <a class="lp-card" href="pronuclei-assignments.html" style="--accent:#db2777">
+        <span class="lp-card-tag">Zygotes with 2 pronuclei</span>
+        <h2>Pronuclei Assignments</h2>
+        <p>Which pronucleus is male and which is female? Several tests — distance to the
+           polar body (centre-of-mass and shell), relative size, and distance to the sperm —
+           each vote, and a consensus is taken. A ♀/♂ concordance grid per zygote, with the
+           distance lines drawn in 3-D.</p>
         <span class="lp-card-go">Open model →</span>
       </a>
 
-      <a class="lp-card" href="axes.html" style="--accent:#e11d48">
-        <span class="lp-card-tag">26 zygotes + 19 two-cell · sperm-positive</span>
-        <h2>Fertilization Geometry &amp; the First Axis</h2>
-        <p>Does the sperm entry position (GFP midpiece) and the polar body (animal
-           pole) predict the first cleavage plane? A shape-controlled, null-tested
-           re-examination of the pre-patterning question — plus whether the
-           transcriptome is asymmetric along that axis.</p>
-        <span class="lp-card-go">Open model →</span>
-      </a>
+      </div>
     </section>
   </main>
   <script src="/analytics.js" defer></script>
@@ -168,7 +218,11 @@
     if (/(?:^|;\s*)surf_admin=1(?:;|$)/.test(document.cookie)) {
       fetch("/admin.card.html", { cache: "no-store" })
         .then(function (r) { return r.ok ? r.text() : ""; })
-        .then(function (h) { var g = document.querySelector(".lp-grid"); if (h && g) g.insertAdjacentHTML("afterbegin", h); })
+        .then(function (h) {
+          // its own grid, above the groups — so it never lands inside a project group
+          var g = document.getElementById("lp-admin-grid") || document.querySelector(".lp-grid");
+          if (h && g) g.insertAdjacentHTML("afterbegin", h);
+        })
         .catch(function () {});
     }
     // Hide project cards this login can't open (server enforces it too — see middleware.js).
@@ -181,8 +235,20 @@
           var key = (a.getAttribute("href") || "").replace(/^\//, "").replace(/\.html?$/, "");
           if (key && key !== "index" && key !== "admin" && !allowed[key]) a.remove();
         });
+        pruneEmptyGroups();
       })
       .catch(function () {});
+
+    // A subgroup / group whose cards were all filtered away must not leave a
+    // dangling heading behind (empty .lp-grid itself collapses via CSS).
+    function pruneEmptyGroups() {
+      document.querySelectorAll(".lp-sub").forEach(function (s) {
+        if (!s.querySelector("a.lp-card")) s.remove();
+      });
+      document.querySelectorAll(".lp-group").forEach(function (g) {
+        if (!g.querySelector("a.lp-card")) g.remove();
+      });
+    }
   </script>
 </body>
 </html>

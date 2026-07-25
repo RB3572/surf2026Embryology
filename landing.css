@@ -33,6 +33,42 @@ body {
   margin-top: 34px;
   display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px;
 }
+/* a grid that ends up with no cards (admin slot, or everything access-filtered
+   away) must not leave a gap */
+.lp-grid:empty { display: none; }
+
+/* ---- project groups ---- */
+.lp-group { margin-top: 46px; }
+.lp-group > .lp-grid { margin-top: 18px; }
+.lp-group-h {
+  font-size: 13px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--ink); margin: 0; padding-bottom: 10px; border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap: 9px;
+}
+.lp-group-h::before {
+  content: ""; width: 9px; height: 9px; border-radius: 3px;
+  background: var(--accent, #3b82f6);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #3b82f6) 16%, transparent);
+}
+.lp-group-note {
+  font-size: 13px; line-height: 1.55; color: var(--ink-2);
+  margin: 10px 0 0; max-width: 660px;
+}
+/* subgroups (e.g. model development vs applied) */
+.lp-sub { margin-top: 26px; }
+.lp-sub > .lp-grid { margin-top: 14px; }
+.lp-sub-h {
+  font-size: 12px; font-weight: 700; letter-spacing: .05em;
+  color: var(--ink-2); margin: 0; display: flex; align-items: baseline; gap: 8px;
+}
+.lp-sub-h .lp-sub-count {
+  font-family: var(--mono); font-size: 10.5px; font-weight: 500; color: var(--ink-soft);
+  letter-spacing: 0;
+}
+.lp-sub-note {
+  font-size: 12.5px; line-height: 1.5; color: var(--ink-soft);
+  margin: 5px 0 0; max-width: 660px;
+}
 .lp-card {
   --accent: #3b82f6;
   display: flex; flex-direction: column; gap: 8px;

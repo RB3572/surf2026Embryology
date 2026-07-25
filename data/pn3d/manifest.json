@@ -1,0 +1,5145 @@
+{
+ "schema_version": 1,
+ "package_version": "pn3d-0.1.0",
+ "generated_at_utc": "2026-07-25T07:00:42+00:00",
+ "data_root_redacted": "<data-root>",
+ "n_experiments": 8,
+ "n_embryos": 121,
+ "by_stage": {
+  "zygote": 54,
+  "l2c": 25,
+  "e2c": 42
+ },
+ "by_batch": {
+  "20251226": 13,
+  "20260212": 2,
+  "20260407": 13,
+  "20260408": 24,
+  "20260409": 8,
+  "20260420": 15,
+  "20260424": 18,
+  "20260425": 28
+ },
+ "spacing_grid_values_seen": {
+  "None": 7,
+  "(1.0, 1.0, 7.0)": 90,
+  "(1.0000000150184936, 1.0000000150184936, 7.0)": 21,
+  "(1.0, 1.0, 2.0)": 1,
+  "(1.0, 1.0, 1.0)": 2
+ },
+ "physical_scale": {
+  "xy_um_assumed": 0.15,
+  "z_over_xy": 7.0,
+  "z_um_assumed": 1.05,
+  "note": "xy \u00b5m is a documented display constant from the MERFISH pipeline; all model features are dimensionless (\u00f7 cell radius)."
+ },
+ "time_supervision": {
+  "in_this_dataset": false,
+  "note": "The mounted dataset is fixed MERFISH with no time-lapse / PNF / NEBD annotations. True developmental tau comes from the external Scheffler 2021 live-imaging trajectories; fixed stacks are the target imaging domain (segmentation / adaptation / inference), never time supervision."
+ },
+ "experiments": [
+  {
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "plate": "p1",
+   "n_embryos": 13
+  },
+  {
+   "experiment": "20260212_sample4_l2c_p2",
+   "batch_date": "20260212",
+   "stage": "l2c",
+   "plate": "p2",
+   "n_embryos": 2
+  },
+  {
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "n_embryos": 13
+  },
+  {
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "n_embryos": 24
+  },
+  {
+   "experiment": "20260409_l2c_p2",
+   "batch_date": "20260409",
+   "stage": "l2c",
+   "plate": "p2",
+   "n_embryos": 8
+  },
+  {
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "n_embryos": 15
+  },
+  {
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "n_embryos": 18
+  },
+  {
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "n_embryos": 28
+  }
+ ],
+ "embryos": [
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov0",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov0",
+   "sub_index": null,
+   "n_label_instances": 3,
+   "spacing_grid": null,
+   "sizes_xyz": null,
+   "n_segments": null,
+   "segment_names_all_generic": null,
+   "space": null,
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": false,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": false,
+   "paths_redacted": {
+    "dna": "<data-root>/20251226_sample1_zygote_p1/fov0/dapi.tif",
+    "all": "<data-root>/20251226_sample1_zygote_p1/fov0/all.tif",
+    "label_tifs": [
+     "<data-root>/20251226_sample1_zygote_p1/fov0/Segmentation-label.tif",
+     "<data-root>/20251226_sample1_zygote_p1/fov0/Segmentation-label_1.tif",
+     "<data-root>/20251226_sample1_zygote_p1/fov0/Segmentation-label_2.tif"
+    ],
+    "seg_nrrd": "",
+    "scene": "<data-root>/20251226_sample1_zygote_p1/fov0/2026-01-12-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov1",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov1",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20251226_sample1_zygote_p1/fov1/dapi.tif",
+    "all": "<data-root>/20251226_sample1_zygote_p1/fov1/all.tif",
+    "label_tifs": [
+     "<data-root>/20251226_sample1_zygote_p1/fov1/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20251226_sample1_zygote_p1/fov1/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20251226_sample1_zygote_p1/fov1/2026-01-12-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov10",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov10",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20251226_sample1_zygote_p1/fov10/dapi.tif",
+    "all": "<data-root>/20251226_sample1_zygote_p1/fov10/all.tif",
+    "label_tifs": [
+     "<data-root>/20251226_sample1_zygote_p1/fov10/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20251226_sample1_zygote_p1/fov10/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20251226_sample1_zygote_p1/fov10/2026-01-13-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov11",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov11",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20251226_sample1_zygote_p1/fov11/dapi.tif",
+    "all": "<data-root>/20251226_sample1_zygote_p1/fov11/all.tif",
+    "label_tifs": [
+     "<data-root>/20251226_sample1_zygote_p1/fov11/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20251226_sample1_zygote_p1/fov11/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20251226_sample1_zygote_p1/fov11/2026-01-13-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov2/2_1",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov2",
+   "sub_index": "2_1",
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 2,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20251226_sample1_zygote_p1/fov2/2_1/dapi.tif",
+    "all": "<data-root>/20251226_sample1_zygote_p1/fov2/2_1/all.tif",
+    "label_tifs": [
+     "<data-root>/20251226_sample1_zygote_p1/fov2/2_1/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20251226_sample1_zygote_p1/fov2/2_1/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20251226_sample1_zygote_p1/fov2/2_1/2026-01-12-Scene.mrml"
+   },
+   "shared_fov": true
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov2/2_2",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov2",
+   "sub_index": "2_2",
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20251226_sample1_zygote_p1/fov2/2_2/dapi.tif",
+    "all": "<data-root>/20251226_sample1_zygote_p1/fov2/2_2/all.tif",
+    "label_tifs": [
+     "<data-root>/20251226_sample1_zygote_p1/fov2/2_2/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20251226_sample1_zygote_p1/fov2/2_2/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20251226_sample1_zygote_p1/fov2/2_2/2026-01-12-Scene.mrml"
+   },
+   "shared_fov": true
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov3",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov3",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 2,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20251226_sample1_zygote_p1/fov3/dapi.tif",
+    "all": "<data-root>/20251226_sample1_zygote_p1/fov3/all.tif",
+    "label_tifs": [
+     "<data-root>/20251226_sample1_zygote_p1/fov3/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20251226_sample1_zygote_p1/fov3/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20251226_sample1_zygote_p1/fov3/2026-01-12-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov4",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov4",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20251226_sample1_zygote_p1/fov4/dapi.tif",
+    "all": "<data-root>/20251226_sample1_zygote_p1/fov4/all.tif",
+    "label_tifs": [
+     "<data-root>/20251226_sample1_zygote_p1/fov4/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20251226_sample1_zygote_p1/fov4/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20251226_sample1_zygote_p1/fov4/2026-01-13-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov5",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov5",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 2,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20251226_sample1_zygote_p1/fov5/dapi.tif",
+    "all": "<data-root>/20251226_sample1_zygote_p1/fov5/all.tif",
+    "label_tifs": [
+     "<data-root>/20251226_sample1_zygote_p1/fov5/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20251226_sample1_zygote_p1/fov5/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20251226_sample1_zygote_p1/fov5/2026-01-13-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov6",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov6",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 2,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20251226_sample1_zygote_p1/fov6/dapi.tif",
+    "all": "<data-root>/20251226_sample1_zygote_p1/fov6/all.tif",
+    "label_tifs": [
+     "<data-root>/20251226_sample1_zygote_p1/fov6/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20251226_sample1_zygote_p1/fov6/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20251226_sample1_zygote_p1/fov6/2026-01-13-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov7",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov7",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20251226_sample1_zygote_p1/fov7/dapi.tif",
+    "all": "<data-root>/20251226_sample1_zygote_p1/fov7/all.tif",
+    "label_tifs": [
+     "<data-root>/20251226_sample1_zygote_p1/fov7/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20251226_sample1_zygote_p1/fov7/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20251226_sample1_zygote_p1/fov7/2026-01-13-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov8",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov8",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20251226_sample1_zygote_p1/fov8/dapi.tif",
+    "all": "<data-root>/20251226_sample1_zygote_p1/fov8/all.tif",
+    "label_tifs": [
+     "<data-root>/20251226_sample1_zygote_p1/fov8/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20251226_sample1_zygote_p1/fov8/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20251226_sample1_zygote_p1/fov8/2026-01-13-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov9",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov9",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 2,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20251226_sample1_zygote_p1/fov9/dapi.tif",
+    "all": "<data-root>/20251226_sample1_zygote_p1/fov9/all.tif",
+    "label_tifs": [
+     "<data-root>/20251226_sample1_zygote_p1/fov9/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20251226_sample1_zygote_p1/fov9/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20251226_sample1_zygote_p1/fov9/2026-01-13-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260212_sample4_l2c_p2/fov0",
+   "experiment": "20260212_sample4_l2c_p2",
+   "batch_date": "20260212",
+   "stage": "l2c",
+   "plate": "p2",
+   "fov": "fov0",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260212_sample4_l2c_p2/fov0/dapi.tif",
+    "all": "<data-root>/20260212_sample4_l2c_p2/fov0/all.tif",
+    "label_tifs": [
+     "<data-root>/20260212_sample4_l2c_p2/fov0/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260212_sample4_l2c_p2/fov0/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260212_sample4_l2c_p2/fov0/2026-02-26-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260212_sample4_l2c_p2/fov1",
+   "experiment": "20260212_sample4_l2c_p2",
+   "batch_date": "20260212",
+   "stage": "l2c",
+   "plate": "p2",
+   "fov": "fov1",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 6,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260212_sample4_l2c_p2/fov1/dapi.tif",
+    "all": "<data-root>/20260212_sample4_l2c_p2/fov1/all.tif",
+    "label_tifs": [
+     "<data-root>/20260212_sample4_l2c_p2/fov1/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260212_sample4_l2c_p2/fov1/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260212_sample4_l2c_p2/fov1/2026-02-26-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov0",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov0",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260407_zygote_p1/fov0/dapi.tif",
+    "all": "<data-root>/20260407_zygote_p1/fov0/all.tif",
+    "label_tifs": [
+     "<data-root>/20260407_zygote_p1/fov0/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260407_zygote_p1/fov0/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260407_zygote_p1/fov0/2026-04-29-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov1",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov1",
+   "sub_index": null,
+   "n_label_instances": 3,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    2.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260407_zygote_p1/fov1/dapi.tif",
+    "all": "<data-root>/20260407_zygote_p1/fov1/all.tif",
+    "label_tifs": [
+     "<data-root>/20260407_zygote_p1/fov1/Segmentation-label.tif",
+     "<data-root>/20260407_zygote_p1/fov1/Segmentation-label_1.tif",
+     "<data-root>/20260407_zygote_p1/fov1/Segmentation-label_2.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260407_zygote_p1/fov1/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260407_zygote_p1/fov1/2026-05-01-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov10",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov10",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260407_zygote_p1/fov10/dapi.tif",
+    "all": "<data-root>/20260407_zygote_p1/fov10/all.tif",
+    "label_tifs": [
+     "<data-root>/20260407_zygote_p1/fov10/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260407_zygote_p1/fov10/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260407_zygote_p1/fov10/2026-06-24-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov11",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov11",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260407_zygote_p1/fov11/dapi.tif",
+    "all": "<data-root>/20260407_zygote_p1/fov11/all.tif",
+    "label_tifs": [
+     "<data-root>/20260407_zygote_p1/fov11/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260407_zygote_p1/fov11/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260407_zygote_p1/fov11/2026-06-24-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov12",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov12",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260407_zygote_p1/fov12/dapi.tif",
+    "all": "<data-root>/20260407_zygote_p1/fov12/all.tif",
+    "label_tifs": [
+     "<data-root>/20260407_zygote_p1/fov12/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260407_zygote_p1/fov12/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260407_zygote_p1/fov12/2026-06-24-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov2",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov2",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260407_zygote_p1/fov2/dapi.tif",
+    "all": "<data-root>/20260407_zygote_p1/fov2/all.tif",
+    "label_tifs": [
+     "<data-root>/20260407_zygote_p1/fov2/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260407_zygote_p1/fov2/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260407_zygote_p1/fov2/2026-05-02-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov3",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov3",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260407_zygote_p1/fov3/dapi.tif",
+    "all": "<data-root>/20260407_zygote_p1/fov3/all.tif",
+    "label_tifs": [
+     "<data-root>/20260407_zygote_p1/fov3/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260407_zygote_p1/fov3/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260407_zygote_p1/fov3/2026-05-02-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov4",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov4",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260407_zygote_p1/fov4/dapi.tif",
+    "all": "<data-root>/20260407_zygote_p1/fov4/all.tif",
+    "label_tifs": [
+     "<data-root>/20260407_zygote_p1/fov4/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260407_zygote_p1/fov4/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260407_zygote_p1/fov4/2026-06-04-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov5",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov5",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260407_zygote_p1/fov5/dapi.tif",
+    "all": "<data-root>/20260407_zygote_p1/fov5/all.tif",
+    "label_tifs": [
+     "<data-root>/20260407_zygote_p1/fov5/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260407_zygote_p1/fov5/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260407_zygote_p1/fov5/2026-06-22-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov6",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov6",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260407_zygote_p1/fov6/dapi.tif",
+    "all": "<data-root>/20260407_zygote_p1/fov6/all.tif",
+    "label_tifs": [
+     "<data-root>/20260407_zygote_p1/fov6/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260407_zygote_p1/fov6/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260407_zygote_p1/fov6/2026-06-22-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov7",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov7",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 3,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260407_zygote_p1/fov7/dapi.tif",
+    "all": "<data-root>/20260407_zygote_p1/fov7/all.tif",
+    "label_tifs": [
+     "<data-root>/20260407_zygote_p1/fov7/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260407_zygote_p1/fov7/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260407_zygote_p1/fov7/2026-06-22-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov8",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov8",
+   "sub_index": null,
+   "n_label_instances": 2,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 3,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260407_zygote_p1/fov8/dapi.tif",
+    "all": "<data-root>/20260407_zygote_p1/fov8/all.tif",
+    "label_tifs": [
+     "<data-root>/20260407_zygote_p1/fov8/Segmentation-label.tif",
+     "<data-root>/20260407_zygote_p1/fov8/Segmentation-label_1.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260407_zygote_p1/fov8/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260407_zygote_p1/fov8/2026-06-23-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov9",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "plate": "p1",
+   "fov": "fov9",
+   "sub_index": null,
+   "n_label_instances": 2,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2304,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260407_zygote_p1/fov9/dapi.tif",
+    "all": "<data-root>/20260407_zygote_p1/fov9/all.tif",
+    "label_tifs": [
+     "<data-root>/20260407_zygote_p1/fov9/Segmentation-label.tif",
+     "<data-root>/20260407_zygote_p1/fov9/Segmentation-label_1.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260407_zygote_p1/fov9/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260407_zygote_p1/fov9/2026-06-24-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov0",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov0",
+   "sub_index": null,
+   "n_label_instances": 3,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov0/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov0/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov0/Segmentation-label.tif",
+     "<data-root>/20260408_e2c_p2/fov0/Segmentation-label_1.tif",
+     "<data-root>/20260408_e2c_p2/fov0/Segmentation-label_2.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov0/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov0/2026-05-08-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov1",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov1",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov1/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov1/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov1/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov1/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov1/2026-05-08-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov10",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov10",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov10/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov10/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov10/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov10/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov10/2026-05-26-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov11",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov11",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov11/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov11/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov11/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov11/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov11/2026-05-26-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov12",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov12",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov12/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov12/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov12/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov12/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov12/2026-05-27-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov13",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov13",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov13/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov13/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov13/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov13/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov13/2026-05-27-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov14",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov14",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov14/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov14/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov14/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov14/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov14/2026-05-29-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov15",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov15",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov15/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov15/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov15/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov15/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov15/2026-05-29-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov16",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov16",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov16/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov16/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov16/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov16/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov16/2026-05-28-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov17",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov17",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov17/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov17/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov17/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov17/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov17/2026-05-28-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov18",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov18",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov18/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov18/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov18/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov18/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov18/2026-05-21-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov19",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov19",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov19/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov19/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov19/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov19/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov19/2026-05-08-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov2",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov2",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov2/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov2/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov2/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov2/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov2/2026-05-11-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov20",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov20",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov20/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov20/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov20/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov20/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov20/2026-05-10-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov21",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov21",
+   "sub_index": null,
+   "n_label_instances": 2,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov21/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov21/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov21/Segmentation-label.tif",
+     "<data-root>/20260408_e2c_p2/fov21/Segmentation-label_1.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov21/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov21/2026-05-12-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov23",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov23",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov23/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov23/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov23/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov23/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov23/2026-05-12-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov25",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov25",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov25/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov25/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov25/Segmentation-label_1.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov25/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov25/2026-05-12-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov3",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov3",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov3/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov3/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov3/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov3/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov3/2026-05-13-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov4",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov4",
+   "sub_index": null,
+   "n_label_instances": 2,
+   "spacing_grid": null,
+   "sizes_xyz": null,
+   "n_segments": null,
+   "segment_names_all_generic": null,
+   "space": null,
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": false,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": false,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov4/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov4/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov4/Segmentation-label.tif",
+     "<data-root>/20260408_e2c_p2/fov4/Segmentation-label_1.tif"
+    ],
+    "seg_nrrd": "",
+    "scene": "<data-root>/20260408_e2c_p2/fov4/2026-05-19-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov5",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov5",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov5/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov5/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov5/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov5/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov5/2026-05-21-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov6",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov6",
+   "sub_index": null,
+   "n_label_instances": 2,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov6/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov6/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov6/Segmentation-label.tif",
+     "<data-root>/20260408_e2c_p2/fov6/Segmentation-label_1.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov6/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov6/2026-05-21-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov7",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov7",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 6,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov7/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov7/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov7/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov7/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov7/2026-05-22-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov8",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov8",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov8/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov8/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov8/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov8/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov8/2026-05-22-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov9",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "plate": "p2",
+   "fov": "fov9",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260408_e2c_p2/fov9/dapi.tif",
+    "all": "<data-root>/20260408_e2c_p2/fov9/all.tif",
+    "label_tifs": [
+     "<data-root>/20260408_e2c_p2/fov9/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260408_e2c_p2/fov9/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260408_e2c_p2/fov9/2026-05-22-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260409_l2c_p2/fov2",
+   "experiment": "20260409_l2c_p2",
+   "batch_date": "20260409",
+   "stage": "l2c",
+   "plate": "p2",
+   "fov": "fov2",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": null,
+   "sizes_xyz": null,
+   "n_segments": null,
+   "segment_names_all_generic": null,
+   "space": null,
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": false,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": false,
+   "paths_redacted": {
+    "dna": "<data-root>/20260409_l2c_p2/fov2/dapi.tif",
+    "all": "<data-root>/20260409_l2c_p2/fov2/all.tif",
+    "label_tifs": [
+     "<data-root>/20260409_l2c_p2/fov2/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "",
+    "scene": "<data-root>/20260409_l2c_p2/fov2/2026-05-01-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260409_l2c_p2/fov3",
+   "experiment": "20260409_l2c_p2",
+   "batch_date": "20260409",
+   "stage": "l2c",
+   "plate": "p2",
+   "fov": "fov3",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": null,
+   "sizes_xyz": null,
+   "n_segments": null,
+   "segment_names_all_generic": null,
+   "space": null,
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": false,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": false,
+   "paths_redacted": {
+    "dna": "<data-root>/20260409_l2c_p2/fov3/dapi.tif",
+    "all": "<data-root>/20260409_l2c_p2/fov3/all.tif",
+    "label_tifs": [
+     "<data-root>/20260409_l2c_p2/fov3/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "",
+    "scene": "<data-root>/20260409_l2c_p2/fov3/2026-05-04-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260409_l2c_p2/fov4",
+   "experiment": "20260409_l2c_p2",
+   "batch_date": "20260409",
+   "stage": "l2c",
+   "plate": "p2",
+   "fov": "fov4",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": null,
+   "sizes_xyz": null,
+   "n_segments": null,
+   "segment_names_all_generic": null,
+   "space": null,
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": false,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": false,
+   "paths_redacted": {
+    "dna": "<data-root>/20260409_l2c_p2/fov4/dapi.tif",
+    "all": "<data-root>/20260409_l2c_p2/fov4/all.tif",
+    "label_tifs": [
+     "<data-root>/20260409_l2c_p2/fov4/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "",
+    "scene": "<data-root>/20260409_l2c_p2/fov4/2026-05-11-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260409_l2c_p2/fov5",
+   "experiment": "20260409_l2c_p2",
+   "batch_date": "20260409",
+   "stage": "l2c",
+   "plate": "p2",
+   "fov": "fov5",
+   "sub_index": null,
+   "n_label_instances": 3,
+   "spacing_grid": null,
+   "sizes_xyz": null,
+   "n_segments": null,
+   "segment_names_all_generic": null,
+   "space": null,
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": false,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": false,
+   "paths_redacted": {
+    "dna": "<data-root>/20260409_l2c_p2/fov5/dapi.tif",
+    "all": "<data-root>/20260409_l2c_p2/fov5/all.tif",
+    "label_tifs": [
+     "<data-root>/20260409_l2c_p2/fov5/Segmentation-label.tif",
+     "<data-root>/20260409_l2c_p2/fov5/Segmentation-label_swapped.tif",
+     "<data-root>/20260409_l2c_p2/fov5/Segmentation-label_swapped_filled.tif"
+    ],
+    "seg_nrrd": "",
+    "scene": "<data-root>/20260409_l2c_p2/fov5/2026-05-19-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260409_l2c_p2/fov6",
+   "experiment": "20260409_l2c_p2",
+   "batch_date": "20260409",
+   "stage": "l2c",
+   "plate": "p2",
+   "fov": "fov6",
+   "sub_index": null,
+   "n_label_instances": 3,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260409_l2c_p2/fov6/dapi.tif",
+    "all": "<data-root>/20260409_l2c_p2/fov6/all.tif",
+    "label_tifs": [
+     "<data-root>/20260409_l2c_p2/fov6/Segmentation-label.tif",
+     "<data-root>/20260409_l2c_p2/fov6/Segmentation-label_1-label.tif",
+     "<data-root>/20260409_l2c_p2/fov6/Segmentation-label_1-label_1.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260409_l2c_p2/fov6/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260409_l2c_p2/fov6/2026-05-30-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260409_l2c_p2/fov7",
+   "experiment": "20260409_l2c_p2",
+   "batch_date": "20260409",
+   "stage": "l2c",
+   "plate": "p2",
+   "fov": "fov7",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260409_l2c_p2/fov7/dapi.tif",
+    "all": "<data-root>/20260409_l2c_p2/fov7/all.tif",
+    "label_tifs": [
+     "<data-root>/20260409_l2c_p2/fov7/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260409_l2c_p2/fov7/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260409_l2c_p2/fov7/2026-06-24-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260409_l2c_p2/fov8",
+   "experiment": "20260409_l2c_p2",
+   "batch_date": "20260409",
+   "stage": "l2c",
+   "plate": "p2",
+   "fov": "fov8",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260409_l2c_p2/fov8/dapi.tif",
+    "all": "<data-root>/20260409_l2c_p2/fov8/all.tif",
+    "label_tifs": [
+     "<data-root>/20260409_l2c_p2/fov8/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260409_l2c_p2/fov8/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260409_l2c_p2/fov8/2026-06-24-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260409_l2c_p2/fov9",
+   "experiment": "20260409_l2c_p2",
+   "batch_date": "20260409",
+   "stage": "l2c",
+   "plate": "p2",
+   "fov": "fov9",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2304,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260409_l2c_p2/fov9/dapi.tif",
+    "all": "<data-root>/20260409_l2c_p2/fov9/all.tif",
+    "label_tifs": [
+     "<data-root>/20260409_l2c_p2/fov9/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260409_l2c_p2/fov9/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260409_l2c_p2/fov9/2026-06-24-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260420_l2c_p1/fov0",
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "fov": "fov0",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260420_l2c_p1/fov0/dapi.tif",
+    "all": "<data-root>/20260420_l2c_p1/fov0/all.tif",
+    "label_tifs": [
+     "<data-root>/20260420_l2c_p1/fov0/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260420_l2c_p1/fov0/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260420_l2c_p1/fov0/2026-04-28-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260420_l2c_p1/fov10",
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "fov": "fov10",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260420_l2c_p1/fov10/dapi.tif",
+    "all": "<data-root>/20260420_l2c_p1/fov10/all.tif",
+    "label_tifs": [
+     "<data-root>/20260420_l2c_p1/fov10/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260420_l2c_p1/fov10/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260420_l2c_p1/fov10/2026-05-05-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260420_l2c_p1/fov11",
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "fov": "fov11",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260420_l2c_p1/fov11/dapi.tif",
+    "all": "<data-root>/20260420_l2c_p1/fov11/all.tif",
+    "label_tifs": [
+     "<data-root>/20260420_l2c_p1/fov11/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260420_l2c_p1/fov11/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260420_l2c_p1/fov11/2026-05-06-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260420_l2c_p1/fov12",
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "fov": "fov12",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260420_l2c_p1/fov12/dapi.tif",
+    "all": "<data-root>/20260420_l2c_p1/fov12/all.tif",
+    "label_tifs": [
+     "<data-root>/20260420_l2c_p1/fov12/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260420_l2c_p1/fov12/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260420_l2c_p1/fov12/2026-05-06-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260420_l2c_p1/fov13",
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "fov": "fov13",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2303,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260420_l2c_p1/fov13/dapi.tif",
+    "all": "<data-root>/20260420_l2c_p1/fov13/all.tif",
+    "label_tifs": [
+     "<data-root>/20260420_l2c_p1/fov13/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260420_l2c_p1/fov13/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260420_l2c_p1/fov13/2026-05-07-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260420_l2c_p1/fov15",
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "fov": "fov15",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2303,
+    251
+   ],
+   "n_segments": 6,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260420_l2c_p1/fov15/dapi.tif",
+    "all": "<data-root>/20260420_l2c_p1/fov15/all.tif",
+    "label_tifs": [
+     "<data-root>/20260420_l2c_p1/fov15/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260420_l2c_p1/fov15/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260420_l2c_p1/fov15/2026-05-07-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260420_l2c_p1/fov16",
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "fov": "fov16",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2303,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260420_l2c_p1/fov16/dapi.tif",
+    "all": "<data-root>/20260420_l2c_p1/fov16/all.tif",
+    "label_tifs": [
+     "<data-root>/20260420_l2c_p1/fov16/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260420_l2c_p1/fov16/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260420_l2c_p1/fov16/2026-05-07-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260420_l2c_p1/fov2",
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "fov": "fov2",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260420_l2c_p1/fov2/dapi.tif",
+    "all": "<data-root>/20260420_l2c_p1/fov2/all.tif",
+    "label_tifs": [
+     "<data-root>/20260420_l2c_p1/fov2/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260420_l2c_p1/fov2/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260420_l2c_p1/fov2/2026-04-28-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260420_l2c_p1/fov3",
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "fov": "fov3",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260420_l2c_p1/fov3/dapi.tif",
+    "all": "<data-root>/20260420_l2c_p1/fov3/all.tif",
+    "label_tifs": [
+     "<data-root>/20260420_l2c_p1/fov3/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260420_l2c_p1/fov3/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260420_l2c_p1/fov3/2026-04-29-Scene.mrml"
+   },
+   "shared_fov": true
+  },
+  {
+   "embryo_id": "20260420_l2c_p1/fov3/1",
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "fov": "fov3",
+   "sub_index": "1",
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260420_l2c_p1/fov3/1/dapi.tif",
+    "all": "<data-root>/20260420_l2c_p1/fov3/1/all.tif",
+    "label_tifs": [
+     "<data-root>/20260420_l2c_p1/fov3/1/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260420_l2c_p1/fov3/1/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260420_l2c_p1/fov3/1/2026-04-28-Scene.mrml"
+   },
+   "shared_fov": true
+  },
+  {
+   "embryo_id": "20260420_l2c_p1/fov4",
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "fov": "fov4",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260420_l2c_p1/fov4/dapi.tif",
+    "all": "<data-root>/20260420_l2c_p1/fov4/all.tif",
+    "label_tifs": [
+     "<data-root>/20260420_l2c_p1/fov4/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260420_l2c_p1/fov4/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260420_l2c_p1/fov4/2026-04-29-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260420_l2c_p1/fov5",
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "fov": "fov5",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2303,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260420_l2c_p1/fov5/dapi.tif",
+    "all": "<data-root>/20260420_l2c_p1/fov5/all.tif",
+    "label_tifs": [
+     "<data-root>/20260420_l2c_p1/fov5/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260420_l2c_p1/fov5/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260420_l2c_p1/fov5/2026-04-30-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260420_l2c_p1/fov7",
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "fov": "fov7",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260420_l2c_p1/fov7/dapi.tif",
+    "all": "<data-root>/20260420_l2c_p1/fov7/all.tif",
+    "label_tifs": [
+     "<data-root>/20260420_l2c_p1/fov7/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260420_l2c_p1/fov7/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260420_l2c_p1/fov7/2026-04-30-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260420_l2c_p1/fov8",
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "fov": "fov8",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260420_l2c_p1/fov8/dapi.tif",
+    "all": "<data-root>/20260420_l2c_p1/fov8/all.tif",
+    "label_tifs": [
+     "<data-root>/20260420_l2c_p1/fov8/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260420_l2c_p1/fov8/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260420_l2c_p1/fov8/2026-05-01-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260420_l2c_p1/fov9",
+   "experiment": "20260420_l2c_p1",
+   "batch_date": "20260420",
+   "stage": "l2c",
+   "plate": "p1",
+   "fov": "fov9",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2303,
+    2303,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260420_l2c_p1/fov9/dapi.tif",
+    "all": "<data-root>/20260420_l2c_p1/fov9/all.tif",
+    "label_tifs": [
+     "<data-root>/20260420_l2c_p1/fov9/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260420_l2c_p1/fov9/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260420_l2c_p1/fov9/2026-05-05-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov0",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov0",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov0/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov0/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov0/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov0/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov0/2026-06-08-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov1",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov1",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov1/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov1/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov1/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov1/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov1/2026-06-10-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov10",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov10",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov10/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov10/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov10/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov10/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov10/2026-06-15-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov11",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov11",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov11/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov11/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov11/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov11/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov11/2026-06-16-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov12",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov12",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov12/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov12/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov12/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov12/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov12/2026-06-17-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov13",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov13",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov13/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov13/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov13/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov13/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov13/2026-06-18-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov14",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov14",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov14/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov14/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov14/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov14/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov14/2026-06-18-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov15",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov15",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov15/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov15/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov15/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov15/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov15/2026-06-23-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov16",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov16",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov16/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov16/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov16/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov16/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov16/2026-06-23-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov17",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov17",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov17/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov17/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov17/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov17/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov17/2026-06-23-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov18",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov18",
+   "sub_index": null,
+   "n_label_instances": 4,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov18/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov18/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov18/Segmentation-label.tif",
+     "<data-root>/20260424_e2c_p1/fov18/Segmentation-label_1.tif",
+     "<data-root>/20260424_e2c_p1/fov18/Segmentation-label_2.tif",
+     "<data-root>/20260424_e2c_p1/fov18/Segmentation-label_3.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov18/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov18/2026-06-23-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov19",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov19",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov19/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov19/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov19/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov19/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov19/2026-06-23-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov2",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov2",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov2/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov2/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov2/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov2/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov2/2026-06-11-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov3",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov3",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov3/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov3/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov3/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov3/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov3/2026-06-11-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov4",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov4",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov4/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov4/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov4/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov4/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov4/2026-06-12-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov5",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov5",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": null,
+   "sizes_xyz": null,
+   "n_segments": null,
+   "segment_names_all_generic": null,
+   "space": null,
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": false,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": false,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov5/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov5/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov5/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "",
+    "scene": "<data-root>/20260424_e2c_p1/fov5/2026-06-12-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov6",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov6",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 6,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov6/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov6/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov6/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov6/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov6/2026-06-12-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260424_e2c_p1/fov9",
+   "experiment": "20260424_e2c_p1",
+   "batch_date": "20260424",
+   "stage": "e2c",
+   "plate": "p1",
+   "fov": "fov9",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2047,
+    2047,
+    251
+   ],
+   "n_segments": 5,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260424_e2c_p1/fov9/dapi.tif",
+    "all": "<data-root>/20260424_e2c_p1/fov9/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260424_e2c_p1/fov9/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260424_e2c_p1/fov9/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260424_e2c_p1/fov9/2026-06-15-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov0",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov0",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov0/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov0/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov0/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov0/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov0/2026-06-04-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov1",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov1",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov1/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov1/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov1/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov1/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov1/2026-06-04-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov10",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov10",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov10/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov10/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov10/Segmentation-label_1.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov10/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov10/2026-06-20-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov11",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov11",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 3,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov11/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov11/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov11/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov11/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov11/2026-06-20-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov12",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov12",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov12/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov12/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov12/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov12/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov12/2026-06-20-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov13",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov13",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov13/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov13/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov13/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov13/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov13/2026-06-20-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov14",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov14",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov14/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov14/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov14/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov14/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov14/2026-06-21-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov15",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov15",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov15/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov15/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov15/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov15/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov15/2026-06-21-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov16",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov16",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov16/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov16/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov16/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov16/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov16/2026-06-21-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov17",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov17",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov17/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov17/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov17/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov17/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov17/2026-06-21-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov18",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov18",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov18/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov18/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov18/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov18/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov18/2026-06-21-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov19",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov19",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov19/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov19/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov19/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov19/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov19/2026-06-21-Scene.mrml"
+   },
+   "shared_fov": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov19/0",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov19",
+   "sub_index": "0",
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov19/0/dapi_1.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov19/0/all_1.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov19/0/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov19/0/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov19/0/2026-06-21-Scene.mrml"
+   },
+   "shared_fov": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov2",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov2",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov2/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov2/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov2/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov2/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov2/2026-06-05-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov20",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov20",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov20/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov20/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov20/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov20/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov20/2026-06-21-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov21",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov21",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov21/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov21/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov21/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov21/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov21/2026-06-21-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov22",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov22",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov22/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov22/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov22/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov22/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov22/2026-06-21-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov23",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov23",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov23/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov23/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov23/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov23/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov23/2026-06-21-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov24",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov24",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 2,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov24/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov24/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov24/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov24/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov24/2026-06-21-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov25",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov25",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 2,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov25/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov25/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov25/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov25/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov25/2026-06-21-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov26",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov26",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 3,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov26/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov26/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov26/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov26/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov26/2026-06-21-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov3_oocyte",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov3_oocyte",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov3_oocyte/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov3_oocyte/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov3_oocyte/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov3_oocyte/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov3_oocyte/2026-06-05-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov4",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov4",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov4/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov4/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov4/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov4/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov4/2026-06-05-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov5",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov5",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov5/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov5/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov5/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov5/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov5/2026-06-05-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov6",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov6",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov6/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov6/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov6/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov6/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov6/2026-06-15-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov7",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov7",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0,
+    1.0,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov7/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov7/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov7/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov7/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov7/2026-06-19-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov8",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov8",
+   "sub_index": null,
+   "n_label_instances": 2,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov8/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov8/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov8/Segmentation-label.tif",
+     "<data-root>/20260425_zygote_p2/fov8/Segmentation-label_1.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov8/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov8/2026-06-20-Scene.mrml"
+   },
+   "shared_fov": false
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov9",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "plate": "p2",
+   "fov": "fov9",
+   "sub_index": null,
+   "n_label_instances": 1,
+   "spacing_grid": [
+    1.0000000150184936,
+    1.0000000150184936,
+    7.0
+   ],
+   "sizes_xyz": [
+    2048,
+    2048,
+    251
+   ],
+   "n_segments": 4,
+   "segment_names_all_generic": true,
+   "space": "left-posterior-superior",
+   "completeness": {
+    "dna": true,
+    "all": true,
+    "label_tif": true,
+    "seg_nrrd": true,
+    "scene": true,
+    "color_table": true
+   },
+   "complete": true,
+   "paths_redacted": {
+    "dna": "<data-root>/20260425_zygote_p2/fov9/dapi.tif",
+    "all": "<data-root>/20260425_zygote_p2/fov9/all.tiff",
+    "label_tifs": [
+     "<data-root>/20260425_zygote_p2/fov9/Segmentation-label.tif"
+    ],
+    "seg_nrrd": "<data-root>/20260425_zygote_p2/fov9/Segmentation.seg.nrrd",
+    "scene": "<data-root>/20260425_zygote_p2/fov9/2026-06-20-Scene.mrml"
+   },
+   "shared_fov": false
+  }
+ ]
+}

@@ -24,6 +24,7 @@ export const PROJECTS = [
   { key: "alphabeta", label: "Sperm α/β · 2-cell" },
   { key: "pseudotime-calibration", label: "Pronuclear Pseudotime Calibration" },
   { key: "vision-pseudotime", label: "Fixed-Image Pseudotime (pilot)" },
+  { key: "pronuclear-pseudotime", label: "3D Pronuclear Pseudotime" },
 ];
 const KEYS = new Set(PROJECTS.map((p) => p.key));
 const DEFAULTS = { "Kathy Tam": ["pronuclei", "extpt"] };   // seeded on first run

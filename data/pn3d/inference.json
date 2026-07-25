@@ -1,0 +1,2062 @@
+{
+ "schema_version": 1,
+ "generated_at_utc": "2026-07-25T07:18:31+00:00",
+ "reference_radius_um": 41.315,
+ "n": 63,
+ "embryos": [
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov1",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "caution",
+   "ood_reasons": [
+    "sum/R 1.56 outside live p01-p99 [0.42, 1.49]"
+   ],
+   "feature_zscore_vs_live": 3.21,
+   "geometry": {
+    "sum_over_R": 1.5633,
+    "near_over_R": 0.6477,
+    "far_over_R": 0.9156,
+    "inter_over_R": 1.2567,
+    "cell_radius_um": 45.69,
+    "distance_sum_um": 71.419,
+    "vol_asymmetry": 0.0144,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0,
+    "tau_sd": 0.0262,
+    "interval_50": [
+     0.0,
+     0.0177
+    ],
+    "interval_80": [
+     0.0,
+     0.0335
+    ],
+    "interval_95": [
+     0.0,
+     0.0513
+    ],
+    "confidence": 0.925
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov10",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.89,
+   "geometry": {
+    "sum_over_R": 0.968,
+    "near_over_R": 0.3893,
+    "far_over_R": 0.5788,
+    "inter_over_R": 0.5894,
+    "cell_radius_um": 43.48,
+    "distance_sum_um": 42.087,
+    "vol_asymmetry": 0.2215,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.2003,
+    "tau_sd": 0.0717,
+    "interval_50": [
+     0.152,
+     0.2486
+    ],
+    "interval_80": [
+     0.1085,
+     0.2921
+    ],
+    "interval_95": [
+     0.0599,
+     0.3407
+    ],
+    "confidence": 0.795
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov11",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov2/2_1",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov2/2_2",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 1.23,
+   "geometry": {
+    "sum_over_R": 1.0549,
+    "near_over_R": 0.4563,
+    "far_over_R": 0.5985,
+    "inter_over_R": 0.6325,
+    "cell_radius_um": 46.0,
+    "distance_sum_um": 48.522,
+    "vol_asymmetry": 0.1268,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.1401,
+    "tau_sd": 0.0538,
+    "interval_50": [
+     0.1038,
+     0.1763
+    ],
+    "interval_80": [
+     0.0712,
+     0.209
+    ],
+    "interval_95": [
+     0.0347,
+     0.2455
+    ],
+    "confidence": 0.846
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov3",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov4",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 2.39,
+   "geometry": {
+    "sum_over_R": 1.3531,
+    "near_over_R": 0.5098,
+    "far_over_R": 0.8433,
+    "inter_over_R": 0.6973,
+    "cell_radius_um": 35.46,
+    "distance_sum_um": 47.988,
+    "vol_asymmetry": 0.2524,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0244,
+    "tau_sd": 0.0262,
+    "interval_50": [
+     0.0067,
+     0.042
+    ],
+    "interval_80": [
+     0.0,
+     0.0579
+    ],
+    "interval_95": [
+     0.0,
+     0.0757
+    ],
+    "confidence": 0.925
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov5",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov6",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov7",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.95,
+   "geometry": {
+    "sum_over_R": 0.983,
+    "near_over_R": 0.3685,
+    "far_over_R": 0.6145,
+    "inter_over_R": 0.8594,
+    "cell_radius_um": 44.4,
+    "distance_sum_um": 43.647,
+    "vol_asymmetry": 0.1484,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.1897,
+    "tau_sd": 0.0708,
+    "interval_50": [
+     0.1419,
+     0.2375
+    ],
+    "interval_80": [
+     0.0989,
+     0.2804
+    ],
+    "interval_95": [
+     0.0509,
+     0.3285
+    ],
+    "confidence": 0.798
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov8",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 1.68,
+   "geometry": {
+    "sum_over_R": 1.1694,
+    "near_over_R": 0.5811,
+    "far_over_R": 0.5883,
+    "inter_over_R": 1.0645,
+    "cell_radius_um": 43.16,
+    "distance_sum_um": 50.474,
+    "vol_asymmetry": 0.3356,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0867,
+    "tau_sd": 0.0348,
+    "interval_50": [
+     0.0632,
+     0.1102
+    ],
+    "interval_80": [
+     0.0421,
+     0.1313
+    ],
+    "interval_95": [
+     0.0185,
+     0.1549
+    ],
+    "confidence": 0.901
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20251226_sample1_zygote_p1/fov9",
+   "experiment": "20251226_sample1_zygote_p1",
+   "batch_date": "20251226",
+   "stage": "zygote",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov0",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 1.08,
+   "geometry": {
+    "sum_over_R": 1.0164,
+    "near_over_R": 0.4662,
+    "far_over_R": 0.5502,
+    "inter_over_R": 0.636,
+    "cell_radius_um": 43.47,
+    "distance_sum_um": 44.182,
+    "vol_asymmetry": 0.0519,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.1405,
+    "tau_sd": 0.0539,
+    "interval_50": [
+     0.1041,
+     0.1769
+    ],
+    "interval_80": [
+     0.0714,
+     0.2096
+    ],
+    "interval_95": [
+     0.0348,
+     0.2462
+    ],
+    "confidence": 0.846
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov1",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 0.982,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.12,
+   "geometry": {
+    "sum_over_R": 0.7693,
+    "near_over_R": 0.2748,
+    "far_over_R": 0.4945,
+    "inter_over_R": 0.7106,
+    "cell_radius_um": 29.08,
+    "distance_sum_um": 22.376,
+    "vol_asymmetry": 0.4248,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.3842,
+    "tau_sd": 0.1037,
+    "interval_50": [
+     0.3143,
+     0.4541
+    ],
+    "interval_80": [
+     0.2513,
+     0.517
+    ],
+    "interval_95": [
+     0.181,
+     0.5874
+    ],
+    "confidence": 0.704
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov10",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.46,
+   "geometry": {
+    "sum_over_R": 0.6212,
+    "near_over_R": 0.1817,
+    "far_over_R": 0.4394,
+    "inter_over_R": 0.5524,
+    "cell_radius_um": 43.5,
+    "distance_sum_um": 27.019,
+    "vol_asymmetry": 0.3605,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.5895,
+    "tau_sd": 0.191,
+    "interval_50": [
+     0.4606,
+     0.7183
+    ],
+    "interval_80": [
+     0.3447,
+     0.8343
+    ],
+    "interval_95": [
+     0.2151,
+     0.9638
+    ],
+    "confidence": 0.454
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov11",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.01,
+   "geometry": {
+    "sum_over_R": 0.7369,
+    "near_over_R": 0.32,
+    "far_over_R": 0.4169,
+    "inter_over_R": 0.4788,
+    "cell_radius_um": 39.59,
+    "distance_sum_um": 29.172,
+    "vol_asymmetry": 0.2183,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.425,
+    "tau_sd": 0.1169,
+    "interval_50": [
+     0.3462,
+     0.5039
+    ],
+    "interval_80": [
+     0.2753,
+     0.5748
+    ],
+    "interval_95": [
+     0.196,
+     0.6541
+    ],
+    "confidence": 0.666
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov12",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.5,
+   "geometry": {
+    "sum_over_R": 0.6108,
+    "near_over_R": 0.2416,
+    "far_over_R": 0.3692,
+    "inter_over_R": 0.5953,
+    "cell_radius_um": 45.01,
+    "distance_sum_um": 27.49,
+    "vol_asymmetry": 0.2404,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.6263,
+    "tau_sd": 0.1718,
+    "interval_50": [
+     0.5105,
+     0.7422
+    ],
+    "interval_80": [
+     0.4062,
+     0.8464
+    ],
+    "interval_95": [
+     0.2897,
+     0.963
+    ],
+    "confidence": 0.509
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov2",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.52,
+   "geometry": {
+    "sum_over_R": 0.8725,
+    "near_over_R": 0.3287,
+    "far_over_R": 0.5438,
+    "inter_over_R": 0.8004,
+    "cell_radius_um": 43.37,
+    "distance_sum_um": 37.835,
+    "vol_asymmetry": 0.2255,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.2571,
+    "tau_sd": 0.0761,
+    "interval_50": [
+     0.2058,
+     0.3085
+    ],
+    "interval_80": [
+     0.1596,
+     0.3547
+    ],
+    "interval_95": [
+     0.1079,
+     0.4064
+    ],
+    "confidence": 0.782
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov3",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.43,
+   "geometry": {
+    "sum_over_R": 0.8475,
+    "near_over_R": 0.3425,
+    "far_over_R": 0.505,
+    "inter_over_R": 0.7261,
+    "cell_radius_um": 40.53,
+    "distance_sum_um": 34.354,
+    "vol_asymmetry": 0.1907,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.2695,
+    "tau_sd": 0.0771,
+    "interval_50": [
+     0.2175,
+     0.3215
+    ],
+    "interval_80": [
+     0.1707,
+     0.3683
+    ],
+    "interval_95": [
+     0.1184,
+     0.4206
+    ],
+    "confidence": 0.78
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov4",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 0.8,
+   "flags": [
+    "1 extra inside segment(s) beyond two pronuclei"
+   ],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.55,
+   "geometry": {
+    "sum_over_R": 0.8797,
+    "near_over_R": 0.4059,
+    "far_over_R": 0.4738,
+    "inter_over_R": 0.5393,
+    "cell_radius_um": 45.46,
+    "distance_sum_um": 39.993,
+    "vol_asymmetry": 0.2082,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.2528,
+    "tau_sd": 0.0758,
+    "interval_50": [
+     0.2017,
+     0.304
+    ],
+    "interval_80": [
+     0.1557,
+     0.35
+    ],
+    "interval_95": [
+     0.1043,
+     0.4014
+    ],
+    "confidence": 0.783
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov5",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 1.09,
+   "geometry": {
+    "sum_over_R": 1.0177,
+    "near_over_R": 0.4716,
+    "far_over_R": 0.5461,
+    "inter_over_R": 0.7341,
+    "cell_radius_um": 41.32,
+    "distance_sum_um": 42.054,
+    "vol_asymmetry": 0.1501,
+    "polar_body_present": false
+   },
+   "pseudotime": {
+    "tau_mean": 0.1405,
+    "tau_sd": 0.0539,
+    "interval_50": [
+     0.1041,
+     0.1769
+    ],
+    "interval_80": [
+     0.0714,
+     0.2096
+    ],
+    "interval_95": [
+     0.0348,
+     0.2462
+    ],
+    "confidence": 0.846
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov6",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.26,
+   "geometry": {
+    "sum_over_R": 0.6718,
+    "near_over_R": 0.2122,
+    "far_over_R": 0.4597,
+    "inter_over_R": 0.5446,
+    "cell_radius_um": 42.58,
+    "distance_sum_um": 28.605,
+    "vol_asymmetry": 0.2463,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.5336,
+    "tau_sd": 0.1856,
+    "interval_50": [
+     0.4084,
+     0.6588
+    ],
+    "interval_80": [
+     0.2957,
+     0.7715
+    ],
+    "interval_95": [
+     0.1698,
+     0.8974
+    ],
+    "confidence": 0.47
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov7",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.52,
+   "geometry": {
+    "sum_over_R": 0.6039,
+    "near_over_R": 0.2811,
+    "far_over_R": 0.3228,
+    "inter_over_R": 0.4878,
+    "cell_radius_um": 39.98,
+    "distance_sum_um": 24.144,
+    "vol_asymmetry": 0.1555,
+    "polar_body_present": false
+   },
+   "pseudotime": {
+    "tau_mean": 0.6263,
+    "tau_sd": 0.1718,
+    "interval_50": [
+     0.5105,
+     0.7422
+    ],
+    "interval_80": [
+     0.4062,
+     0.8464
+    ],
+    "interval_95": [
+     0.2897,
+     0.963
+    ],
+    "confidence": 0.509
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov8",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.73,
+   "geometry": {
+    "sum_over_R": 0.9264,
+    "near_over_R": 0.4283,
+    "far_over_R": 0.4981,
+    "inter_over_R": 0.5401,
+    "cell_radius_um": 39.93,
+    "distance_sum_um": 36.991,
+    "vol_asymmetry": 0.0782,
+    "polar_body_present": false
+   },
+   "pseudotime": {
+    "tau_mean": 0.2218,
+    "tau_sd": 0.0733,
+    "interval_50": [
+     0.1723,
+     0.2712
+    ],
+    "interval_80": [
+     0.1278,
+     0.3158
+    ],
+    "interval_95": [
+     0.078,
+     0.3655
+    ],
+    "confidence": 0.79
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260407_zygote_p1/fov9",
+   "experiment": "20260407_zygote_p1",
+   "batch_date": "20260407",
+   "stage": "zygote",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov0",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 2.0,
+   "geometry": {
+    "sum_over_R": 1.2513,
+    "near_over_R": 0.5672,
+    "far_over_R": 0.6841,
+    "inter_over_R": 1.1835,
+    "cell_radius_um": 40.11,
+    "distance_sum_um": 50.192,
+    "vol_asymmetry": 0.1399,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0525,
+    "tau_sd": 0.0262,
+    "interval_50": [
+     0.0348,
+     0.0701
+    ],
+    "interval_80": [
+     0.0189,
+     0.086
+    ],
+    "interval_95": [
+     0.0012,
+     0.1038
+    ],
+    "confidence": 0.925
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov1",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 1.5,
+   "geometry": {
+    "sum_over_R": 1.1228,
+    "near_over_R": 0.5092,
+    "far_over_R": 0.6135,
+    "inter_over_R": 1.0966,
+    "cell_radius_um": 41.98,
+    "distance_sum_um": 47.137,
+    "vol_asymmetry": 0.1166,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.109,
+    "tau_sd": 0.0427,
+    "interval_50": [
+     0.0802,
+     0.1378
+    ],
+    "interval_80": [
+     0.0543,
+     0.1637
+    ],
+    "interval_95": [
+     0.0253,
+     0.1927
+    ],
+    "confidence": 0.878
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov10",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.06,
+   "geometry": {
+    "sum_over_R": 0.7527,
+    "near_over_R": 0.3469,
+    "far_over_R": 0.4059,
+    "inter_over_R": 0.5694,
+    "cell_radius_um": 41.64,
+    "distance_sum_um": 31.342,
+    "vol_asymmetry": 0.2023,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.4143,
+    "tau_sd": 0.1134,
+    "interval_50": [
+     0.3378,
+     0.4908
+    ],
+    "interval_80": [
+     0.269,
+     0.5597
+    ],
+    "interval_95": [
+     0.192,
+     0.6366
+    ],
+    "confidence": 0.676
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov11",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov12",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 1.68,
+   "geometry": {
+    "sum_over_R": 1.1691,
+    "near_over_R": 0.5377,
+    "far_over_R": 0.6315,
+    "inter_over_R": 1.0272,
+    "cell_radius_um": 41.52,
+    "distance_sum_um": 48.538,
+    "vol_asymmetry": 0.0531,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0867,
+    "tau_sd": 0.0348,
+    "interval_50": [
+     0.0632,
+     0.1102
+    ],
+    "interval_80": [
+     0.0421,
+     0.1313
+    ],
+    "interval_95": [
+     0.0185,
+     0.1549
+    ],
+    "confidence": 0.901
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov13",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 0.825,
+   "flags": [],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "sum/R 1.79 outside live-training range [0.39, 1.76]"
+   ],
+   "feature_zscore_vs_live": 4.09,
+   "geometry": {
+    "sum_over_R": 1.7888,
+    "near_over_R": 0.684,
+    "far_over_R": 1.1048,
+    "inter_over_R": 1.0535,
+    "cell_radius_um": 40.95,
+    "distance_sum_um": 73.248,
+    "vol_asymmetry": 0.0797,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0,
+    "tau_sd": 0.0262,
+    "interval_50": [
+     0.0,
+     0.0177
+    ],
+    "interval_80": [
+     0.0,
+     0.0335
+    ],
+    "interval_95": [
+     0.0,
+     0.0513
+    ],
+    "confidence": 0.925
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov14",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.2,
+   "geometry": {
+    "sum_over_R": 0.7889,
+    "near_over_R": 0.2812,
+    "far_over_R": 0.5077,
+    "inter_over_R": 0.6132,
+    "cell_radius_um": 40.88,
+    "distance_sum_um": 32.25,
+    "vol_asymmetry": 0.1606,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.3693,
+    "tau_sd": 0.0989,
+    "interval_50": [
+     0.3026,
+     0.436
+    ],
+    "interval_80": [
+     0.2426,
+     0.496
+    ],
+    "interval_95": [
+     0.1756,
+     0.5631
+    ],
+    "confidence": 0.718
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov15",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov16",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 2.01,
+   "geometry": {
+    "sum_over_R": 1.2543,
+    "near_over_R": 0.6258,
+    "far_over_R": 0.6285,
+    "inter_over_R": 1.1793,
+    "cell_radius_um": 40.31,
+    "distance_sum_um": 50.565,
+    "vol_asymmetry": 0.107,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0525,
+    "tau_sd": 0.0262,
+    "interval_50": [
+     0.0348,
+     0.0701
+    ],
+    "interval_80": [
+     0.0189,
+     0.086
+    ],
+    "interval_95": [
+     0.0012,
+     0.1038
+    ],
+    "confidence": 0.925
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov17",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 0.921,
+   "flags": [],
+   "ood_level": "caution",
+   "ood_reasons": [
+    "sum/R 1.57 outside live p01-p99 [0.42, 1.49]"
+   ],
+   "feature_zscore_vs_live": 3.24,
+   "geometry": {
+    "sum_over_R": 1.5714,
+    "near_over_R": 0.6536,
+    "far_over_R": 0.9177,
+    "inter_over_R": 1.211,
+    "cell_radius_um": 42.91,
+    "distance_sum_um": 67.431,
+    "vol_asymmetry": 0.1079,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0,
+    "tau_sd": 0.0262,
+    "interval_50": [
+     0.0,
+     0.0177
+    ],
+    "interval_80": [
+     0.0,
+     0.0335
+    ],
+    "interval_95": [
+     0.0,
+     0.0513
+    ],
+    "confidence": 0.925
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov18",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 1.19,
+   "geometry": {
+    "sum_over_R": 1.0442,
+    "near_over_R": 0.4006,
+    "far_over_R": 0.6437,
+    "inter_over_R": 1.0304,
+    "cell_radius_um": 39.23,
+    "distance_sum_um": 40.967,
+    "vol_asymmetry": 0.0803,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.1401,
+    "tau_sd": 0.0538,
+    "interval_50": [
+     0.1038,
+     0.1763
+    ],
+    "interval_80": [
+     0.0712,
+     0.209
+    ],
+    "interval_95": [
+     0.0347,
+     0.2455
+    ],
+    "confidence": 0.846
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov19",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 2.33,
+   "geometry": {
+    "sum_over_R": 1.3359,
+    "near_over_R": 0.6572,
+    "far_over_R": 0.6788,
+    "inter_over_R": 1.3326,
+    "cell_radius_um": 40.12,
+    "distance_sum_um": 53.595,
+    "vol_asymmetry": 0.0494,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0358,
+    "tau_sd": 0.0262,
+    "interval_50": [
+     0.0181,
+     0.0534
+    ],
+    "interval_80": [
+     0.0022,
+     0.0693
+    ],
+    "interval_95": [
+     0.0,
+     0.0871
+    ],
+    "confidence": 0.925
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov19/0",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov2",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 0.8,
+   "flags": [
+    "1 extra inside segment(s) beyond two pronuclei"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "sum/R 2.02 outside live-training range [0.39, 1.76]"
+   ],
+   "feature_zscore_vs_live": 4.99,
+   "geometry": {
+    "sum_over_R": 2.019,
+    "near_over_R": 0.9408,
+    "far_over_R": 1.0782,
+    "inter_over_R": 0.5961,
+    "cell_radius_um": 41.33,
+    "distance_sum_um": 83.452,
+    "vol_asymmetry": 0.0316,
+    "polar_body_present": false
+   },
+   "pseudotime": {
+    "tau_mean": 0.0,
+    "tau_sd": 0.0262,
+    "interval_50": [
+     0.0,
+     0.0177
+    ],
+    "interval_80": [
+     0.0,
+     0.0335
+    ],
+    "interval_95": [
+     0.0,
+     0.0513
+    ],
+    "confidence": 0.925
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov20",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.86,
+   "geometry": {
+    "sum_over_R": 0.9596,
+    "near_over_R": 0.3967,
+    "far_over_R": 0.5629,
+    "inter_over_R": 0.5862,
+    "cell_radius_um": 40.36,
+    "distance_sum_um": 38.724,
+    "vol_asymmetry": 0.0785,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.2003,
+    "tau_sd": 0.0717,
+    "interval_50": [
+     0.152,
+     0.2486
+    ],
+    "interval_80": [
+     0.1085,
+     0.2921
+    ],
+    "interval_95": [
+     0.0599,
+     0.3407
+    ],
+    "confidence": 0.795
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov21",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.36,
+   "geometry": {
+    "sum_over_R": 0.6456,
+    "near_over_R": 0.2666,
+    "far_over_R": 0.379,
+    "inter_over_R": 0.626,
+    "cell_radius_um": 39.89,
+    "distance_sum_um": 25.753,
+    "vol_asymmetry": 0.1713,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.55,
+    "tau_sd": 0.1967,
+    "interval_50": [
+     0.4174,
+     0.6827
+    ],
+    "interval_80": [
+     0.298,
+     0.8021
+    ],
+    "interval_95": [
+     0.1645,
+     0.9355
+    ],
+    "confidence": 0.438
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov22",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "caution",
+   "ood_reasons": [
+    "sum/R 1.70 outside live p01-p99 [0.42, 1.49]"
+   ],
+   "feature_zscore_vs_live": 3.74,
+   "geometry": {
+    "sum_over_R": 1.7,
+    "near_over_R": 0.7093,
+    "far_over_R": 0.9907,
+    "inter_over_R": 1.1784,
+    "cell_radius_um": 39.6,
+    "distance_sum_um": 67.322,
+    "vol_asymmetry": 0.033,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0,
+    "tau_sd": 0.0262,
+    "interval_50": [
+     0.0,
+     0.0177
+    ],
+    "interval_80": [
+     0.0,
+     0.0335
+    ],
+    "interval_95": [
+     0.0,
+     0.0513
+    ],
+    "confidence": 0.925
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov23",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 1.82,
+   "geometry": {
+    "sum_over_R": 1.2061,
+    "near_over_R": 0.5467,
+    "far_over_R": 0.6594,
+    "inter_over_R": 0.8361,
+    "cell_radius_um": 42.32,
+    "distance_sum_um": 51.046,
+    "vol_asymmetry": 0.0745,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0525,
+    "tau_sd": 0.0262,
+    "interval_50": [
+     0.0348,
+     0.0701
+    ],
+    "interval_80": [
+     0.0189,
+     0.086
+    ],
+    "interval_95": [
+     0.0012,
+     0.1038
+    ],
+    "confidence": 0.925
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov24",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov25",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov26",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.63,
+   "geometry": {
+    "sum_over_R": 0.5756,
+    "near_over_R": 0.196,
+    "far_over_R": 0.3796,
+    "inter_over_R": 0.5147,
+    "cell_radius_um": 41.3,
+    "distance_sum_um": 23.773,
+    "vol_asymmetry": 0.2313,
+    "polar_body_present": false
+   },
+   "pseudotime": {
+    "tau_mean": 0.6434,
+    "tau_sd": 0.1628,
+    "interval_50": [
+     0.5336,
+     0.7532
+    ],
+    "interval_80": [
+     0.4348,
+     0.8521
+    ],
+    "interval_95": [
+     0.3243,
+     0.9626
+    ],
+    "confidence": 0.535
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov3_oocyte",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov4",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.49,
+   "geometry": {
+    "sum_over_R": 0.8649,
+    "near_over_R": 0.3796,
+    "far_over_R": 0.4853,
+    "inter_over_R": 0.6131,
+    "cell_radius_um": 41.24,
+    "distance_sum_um": 35.666,
+    "vol_asymmetry": 0.2076,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.2671,
+    "tau_sd": 0.0769,
+    "interval_50": [
+     0.2152,
+     0.319
+    ],
+    "interval_80": [
+     0.1685,
+     0.3656
+    ],
+    "interval_95": [
+     0.1163,
+     0.4178
+    ],
+    "confidence": 0.78
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov5",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 0.81,
+   "geometry": {
+    "sum_over_R": 0.9454,
+    "near_over_R": 0.3382,
+    "far_over_R": 0.6072,
+    "inter_over_R": 0.5591,
+    "cell_radius_um": 42.1,
+    "distance_sum_um": 39.8,
+    "vol_asymmetry": 0.1596,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.2003,
+    "tau_sd": 0.0717,
+    "interval_50": [
+     0.152,
+     0.2486
+    ],
+    "interval_80": [
+     0.1085,
+     0.2921
+    ],
+    "interval_95": [
+     0.0599,
+     0.3407
+    ],
+    "confidence": 0.795
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov6",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 1.96,
+   "geometry": {
+    "sum_over_R": 1.243,
+    "near_over_R": 0.5615,
+    "far_over_R": 0.6815,
+    "inter_over_R": 0.9508,
+    "cell_radius_um": 41.78,
+    "distance_sum_um": 51.928,
+    "vol_asymmetry": 0.1793,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0525,
+    "tau_sd": 0.0262,
+    "interval_50": [
+     0.0348,
+     0.0701
+    ],
+    "interval_80": [
+     0.0189,
+     0.086
+    ],
+    "interval_95": [
+     0.0012,
+     0.1038
+    ],
+    "confidence": 0.925
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov7",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 1.76,
+   "geometry": {
+    "sum_over_R": 1.1906,
+    "near_over_R": 0.5497,
+    "far_over_R": 0.6409,
+    "inter_over_R": 0.6755,
+    "cell_radius_um": 41.31,
+    "distance_sum_um": 49.188,
+    "vol_asymmetry": 0.1305,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0525,
+    "tau_sd": 0.0262,
+    "interval_50": [
+     0.0348,
+     0.0701
+    ],
+    "interval_80": [
+     0.0189,
+     0.086
+    ],
+    "interval_95": [
+     0.0012,
+     0.1038
+    ],
+    "confidence": 0.925
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov8",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 0.877,
+   "flags": [],
+   "ood_level": "caution",
+   "ood_reasons": [
+    "sum/R 1.62 outside live p01-p99 [0.42, 1.49]"
+   ],
+   "feature_zscore_vs_live": 3.44,
+   "geometry": {
+    "sum_over_R": 1.6227,
+    "near_over_R": 0.597,
+    "far_over_R": 1.0257,
+    "inter_over_R": 1.2049,
+    "cell_radius_um": 40.02,
+    "distance_sum_um": 64.943,
+    "vol_asymmetry": 0.1352,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0,
+    "tau_sd": 0.0262,
+    "interval_50": [
+     0.0,
+     0.0177
+    ],
+    "interval_80": [
+     0.0,
+     0.0335
+    ],
+    "interval_95": [
+     0.0,
+     0.0513
+    ],
+    "confidence": 0.925
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260425_zygote_p2/fov9",
+   "experiment": "20260425_zygote_p2",
+   "batch_date": "20260425",
+   "stage": "zygote",
+   "segmentation_status": "resolved",
+   "segmentation_confidence": 1.0,
+   "flags": [],
+   "ood_level": "in_domain",
+   "ood_reasons": [],
+   "feature_zscore_vs_live": 2.13,
+   "geometry": {
+    "sum_over_R": 1.2858,
+    "near_over_R": 0.5375,
+    "far_over_R": 0.7483,
+    "inter_over_R": 1.2211,
+    "cell_radius_um": 41.17,
+    "distance_sum_um": 52.934,
+    "vol_asymmetry": 0.0626,
+    "polar_body_present": true
+   },
+   "pseudotime": {
+    "tau_mean": 0.0374,
+    "tau_sd": 0.0262,
+    "interval_50": [
+     0.0197,
+     0.055
+    ],
+    "interval_80": [
+     0.0038,
+     0.0709
+    ],
+    "interval_95": [
+     0.0,
+     0.0887
+    ],
+    "confidence": 0.925
+   },
+   "inferable": true
+  },
+  {
+   "embryo_id": "20260212_sample4_l2c_p2/fov0",
+   "experiment": "20260212_sample4_l2c_p2",
+   "batch_date": "20260212",
+   "stage": "l2c",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "stage l2c is not a pronuclear zygote",
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260212_sample4_l2c_p2/fov1",
+   "experiment": "20260212_sample4_l2c_p2",
+   "batch_date": "20260212",
+   "stage": "l2c",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "stage l2c is not a pronuclear zygote",
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov0",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "stage e2c is not a pronuclear zygote",
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov1",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "stage e2c is not a pronuclear zygote",
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov10",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "stage e2c is not a pronuclear zygote",
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov11",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "stage e2c is not a pronuclear zygote",
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov12",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "stage e2c is not a pronuclear zygote",
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov13",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "stage e2c is not a pronuclear zygote",
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov14",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "stage e2c is not a pronuclear zygote",
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  },
+  {
+   "embryo_id": "20260408_e2c_p2/fov15",
+   "experiment": "20260408_e2c_p2",
+   "batch_date": "20260408",
+   "stage": "e2c",
+   "segmentation_status": "unresolved",
+   "segmentation_confidence": 0.0,
+   "flags": [
+    "only 1 pronucleus/pronuclei inside the cell body (need 2)",
+    "a candidate lies OUTSIDE the cell body; not substituted for a pronucleus"
+   ],
+   "ood_level": "out_of_domain",
+   "ood_reasons": [
+    "stage e2c is not a pronuclear zygote",
+    "segmentation unresolved"
+   ],
+   "feature_zscore_vs_live": null,
+   "inferable": false,
+   "pseudotime": null
+  }
+ ]
+}

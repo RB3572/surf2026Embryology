@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>3D Pronuclear Pseudotime · SURF 2026</title>
+<style>
+  :root{--ink:#0f172a;--body:#334155;--muted:#64748b;--line:#e5e9f0;--bg:#f6f8fc;--card:#fff;
+        --accent:#4338ca;--near:#3c82f6;--far:#dc3c3c;--polar:#f5af3c;--cell:#96a0af;
+        --green:#15803d;--amber:#b45309;--red:#b42318;}
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--body);background:var(--bg)}
+  a{color:var(--accent)}
+  header.top{display:flex;align-items:center;gap:13px;padding:14px 24px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:9;flex-wrap:wrap}
+  .back{text-decoration:none;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:5px 11px;font-weight:600}
+  header.top h1{font-size:17px;margin:0;color:var(--ink)}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);display:inline-block}
+  .sub{color:var(--muted);font-size:12px;font-family:ui-monospace,Menlo,monospace}
+  .vsw{margin-left:auto;display:flex;gap:6px}
+  .vsw button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 13px;font-weight:600;cursor:pointer;color:var(--muted)}
+  .vsw button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  main{max-width:1180px;margin:0 auto;padding:20px 22px 90px}
+  .banner{background:#eef2ff;border:1px solid #c7d2fe;border-left:4px solid var(--accent);border-radius:10px;padding:12px 15px;margin:16px 0 22px;color:#3730a3;font-size:13.5px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+  section h2{margin:0 0 3px;font-size:16px;color:var(--ink)}
+  section .lead{color:var(--muted);font-size:12.5px;margin:0 0 13px}
+  .row{display:grid;gap:14px}
+  @media(min-width:820px){.cols2{grid-template-columns:1fr 1fr}.cols3{grid-template-columns:1fr 1fr 1fr}}
+  select,button.dl{font:inherit}
+  .sel{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;min-width:230px}
+  .planes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .plane{background:#0b1220;border:1px solid var(--line);border-radius:9px;overflow:hidden;text-align:center}
+  .plane img{width:100%;display:block;background:#0b1220;aspect-ratio:1/1;object-fit:contain}
+  .plane .cap{font-size:11px;color:#93a2b6;padding:4px}
+  .toggles{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}
+  .chip{font-size:11.5px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer;background:#fff;font-weight:600;color:var(--muted)}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:4px}
+  .swatch{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:4px}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;font-size:13px}
+  .kv .k{color:var(--muted)} .kv .v{color:var(--ink);font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+  .tag{display:inline-block;padding:1px 9px;border-radius:999px;font-size:11px;font-weight:700}
+  .t-ok{background:#dcfce7;color:var(--green)} .t-warn{background:#fef3c7;color:var(--amber)} .t-bad{background:#fee2e2;color:var(--red)} .t-info{background:#e0e7ff;color:#3730a3}
+  .big{font-size:30px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+  svg{max-width:100%;height:auto}
+  .dl{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;font-weight:600;cursor:pointer;color:var(--accent)}
+  .flags{font-size:12px;color:var(--amber);margin-top:6px}
+  ul.clean{margin:5px 0 0;padding-left:17px}ul.clean li{margin:2px 0}
+  .missing{color:var(--muted);font-style:italic;font-size:12px}
+  code{font-family:ui-monospace,Menlo,monospace;background:var(--bg);padding:1px 5px;border-radius:5px;font-size:12px}
+  @media(prefers-color-scheme:dark){:root{--ink:#e6edf6;--body:#c2cbd8;--muted:#8b97a7;--line:#22303f;--bg:#0d1520;--card:#111a26}
+    header.top,.back,.vsw button,.sel,.chip,.dl{background:#0f1926}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="index.html">‹ Projects</a><span class="dot"></span>
+  <h1>3D Pronuclear Pseudotime</h1><span class="sub" id="meta">loading…</span>
+  <div class="vsw"><button id="v-explore" class="on">Explorer</button><button id="v-dev">Model development</button></div>
+</header>
+<main>
+  <div class="banner" id="banner"></div>
+  <div id="explore"></div>
+  <div id="dev" style="display:none"></div>
+</main>
+<script>
+const $=(s,r=document)=>r.querySelector(s);
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
+const esc=s=>String(s==null?"":s).replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]));
+const f=(v,d=3)=>v==null||Number.isNaN(v)?"—":(+v).toFixed(d);
+let M,INF,GEO,PREV,MAN;
+const oodTag=l=>l==="in_domain"?`<span class="tag t-ok">in-domain</span>`:l==="caution"?`<span class="tag t-warn">caution</span>`:`<span class="tag t-bad">out-of-domain</span>`;
+
+Promise.all([
+  fetch("data/pn3d/model.json").then(r=>r.json()),
+  fetch("data/pn3d/inference.json").then(r=>r.json()),
+  fetch("data/pn3d/segmentation_geometry.json").then(r=>r.json()),
+  fetch("data/pn3d/preview_index.json").then(r=>r.ok?r.json():{embryos:[]}).catch(()=>({embryos:[]})),
+  fetch("data/pn3d/manifest.json").then(r=>r.ok?r.json():null).catch(()=>null),
+]).then(([m,inf,geo,prev,man])=>{
+  M=m;INF=inf;GEO=geo;PREV=prev;MAN=man;
+  $("#meta").textContent=`${m.package_version} · R0 ${m.reference_radius_um}µm · clock MAE ${f(m.clock.cv_metrics.mae)} · ${m.counts.zygotes_resolved}/${m.counts.zygotes_audited} zygotes resolved`;
+  $("#banner").innerHTML=`<b>A single fixed 3D stack is developmentally ambiguous.</b> This model turns morphology into a 3D segmentation (cell body · 2 pronuclei · polar body), reduces it to dimensionless geometry, and compares that geometry to real live-imaging trajectories to return a <b>calibrated τ distribution with uncertainty</b> — not an unjustified point estimate. Fixed stacks have no true time; τ here is an inferred estimate, validated on live data.`;
+  buildExplorer();buildDev();
+  $("#v-explore").onclick=()=>sw("explore");$("#v-dev").onclick=()=>sw("dev");
+}).catch(e=>{$("#banner").innerHTML=`Could not load pn3d artifacts — run <code>scripts/build_pn3d_model.py</code>. ${esc(e.message)}`});
+
+function sw(v){for(const k of ["explore","dev"]){$("#"+k).style.display=v===k?"":"none";$("#v-"+k).classList.toggle("on",v===k)}}
+
+// ─────────── explorer ───────────
+let curId, showSeg=true;
+function buildExplorer(){
+  const root=$("#explore");root.innerHTML="";
+  const zy=INF.embryos.filter(e=>e.stage==="zygote");
+  const inferable=zy.filter(e=>e.inferable).sort((a,b)=>a.pseudotime.tau_mean-b.pseudotime.tau_mean);
+  const sec=el("section");
+  sec.appendChild(el("h2",null,"Select a fixed zygote"));
+  sec.appendChild(el("p","lead","Ordered by estimated τ. Unresolved / out-of-domain stacks are shown too — nothing is hidden."));
+  const sel=el("select","sel");
+  const g1=el("optgroup");g1.label="inferable (resolved)";
+  inferable.forEach(e=>{const o=el("option");o.value=e.embryo_id;o.textContent=`${e.embryo_id}  ·  τ≈${f(e.pseudotime.tau_mean,2)}  ${e.ood_level==="out_of_domain"?"⚠ OOD":""}`;g1.appendChild(o)});
+  sel.appendChild(g1);
+  const un=zy.filter(e=>!e.inferable);
+  if(un.length){const g2=el("optgroup");g2.label="unresolved (segmentation)";un.forEach(e=>{const o=el("option");o.value=e.embryo_id;o.textContent=`${e.embryo_id}  ·  unresolved`;g2.appendChild(o)});sel.appendChild(g2)}
+  sel.onchange=()=>selectEmbryo(sel.value);
+  sec.appendChild(sel);root.appendChild(sec);
+  root.appendChild(el("div",null,'<div id="ex-body"></div>'));
+  // prefer an embryo that has a published preview so the 3D views show on first load
+  const prevIds=new Set((PREV.embryos||[]).map(e=>e.embryo_id));
+  const withPrev=inferable.filter(e=>prevIds.has(e.embryo_id));
+  const pool=withPrev.length?withPrev:inferable.length?inferable:zy;
+  curId=(pool[Math.floor(pool.length/2)]||zy[0]).embryo_id;sel.value=curId;selectEmbryo(curId);
+}
+
+function rec(id){return INF.embryos.find(e=>e.embryo_id===id)}
+function prevOf(id){return (PREV.embryos||[]).find(e=>e.embryo_id===id)}
+
+function selectEmbryo(id){
+  curId=id;const r=rec(id),body=$("#ex-body");body.innerHTML="";
+  // ---- 3D orthogonal exploration ----
+  const s1=el("section");
+  s1.appendChild(el("h2",null,"3D exploration · orthogonal planes"));
+  s1.appendChild(el("p","lead",`DAPI maximum projections in the three orthogonal planes. Toggle the audited segmentation overlay. ${prevOf(id)?"":"<b>Preview not published for this embryo (or in production)</b> — generate locally with <code>build_pn3d_previews.py</code>."}`));
+  const tg=el("div","toggles");
+  const cSeg=el("span","chip"+(showSeg?" on":""),"segmentation overlay");
+  cSeg.onclick=()=>{showSeg=!showSeg;selectEmbryo(id)};tg.appendChild(cSeg);
+  tg.appendChild(el("span","legend",
+    `<span><span class="swatch" style="background:var(--cell)"></span>cell body</span>
+     <span><span class="swatch" style="background:var(--near)"></span>pronucleus (near)</span>
+     <span><span class="swatch" style="background:var(--far)"></span>pronucleus (far)</span>
+     <span><span class="swatch" style="background:var(--polar)"></span>polar body</span>`));
+  s1.appendChild(tg);
+  const planes=el("div","planes");const p=prevOf(id);
+  [["xy","XY (axial)"],["xz","XZ (coronal)"],["yz","YZ (sagittal)"]].forEach(([k,lab])=>{
+    const d=el("div","plane");
+    if(p&&p.planes[k]){const src=showSeg?p.planes[k].seg:p.planes[k].raw;
+      d.innerHTML=`<img src="${esc(src)}" alt="${lab}" onerror="this.parentElement.querySelector('.cap').textContent='preview not published';this.remove()"><div class="cap">${lab}</div>`;}
+    else d.innerHTML=`<div class="cap" style="padding:40px 4px">${lab}<br>no preview</div>`;
+    planes.appendChild(d)});
+  s1.appendChild(planes);
+  s1.appendChild(el("p","lead","2.5D fallback: these information-preserving projections (not a single MIP) are the deterministic 2.5D representation the model also supports when a full 3D pass is unavailable."));
+  body.appendChild(s1);
+
+  // ---- geometry + pseudotime ----
+  const wrap=el("div","row cols2");
+  const sg=el("section");sg.appendChild(el("h2",null,"Derived geometry"));
+  sg.appendChild(el("p","lead","Physical (µm) and dimensionless (÷ cell radius) — the model uses the dimensionless features."));
+  if(r.geometry){const g=r.geometry;
+    sg.appendChild(el("div","kv",
+      `<div class="k">cell radius</div><div class="v">${f(g.cell_radius_um,1)} µm</div>
+       <div class="k">Σ pronucleus→centre distance</div><div class="v">${f(g.distance_sum_um,1)} µm</div>
+       <div class="k">Σ distance ÷ radius</div><div class="v">${f(g.sum_over_R,3)}</div>
+       <div class="k">near ÷ radius</div><div class="v">${f(g.near_over_R,3)}</div>
+       <div class="k">far ÷ radius</div><div class="v">${f(g.far_over_R,3)}</div>
+       <div class="k">inter-pronuclear ÷ radius</div><div class="v">${f(g.inter_over_R,3)}</div>
+       <div class="k">volume asymmetry</div><div class="v">${f(g.vol_asymmetry,3)}</div>
+       <div class="k">polar body detected</div><div class="v">${g.polar_body_present?"yes":"no"}</div>`));
+  } else sg.appendChild(el("p","missing","Geometry unavailable — segmentation unresolved."));
+  wrap.appendChild(sg);
+
+  const sp=el("section");sp.appendChild(el("h2",null,"Estimated pseudotime τ"));
+  sp.appendChild(el("p","lead","Calibrated posterior with 50 / 80 / 95% intervals. Wide = geometry is ambiguous at this stage."));
+  if(r.pseudotime){const p2=r.pseudotime;
+    sp.appendChild(el("div",null,`<span class="big">${f(p2.tau_mean,2)}</span> <span class="sub">± ${f(p2.tau_sd,2)} sd · confidence ${f(p2.confidence,2)}</span>`));
+    sp.appendChild(tauPlot(p2));
+    sp.appendChild(el("div","kv",
+      `<div class="k">50% interval</div><div class="v">${f(p2.interval_50[0],2)} – ${f(p2.interval_50[1],2)}</div>
+       <div class="k">80% interval</div><div class="v">${f(p2.interval_80[0],2)} – ${f(p2.interval_80[1],2)}</div>
+       <div class="k">95% interval</div><div class="v">${f(p2.interval_95[0],2)} – ${f(p2.interval_95[1],2)}</div>`));
+  } else sp.appendChild(el("p","missing","No τ — segmentation did not resolve two pronuclei; the model refuses rather than guessing."));
+  wrap.appendChild(sp);body.appendChild(wrap);
+
+  // ---- QC / OOD ----
+  const sq=el("section");sq.appendChild(el("h2",null,"Quality control & domain check"));
+  sq.appendChild(el("div",null,
+    `segmentation ${r.segmentation_status==="resolved"?'<span class="tag t-ok">resolved</span>':'<span class="tag t-bad">'+esc(r.segmentation_status)+'</span>'}
+     · confidence ${f(r.segmentation_confidence,2)} · domain ${oodTag(r.ood_level)}`));
+  if((r.ood_reasons||[]).length||(r.flags||[]).length){
+    const u=el("ul","clean");(r.flags||[]).concat(r.ood_reasons||[]).forEach(x=>u.appendChild(el("li",null,esc(x))));
+    sq.appendChild(el("div","flags","Flags & constraints:"));sq.appendChild(u);}
+  else sq.appendChild(el("p","lead","All biological constraints satisfied; feature within live-training support."));
+  body.appendChild(sq);
+
+  // ---- reference trajectory + animation ----
+  const sa=el("section");sa.appendChild(el("h2",null,"Nearest live-imaging trajectory · τ 0 → 1"));
+  sa.appendChild(el("p","lead","The pronuclei migrate together as development proceeds. The schematic below is driven by the median live-imaging geometry; the marker shows where this embryo sits."));
+  sa.appendChild(trajAnim(r));body.appendChild(sa);
+
+  // ---- downloads ----
+  const sd=el("section");sd.appendChild(el("h2",null,"Reproducible inference record"));
+  const jb=el("button","dl","Download JSON");jb.onclick=()=>dl(id+".json",JSON.stringify(recordFor(r),null,1),"application/json");
+  const cb=el("button","dl","Download CSV");cb.onclick=()=>dl(id.replace(/\//g,"_")+".csv",toCSV(r),"text/csv");
+  sd.appendChild(jb);sd.appendChild(document.createTextNode(" "));sd.appendChild(cb);
+  body.appendChild(sd);
+}
+
+function recordFor(r){return {model_version:M.package_version,reference_radius_um:M.reference_radius_um,clock:M.clock.kind,embryo:r}}
+function toCSV(r){const g=r.geometry||{},p=r.pseudotime||{};
+  const rows=[["field","value"],["embryo_id",r.embryo_id],["stage",r.stage],["segmentation_status",r.segmentation_status],
+   ["segmentation_confidence",r.segmentation_confidence],["ood_level",r.ood_level],
+   ["cell_radius_um",g.cell_radius_um],["distance_sum_um",g.distance_sum_um],["sum_over_R",g.sum_over_R],
+   ["tau_mean",p.tau_mean],["tau_sd",p.tau_sd],["ci95_lo",p.interval_95&&p.interval_95[0]],["ci95_hi",p.interval_95&&p.interval_95[1]],["confidence",p.confidence]];
+  return rows.map(r=>r.join(",")).join("\n")}
+function dl(name,txt,mime){const b=new Blob([txt],{type:mime}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1500)}
+
+function tauPlot(p){
+  const W=520,H=64,x=t=>18+t*(W-36);
+  const bar=(iv,y,col,h)=>`<rect x="${x(iv[0])}" y="${y}" width="${x(iv[1])-x(iv[0])}" height="${h}" rx="3" fill="${col}"/>`;
+  return svgWrap(`<svg viewBox="0 0 ${W} ${H}">
+    <line x1="18" y1="${H-14}" x2="${W-18}" y2="${H-14}" stroke="var(--line)"/>
+    ${[0,.25,.5,.75,1].map(t=>`<text x="${x(t)}" y="${H-3}" font-size="9" fill="var(--muted)" text-anchor="middle">${t}</text>`).join("")}
+    ${bar(p.interval_95,10,"rgba(67,56,202,.16)",30)}
+    ${bar(p.interval_80,16,"rgba(67,56,202,.28)",18)}
+    ${bar(p.interval_50,20,"rgba(67,56,202,.45)",10)}
+    <line x1="${x(p.tau_mean)}" y1="6" x2="${x(p.tau_mean)}" y2="${H-14}" stroke="var(--accent)" stroke-width="2"/>
+    <circle cx="${x(p.tau_mean)}" cy="8" r="3.5" fill="var(--accent)"/></svg>`)}
+function svgWrap(s){const d=el("div");d.innerHTML=s;return d}
+
+function trajAnim(r){
+  const traj=M.canonical_trajectory,W=520,H=150,cx=W/2,cy=70,R=46;
+  const wrap=el("div");
+  wrap.innerHTML=`<svg viewBox="0 0 ${W} ${H}">
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--cell)" stroke-width="2"/>
+    <circle id="pnA" r="12" fill="var(--near)" opacity="0.85"/><circle id="pnB" r="12" fill="var(--far)" opacity="0.85"/>
+    <rect x="18" y="${H-20}" width="${W-36}" height="6" rx="3" fill="var(--line)"/>
+    <rect id="tbar" x="18" y="${H-20}" width="0" height="6" rx="3" fill="var(--accent)"/>
+    <circle id="tmark" cy="${H-17}" r="5" fill="var(--accent)"/>
+    <text id="tlab" x="${W-18}" y="${H-24}" font-size="10" fill="var(--muted)" text-anchor="end"></text></svg>`;
+  const pnA=wrap.querySelector("#pnA"),pnB=wrap.querySelector("#pnB"),tbar=wrap.querySelector("#tbar"),
+        tmark=wrap.querySelector("#tmark"),tlab=wrap.querySelector("#tlab");
+  const sumAt=t=>{let best=traj[0];for(const p of traj)if(Math.abs(p.tau-t)<Math.abs(best.tau-t))best=p;return best.sum_over_R};
+  const draw=t=>{const half=Math.min(R*0.9,sumAt(t)/2*R*0.62);
+    pnA.setAttribute("cx",cx-half);pnA.setAttribute("cy",cy);pnB.setAttribute("cx",cx+half);pnB.setAttribute("cy",cy);
+    tbar.setAttribute("width",t*(W-36));tmark.setAttribute("cx",18+t*(W-36));tlab.textContent="τ = "+t.toFixed(2)};
+  let t=0,dir=1;const embT=r.pseudotime?r.pseudotime.tau_mean:null;
+  const timer=setInterval(()=>{t+=dir*0.012;if(t>=1){t=1;dir=-1}if(t<=0){t=0;dir=1}draw(t)},40);
+  wrap._timer=timer;
+  if(embT!=null){const mk=document.createElementNS("http://www.w3.org/2000/svg","circle");
+    mk.setAttribute("cx",18+embT*(W-36));mk.setAttribute("cy",H-17);mk.setAttribute("r",4);mk.setAttribute("fill","var(--far)");mk.setAttribute("stroke","#fff");
+    wrap.querySelector("svg").appendChild(mk);
+    const lb=document.createElementNS("http://www.w3.org/2000/svg","text");lb.setAttribute("x",18+embT*(W-36));lb.setAttribute("y",H-2);lb.setAttribute("font-size","9");lb.setAttribute("fill","var(--far)");lb.setAttribute("text-anchor","middle");lb.textContent="this embryo";wrap.querySelector("svg").appendChild(lb)}
+  draw(0);return wrap;
+}
+
+// ─────────── model development view ───────────
+function buildDev(){
+  const root=$("#dev");root.innerHTML="";
+  // provenance / splits
+  let s=el("section");s.appendChild(el("h2",null,"Data provenance & splits"));
+  s.appendChild(el("p","lead","Inventory from the mounted dataset manifest. Splits are by whole embryo & acquisition batch — never neighbouring slices or duplicated FOVs."));
+  const c=M.counts;
+  s.appendChild(el("div","kv",
+    `<div class="k">experiments / batches</div><div class="v">${MAN?MAN.n_experiments:"—"}</div>
+     <div class="k">embryos inventoried</div><div class="v">${MAN?MAN.n_embryos:"—"}</div>
+     <div class="k">zygotes audited</div><div class="v">${c.zygotes_audited}</div>
+     <div class="k">zygotes resolved</div><div class="v">${c.zygotes_resolved}</div>
+     <div class="k">zygotes inferable</div><div class="v">${c.zygotes_inferable}</div>
+     <div class="k">flagged out-of-domain</div><div class="v">${c.zygotes_ood}</div>
+     <div class="k">2-cell OOD reference</div><div class="v">${c.two_cell_reference}</div>
+     <div class="k">time supervision</div><div class="v">live-imaging (Scheffler 2021)</div>`));
+  if(MAN)s.appendChild(el("p","lead","Time supervision is NOT in the fixed dataset (all fixed MERFISH). "+esc(MAN.time_supervision.note)));
+  root.appendChild(s);
+
+  // clock validation
+  s=el("section");s.appendChild(el("h2",null,"Clock validation (true time-supervised)"));
+  s.appendChild(el("p","lead","Leave-one-embryo-out CV on live-imaging τ — the ONLY independent time validation. Isotonic (monotone) mean + calibrated heteroscedastic interval."));
+  const cv=M.clock.cv_metrics;
+  const kp=el("div","row cols3");
+  [["MAE",f(cv.mae,3)],["Spearman ρ",f(cv.spearman,3)],["within-embryo monotonicity",f(cv.within_embryo_mono_median,3)]].forEach(([k,v])=>{
+    const d=el("div");d.innerHTML=`<div class="big">${v}</div><div class="sub">${k}</div>`;kp.appendChild(d)});
+  s.appendChild(kp);
+  s.appendChild(el("div","row cols2",""));
+  const two=el("div","row cols2");
+  two.appendChild(wrapSec("Held-out predicted vs true τ",scatterPlot(M.clock.cv_scatter)));
+  two.appendChild(wrapSec("Calibration (nominal vs empirical coverage)",calibPlot(M.clock.calibration_curve)));
+  s.appendChild(two);root.appendChild(s);
+
+  // baselines
+  s=el("section");s.appendChild(el("h2",null,"Baselines: geometry-only · image-only · structured"));
+  const t=el("table");t.innerHTML="<tr><th>model</th><th>description</th><th>result</th></tr>";
+  const b=M.baselines;
+  t.innerHTML+=`<tr><td><b>geometry-only</b></td><td>${esc(b.geometry_only.description)}</td><td>Scheffler CV MAE ${f(b.geometry_only.scheffler_cv_mae,3)}</td></tr>
+    <tr><td><b>image-only</b></td><td>${esc(b.image_only.description)}</td><td><span class="tag t-bad">exploratory</span> ${esc(b.image_only.status)} (ρ≈${b.image_only.spearman_approx})</td></tr>
+    <tr><td><b>structured</b></td><td>${esc(b.structured.description)}</td><td>MAE ${f(b.structured.scheffler_cv_mae,3)} + ${esc(b.structured.adds.join(", "))}</td></tr>`;
+  s.appendChild(t);root.appendChild(s);
+
+  // domain shift
+  s=el("section");s.appendChild(el("h2",null,"Domain: fixed MERFISH vs live-imaging"));
+  const ds=M.domain_shift;
+  s.appendChild(el("div","kv",
+    `<div class="k">physical Σdist median (fixed / live)</div><div class="v">${ds.physical_distance_sum.fixed_median} / ${ds.physical_distance_sum.live_median} µm</div>
+     <div class="k">KS distance (physical)</div><div class="v">${ds.physical_distance_sum.ks_statistic}</div>
+     <div class="k">KS distance (dimensionless)</div><div class="v">${ds.dimensionless_sum_over_R.ks_statistic}</div>
+     <div class="k">fixed stacks above live support</div><div class="v">${ds.n_fixed_above_live_support}</div>`));
+  s.appendChild(el("p","lead",esc(ds.verdict)));root.appendChild(s);
+
+  // evidence table
+  s=el("section");s.appendChild(el("h2",null,"Evidence table"));
+  s.appendChild(el("p","lead","What each result does and does not establish. Agreement with a prior cached pseudotime is NOT independent validation."));
+  const et=el("table");et.innerHTML="<tr><th>claim</th><th>evidence type</th><th>data</th><th>result</th></tr>";
+  M.evidence_table.forEach(e=>{et.innerHTML+=`<tr><td>${esc(e.claim)}</td><td><span class="tag ${e.evidence_type.includes("TRUE")?"t-ok":e.evidence_type.includes("exploratory")?"t-bad":"t-info"}">${esc(e.evidence_type)}</span></td><td>${esc(e.data)}</td><td>${esc(e.result)}</td></tr>`});
+  s.appendChild(et);root.appendChild(s);
+
+  // failure cases
+  s=el("section");s.appendChild(el("h2",null,"Failure cases (shown, not hidden)"));
+  const fails=INF.embryos.filter(e=>e.stage==="zygote"&&(!e.inferable||e.ood_level==="out_of_domain")).slice(0,10);
+  const ft=el("table");ft.innerHTML="<tr><th>embryo</th><th>status</th><th>why</th></tr>";
+  fails.forEach(e=>{ft.innerHTML+=`<tr><td><code>${esc(e.embryo_id)}</code></td><td>${e.inferable?oodTag(e.ood_level):'<span class="tag t-bad">unresolved</span>'}</td><td>${esc((e.flags||[]).concat(e.ood_reasons||[]).slice(0,2).join("; "))}</td></tr>`});
+  s.appendChild(ft);root.appendChild(s);
+}
+function wrapSec(title,node){const d=el("div");d.appendChild(el("div","lead",title));d.appendChild(node);return d}
+function scatterPlot(pts){const W=340,H=240,x=t=>30+t*(W-40),y=t=>H-26-t*(H-40);
+  const dots=pts.map(p=>`<circle cx="${x(p.true)}" cy="${y(p.pred)}" r="1.7" fill="rgba(67,56,202,.5)"/>`).join("");
+  return svgWrap(`<svg viewBox="0 0 ${W} ${H}"><line x1="30" y1="${y(0)}" x2="${x(1)}" y2="${y(1)}" stroke="var(--muted)" stroke-dasharray="4"/>
+    ${dots}<line x1="30" y1="14" x2="30" y2="${y(0)}" stroke="var(--line)"/><line x1="30" y1="${y(0)}" x2="${x(1)}" y2="${y(0)}" stroke="var(--line)"/>
+    <text x="${x(.5)}" y="${H-4}" font-size="10" fill="var(--muted)" text-anchor="middle">true τ</text>
+    <text x="10" y="${y(.5)}" font-size="10" fill="var(--muted)" transform="rotate(-90 10 ${y(.5)})" text-anchor="middle">predicted τ</text></svg>`)}
+function calibPlot(curve){const W=340,H=240,x=t=>34+t*(W-48),y=t=>H-26-t*(H-42);
+  const line=curve.map((c,i)=>`${i?"L":"M"}${x(c.nominal)} ${y(c.empirical)}`).join(" ");
+  const dots=curve.map(c=>`<circle cx="${x(c.nominal)}" cy="${y(c.empirical)}" r="3.5" fill="var(--accent)"/>`).join("");
+  return svgWrap(`<svg viewBox="0 0 ${W} ${H}"><line x1="${x(.4)}" y1="${y(.4)}" x2="${x(1)}" y2="${y(1)}" stroke="var(--muted)" stroke-dasharray="4"/>
+    <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2"/>${dots}
+    <line x1="34" y1="14" x2="34" y2="${y(0)}" stroke="var(--line)"/><line x1="34" y1="${y(0)}" x2="${x(1)}" y2="${y(0)}" stroke="var(--line)"/>
+    <text x="${x(.7)}" y="${H-4}" font-size="10" fill="var(--muted)" text-anchor="middle">nominal coverage</text>
+    <text x="12" y="${y(.5)}" font-size="10" fill="var(--muted)" transform="rotate(-90 12 ${y(.5)})" text-anchor="middle">empirical</text></svg>`)}
+</script>
+</body>
+</html>

@@ -16,3 +16,8 @@ vision_local.json
 *.mp4
 __pycache__/
 *.pyc
+
+# 3D pronuclear pseudotime — large/derived artifacts and resolved-path files out of git
+calibration_data/pn3d/derived/*
+!calibration_data/pn3d/derived/README.txt
+pn3d_local.json

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sperm Location vs Pseudotime · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="sperm-pseudotime.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="help.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#ff2d95;box-shadow:0 0 0 4px color-mix(in srgb,#ff2d95 20%,transparent)"></span>
+      <span class="brand-name">Sperm&nbsp;Location&nbsp;vs&nbsp;Pseudotime</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Sperm-labelled zygotes"></nav>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">Controls</span>
+        <button class="help-btn" data-help="sperm-pseudotime" style="margin-left:auto" aria-label="What is this?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="ctl-block">
+          <span class="ctl-label">Distance from sperm to…</span>
+          <div class="seg-obj" id="obj-select" role="group">
+            <button type="button" data-obj="polar" class="active">Polar body</button>
+            <button type="button" data-obj="maternal">Maternal ♀</button>
+            <button type="button" data-obj="paternal">Paternal ♂</button>
+          </div>
+        </div>
+        <div class="ctl-toggles">
+          <label class="ctl-chk"><input type="checkbox" id="show-all" checked><span>show all objects</span></label>
+          <label class="ctl-chk"><input type="checkbox" id="show-body" checked><span>cell body</span></label>
+        </div>
+        <div class="sp-readout" id="sp-readout"></div>
+        <div class="sp-legend" id="sp-legend"></div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Select a zygote</div>
+        <div class="ph-sub">Choose a sperm-labelled zygote above to see the sperm, the two pronuclei
+          and the polar body in 3-D, with the distance to the selected object drawn. The drawer plots
+          that distance against pseudotime across every sperm-labelled zygote.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- bottom drawer: distance vs pseudotime across all zygotes -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Sperm distance vs pseudotime <span class="drawer-gene" id="drawer-obj"></span></span>
+      <span class="drawer-hint">one point per sperm-labelled zygote · x = calibrated τ, y = sperm-to-object distance</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="sp-chart-head">
+        <div class="sp-stat" id="sp-stat"></div>
+        <button type="button" class="secondary-button" id="export-csv">Export CSV</button>
+      </div>
+      <div id="sp-scatter" class="sp-scatter"></div>
+      <div class="sp-note" id="sp-note"></div>
+    </div>
+  </section>
+
+  <script src="viewer-core.js"></script>
+  <script src="sperm-pseudotime.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

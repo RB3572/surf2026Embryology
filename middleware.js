@@ -32,6 +32,7 @@ const PROJECT_OF = {
   "pronuclear-pseudotime.html": "pronuclear-pseudotime",
   "pn3d-transcripts.html": "pn3d-transcripts",
   "stage-expression.html": "stage-expression",
+  "sperm-pseudotime.html": "sperm-pseudotime",
 };
 let _accMap = null, _accAt = 0;
 async function allowedProjects(user) {          // → array of allowed keys, or null = all projects

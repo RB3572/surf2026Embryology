@@ -1,0 +1,36 @@
+/* Sperm Location vs Pseudotime — page-specific styling (builds on style.css). */
+
+.ctl-block { display: flex; flex-direction: column; gap: 6px; }
+.ctl-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-soft); }
+.seg-obj { display: inline-flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+.seg-obj button { flex: 1; padding: 7px 10px; border: none; background: var(--surface); color: var(--ink-2);
+  font: inherit; font-size: 12.5px; cursor: pointer; border-right: 1px solid var(--line); white-space: nowrap; }
+.seg-obj button:last-child { border-right: none; }
+.seg-obj button.active { background: var(--ink); color: #fff; }
+.seg-obj button:not(.active):hover { background: var(--line-2); }
+
+.ctl-toggles { display: flex; gap: 14px; margin-top: 10px; }
+.ctl-chk { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); cursor: pointer; }
+
+.sp-readout { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line-2); font-size: 12.5px; }
+.sp-readout .sp-big { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sp-readout .sp-big small { font-size: 12px; font-weight: 500; color: var(--ink-soft); }
+.sp-readout .sp-sub { color: var(--ink-soft); margin-top: 3px; line-height: 1.5; }
+.sp-readout .sp-split { color: #b45309; font-weight: 600; }
+
+.sp-legend { display: grid; gap: 5px; margin-top: 11px; font-size: 11.5px; }
+.sp-legend .lg { display: flex; align-items: center; gap: 7px; color: var(--ink-2); }
+.sp-legend .lg i { width: 12px; height: 12px; border-radius: 3px; flex: 0 0 auto; }
+.sp-legend .lg .di { width: 12px; height: 12px; transform: rotate(45deg); border-radius: 2px; }
+
+/* drawer scatter */
+.drawer-gene { color: #ff2d95; font-weight: 700; }
+.sp-chart-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 2px 2px 8px; }
+.sp-stat { font-size: 12.5px; color: var(--ink-2); }
+.sp-stat b { font-variant-numeric: tabular-nums; }
+.sp-stat .sig { color: #15803d; }
+.secondary-button { padding: 5px 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+  font: inherit; font-size: 12px; color: var(--ink-2); cursor: pointer; }
+.secondary-button:hover { background: var(--line-2); }
+.sp-scatter { width: 100%; height: min(46vh, 420px); }
+.sp-note { font-size: 11.5px; color: var(--ink-soft); margin-top: 6px; line-height: 1.5; }

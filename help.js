@@ -400,6 +400,23 @@
         <li><b>Volume density</b> — ÷ the cell's segmented volume, so a bigger cell isn't counted as higher for its size.</li></ul>
         <p>The <b>log y-axis</b> spaces the axis by log10(value + 1) (values span three orders of magnitude), matching the
         source explorer. Counts reproduce the segment dataset exactly; CPM and density are derived live.</p>` },
+    "sperm-pseudotime": { eyebrow: "Sperm Location vs Pseudotime · the idea", title: "Where is the sperm as the clock ticks?",
+      html: `<p class="lede">The sperm enters at the cortex and its mark stays put while the pronuclei migrate inward.
+        This asks a simple question: how far is that sperm mark from a chosen object, and does the distance change over
+        developmental time?</p>
+        <h3>The object</h3>
+        <p>Pick what to measure the distance to: the <b>polar body</b>, the <b>maternal pronucleus ♀</b>, or the
+        <b>paternal pronucleus ♂</b>. Maternal vs paternal comes from the <b>Maternal/Paternal Pronucleus ID</b> project's
+        consensus (four tests, majority vote). The 3-D view draws the sperm (pink diamond), the two pronuclei and the
+        polar body, with a dashed line to the object you chose.</p>
+        <h3>The clock</h3>
+        <p>The x-axis is the calibrated <b>pronuclear pseudotime τ</b> (0 = pronuclear formation → 1 = NEBD, model
+        pnpt-3.0.0); the horizontal bars are its 95% interval. Only zygotes with a <b>labelled sperm</b> are included.</p>
+        <h3>What it shows</h3>
+        <p>The sperm sits right on the <b>paternal</b> pronucleus (~15-20 µm) — as it should, since that pronucleus forms
+        from the sperm — and that distance <i>grows</i> with τ as the paternal pronucleus migrates inward, away from the
+        fixed cortical entry point. Distance to the maternal pronucleus and the polar body stays roughly flat. Four zygotes
+        have an even-split pronucleus call, so they have no defined maternal/paternal and drop out of those two views.</p>` },
     "extpt": { eyebrow: "Extended Pseudotime · the idea", title: "One clock across three stages",
       html: `<p class="lede">The pronuclei give zygotes a ruler for developmental time. This project extends that ruler
         past the first division — laying <b>zygote → early-2-cell → late-2-cell</b> along a single pseudotime axis so you

@@ -71,28 +71,34 @@
     <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
     <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
       <span class="rdrawer-chevron" aria-hidden="true"></span>
-      <span class="rdrawer-handle-label">Gene ⟷ distance</span>
+      <span class="rdrawer-handle-label" id="rank-handle-label">Gene ⟷ distance</span>
     </button>
     <div class="rdrawer-body" id="rdrawer-body">
       <div class="rdrawer-head">
-        <div class="rdrawer-title" style="position:relative">Genes correlated with pronuclei distance<button class="help-btn help-corner" data-help="pronuclei-genes" aria-label="What is this?">?</button></div>
-        <div class="rdrawer-desc">Pearson correlation between a gene's transcript count and the
+        <div class="rdrawer-title" style="position:relative"><span id="rank-title">Genes correlated with pronuclei distance</span><button class="help-btn help-corner" data-help="pronuclei-genes" aria-label="What is this?">?</button></div>
+        <div class="rdrawer-desc" id="rank-desc">Pearson correlation between a gene's transcript count and the
           minimum pronuclei distance, across the zygotes that contain the gene (panels are
           disjoint, so n varies per gene). Click a gene to plot it.</div>
         <div class="pn-rank-ctl">
+          <label class="ctl"><span class="ctl-label">Rank by</span>
+            <select id="rank-metric">
+              <option value="r-distance">r · pronuclei distance</option>
+              <option value="r2-tau">R² · calibrated τ</option>
+            </select></label>
           <label class="ctl"><span class="ctl-label">Top</span>
             <select id="rank-n"><option value="10">10</option><option value="20">20</option>
               <option value="30">30</option><option value="50">50</option></select></label>
           <span class="pn-rank-min">genes in ≥ <b>5</b> zygotes</span>
         </div>
+        <div class="pn-rank-mismatch" id="rank-mismatch" hidden></div>
       </div>
       <div class="pn-ranks">
         <div class="pn-rank-sec">
-          <div class="pn-rank-title pos">Most positive — distance rises with the gene's count</div>
+          <div class="pn-rank-title pos" id="rank-pos-title">Most positive — distance rises with the gene's count</div>
           <div id="rank-pos" class="best-list"></div>
         </div>
         <div class="pn-rank-sec">
-          <div class="pn-rank-title neg">Most negative — distance falls as the gene's count rises</div>
+          <div class="pn-rank-title neg" id="rank-neg-title">Most negative — distance falls as the gene's count rises</div>
           <div id="rank-neg" class="best-list"></div>
         </div>
       </div>

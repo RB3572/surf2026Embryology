@@ -30,6 +30,9 @@
   const scatterPlot = $("#scatter-plot");
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
   const rankNEl = $("#rank-n"), rankPosEl = $("#rank-pos"), rankNegEl = $("#rank-neg");
+  const rankMetricEl = $("#rank-metric"), rankTitleEl = $("#rank-title"), rankDescEl = $("#rank-desc"),
+        rankPosTitleEl = $("#rank-pos-title"), rankNegTitleEl = $("#rank-neg-title"),
+        rankHandleEl = $("#rank-handle-label"), rankMismatchEl = $("#rank-mismatch");
   const ptToggle = $("#pseudotime-toggle");
   const clockSel = $("#pn-clock");
   const exRowEl = $("#pn-ex-row"), exCountEl = $("#pn-ex-count"),
@@ -43,6 +46,9 @@
   const graphTabsEl = $("#graph-tabs"), graphPanels = $("#graph-panels");
 
   const state = { points: [], byId: {}, genesAgg: null, gaById: {}, geneCorr: [], userGene: null, rankN: 10,
+                  // right-drawer ranking axis. Defaults to the established distance correlation so
+                  // the published ranking is unchanged until τ is explicitly chosen.
+                  rankMetric: "r-distance",
                   currentId: null, scene: null, fit: null, drawerOpen: false, showDots: false,
                   regType: "linear", dotSize: 1.5, pseudotime: false,
                   // x-axis clock. DEFAULT STAYS "legacy" so established analyses are unchanged
@@ -83,7 +89,7 @@
         label: e.label, sub: e.date_short,
         title: `${e.label} · dist ${e.distance} µm · ${e.total.toLocaleString()} transcripts`,
       }));
-      wireDrawer(); wireRdrawer(); wireGraphTabs(); renderRanks();
+      wireDrawer(); wireRdrawer(); wireGraphTabs(); syncRankMetricUI(); renderRanks();
       ptToggle.addEventListener("change", () => { state.pseudotime = ptToggle.checked; renderAllScatters(); });
       // default the shift interval to the calibration project's published half-width
       if (cal && cal.meta && cal.meta.halfwidth_95 != null) {
@@ -94,7 +100,18 @@
       applyClockAvail();
       wireShift(); wireExclude();
       if (clockSel) clockSel.addEventListener("change", () => {
-        state.clock = clockSel.value; syncClockUI(); syncShiftUI(); renderAllScatters();
+        state.clock = clockSel.value; syncClockUI(); syncShiftUI(); syncRankMismatch(); renderAllScatters();
+      });
+      if (rankMismatchEl) rankMismatchEl.addEventListener("click", (e) => {
+        const b = e.target.closest(".pn-rank-fix"); if (!b) return;
+        if (b.dataset.to === "calibrated") {
+          if (clockSel && !clockSel.disabled) { state.clock = "calibrated"; clockSel.value = "calibrated"; }
+          syncClockUI(); syncShiftUI(); renderAllScatters();
+        } else {
+          state.rankMetric = "r2-tau"; if (rankMetricEl) rankMetricEl.value = "r2-tau";
+          syncRankMetricUI(); computeGeneCorr(); renderRanks(); highlightRank();
+        }
+        syncRankMismatch();
       });
       // deep link from the calibration page: ?embryo=<id>
       const want = new URLSearchParams(location.search).get("embryo");
@@ -102,6 +119,11 @@
       vcExtras = V.addWindowExtras($("#controls-body"), { defaultSize: state.dotSize, onDotSize: (s) => { state.dotSize = s; if (state.scene) render(); } });
       geneSelect.addEventListener("change", () => selectGene(geneSelect.value));
       rankNEl.addEventListener("change", () => { state.rankN = parseInt(rankNEl.value, 10) || 10; renderRanks(); });
+      // switching the ranking axis re-runs the correlations against the new x, so n changes too
+      if (rankMetricEl) rankMetricEl.addEventListener("change", () => {
+        state.rankMetric = rankMetricEl.value;
+        syncRankMetricUI(); computeGeneCorr(); renderRanks(); highlightRank();
+      });
       dotsShow.addEventListener("change", () => { state.showDots = dotsShow.checked; ensureDotGene(); if (state.scene) render(); });
       regTypeEl.addEventListener("change", () => { state.regType = regTypeEl.value; updRegNote(); renderAllScatters(); });
       // region + normalization + flip (bottom-drawer scatters)
@@ -121,25 +143,88 @@
     } catch (err) { showError("Failed to load: " + (err.message || err)); }
   })();
 
-  // ---------- gene ↔ distance correlations ----------
-  function geneSeries(g) {
+  // ---------- gene ↔ distance / τ correlations ----------
+  // `axis` picks what the gene's count is correlated AGAINST:
+  //   "distance"  the raw minimum pronuclei surface gap (µm) — the established ranking;
+  //   "tau"       the frozen calibration model's pseudotime τ, which is a real developmental
+  //               clock rather than a geometric proxy. τ is only defined for embryos the model
+  //               could score, so those without one are dropped (never treated as τ = 0) and n
+  //               falls accordingly — which is why n is always shown next to the statistic.
+  function geneSeries(g, axis) {
     const xs = [], ys = [], ids = [], labels = [];
     for (const e of state.genesAgg.embryos) {
       const c = e.genes[g]; if (c == null) continue;
-      xs.push(c); ys.push(e.distance); ids.push(e.id); labels.push((state.byId[e.id] || {}).label || e.id);
+      let y = e.distance;
+      if (axis === "tau") {
+        const r = state.calById[e.id];
+        if (!r || r.tau == null) continue;
+        y = r.tau;
+      }
+      xs.push(c); ys.push(y); ids.push(e.id); labels.push((state.byId[e.id] || {}).label || e.id);
     }
     return { xs, ys, ids, labels };
   }
   function computeGeneCorr() {
     const genes = new Set();
     state.genesAgg.embryos.forEach((e) => Object.keys(e.genes).forEach((g) => genes.add(g)));
+    const axis = rankAxis();
     const out = [];
     for (const g of genes) {
-      const s = geneSeries(g); if (s.xs.length < MIN_ZYG) continue;
+      const s = geneSeries(g, axis); if (s.xs.length < MIN_ZYG) continue;
       const f = linreg(s.xs, s.ys); if (!isFinite(f.r)) continue;
-      out.push({ gene: g, r: f.r, n: s.xs.length });
+      // r keeps the direction (which half of the panel a gene lands in); r2 is what the
+      // τ mode ranks on, so a strong negative gene is not buried under a weak positive one.
+      out.push({ gene: g, r: f.r, r2: f.r * f.r, n: s.xs.length });
     }
     state.geneCorr = out;
+  }
+  const rankAxis = () => (state.rankMetric === "r2-tau" ? "tau" : "distance");
+  // τ ranking needs the calibration artifact; without it the option is disabled with a reason
+  // rather than silently falling back to distance under a label that says τ.
+  function syncRankMetricUI() {
+    if (!rankMetricEl) return;
+    const opt = [...rankMetricEl.options].find((o) => o.value === "r2-tau");
+    const have = !!(state.calib && Object.keys(state.calById).length);
+    if (opt) {
+      opt.disabled = !have;
+      opt.textContent = have ? "R² · calibrated τ" : "R² · calibrated τ (unavailable)";
+    }
+    if (!have && state.rankMetric === "r2-tau") { state.rankMetric = "r-distance"; rankMetricEl.value = "r-distance"; }
+    const tau = state.rankMetric === "r2-tau";
+    if (rankTitleEl) rankTitleEl.textContent = tau
+      ? "Genes tracking calibrated pseudotime τ" : "Genes correlated with pronuclei distance";
+    if (rankDescEl) rankDescEl.innerHTML = tau
+      ? `Ranked by <b>R²</b> of a gene's transcript count against the frozen calibration model's `
+        + `pseudotime τ (0 = pronuclear formation → 1 = NEBD), over the zygotes that contain the `
+        + `gene <i>and</i> have a τ estimate. Sign of the slope decides which panel a gene lands in. `
+        + `Click a gene to plot it.`
+      : `Pearson correlation between a gene's transcript count and the minimum pronuclei distance, `
+        + `across the zygotes that contain the gene (panels are disjoint, so n varies per gene). `
+        + `Click a gene to plot it.`;
+    if (rankPosTitleEl) rankPosTitleEl.textContent = tau
+      ? "Increases with τ — count rises as the zygote ages"
+      : "Most positive — distance rises with the gene's count";
+    if (rankNegTitleEl) rankNegTitleEl.textContent = tau
+      ? "Decreases with τ — count falls as the zygote ages"
+      : "Most negative — distance falls as the gene's count rises";
+    if (rankHandleEl) rankHandleEl.textContent = tau ? "Gene ⟷ τ" : "Gene ⟷ distance";
+    syncRankMismatch();
+  }
+  // The ranking axis and the scatter's time axis are deliberately independent — comparing a
+  // gene's τ ranking against its distance plot is a legitimate thing to want. But letting them
+  // disagree unannounced would mean clicking an "R² vs τ" row and reading a different R² off the
+  // plot, so the difference is stated with a one-click way to line them up.
+  function syncRankMismatch() {
+    if (!rankMismatchEl) return;
+    const tau = state.rankMetric === "r2-tau", calPlot = state.clock === "calibrated";
+    const off = tau !== calPlot;
+    rankMismatchEl.hidden = !off;
+    if (!off) return;
+    rankMismatchEl.innerHTML = tau
+      ? `Ranked on τ, but the plot's time axis is the legacy distance — the R² here will not match `
+        + `the one on the scatter. <button type="button" class="pn-rank-fix" data-to="calibrated">Set plot to τ</button>`
+      : `Ranked on distance, but the plot's time axis is calibrated τ. `
+        + `<button type="button" class="pn-rank-fix" data-to="r2-tau">Rank on τ</button>`;
   }
   function populateGenes() {
     const genes = [...new Set(state.genesAgg.embryos.flatMap((e) => Object.keys(e.genes)))]
@@ -1027,20 +1112,35 @@
 
   // ---------- right drawer: correlation ranking ----------
   function rankRows(rows) {
-    const cur = gene();
-    let html = `<div class="best-head"><span></span><span>gene</span><span>r</span><span>n</span></div>`;
-    html += rows.map((r, i) =>
-      `<div class="best-row pn-row${r.gene === cur ? " current" : ""}" data-gene="${r.gene}" ` +
-      `title="Pearson r = ${r.r.toFixed(3)} of ${r.gene} count vs pronuclei distance across ${r.n} zygotes">` +
-      `<span class="best-num">${i + 1}</span><span class="best-gene">${r.gene}</span>` +
-      `<span class="best-real" style="color:${r.r >= 0 ? "#dc2626" : "#2563eb"}">${r.r >= 0 ? "+" : ""}${r.r.toFixed(2)}</span>` +
-      `<span class="best-p">${r.n}</span></div>`).join("");
-    return html || `<div class="pn-empty">No genes in ≥ ${MIN_ZYG} zygotes.</div>`;
+    const cur = gene(), tau = state.rankMetric === "r2-tau";
+    const head = tau ? "R²" : "r";
+    let html = `<div class="best-head"><span></span><span>gene</span><span>${head}</span><span>n</span></div>`;
+    html += rows.map((r, i) => {
+      const val = tau ? r.r2.toFixed(2).replace(/^0/, "") : `${r.r >= 0 ? "+" : ""}${r.r.toFixed(2)}`;
+      const tip = tau
+        ? `R² = ${r.r2.toFixed(3)} (r = ${r.r.toFixed(3)}) of ${r.gene} count vs calibrated τ across ${r.n} zygotes`
+        : `Pearson r = ${r.r.toFixed(3)} of ${r.gene} count vs pronuclei distance across ${r.n} zygotes`;
+      return `<div class="best-row pn-row${r.gene === cur ? " current" : ""}" data-gene="${r.gene}" ` +
+        `title="${tip}">` +
+        `<span class="best-num">${i + 1}</span><span class="best-gene">${r.gene}</span>` +
+        `<span class="best-real" style="color:${r.r >= 0 ? "#dc2626" : "#2563eb"}">${val}</span>` +
+        `<span class="best-p">${r.n}</span></div>`;
+    }).join("");
+    return html || `<div class="pn-empty">No genes in ≥ ${MIN_ZYG} zygotes${
+      state.rankMetric === "r2-tau" ? " with a τ estimate" : ""}.</div>`;
   }
   function renderRanks() {
-    const n = state.rankN;
-    rankPosEl.innerHTML = rankRows([...state.geneCorr].sort((a, b) => b.r - a.r).slice(0, n));
-    rankNegEl.innerHTML = rankRows([...state.geneCorr].sort((a, b) => a.r - b.r).slice(0, n));
+    const n = state.rankN, all = state.geneCorr;
+    if (state.rankMetric === "r2-tau") {
+      // Direction still splits the panels, but within a panel the ordering is by R² — the
+      // question in τ mode is "how much of this gene's variation does the clock explain",
+      // not "which correlation is most extreme in signed terms".
+      rankPosEl.innerHTML = rankRows(all.filter((x) => x.r >= 0).sort((a, b) => b.r2 - a.r2).slice(0, n));
+      rankNegEl.innerHTML = rankRows(all.filter((x) => x.r < 0).sort((a, b) => b.r2 - a.r2).slice(0, n));
+    } else {
+      rankPosEl.innerHTML = rankRows([...all].sort((a, b) => b.r - a.r).slice(0, n));
+      rankNegEl.innerHTML = rankRows([...all].sort((a, b) => a.r - b.r).slice(0, n));
+    }
   }
   function highlightRank() {
     const cur = gene();

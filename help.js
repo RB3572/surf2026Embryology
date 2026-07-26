@@ -382,6 +382,24 @@
         association; a curved model can have a high R² yet a near-zero Pearson r (a U-shape) — so read the R², the r, <i>and</i> the
         shape together, not any one alone.</div>` },
 
+    "stage-expression": { eyebrow: "Stage Expression Explorer · the idea", title: "One gene, three stages, every sample in 3-D",
+      html: `<p class="lede">Pick a gene and this answers one question three ways: how much of it is in each
+        <b>zygote</b>, <b>early-2-cell</b> and <b>late-2-cell</b> sample — as a picture, a distribution, and a p-value.</p>
+        <h3>The grid (main view)</h3>
+        <p>Every sample that detected the gene, rendered in 3-D and grouped by stage. Each card is the cell's silhouette
+        in its stage colour with the gene's located transcripts as dots — so you can see at a glance where, and how much,
+        the gene sits inside each embryo. <b>Click any card</b> to open a full rotatable 3-D view of that sample.</p>
+        <h3>The plots (bottom drawer)</h3>
+        <p>The same samples as <b>mean bars</b> (± SEM, with every sample as a dot), a <b>box</b> plot, or a <b>violin</b>.
+        Above the chart, <b>Welch two-sided p-values</b> for each pair of stages; below it, a per-stage summary
+        (samples, detected, mean ± SEM, median). Click a dot to jump to that sample's 3-D view.</p>
+        <h3>Normalization</h3>
+        <ul><li><b>Raw count</b> — transcripts of this gene in the sample.</li>
+        <li><b>Transcript CPM</b> — ÷ the sample's total transcripts × 10⁶, so a sample with a bigger transcriptome isn't
+        counted as higher just for being busier.</li>
+        <li><b>Volume density</b> — ÷ the cell's segmented volume, so a bigger cell isn't counted as higher for its size.</li></ul>
+        <p>The <b>log y-axis</b> spaces the axis by log10(value + 1) (values span three orders of magnitude), matching the
+        source explorer. Counts reproduce the segment dataset exactly; CPM and density are derived live.</p>` },
     "extpt": { eyebrow: "Extended Pseudotime · the idea", title: "One clock across three stages",
       html: `<p class="lede">The pronuclei give zygotes a ruler for developmental time. This project extends that ruler
         past the first division — laying <b>zygote → early-2-cell → late-2-cell</b> along a single pseudotime axis so you

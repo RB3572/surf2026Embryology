@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stage Expression Explorer · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="stage-expression.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="help.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#55B3CB;box-shadow:0 0 0 4px color-mix(in srgb,#55B3CB 20%,transparent)"></span>
+      <span class="brand-name">Stage&nbsp;Expression&nbsp;Explorer</span>
+      <span class="brand-sub" id="samp-count"></span>
+    </div>
+    <form class="gene-form" id="gene-form" autocomplete="off">
+      <label class="sr-only" for="gene-search">Gene</label>
+      <input id="gene-search" list="gene-options" spellcheck="false" placeholder="Search a gene…" aria-label="Gene" />
+      <datalist id="gene-options"></datalist>
+      <button type="submit">Plot</button>
+      <button type="button" class="help-btn" data-help="stage-expression" aria-label="What is this?">?</button>
+    </form>
+  </header>
+
+  <section class="control-band" aria-label="Plot controls">
+    <fieldset class="seg-ctl">
+      <legend>Plot</legend>
+      <div role="group">
+        <button type="button" data-mode="bar" class="active">Mean bars</button>
+        <button type="button" data-mode="box">Box</button>
+        <button type="button" data-mode="violin">Violin</button>
+      </div>
+    </fieldset>
+    <fieldset class="seg-ctl">
+      <legend>Normalization</legend>
+      <div role="group">
+        <button type="button" data-norm="raw" class="active">Raw count</button>
+        <button type="button" data-norm="cpm">Transcript CPM</button>
+        <button type="button" data-norm="density">Volume density</button>
+      </div>
+    </fieldset>
+    <label class="switch-ctl"><span>Log y-axis</span>
+      <input type="checkbox" id="log-toggle" checked />
+      <span class="switch-track" aria-hidden="true"><span></span></span>
+    </label>
+    <div class="stage-legend" id="stage-legend" aria-label="Stage colors"></div>
+  </section>
+
+  <main class="stage-main">
+    <div class="grid-head" id="grid-head" hidden>
+      <div class="grid-head-title"><span id="grid-gene">—</span>
+        <span class="grid-head-sub" id="grid-sub"></span></div>
+      <div class="grid-head-hint">Every sample that detected this gene, as a 3-D view.
+        Cell silhouette in stage colour · dots are located transcripts · click a card to rotate it.</div>
+    </div>
+    <div class="stage-grid" id="stage-grid"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Search a gene</div>
+        <div class="ph-sub">Type any of 426 genes above to see every zygote, early-2-cell and
+          late-2-cell sample that detected it, rendered in 3-D, with the per-stage expression
+          plots in the drawer below.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- click-to-rotate focused 3-D view -->
+  <div class="focus-modal" id="focus-modal" hidden>
+    <div class="focus-backdrop" id="focus-backdrop"></div>
+    <div class="focus-card">
+      <button class="focus-close" id="focus-close" aria-label="Close">×</button>
+      <div class="focus-title" id="focus-title"></div>
+      <div class="focus-plot" id="focus-plot"></div>
+      <div class="focus-loading" id="focus-loading" hidden>
+        <div class="spinner" aria-hidden="true"></div><span>Loading 3-D scene…</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- bottom drawer: the per-stage expression plots -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Expression by stage <span class="drawer-gene" id="drawer-gene"></span></span>
+      <span class="drawer-hint">one point per sample · mean bars, box or violin across the three stages</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="statistics-strip" id="stat-strip" aria-label="Pairwise stage p-values"></div>
+      <div class="chart-wrap">
+        <div class="chart-actions">
+          <button type="button" class="secondary-button" id="export-csv">Export CSV</button>
+        </div>
+        <div class="expr-chart-host" id="expr-chart"></div>
+      </div>
+      <div class="summary-band" id="summary-band" aria-label="Stage summary"></div>
+    </div>
+  </section>
+
+  <script src="viewer-core.js"></script>
+  <script src="stage-expression.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

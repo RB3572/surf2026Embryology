@@ -312,8 +312,16 @@
         segment that is not segment 1 or a pronucleus).</li>
         <li><b>Count axis</b> plots the raw count, the count ÷ the zygote's total transcripts (a fraction), or ÷ the region's
         volume (density per µm³ — controls for a bigger region simply holding more molecules).</li>
-        <li><b>Pseudotime</b> flips the x-axis to (max distance − distance) so larger = later; <b>Flip x / y</b> transposes any
-        graph (the fit is unchanged).</li></ul>
+        <li><b>Legacy ordering score</b> flips the legacy x-axis to (max distance − distance) so larger = later; <b>Flip x / y</b>
+        transposes any graph (the fit is unchanged).</li></ul>
+        <h3>Time axis — four ways to order the zygotes</h3>
+        <p>The <b>Time axis</b> menu chooses which clock the graphs use. Two read the <b>pronuclei surface gap</b> (it shrinks as the
+        zygote ages, so <b>smaller = later</b>): the <b>legacy</b> ordering score, and the <b>calibrated pseudotime τ</b> from the
+        frozen Pronuclear Distance Clock (0 = pronuclear formation → 1 = NEBD). Two more read a <b>migration distance</b> that instead
+        <i>grows</i> as a pronucleus moves inward from the surface (<b>larger = later</b>): the <b>maternal ♀ pronucleus → polar
+        body</b> distance, and the <b>sperm entry → paternal ♂ pronucleus</b> distance. The two migration axes reuse the
+        Maternal/Paternal Pronucleus-ID geometry, so each is only defined for zygotes with the parts it needs (a polar body, a
+        labelled sperm, and a non-split ♀/♂ call); zygotes without it drop out and <span class="tag">n</span> falls accordingly.</p>
         <h3>Gene sets</h3>
         <p>The bottom graph sums a <b>set</b> of genes' counts per zygote and plots that against distance. Build a set by hand or
         from a <b>preset</b>; presets <i>add</i> to the current set. The two highlighted presets are <b>live</b> — <b>Top 10
@@ -335,7 +343,10 @@
         pronuclei distance, and rank the strongest <b>positive</b> and <b>negative</b> relationships. Positive = more of the gene
         goes with a larger gap; negative = more of the gene goes with a smaller gap.</p>
         <p>Click a gene to see its own scatter above the total, and toggle its molecules as dots in the 3-D cell. Because panels
-        are disjoint, each gene is measured in a different subset of zygotes (its <span class="tag">n</span>).</p>` },
+        are disjoint, each gene is measured in a different subset of zygotes (its <span class="tag">n</span>).</p>
+        <p>The <b>Rank by</b> menu chooses which time axis genes are ranked against — pronuclei distance (signed Pearson r), or the
+        <b>R²</b> against calibrated τ or either migration distance (♀ PN → polar body, sperm → ♂ PN). When the ranking axis and the
+        plot's <b>Time axis</b> differ, a one-click note lets you line them up.</p>` },
 
     "pronuclei-stats": { eyebrow: "Pronuclei · the statistics", title: "What every number under a graph means",
       html: `<p class="lede">Each scatter (selected gene, all transcripts, and the gene set) reports the same five things, so you

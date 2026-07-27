@@ -54,6 +54,9 @@
                   // x-axis clock. DEFAULT STAYS "legacy" so established analyses are unchanged
                   // until the new calibration has been reviewed. calib/calById are filled in init.
                   clock: "legacy", calib: null, calById: {},
+                  // the two geometric migration clocks (♀PN→polar, sperm→♂PN), from
+                  // pronuclei_clocks.json (optional — the page works unchanged without it).
+                  clockData: null, clockById: {},
                   // τ-interval point shifting. OFF by default: it can only inflate R², so it must
                   // never silently alter an established analysis. shiftDelta defaults to the
                   // calibration project's own 95% half-width once that artifact loads.
@@ -67,19 +70,62 @@
   const shown = (el) => !!(el && el.offsetParent);   // in the active (non-hidden) panel & laid out
   let vcExtras = null;   // dot-size + atlas-link row (VCore.addWindowExtras)
 
+  // ── selectable time axes (the "Time axis" menu) ─────────────────────────────────────────────
+  // Every zygote gets ONE scalar x per axis. `legacy` is the minimum pronuclei surface gap, which
+  // SHRINKS as the zygote ages (smaller = later); the other three are absolute-ish axes where
+  // LARGER = LATER, so the legacy "pseudotime" flip and the τ-shift interval do not apply to them.
+  //   calibrated — the frozen Pronuclear Pseudotime Calibration τ (from pronuclei_pseudotime.json)
+  //   mat_polar  — maternal ♀ pronucleus → polar body distance (µm)  ┐ migration distances from
+  //   sperm_pat  — sperm entry → paternal ♂ pronucleus distance (µm) ┘ pronuclei_clocks.json
+  const CLOCKS = {
+    legacy:     { larger: false, unit: "µm", need: null,
+                  xTitle: "min pronuclei surface gap (µm)  ·  smaller = later in development",
+                  short: "pronuclei distance", rank: "pronuclei distance" },
+    calibrated: { larger: true,  unit: "",   need: "calib",
+                  xTitle: "calibrated pseudotime τ  ·  0 = pronuclear formation → 1 = NEBD",
+                  short: "calibrated τ", rank: "calibrated τ" },
+    mat_polar:  { larger: true,  unit: "µm", need: "mat_polar",
+                  xTitle: "maternal ♀ pronucleus → polar body distance (µm)  ·  larger = later",
+                  short: "♀ pronucleus → polar body", rank: "♀ PN → polar body" },
+    sperm_pat:  { larger: true,  unit: "µm", need: "sperm_pat",
+                  xTitle: "sperm entry → paternal ♂ pronucleus distance (µm)  ·  larger = later",
+                  short: "sperm → ♂ pronucleus", rank: "sperm → ♂ PN" },
+  };
+  // one zygote's value on a given axis, or null when that axis is undefined for it (never 0).
+  function timeValue(id, clock) {
+    if (clock === "calibrated") { const r = state.calById[id]; return r && r.tau != null ? r.tau : null; }
+    if (clock === "mat_polar" || clock === "sperm_pat") {
+      const r = state.clockById[id]; if (!r) return null;
+      const v = r[clock]; return v == null ? null : v;
+    }
+    const p = state.byId[id]; return p && p.distance != null ? p.distance : null;   // legacy min gap
+  }
+  // how many zygotes carry a given migration-distance measurement (drives the availability gating)
+  const nWithClock = (k) => Object.values(state.clockById).filter((r) => r[k] != null).length;
+  // the ranking can track ANY of the four time axes — map between the menu value and the clock key
+  const RANK_CLOCK = { "r-distance": "legacy", "r2-tau": "calibrated", "r2-matpolar": "mat_polar", "r2-spermpat": "sperm_pat" };
+  const CLOCK_RANK = { legacy: "r-distance", calibrated: "r2-tau", mat_polar: "r2-matpolar", sperm_pat: "r2-spermpat" };
+  const rankClock = () => RANK_CLOCK[state.rankMetric] || "legacy";
+  const rankIsR2 = () => rankClock() !== "legacy";   // distance ranks by signed r; the rest by R²
+
   (async function init() {
     try {
-      const [m, ga, sd, cal] = await Promise.all([
+      const [m, ga, sd, cal, clk] = await Promise.all([
         (await fetch("data/pronuclei_manifest.json")).json(),
         V.loadGz("data/pronuclei_genes.json.gz"),
         V.loadGz("data/pronuclei_segcounts.json.gz").catch(() => null),   // per-segment counts + volumes (optional)
         // calibrated pseudotime (optional — the page works unchanged without it)
         fetch("data/pronuclei_pseudotime.json").then((r) => (r.ok ? r.json() : null)).catch(() => null),
+        // geometric migration clocks: ♀PN→polar, sperm→♂PN (optional — same pattern as τ above)
+        fetch("data/pronuclei_clocks.json").then((r) => (r.ok ? r.json() : null)).catch(() => null),
       ]);
       state.points = m.embryos; state.genesAgg = ga; state.segData = sd;
       state.calib = cal;
       state.calById = {};
       if (cal) (cal.embryos || []).forEach((e) => (state.calById[e.id] = e));
+      state.clockData = clk;
+      state.clockById = {};
+      if (clk) (clk.embryos || []).forEach((e) => (state.clockById[e.id] = e));
       state.points.forEach((p) => (state.byId[p.id] = p));
       state.genesAgg.embryos.forEach((e) => (state.gaById[e.id] = e));
       countEl.textContent = `${m.embryos.length} zygotes · pronuclei auto-detected inside the cytoplasm`;
@@ -104,12 +150,16 @@
       });
       if (rankMismatchEl) rankMismatchEl.addEventListener("click", (e) => {
         const b = e.target.closest(".pn-rank-fix"); if (!b) return;
-        if (b.dataset.to === "calibrated") {
-          if (clockSel && !clockSel.disabled) { state.clock = "calibrated"; clockSel.value = "calibrated"; }
-          syncClockUI(); syncShiftUI(); renderAllScatters();
-        } else {
-          state.rankMetric = "r2-tau"; if (rankMetricEl) rankMetricEl.value = "r2-tau";
+        if (b.dataset.to === "plot") {                 // rank on whatever the plot currently shows
+          const want = CLOCK_RANK[state.clock];
+          const opt = rankMetricEl && [...rankMetricEl.options].find((o) => o.value === want);
+          if (opt && !opt.disabled) { state.rankMetric = want; rankMetricEl.value = want; }
           syncRankMetricUI(); computeGeneCorr(); renderRanks(); highlightRank();
+        } else if (b.dataset.to === "axis") {          // set the plot to whatever the ranking uses
+          const want = rankClock();
+          const opt = clockSel && [...clockSel.options].find((o) => o.value === want);
+          if (opt && !opt.disabled) { state.clock = want; clockSel.value = want; }
+          syncClockUI(); syncShiftUI(); renderAllScatters();
         }
         syncRankMismatch();
       });
@@ -143,23 +193,20 @@
     } catch (err) { showError("Failed to load: " + (err.message || err)); }
   })();
 
-  // ---------- gene ↔ distance / τ correlations ----------
-  // `axis` picks what the gene's count is correlated AGAINST:
-  //   "distance"  the raw minimum pronuclei surface gap (µm) — the established ranking;
-  //   "tau"       the frozen calibration model's pseudotime τ, which is a real developmental
-  //               clock rather than a geometric proxy. τ is only defined for embryos the model
-  //               could score, so those without one are dropped (never treated as τ = 0) and n
-  //               falls accordingly — which is why n is always shown next to the statistic.
-  function geneSeries(g, axis) {
+  // ---------- gene ↔ time-axis correlations ----------
+  // `clock` picks which time axis the gene's count is correlated AGAINST — any of the four the
+  // "Rank by" menu offers (legacy pronuclei distance, calibrated τ, or the two migration
+  // distances). Every axis except legacy is only defined for a subset of zygotes, so embryos
+  // without a value are dropped (never treated as 0) and n falls accordingly — which is why n is
+  // always shown next to the statistic.
+  function geneSeries(g, clock) {
     const xs = [], ys = [], ids = [], labels = [];
     for (const e of state.genesAgg.embryos) {
       const c = e.genes[g]; if (c == null) continue;
-      let y = e.distance;
-      if (axis === "tau") {
-        const r = state.calById[e.id];
-        if (!r || r.tau == null) continue;
-        y = r.tau;
-      }
+      // legacy uses the per-embryo min gap carried in the genes aggregate; the other axes look
+      // their value up and drop embryos that lack it.
+      const y = clock === "legacy" ? e.distance : timeValue(e.id, clock);
+      if (y == null) continue;
       xs.push(c); ys.push(y); ids.push(e.id); labels.push((state.byId[e.id] || {}).label || e.id);
     }
     return { xs, ys, ids, labels };
@@ -167,10 +214,10 @@
   function computeGeneCorr() {
     const genes = new Set();
     state.genesAgg.embryos.forEach((e) => Object.keys(e.genes).forEach((g) => genes.add(g)));
-    const axis = rankAxis();
+    const clock = rankClock();
     const out = [];
     for (const g of genes) {
-      const s = geneSeries(g, axis); if (s.xs.length < MIN_ZYG) continue;
+      const s = geneSeries(g, clock); if (s.xs.length < MIN_ZYG) continue;
       const f = linreg(s.xs, s.ys); if (!isFinite(f.r)) continue;
       // r keeps the direction (which half of the panel a gene lands in); r2 is what the
       // τ mode ranks on, so a strong negative gene is not buried under a weak positive one.
@@ -178,36 +225,38 @@
     }
     state.geneCorr = out;
   }
-  const rankAxis = () => (state.rankMetric === "r2-tau" ? "tau" : "distance");
-  // τ ranking needs the calibration artifact; without it the option is disabled with a reason
-  // rather than silently falling back to distance under a label that says τ.
+  // Each non-legacy ranking axis needs its artifact (and enough zygotes carrying that measurement);
+  // an unavailable option is disabled rather than silently falling back under a name that says
+  // otherwise, and the selection resets to distance if the current one becomes unavailable.
   function syncRankMetricUI() {
     if (!rankMetricEl) return;
-    const opt = [...rankMetricEl.options].find((o) => o.value === "r2-tau");
-    const have = !!(state.calib && Object.keys(state.calById).length);
-    if (opt) {
-      opt.disabled = !have;
-      opt.textContent = have ? "R² · calibrated τ" : "R² · calibrated τ (unavailable)";
-    }
-    if (!have && state.rankMetric === "r2-tau") { state.rankMetric = "r-distance"; rankMetricEl.value = "r-distance"; }
-    const tau = state.rankMetric === "r2-tau";
-    if (rankTitleEl) rankTitleEl.textContent = tau
-      ? "Genes tracking calibrated pseudotime τ" : "Genes correlated with pronuclei distance";
-    if (rankDescEl) rankDescEl.innerHTML = tau
-      ? `Ranked by <b>R²</b> of a gene's transcript count against the frozen calibration model's `
-        + `pseudotime τ (0 = pronuclear formation → 1 = NEBD), over the zygotes that contain the `
-        + `gene <i>and</i> have a τ estimate. Sign of the slope decides which panel a gene lands in. `
-        + `Click a gene to plot it.`
+    const avail = {
+      "r-distance": true,
+      "r2-tau": !!(state.calib && Object.keys(state.calById).length),
+      "r2-matpolar": !!state.clockData && nWithClock("mat_polar") >= MIN_ZYG,
+      "r2-spermpat": !!state.clockData && nWithClock("sperm_pat") >= MIN_ZYG,
+    };
+    [...rankMetricEl.options].forEach((o) => { if (o.value in avail) o.disabled = !avail[o.value]; });
+    if (!avail[state.rankMetric]) { state.rankMetric = "r-distance"; rankMetricEl.value = "r-distance"; }
+    const clock = rankClock(), r2 = rankIsR2(), c = CLOCKS[clock];
+    if (rankTitleEl) rankTitleEl.textContent = clock === "legacy"
+      ? "Genes correlated with pronuclei distance" : `Genes tracking ${c.rank}`;
+    if (rankDescEl) rankDescEl.innerHTML = r2
+      ? `Ranked by <b>R²</b> of a gene's transcript count against <b>${c.rank}</b>`
+        + `${clock === "calibrated" ? " (0 = pronuclear formation → 1 = NEBD)" : " (µm; larger = later)"}, `
+        + `over the zygotes that contain the gene <i>and</i> have that measurement. Sign of the slope `
+        + `decides which panel a gene lands in. Click a gene to plot it.`
       : `Pearson correlation between a gene's transcript count and the minimum pronuclei distance, `
         + `across the zygotes that contain the gene (panels are disjoint, so n varies per gene). `
         + `Click a gene to plot it.`;
-    if (rankPosTitleEl) rankPosTitleEl.textContent = tau
-      ? "Increases with τ — count rises as the zygote ages"
-      : "Most positive — distance rises with the gene's count";
-    if (rankNegTitleEl) rankNegTitleEl.textContent = tau
-      ? "Decreases with τ — count falls as the zygote ages"
-      : "Most negative — distance falls as the gene's count rises";
-    if (rankHandleEl) rankHandleEl.textContent = tau ? "Gene ⟷ τ" : "Gene ⟷ distance";
+    if (rankPosTitleEl) rankPosTitleEl.textContent = clock === "legacy"
+      ? "Most positive — distance rises with the gene's count"
+      : `Increases with ${c.rank} — count rises as the zygote ages`;
+    if (rankNegTitleEl) rankNegTitleEl.textContent = clock === "legacy"
+      ? "Most negative — distance falls as the gene's count rises"
+      : `Decreases with ${c.rank} — count falls as the zygote ages`;
+    if (rankHandleEl) rankHandleEl.textContent = clock === "legacy" ? "Gene ⟷ distance"
+      : clock === "calibrated" ? "Gene ⟷ τ" : `Gene ⟷ ${c.rank}`;
     syncRankMismatch();
   }
   // The ranking axis and the scatter's time axis are deliberately independent — comparing a
@@ -216,15 +265,15 @@
   // plot, so the difference is stated with a one-click way to line them up.
   function syncRankMismatch() {
     if (!rankMismatchEl) return;
-    const tau = state.rankMetric === "r2-tau", calPlot = state.clock === "calibrated";
-    const off = tau !== calPlot;
+    const rc = rankClock(), pc = state.clock;
+    const off = rc !== pc;
     rankMismatchEl.hidden = !off;
     if (!off) return;
-    rankMismatchEl.innerHTML = tau
-      ? `Ranked on τ, but the plot's time axis is the legacy distance — the R² here will not match `
-        + `the one on the scatter. <button type="button" class="pn-rank-fix" data-to="calibrated">Set plot to τ</button>`
-      : `Ranked on distance, but the plot's time axis is calibrated τ. `
-        + `<button type="button" class="pn-rank-fix" data-to="r2-tau">Rank on τ</button>`;
+    const rl = CLOCKS[rc].rank, pl = CLOCKS[pc].rank;
+    rankMismatchEl.innerHTML =
+      `Ranked on <b>${rl}</b>, but the plot's time axis is <b>${pl}</b> — the value here will not match `
+      + `the one on the scatter. <button type="button" class="pn-rank-fix" data-to="plot">Rank on ${pl}</button> `
+      + `· <button type="button" class="pn-rank-fix" data-to="axis">Set plot to ${rl}</button>`;
   }
   function populateGenes() {
     const genes = [...new Set(state.genesAgg.embryos.flatMap((e) => Object.keys(e.genes)))]
@@ -848,26 +897,25 @@
   // LEGACY surface-gap ordering score = max(gap among the plotted embryos) − gap, so larger =
   // later. It is a relative ordering with no time unit, and its scale depends on which embryos
   // happen to be plotted. Kept as the DEFAULT so published analyses are unchanged.
-  const ptx = (dists, maxD) => (state.pseudotime ? dists.map((d) => maxD - d) : dists);
   const PT_X_TITLE = "legacy surface-gap ordering score  ·  max gap − pronuclei gap (larger = later)";
-  const X_TITLE = () => (state.clock === "calibrated" ? CAL_X_TITLE
-    : state.pseudotime ? PT_X_TITLE : "min pronuclei surface gap (µm)  ·  smaller = later in development");
-  const CAL_X_TITLE = "calibrated pseudotime τ  ·  0 = pronuclear formation → 1 = NEBD";
+  const X_TITLE = () => state.clock === "legacy"
+    ? (state.pseudotime ? PT_X_TITLE : CLOCKS.legacy.xTitle)
+    : CLOCKS[state.clock].xTitle;
 
-  // Build the x axis for one scatter. In calibrated mode the x value is the frozen model's τ and
-  // embryos without a prediction are dropped (never plotted as zero); the y/id/label arrays are
-  // filtered in lockstep so nothing desynchronises.
+  // Build the x axis for one scatter. Only the legacy axis uses the raw per-series distances; every
+  // other axis looks each embryo's value up and DROPS embryos without one (never plotted as zero),
+  // filtering the y/id/label arrays in lockstep so nothing desynchronises.
   function clockX(rawDists, ids, labels, Y) {
     // 1) map to the chosen axis
     let X, Y2 = Y, I = ids, L = labels, dropped = 0;
-    if (state.clock !== "calibrated") {
+    if (state.clock === "legacy") {
       X = rawDists.slice();
     } else {
       X = []; Y2 = []; I = []; L = [];
       for (let i = 0; i < ids.length; i++) {
-        const r = state.calById[ids[i]];
-        if (!r || r.tau == null) { dropped++; continue; }
-        X.push(r.tau); Y2.push(Y[i]); I.push(ids[i]); L.push(labels[i]);
+        const v = timeValue(ids[i], state.clock);
+        if (v == null) { dropped++; continue; }
+        X.push(v); Y2.push(Y[i]); I.push(ids[i]); L.push(labels[i]);
       }
     }
     // 2) split off manually excluded embryos. They are NOT deleted — they are returned separately
@@ -881,7 +929,7 @@
     }
     // 3) the legacy score is (max − value) over the PLOTTED embryos, so its reference is the kept
     //    set; ghosts get the same transform so they stay comparable.
-    if (state.clock !== "calibrated" && state.pseudotime) {
+    if (state.clock === "legacy" && state.pseudotime) {
       const mx = kX.length ? Math.max(...kX) : 0;
       for (let i = 0; i < kX.length; i++) kX[i] = mx - kX[i];
       for (let i = 0; i < eX.length; i++) eX[i] = mx - eX[i];
@@ -889,13 +937,18 @@
     return { X: kX, Y: kY, ids: kI, labels: kL, dropped,
              exX: eX, exY: eY, exIds: eI, exLabels: eL };
   }
-  const clockUnit = () => (state.clock === "calibrated" ? "" : state.pseudotime ? "" : "µm");
+  const clockUnit = () => state.clock === "legacy" ? (state.pseudotime ? "" : "µm") : CLOCKS[state.clock].unit;
   function clockNote(dropped) {
-    if (state.clock !== "calibrated") return "";
-    const v = state.calib ? state.calib.meta.model_version : "?";
-    return ` · <span class="pn-cal-inline">calibrated τ (${v})</span>` +
-      (dropped ? ` · <b>${dropped}</b> without a τ estimate excluded` : "");
+    if (state.clock === "legacy") return "";
+    const src = state.clock === "calibrated"
+      ? `calibrated τ (${state.calib ? state.calib.meta.model_version : "?"})`
+      : `${CLOCKS[state.clock].short} distance (µm)`;
+    return ` · <span class="pn-cal-inline">${src}</span>` +
+      (dropped ? ` · <b>${dropped}</b> without this measurement excluded` : "");
   }
+  // "too few to fit" reason, worded for whichever non-legacy axis dropped the embryos.
+  const fewAxisWhy = () => state.clock === "calibrated"
+    ? "a calibrated τ" : `a ${CLOCKS[state.clock].short} distance`;
   // Calibrated mode needs the artifact; disable the control (with a reason) when it is missing.
   // ── manual exclusion UI ───────────────────────────────────────────────────────────────────
   // Hand-removing points is a real p-hacking vector, so the state is always displayed: a live
@@ -978,21 +1031,28 @@
 
   function applyClockAvail() {
     if (!clockSel) return;
-    if (state.calib) return;
-    const opt = [...clockSel.options].find((o) => o.value === "calibrated");
-    if (opt) { opt.disabled = true; opt.textContent += " — not built"; }
-    clockSel.title = "Calibrated τ unavailable — run build_pronuclei_pseudotime.py";
-    state.clock = "legacy"; clockSel.value = "legacy";
+    const disable = (val, why) => {
+      const opt = [...clockSel.options].find((o) => o.value === val);
+      if (opt && !opt.disabled) { opt.disabled = true; opt.textContent += " — " + why; }
+    };
+    if (!state.calib) disable("calibrated", "not built");
+    // the two geometric clocks need pronuclei_clocks.json AND enough zygotes carrying the distance
+    if (!state.clockData || nWithClock("mat_polar") < MIN_ZYG) disable("mat_polar", state.clockData ? "too few zygotes" : "not built");
+    if (!state.clockData || nWithClock("sperm_pat") < MIN_ZYG) disable("sperm_pat", state.clockData ? "too few zygotes" : "not built");
+    // if the current (default) selection got disabled, fall back to the always-available legacy axis
+    const cur = [...clockSel.options].find((o) => o.value === state.clock);
+    if (cur && cur.disabled) { state.clock = "legacy"; clockSel.value = "legacy"; }
   }
-  // The legacy pseudotime checkbox only applies to the legacy score.
+  // The legacy "ordering score" checkbox only applies to the legacy axis; every other axis is
+  // already ordered so that larger = later, so the flip has no meaning there.
   function syncClockUI() {
-    const cal = state.clock === "calibrated";
+    const legacy = state.clock === "legacy";
     if (ptToggle) {
-      ptToggle.disabled = cal;
-      ptToggle.parentElement.style.opacity = cal ? 0.45 : 1;
-      ptToggle.parentElement.title = cal
-        ? "Not applicable: calibrated τ is already an absolute 0→1 developmental axis"
-        : ptToggle.parentElement.dataset.t0 || "";
+      ptToggle.disabled = !legacy;
+      ptToggle.parentElement.style.opacity = legacy ? 1 : 0.45;
+      ptToggle.parentElement.title = legacy
+        ? ptToggle.parentElement.dataset.t0 || ""
+        : "Not applicable: this axis is already an absolute developmental scale (larger = later)";
     }
   }
   const RENDER = { gene: () => renderGeneScatter(), total: () => renderScatter(), set: () => renderSetScatter() };
@@ -1015,7 +1075,7 @@
                      pts.map((p) => normVal(totalIn(p.id), p.id)));
     const X = c.X, Y = c.Y;
     if (X.length < 3) {
-      scatterPlot.innerHTML = `<div class="pn-empty">Only ${X.length} zygote(s) have a calibrated τ — too few to fit.</div>`;
+      scatterPlot.innerHTML = `<div class="pn-empty">Only ${X.length} zygote(s) have ${fewAxisWhy()} — too few to fit.</div>`;
       pnFit.innerHTML = clockNote(c.dropped); return;
     }
     const sh = applyShift(X, Y, state.regType);
@@ -1047,7 +1107,7 @@
     const c = clockX(xs, ids, labels, ys);
     const X = c.X, Y = c.Y;
     if (X.length < 3) {
-      geneScatter.innerHTML = `<div class="pn-empty">Only ${X.length} zygote(s) with <b>${g}</b> have a calibrated τ — too few to fit.</div>`;
+      geneScatter.innerHTML = `<div class="pn-empty">Only ${X.length} zygote(s) with <b>${g}</b> have ${fewAxisWhy()} — too few to fit.</div>`;
       geneFit.innerHTML = `· <b>${g}</b>${clockNote(c.dropped)}`; return;
     }
     const sh = applyShift(X, Y, state.regType);
@@ -1096,7 +1156,7 @@
     const c = clockX(s.xs, s.ids, s.labels, s.ys);
     const X = c.X, Y = c.Y;
     if (X.length < 3) {
-      setScatter.innerHTML = `<div class="pn-empty">Only ${X.length} zygote(s) have a calibrated τ — too few to fit.</div>`;
+      setScatter.innerHTML = `<div class="pn-empty">Only ${X.length} zygote(s) have ${fewAxisWhy()} — too few to fit.</div>`;
       setFit.innerHTML = `· <b>${nSet}</b> gene${nSet === 1 ? "" : "s"}${clockNote(c.dropped)}`; return;
     }
     const sh = applyShift(X, Y, state.regType);
@@ -1112,13 +1172,13 @@
 
   // ---------- right drawer: correlation ranking ----------
   function rankRows(rows) {
-    const cur = gene(), tau = state.rankMetric === "r2-tau";
-    const head = tau ? "R²" : "r";
+    const cur = gene(), r2 = rankIsR2(), c = CLOCKS[rankClock()];
+    const head = r2 ? "R²" : "r";
     let html = `<div class="best-head"><span></span><span>gene</span><span>${head}</span><span>n</span></div>`;
     html += rows.map((r, i) => {
-      const val = tau ? r.r2.toFixed(2).replace(/^0/, "") : `${r.r >= 0 ? "+" : ""}${r.r.toFixed(2)}`;
-      const tip = tau
-        ? `R² = ${r.r2.toFixed(3)} (r = ${r.r.toFixed(3)}) of ${r.gene} count vs calibrated τ across ${r.n} zygotes`
+      const val = r2 ? r.r2.toFixed(2).replace(/^0/, "") : `${r.r >= 0 ? "+" : ""}${r.r.toFixed(2)}`;
+      const tip = r2
+        ? `R² = ${r.r2.toFixed(3)} (r = ${r.r.toFixed(3)}) of ${r.gene} count vs ${c.rank} across ${r.n} zygotes`
         : `Pearson r = ${r.r.toFixed(3)} of ${r.gene} count vs pronuclei distance across ${r.n} zygotes`;
       return `<div class="best-row pn-row${r.gene === cur ? " current" : ""}" data-gene="${r.gene}" ` +
         `title="${tip}">` +
@@ -1127,11 +1187,12 @@
         `<span class="best-p">${r.n}</span></div>`;
     }).join("");
     return html || `<div class="pn-empty">No genes in ≥ ${MIN_ZYG} zygotes${
-      state.rankMetric === "r2-tau" ? " with a τ estimate" : ""}.</div>`;
+      rankIsR2() ? " with " + fewRankWhy() : ""}.</div>`;
   }
+  const fewRankWhy = () => rankClock() === "calibrated" ? "a τ estimate" : `a ${CLOCKS[rankClock()].rank} value`;
   function renderRanks() {
     const n = state.rankN, all = state.geneCorr;
-    if (state.rankMetric === "r2-tau") {
+    if (rankIsR2()) {
       // Direction still splits the panels, but within a panel the ordering is by R² — the
       // question in τ mode is "how much of this gene's variation does the clock explain",
       // not "which correlation is most extreme in signed terms".

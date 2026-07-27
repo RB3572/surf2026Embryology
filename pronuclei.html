@@ -84,6 +84,8 @@
             <select id="rank-metric">
               <option value="r-distance">r · pronuclei distance</option>
               <option value="r2-tau">R² · calibrated τ</option>
+              <option value="r2-matpolar">R² · ♀ PN → polar body</option>
+              <option value="r2-spermpat">R² · sperm → ♂ PN</option>
             </select></label>
           <label class="ctl"><span class="ctl-label">Top</span>
             <select id="rank-n"><option value="10">10</option><option value="20">20</option>
@@ -152,11 +154,17 @@
             <option value="vol">÷ volume (density /µm³)</option>
           </select>
         </label>
-        <label class="pn-ctl" title="Which developmental axis the graphs below use. Legacy is the historical surface-gap ordering; calibrated τ comes from the frozen Pronuclear Distance Clock.">
+        <label class="pn-ctl" title="Which developmental time axis the graphs below use. The pronuclei surface gap SHRINKS as the zygote ages; calibrated τ comes from the frozen Pronuclear Distance Clock; the two migration distances GROW as each pronucleus moves inward (larger = later).">
           <span class="pn-ctl-l">Time axis</span>
           <select id="pn-clock">
-            <option value="legacy">Legacy surface-gap ordering score (default)</option>
-            <option value="calibrated">Calibrated pseudotime τ</option>
+            <optgroup label="Pronuclei surface gap">
+              <option value="legacy">Legacy surface-gap ordering score (default)</option>
+              <option value="calibrated">Calibrated pseudotime τ</option>
+            </optgroup>
+            <optgroup label="Migration distance · larger = later">
+              <option value="mat_polar">Maternal ♀ pronucleus → polar body</option>
+              <option value="sperm_pat">Sperm entry → paternal ♂ pronucleus</option>
+            </optgroup>
           </select>
         </label>
         <label class="pn-pt-toggle" data-t0="Use (max gap − pronuclei gap) as a legacy ordering score, where max gap is the largest among the plotted embryos — larger score = later in development. Applies to the legacy axis only." title="Use (max gap − pronuclei gap) as a legacy ordering score, where max gap is the largest among the plotted embryos — larger score = later in development. Applies to the legacy axis only.">

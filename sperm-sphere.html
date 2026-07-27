@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sperm-Entry-Site Enrichment · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="sperm-sphere.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="help.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#db2777;box-shadow:0 0 0 4px color-mix(in srgb,#db2777 18%,transparent)"></span>
+      <span class="brand-name">Sperm-Entry-Site&nbsp;Enrichment</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Zygotes"></nav>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">Controls</span>
+        <button class="help-btn" data-help="sperm-sphere" style="margin-left:auto"
+                aria-label="What is this analysis?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <label class="ctl"><span class="ctl-label">Gene</span>
+          <select id="gene-select"></select></label>
+
+        <div class="ss-radius">
+          <div class="ss-radius-top"><span class="ctl-label">Sphere radius</span>
+            <span class="ss-radius-val" id="radius-val">9 µm</span></div>
+          <input type="range" id="radius-range" min="0" max="6" step="1" value="2" />
+          <div class="ss-radius-hint">around the sperm entry site, clipped to the cell</div>
+        </div>
+
+        <div class="ss-toggles">
+          <label class="zt"><input type="checkbox" id="sphere-show" checked /><span class="zt-sphere">Sphere</span></label>
+          <label class="zt"><input type="checkbox" id="sperm-show" checked /><span class="zt-sperm">Sperm site</span></label>
+          <label class="zt"><input type="checkbox" id="dots-show" checked /><span class="zt-dots">Gene dots</span></label>
+        </div>
+
+        <div class="ss-readout" id="ss-readout"></div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Select a zygote</div>
+        <div class="ph-sub">Choose a sperm-positive zygote above to test whether each gene is
+          enriched or depleted within a sphere around the sperm entry site.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- ================= BOTTOM DRAWER ================= -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Enrichment plots <span class="drawer-gene" id="drawer-gene"></span></span>
+      <span class="drawer-hint">fold vs radius · per-gene ranking · this gene across zygotes</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="xs-graph-tabs" id="xs-tabs" role="tablist" aria-label="Enrichment plots">
+        <button type="button" class="xs-gtab active" data-tab="curve" role="tab" aria-selected="true">Fold × radius</button>
+        <button type="button" class="xs-gtab" data-tab="rank" role="tab" aria-selected="false">Gene ranking</button>
+        <button type="button" class="xs-gtab" data-tab="across" role="tab" aria-selected="false">Across zygotes</button>
+        <button type="button" class="xs-gtab" data-tab="occ" role="tab" aria-selected="false">Overall occupancy</button>
+      </div>
+      <div class="xs-panels" id="xs-panels">
+        <div class="xs-panel" data-tab="curve" role="tabpanel">
+          <div class="plot-head">
+            <div class="mini-title">Density fold vs sphere radius <span class="mini-sub" id="curve-sub"></span></div>
+            <button class="plot-download" id="curve-download" type="button" title="Download PNG" aria-label="Download">↓</button>
+          </div>
+          <div class="ss-note">Fold = (density in the sphere) ÷ (whole-cell density). Grey band = 95% of the cortical
+            random-site null (other cortical sites at the sperm's depth). A point outside the band is unusual for the sperm site.</div>
+          <div class="xs-resizable"><div id="curve-plot" class="xs-plot xs-plot-outlines"></div></div>
+        </div>
+        <div class="xs-panel" data-tab="rank" hidden role="tabpanel">
+          <div class="plot-head">
+            <div class="mini-title">Genes ranked at <span id="rank-r"></span> <span class="mini-sub" id="rank-sub"></span></div>
+            <div class="ss-rank-ctl">
+              <label class="ctl"><span class="ctl-label">Show</span>
+                <select id="rank-dir"><option value="enr">Enriched near sperm</option>
+                  <option value="dep">Depleted near sperm</option></select></label>
+            </div>
+          </div>
+          <div class="xs-resizable"><div id="rank-plot" class="xs-plot"></div></div>
+        </div>
+        <div class="xs-panel" data-tab="across" hidden role="tabpanel">
+          <div class="plot-head">
+            <div class="mini-title">This gene across every sperm zygote <span class="mini-sub" id="across-sub"></span></div>
+            <button class="plot-download" id="across-download" type="button" title="Download PNG" aria-label="Download">↓</button>
+          </div>
+          <div class="ss-note">One point per zygote at the selected radius: fold near <i>its</i> sperm site. The dashed line is fold = 1 (no enrichment).</div>
+          <div class="xs-resizable"><div id="across-plot" class="xs-plot"></div></div>
+        </div>
+        <div class="xs-panel" data-tab="occ" hidden role="tabpanel">
+          <div class="plot-head">
+            <div class="mini-title">Whole-transcriptome occupancy near the sperm <span class="mini-sub" id="occ-sub"></span></div>
+            <button class="plot-download" id="occ-download" type="button" title="Download PNG" aria-label="Download">↓</button>
+          </div>
+          <div class="ss-note">Across radii: the share of <b>all</b> in-cell transcripts that fall in the sperm sphere (observed)
+            vs the sphere's volume fraction (expected if transcripts were uniform). Below the line = the sperm region is transcript-sparse.</div>
+          <div class="xs-resizable"><div id="occ-plot" class="xs-plot"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RIGHT DRAWER ================= -->
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Genes near sperm</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Consistent across zygotes</div>
+        <div class="rdrawer-desc">Genes ranked by how many sperm-positive zygotes they are significantly enriched
+          (or depleted) in near the sperm site, at the selected radius. Click a gene to plot it.</div>
+      </div>
+      <div class="rtabs" id="rtabs">
+        <button class="rtab active" data-dir="enr">Enriched</button>
+        <button class="rtab" data-dir="dep">Depleted</button>
+      </div>
+      <div class="best-list" id="best-list"></div>
+    </div>
+  </aside>
+
+  <script src="viewer-core.js"></script>
+  <script src="sperm-sphere.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

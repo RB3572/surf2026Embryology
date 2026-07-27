@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Division Plane Sweep — every plane · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="planes-all.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="help.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#f59e0b;box-shadow:0 0 0 4px color-mix(in srgb,#f59e0b 18%,transparent)"></span>
+      <span class="brand-name">Division&nbsp;Plane&nbsp;Sweep&nbsp;—&nbsp;every&nbsp;plane</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Zygotes"></nav>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">Controls</span>
+        <button class="help-btn" data-help="planes-all" style="margin-left:auto"
+                aria-label="What is this analysis?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <label class="ctl"><span class="ctl-label">Gene</span>
+          <select id="gene-select"></select></label>
+        <label class="ctl"><span class="ctl-label">Best plane by</span>
+          <select id="mode-select">
+            <option value="vol">density split (÷ side volume)</option>
+            <option value="cnt">count split</option>
+          </select></label>
+
+        <div class="pa-toggles">
+          <label class="zt"><input type="checkbox" id="plane-show" checked /><span class="zt-plane">Best plane</span></label>
+          <label class="zt"><input type="checkbox" id="axis-show" checked /><span class="zt-axis">Polar-body axis</span></label>
+          <label class="zt"><input type="checkbox" id="sperm-show" /><span class="zt-sperm">Sperm</span></label>
+          <label class="zt"><input type="checkbox" id="dots-show" checked /><span class="zt-dots">Gene dots</span></label>
+        </div>
+
+        <div class="pa-readout" id="pa-readout"></div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Select a zygote</div>
+        <div class="ph-sub">Every plane orientation through the cell centre was searched (~20,000 at ~1°);
+          pick a gene to see its single globally-best dividing plane.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Analysis plots <span class="drawer-gene" id="drawer-gene"></span></span>
+      <span class="drawer-hint">aligned outlines · per-side split · orientations across zygotes</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="xs-graph-tabs" id="xs-tabs" role="tablist" aria-label="Analysis plots">
+        <button type="button" class="xs-gtab active" data-tab="align" role="tab" aria-selected="true">Aligned outlines</button>
+        <button type="button" class="xs-gtab" data-tab="bars" role="tab" aria-selected="false">Per-side split</button>
+        <button type="button" class="xs-gtab" data-tab="orient" role="tab" aria-selected="false">Orientations</button>
+      </div>
+      <div class="xs-panels" id="xs-panels">
+        <div class="xs-panel" data-tab="align" role="tabpanel">
+          <div class="plot-head">
+            <div class="mini-title">Cell outlines aligned by this gene's best plane <span class="mini-sub" id="align-sub"></span></div>
+            <button class="plot-download" id="align-download" type="button" title="Download PNG" aria-label="Download">↓</button>
+          </div>
+          <div class="pa-note">Each carrier zygote's cell silhouette is rotated into its gene-specific best-plane frame (plane vertical at x = 0,
+            polar-body axis up) and flipped so the gene's higher-density side is on the right. Colour = search-corrected significance (dark = significant).</div>
+          <div class="xs-otoggles">
+            <label class="xs-tg"><input type="checkbox" id="align-cells" checked /><span>other zygotes</span></label>
+            <label class="xs-tg"><input type="checkbox" id="align-mean" checked /><span>mean outline</span></label>
+            <label class="xs-tg"><input type="checkbox" id="align-plane" checked /><span>plane line</span></label>
+          </div>
+          <div class="xs-resizable"><div id="align-plot" class="xs-plot xs-plot-outlines"></div></div>
+        </div>
+        <div class="xs-panel" data-tab="bars" hidden role="tabpanel">
+          <div class="plot-head">
+            <div class="mini-title">Per-side split at each zygote's best plane <span class="mini-sub" id="bars-sub"></span></div>
+            <button class="plot-download" id="bars-download" type="button" title="Download PNG" aria-label="Download">↓</button>
+          </div>
+          <div class="pa-note">For each zygote that carries the gene: the fraction of its transcripts on the higher-density side of that zygote's
+            own best plane (50% = no split). Grey = the fair-coin expectation.</div>
+          <div class="xs-resizable"><div id="bars-plot" class="xs-plot"></div></div>
+        </div>
+        <div class="xs-panel" data-tab="orient" hidden role="tabpanel">
+          <div class="plot-head">
+            <div class="mini-title">Best-plane orientation vs the polar-body axis <span class="mini-sub" id="orient-sub"></span></div>
+            <button class="plot-download" id="orient-download" type="button" title="Download PNG" aria-label="Download">↓</button>
+          </div>
+          <div class="pa-note">The angle between each zygote's gene-best-plane normal and the polar-body axis. <b>90°</b> = the plane <i>contains</i>
+            the axis (a meridional split, like the classic sweep); <b>0°</b> = the plane is perpendicular to the axis (an equatorial split).</div>
+          <div class="xs-resizable"><div id="orient-plot" class="xs-plot"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Gene ranking</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Most spatially polarized genes</div>
+        <div class="rdrawer-desc">In the current zygote, genes ranked by their best-plane split strength and search-corrected
+          significance. Click a gene to plot it.</div>
+      </div>
+      <div class="rtabs" id="rtabs">
+        <button class="rtab active" data-sort="p">by significance</button>
+        <button class="rtab" data-sort="eff">by split size</button>
+      </div>
+      <div class="best-list" id="best-list"></div>
+    </div>
+  </aside>
+
+  <script src="viewer-core.js"></script>
+  <script src="planes-all.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

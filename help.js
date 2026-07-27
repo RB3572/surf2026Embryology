@@ -122,6 +122,64 @@
         <div class="help-callout">The sperm lies <i>in</i> this plane by construction, so it has no side — there is no
         sperm-concordance read-out here (unlike Division Planes, where the plane is free of the sperm).</div>` },
 
+    "equatorial": { eyebrow: "Equatorial Division Plane · the method", title: "Animal vs vegetal",
+      html: `<p class="lede">Same question as Division Planes — is a gene's transcriptome lopsided across a plane? — but
+        here the single plane is the <b>equatorial</b> one: through the <b>cell centre of mass</b>, perpendicular to the
+        <b>animal–vegetal (polar-body) axis</b>. It cuts the zygote into an <b>animal</b> half (toward the polar body) and a
+        <b>vegetal</b> half.</p>
+        <h3>How the plane is built</h3>
+        <ul><li>The <b>cell COM</b> is the centre of mass of segment 1 (the cytoplasm) — the fixed point the plane passes through.</li>
+        <li>The <b>animal–vegetal axis</b> runs from the cell COM to the polar body; the equatorial plane's normal <i>is</i> that
+        axis, so the plane is perpendicular to it.</li>
+        <li>Side A = the animal (polar-body) side, <code>(p − cell COM)·axis &gt; 0</code>; side B = vegetal.</li></ul>
+        <h3>How to read the views</h3>
+        <ul><li><span class="tag">blue</span> / <span class="tag">red</span> dots — the gene's transcripts on the animal / vegetal side.</li>
+        <li><span class="tag">green</span> dots — molecules outside the cytoplasm (polar body, pronuclei); not counted.</li>
+        <li>The 2-D plots are <b>meridional</b> (a side-on slice containing the axis): the equatorial plane is the vertical line at
+        x = 0, the animal pole to the right. x is distance from the plane along the axis; y is an equatorial chord.</li></ul>
+        <div class="help-callout">Because the plane is fixed by geometry (not chosen per gene), a gene's significance is just how
+        unevenly <i>it</i> falls across the animal/vegetal divide — tested against a fair-coin null with a permutation p-value.</div>` },
+
+    "planes-all": { eyebrow: "Division Plane Sweep — every plane · the method", title: "The best plane, unrestricted",
+      html: `<p class="lede">The classic Division Plane Sweep only tries 18 planes that all contain the polar-body axis. Here we drop
+        that restriction and ask the bigger question: over <b>every</b> plane orientation through the cell centre — the normal swept
+        across the whole sphere at ~1° (~20,000 candidates) — which single plane best splits each gene?</p>
+        <h3>What we measure</h3>
+        <ul><li>For each gene we find its <b>globally-best dividing plane</b> (its own 3-D normal), under two normalizations:
+        <b>density</b> (÷ the segment-1 volume on each side) or raw <b>count</b>.</li>
+        <li>Searching 20,000 planes finds a big split even in noise, so significance is a <b>search-corrected</b> p: the null is the
+        best-plane split of the same number of <i>uniformly-random</i> in-cell points, so a gene only scores if it beats the best a
+        random cloud of its size would manage.</li></ul>
+        <h3>How to read it</h3>
+        <ul><li>3-D: the <b>orange</b> square is the selected gene's best plane; <span class="tag">blue</span>/<span class="tag">red</span>
+        dots are its transcripts on either side, <span class="tag">green</span> = outside the cytoplasm (not counted).</li>
+        <li><b>Aligned outlines</b> rotates every carrier zygote into that gene's own best-plane frame (plane vertical, higher side right)
+        and colours each by significance. <b>Orientations</b> asks whether those best planes line up with the polar-body axis
+        (<b>90°</b> = meridional, contains the axis; <b>0°</b> = equatorial, perpendicular to it) — i.e. whether a gene's natural split
+        respects the animal–vegetal axis or something else.</li></ul>
+        <div class="help-callout">A plane and its flip are the same plane, so the search runs over a hemisphere of ~20,000 normals,
+        shared across all zygotes; a gene's best plane is stored as an index into that one grid.</div>` },
+
+    "sperm-sphere": { eyebrow: "Sperm-Entry-Site Enrichment · the method", title: "Is anything special where the sperm enters?",
+      html: `<p class="lede">The sperm enters the egg at one cortical spot. This asks a simple question for every gene:
+        are its transcripts <b>enriched</b> or <b>depleted</b> in a small ball around that entry site, more than you'd expect?</p>
+        <h3>How the test works</h3>
+        <ul><li>Draw a sphere of radius <b>r</b> (you set it in the floating window) around the sperm, and <b>clip it to the cell</b> —
+        the sperm is cortical, so much of a naïve sphere lies outside the cell and shouldn't count.</li>
+        <li><b>Fold</b> = the gene's transcript density inside the sphere ÷ its density over the whole cell. <b>&gt;1</b> = enriched,
+        <b>&lt;1</b> = depleted.</li>
+        <li>Two nulls: a <b>binomial</b> one (scatter the gene's transcripts uniformly in the cell — how often do this many land in the
+        sphere?), and — the honest one — a <b>cortical random-site</b> null: drop the same sphere on other cortical spots at the sperm's
+        depth, and ask whether the sperm site is unusual. That controls for "cortical" and for generic local density.</li></ul>
+        <h3>How to read it</h3>
+        <ul><li>3-D: the <span class="tag">pink</span> sphere sits at the sperm entry site (pink diamond); the gene's molecules inside it
+        are bright, the rest faint.</li>
+        <li><b>Fold × radius</b> traces the fold as you grow the sphere, with the cortical-null 95% band — points outside the band are
+        unusual. <b>Across zygotes</b> shows the same gene at every sperm-positive zygote; the right rail ranks genes by how <i>consistently</i>
+        they are enriched/depleted near the sperm.</li></ul>
+        <div class="help-callout">Overall, the sperm-entry region tends to be <b>transcript-sparse</b> (the whole-cell occupancy sits
+        below the expected line) — the male pronucleus hasn't yet built a transcription hotspot there. Look for the genes that buck that.</div>` },
+
     "diffusion": { eyebrow: "mRNA Diffusion Rates · the model", title: "Could it just be diffusion?",
       html: `<p class="lede">Every mRNA is born at the nucleus and spreads out. The simplest possible explanation for
         where a gene ends up is <b>passive diffusion</b> — no motors, no anchoring, just random Brownian jostling. This

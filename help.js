@@ -162,21 +162,22 @@
 
     "sperm-sphere": { eyebrow: "Sperm-Entry-Site Enrichment · the method", title: "Is anything special where the sperm enters?",
       html: `<p class="lede">The sperm enters the egg at one cortical spot. This asks a simple question for every gene:
-        are its transcripts <b>enriched</b> or <b>depleted</b> in a small ball around that entry site, more than you'd expect?</p>
+        are its transcripts <b>concentrated</b> (enriched) or <b>depleted</b> in a small ball around that entry site, more than you'd expect?</p>
         <h3>How the test works</h3>
         <ul><li>Draw a sphere of radius <b>r</b> (you set it in the floating window) around the sperm, and <b>clip it to the cell</b> —
         the sperm is cortical, so much of a naïve sphere lies outside the cell and shouldn't count.</li>
-        <li><b>Fold</b> = the gene's transcript density inside the sphere ÷ its density over the whole cell. <b>&gt;1</b> = enriched,
-        <b>&lt;1</b> = depleted.</li>
-        <li>Two nulls: a <b>binomial</b> one (scatter the gene's transcripts uniformly in the cell — how often do this many land in the
-        sphere?), and — the honest one — a <b>cortical random-site</b> null: drop the same sphere on other cortical spots at the sperm's
-        depth, and ask whether the sperm site is unusual. That controls for "cortical" and for generic local density.</li></ul>
+        <li><b>Fold</b> = the gene's transcript <b>concentration</b> (count ÷ volume) inside the sphere ÷ its concentration over the whole
+        cell. <b>&gt;1</b> = enriched, <b>&lt;1</b> = depleted. A checkbox row picks which <b>segments</b> (cytoplasm, pronuclei, polar body,
+        other) are counted — in both the sphere and the whole-cell reference — so you can ask, e.g., about cytoplasmic transcripts only.</li>
+        <li>The null is <b>binomial</b>: scatter the gene's transcripts uniformly through the selected segments and ask how often this many
+        land in the sphere. Every chart shades the 95% range of that null; a point outside it is unusual. The whole cell is the reference,
+        so a cortically-entering sperm sits in a region that is often transcript-sparse to begin with (see the callout).</li></ul>
         <h3>How to read it</h3>
         <ul><li>3-D: the <span class="tag">pink</span> sphere sits at the sperm entry site (pink diamond); the gene's molecules inside it
         are bright, the rest faint.</li>
-        <li><b>Fold × radius</b> traces the fold as you grow the sphere, with the cortical-null 95% band — points outside the band are
-        unusual. <b>Across zygotes</b> shows the same gene at every sperm-positive zygote; the right rail ranks genes by how <i>consistently</i>
-        they are enriched/depleted near the sperm.</li></ul>
+        <li><b>Fold × radius</b> traces the fold as you grow the sphere, with the binomial 95% null band — points outside the band are
+        unusual. <b>Across zygotes</b> shows the same gene at every sperm-positive zygote (with 95% null error bars); the right rail ranks genes by how <i>consistently</i>
+        they are enriched/depleted near the sperm; click a row to view that gene.</li></ul>
         <div class="help-callout">Overall, the sperm-entry region tends to be <b>transcript-sparse</b> (the whole-cell occupancy sits
         below the expected line) — the male pronucleus hasn't yet built a transcription hotspot there. Look for the genes that buck that.</div>` },
 

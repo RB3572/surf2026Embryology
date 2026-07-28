@@ -57,8 +57,8 @@
     <div class="placeholder" id="placeholder">
       <div class="ph-inner">
         <div class="ph-title">Select a zygote</div>
-        <div class="ph-sub">Choose a sperm-positive zygote above to test whether each gene is
-          enriched or depleted within a sphere around the sperm entry site.</div>
+        <div class="ph-sub">Choose a sperm-positive zygote above to test whether each gene is concentrated (enriched)
+          or depleted within a sphere around the sperm entry site.</div>
       </div>
     </div>
     <div class="loading" id="loading" hidden>
@@ -70,8 +70,8 @@
   <section class="drawer" id="drawer" data-open="false" hidden>
     <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
     <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
-      <span class="drawer-title">Enrichment plots <span class="drawer-gene" id="drawer-gene"></span></span>
-      <span class="drawer-hint">fold vs radius · per-gene ranking · this gene across zygotes</span>
+      <span class="drawer-title">Concentration plots <span class="drawer-gene" id="drawer-gene"></span></span>
+      <span class="drawer-hint">concentration fold vs radius · gene ranking · across zygotes · occupancy</span>
       <span class="drawer-chevron" aria-hidden="true"></span>
     </button>
     <div class="drawer-body" id="drawer-body">
@@ -81,14 +81,20 @@
         <button type="button" class="xs-gtab" data-tab="across" role="tab" aria-selected="false">Across zygotes</button>
         <button type="button" class="xs-gtab" data-tab="occ" role="tab" aria-selected="false">Overall occupancy</button>
       </div>
+      <div class="ss-drawer-ctl">
+        <div id="seg-controls" class="seg-controls"></div>
+        <label class="ctl ss-mincount"><span class="ctl-label" title="Only show genes with at least this many transcripts in the selected segments of the cell">Min transcripts</span>
+          <input type="number" id="min-count" min="1" step="1" value="10" /></label>
+      </div>
       <div class="xs-panels" id="xs-panels">
         <div class="xs-panel" data-tab="curve" role="tabpanel">
           <div class="plot-head">
-            <div class="mini-title">Density fold vs sphere radius <span class="mini-sub" id="curve-sub"></span></div>
+            <div class="mini-title">Concentration fold vs sphere radius <span class="mini-sub" id="curve-sub"></span></div>
             <button class="plot-download" id="curve-download" type="button" title="Download PNG" aria-label="Download">↓</button>
           </div>
-          <div class="ss-note">Fold = (density in the sphere) ÷ (whole-cell density). Grey band = 95% of the cortical
-            random-site null (other cortical sites at the sperm's depth). A point outside the band is unusual for the sperm site.</div>
+          <div class="ss-note">Fold = (concentration in the sphere) ÷ (concentration over the whole cell), counting the selected
+            segments. Grey band = the 95% range expected if the gene's transcripts were scattered uniformly (binomial null); a point
+            outside it is unusual for the sperm site.</div>
           <div class="xs-resizable"><div id="curve-plot" class="xs-plot xs-plot-outlines"></div></div>
         </div>
         <div class="xs-panel" data-tab="rank" hidden role="tabpanel">
@@ -107,7 +113,7 @@
             <div class="mini-title">This gene across every sperm zygote <span class="mini-sub" id="across-sub"></span></div>
             <button class="plot-download" id="across-download" type="button" title="Download PNG" aria-label="Download">↓</button>
           </div>
-          <div class="ss-note">One point per zygote at the selected radius: fold near <i>its</i> sperm site. The dashed line is fold = 1 (no enrichment).</div>
+          <div class="ss-note">One bar per zygote at the selected radius: concentration fold near <i>its</i> sperm site, coloured by direction and significance (see legend). Error bars = the 95% binomial null range. Dashed line = fold 1 (no change).</div>
           <div class="xs-resizable"><div id="across-plot" class="xs-plot"></div></div>
         </div>
         <div class="xs-panel" data-tab="occ" hidden role="tabpanel">
@@ -115,8 +121,8 @@
             <div class="mini-title">Whole-transcriptome occupancy near the sperm <span class="mini-sub" id="occ-sub"></span></div>
             <button class="plot-download" id="occ-download" type="button" title="Download PNG" aria-label="Download">↓</button>
           </div>
-          <div class="ss-note">Across radii: the share of <b>all</b> in-cell transcripts that fall in the sperm sphere (observed)
-            vs the sphere's volume fraction (expected if transcripts were uniform). Below the line = the sperm region is transcript-sparse.</div>
+          <div class="ss-note">Across radii: the share of <b>all</b> transcripts (selected segments) that fall in the sperm sphere (observed)
+            vs the sphere's volume fraction (expected if uniform), with the 95% binomial null shaded. Below the band = the sperm region is transcript-sparse.</div>
           <div class="xs-resizable"><div id="occ-plot" class="xs-plot"></div></div>
         </div>
       </div>
@@ -133,8 +139,11 @@
     <div class="rdrawer-body" id="rdrawer-body">
       <div class="rdrawer-head">
         <div class="rdrawer-title">Consistent across zygotes</div>
-        <div class="rdrawer-desc">Genes ranked by how many sperm-positive zygotes they are significantly enriched
-          (or depleted) in near the sperm site, at the selected radius. Click a gene to plot it.</div>
+        <div class="rdrawer-desc">Genes ranked by the number of sperm-positive zygotes in which they are significantly
+          <b>enriched</b> (or <b>depleted</b>) near the sperm site at the selected radius. Click a gene to view it.</div>
+        <label class="ctl ss-mincount-r"><span class="ctl-label" title="Only count zygotes where the gene has at least this many transcripts in the selected segments">Min transcripts / zygote</span>
+          <input type="number" id="min-count-r" min="1" step="1" value="10" /></label>
+        <div id="seg-controls-r" class="seg-controls seg-controls-r" title="Include or exclude segments — applies to both the sphere and the whole-cell count, here and in the plots below"></div>
       </div>
       <div class="rtabs" id="rtabs">
         <button class="rtab active" data-dir="enr">Enriched</button>

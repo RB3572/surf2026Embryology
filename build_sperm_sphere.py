@@ -2,31 +2,31 @@
 """
 Build the "Sperm-Entry-Site Enrichment" project data.
 
-For every zygote that has a LABELLED SPERM, and every gene, test whether that gene's
-transcripts are ENRICHED or DEPLETED inside a sphere of radius r (µm) centred on the
-sperm entry site (SES), across a sweep of radii. Everything is done in true isotropic
-µm (µm = plot × 0.15; transcript z-frame = µm), and the sphere is intersected with the
-cell so the cortical sperm site isn't penalised for the part of the sphere outside the
-cell.
+For every zygote that has a LABELLED SPERM, test whether each gene's transcripts are
+CONCENTRATED (enriched) or DEPLETED inside a sphere of radius r (µm) around the sperm
+entry site (SES), across a radius sweep. Everything is in true isotropic µm
+(µm = plot × 0.15; transcript z-frame = µm).
 
-Per (zygote, gene, radius r):
-    n_cell  = the gene's transcripts inside the cell (cytoplasm + pronuclei; polar body
-              and background excluded), via the full-resolution label TIFF.
-    n_sph   = those within r µm of the sperm site.
-    V_cell  = cell voxels;  V_sph = cell voxels within r of the sperm  (clipped sphere).
-    p_null  = V_sph / V_cell                                  (uniform-in-cell chance)
-    fold    = (n_sph / V_sph) / (n_cell / V_cell)             (>1 enriched, <1 depleted)
-    p_enr   = P(Binomial(n_cell, p_null) >= n_sph)            (upper tail — enrichment)
-    p_dep   = P(Binomial(n_cell, p_null) <= n_sph)            (lower tail — depletion)
-and a SPATIAL null that asks whether the sperm site is special vs OTHER cortical sites:
-    draw B random centres among cell voxels at a similar distance-from-COM as the sperm
-    (a cortical shell), recount n_sph for each; report the empirical enrich/deplete p and
-    the null fold band (2.5–97.5 pct). This controls for "cortical" and for local density.
+This build ships RAW per-SEGMENT counts and voxel volumes so the front-end can
+include/exclude segments (cytoplasm, pronuclei, polar body, other) on the fly and
+recompute the concentration, fold and a binomial null band for whatever segment set
+is selected. Segment of each transcript / voxel comes from the full-resolution label
+TIFF; segment identity (pronuclei, polar body) comes from pronuclei_assignments.json.
 
-Reuses build_pronuclei (imported as BP) for the atlas/label readers, the downsampled
-mask, and the constants. Reuses the per-zygote 3-D scenes in data/zygote/<id>.json.gz
-for rendering (no meshes re-shipped here). Output:
-  data/sperm_sphere.json.gz   {radii, embryos:[{…per-gene sweep…}], byGene, meta}
+Per (zygote, gene) we store, per segment s:
+    nc[s]        gene transcripts inside segment s (whole cell)          [radius-independent]
+    ns[s][r]     those within r µm of the sperm site                     [per radius]
+Per zygote, per segment s:
+    vc[s]        downsampled voxels of segment s                         [radius-independent]
+    vs[s][r]     those within r µm of the sperm                          [per radius]
+The front-end then computes, for the selected segment set S:
+    concentration_sphere = (Σ_S ns[s][r]) / (Σ_S vs[s][r])
+    concentration_cell   = (Σ_S nc[s])    / (Σ_S vc[s])
+    fold = concentration_sphere / concentration_cell
+    p, 95% band from Binomial(Σ_S nc[s],  Σ_S vs[s][r] / Σ_S vc[s]).
+
+Reuses build_pronuclei (BP) for the atlas/label readers + constants. The 3-D scene is
+reused from data/zygote/<id>.json.gz. Output: data/sperm_sphere.json.gz.
 Run from the deploy repo root:  python3 build_sperm_sphere.py
 """
 import glob
@@ -36,7 +36,6 @@ import os
 
 import numpy as np
 import tifffile
-from scipy.stats import binom
 
 import build_pronuclei as BP
 from embryo_naming import embryo_label
@@ -52,12 +51,16 @@ XY_UM, Z_UM = BP.XY_UM, BP.Z_UM           # 0.15, 1.0
 DS_XY, DS_Z = BP.DS_XY, BP.DS_Z           # 4, 2
 CYTO = BP.CYTO                            # 1
 RADII = [5, 7, 9, 11, 13, 15, 18]        # µm sweep
-MIN_COUNT = 10                           # min in-cell transcripts for a gene to be reported
-FOLD_THRESH = 1.5                        # enriched-list density-fold threshold
-DEP_THRESH = 1.0 / FOLD_THRESH           # depleted-list threshold (~0.67)
-NULL_B = 400                             # cortical random-centre draws for the spatial null
-SHELL_UM = 10.0                          # cortical-shell half-width for random centres (µm)
-RNG = np.random.default_rng(20260737)
+MIN_COUNT = 10                           # min in-cell transcripts (all segments) to report a gene
+
+# segment categories, in display order
+SEGS = ["cyto", "pron", "polar", "other"]
+SEG_META = [
+    {"key": "cyto",  "label": "Cytoplasm",  "color": "#64748b"},
+    {"key": "pron",  "label": "Pronuclei",  "color": "#a855f7"},
+    {"key": "polar", "label": "Polar body", "color": "#f59e0b"},
+    {"key": "other", "label": "Other body", "color": "#0d9488"},
+]
 
 
 def transcript_labels_and_um(label_path, tx, genes):
@@ -84,16 +87,20 @@ def transcript_labels_and_um(label_path, tx, genes):
     return out_l, out_p
 
 
-def cell_voxels_um(sub, polar_label):
-    """µm positions of the cell voxels = every nonzero label except the polar body."""
-    mask = sub > 0
+def seg_category(label_arr, pron_labels, polar_label):
+    """Map an int label array to a category string array (cyto/pron/polar/other/'')."""
+    cat = np.full(label_arr.shape, "", dtype="<U5")
+    cat[label_arr == CYTO] = "cyto"
+    for pl in pron_labels:
+        cat[label_arr == pl] = "pron"
     if polar_label is not None:
-        mask &= (sub != polar_label)
-    iz, iy, ix = np.nonzero(mask)
-    return np.stack([ix * DS_XY * XY_UM, iy * DS_XY * XY_UM, iz * DS_Z * Z_UM], axis=1)
+        cat[label_arr == polar_label] = "polar"
+    other = (label_arr > 0) & (cat == "")
+    cat[other] = "other"
+    return cat
 
 
-def process(eid, sperm_um, polar_label):
+def process(eid, sperm_um, pron_labels, polar_label):
     scene_p = os.path.join(BP.ATLAS, eid, "scene.json.gz")
     lab = glob.glob(os.path.join(BP.SRC, eid, "*_label.tif"))
     if not (os.path.isfile(scene_p) and lab):
@@ -105,60 +112,36 @@ def process(eid, sperm_um, polar_label):
         return None
     labs, pos = transcript_labels_and_um(lab[0], tx, genes)
     sub = BP.load_sub(lab[0])
-    Vc = cell_voxels_um(sub, polar_label)
-    if len(Vc) == 0:
+
+    # cell voxels (all non-zero) + their segment + µm positions
+    iz, iy, ix = np.nonzero(sub > 0)
+    if len(iz) == 0:
         return None
-    com = Vc.mean(axis=0)
+    vlab = np.asarray(sub[iz, iy, ix])
+    vcat = seg_category(vlab, pron_labels, polar_label)
+    Vpos = np.stack([ix * DS_XY * XY_UM, iy * DS_XY * XY_UM, iz * DS_Z * Z_UM], axis=1)
     sp = np.asarray(sperm_um, float)
+    dvox = np.linalg.norm(Vpos - sp, axis=1)
+    com = Vpos.mean(axis=0)
     r_com = float(np.linalg.norm(sp - com))
-    dcell = np.linalg.norm(Vc - sp, axis=1)                 # cell voxel → sperm distances (µm)
 
-    # cortical random-centre pool for the spatial null: cell voxels at a similar
-    # distance-from-COM as the sperm (compare the sperm site to OTHER cortical sites)
-    dcom = np.linalg.norm(Vc - com, axis=1)
-    shell = np.abs(dcom - r_com) < SHELL_UM
-    pool = Vc[shell] if shell.sum() >= 50 else Vc           # fall back to all cell voxels
-    ci = RNG.integers(0, len(pool), size=NULL_B)
-    C = pool[ci]                                            # (B,3) random cortical centres
-
-    V_cell = len(Vc)
-    v_sph = {r: int((dcell <= r).sum()) for r in RADII}     # clipped-to-cell sphere volumes
-
-    # in-cell membership of every transcript: nonzero label AND not the polar body
-    def in_cell(lg):
-        m = lg > 0
-        if polar_label is not None:
-            m &= (lg != polar_label)
-        return m
+    # per-segment cell + sphere VOLUMES (downsampled voxel counts)
+    vc = {s: int((vcat == s).sum()) for s in SEGS}
+    vs = {s: [int(((vcat == s) & (dvox <= r)).sum()) for r in RADII] for s in SEGS}
+    present = [s for s in SEGS if vc[s] > 0]
 
     gene_out = {}
     for g in genes:
-        m = in_cell(labs[g])
-        n_cell = int(m.sum())
-        if n_cell < MIN_COUNT:
+        lg = labs[g]
+        gcat = seg_category(lg, pron_labels, polar_label)
+        in_cell = gcat != ""
+        if int(in_cell.sum()) < MIN_COUNT:
             continue
-        Pg = pos[g][m]                                      # in-cell transcript µm
-        dsp = np.linalg.norm(Pg - sp, axis=1)               # → sperm
-        dnull = np.linalg.norm(Pg[:, None, :] - C[None, :, :], axis=2)  # (n_cell, B) → random centres
-        rec = {"n": n_cell, "nsph": [], "fold": [], "pE": [], "pD": [],
-               "pSE": [], "pSD": [], "nlo": [], "nhi": []}
-        for r in RADII:
-            vsph = v_sph[r]
-            p_null = vsph / V_cell if V_cell else 0.0
-            nsph = int((dsp <= r).sum())
-            fold = (nsph / vsph) / (n_cell / V_cell) if (vsph and n_cell) else 0.0
-            p_enr = float(binom.sf(nsph - 1, n_cell, p_null)) if p_null > 0 else 1.0
-            p_dep = float(binom.cdf(nsph, n_cell, p_null)) if p_null > 0 else 1.0
-            null_counts = (dnull <= r).sum(axis=0)          # (B,) gene counts in random spheres
-            ge = int((null_counts >= nsph).sum()); le = int((null_counts <= nsph).sum())
-            p_se = (1 + ge) / (1 + NULL_B); p_sd = (1 + le) / (1 + NULL_B)
-            null_fold = (null_counts / max(vsph, 1)) / (n_cell / V_cell) if n_cell else null_counts * 0.0
-            nlo, nhi = np.percentile(null_fold, [2.5, 97.5])
-            rec["nsph"].append(nsph); rec["fold"].append(round(fold, 3))
-            rec["pE"].append(round(p_enr, 5)); rec["pD"].append(round(p_dep, 5))
-            rec["pSE"].append(round(p_se, 4)); rec["pSD"].append(round(p_sd, 4))
-            rec["nlo"].append(round(float(nlo), 3)); rec["nhi"].append(round(float(nhi), 3))
-        gene_out[g] = rec
+        Pg = pos[g]
+        dsp = np.linalg.norm(Pg - sp, axis=1)
+        nc = {s: int((gcat == s).sum()) for s in SEGS}
+        ns = {s: [int(((gcat == s) & (dsp <= r)).sum()) for r in RADII] for s in SEGS}
+        gene_out[g] = {"nc": [nc[s] for s in SEGS], "ns": [ns[s] for s in SEGS]}
 
     zs = d.get("z_scale", 7.0)
     return {
@@ -166,9 +149,10 @@ def process(eid, sperm_um, polar_label):
         "sperm_um": [round(float(x), 2) for x in sp],
         "sperm_plot": [round(float(sp[0] / XY_UM), 2), round(float(sp[1] / XY_UM), 2), round(float(sp[2] * zs), 2)],
         "com_plot": [round(float(com[0] / XY_UM), 2), round(float(com[1] / XY_UM), 2), round(float(com[2] * zs), 2)],
-        "r_com_um": round(r_com, 2), "V_cell": V_cell,
-        "v_sph": {str(r): v_sph[r] for r in RADII},
-        "p_null": {str(r): round(v_sph[r] / V_cell, 5) for r in RADII},
+        "r_com_um": round(r_com, 2),
+        "present": present,
+        "vc": [vc[s] for s in SEGS],
+        "vs": [vs[s] for s in SEGS],
         "genes": gene_out,
     }
 
@@ -183,11 +167,13 @@ def main():
         sp_plot = se.get("sperm_plot")
         if not sp_plot:
             continue
-        sperm_um = np.asarray(sp_plot, float) * XY_UM             # plot → isotropic µm
-        pol = (assign.get(eid, {}).get("polar") or {}).get("label")
-        pol = int(pol) if pol is not None else None
+        sperm_um = np.asarray(sp_plot, float) * XY_UM
+        a = assign.get(eid, {})
+        pron_labels = [int(p["label"]) for p in (a.get("pron") or []) if p.get("label") is not None]
+        polar_label = (a.get("polar") or {}).get("label")
+        polar_label = int(polar_label) if polar_label is not None else None
         try:
-            r = process(eid, sperm_um, pol)
+            r = process(eid, sperm_um, pron_labels, polar_label)
         except Exception as e:                                    # noqa: BLE001
             print(f"  !! {eid}: {e}")
             continue
@@ -197,31 +183,17 @@ def main():
         r["label"] = (zman.get(eid, {}).get("label")) or embryo_label(eid, "zygote") or eid
         r["date_short"] = zman.get(eid, {}).get("date_short", "")
         embryos.append(r)
-        ng = len(r["genes"])
-        print(f"  {eid}  {r['label']}  {ng} genes  r(sperm→COM)={r['r_com_um']}µm  Vcell={r['V_cell']}")
-
-    # cross-gene aggregation: per gene, how many zygotes it is enriched / depleted in at each radius
-    by_gene = {}
-    for emb in embryos:
-        for g, rec in emb["genes"].items():
-            bg = by_gene.setdefault(g, {"nz": 0, "enr": [0] * len(RADII), "dep": [0] * len(RADII)})
-            bg["nz"] += 1
-            for ri in range(len(RADII)):
-                if rec["fold"][ri] >= FOLD_THRESH and rec["pSE"][ri] <= 0.05:
-                    bg["enr"][ri] += 1
-                if rec["fold"][ri] <= DEP_THRESH and rec["pSD"][ri] <= 0.05:
-                    bg["dep"][ri] += 1
+        print(f"  {eid}  {r['label']}  {len(r['genes'])} genes  segs={r['present']}  r(sperm→COM)={r['r_com_um']}µm")
 
     doc = {
-        "radii": RADII, "embryos": embryos, "byGene": by_gene,
-        "meta": {"nZygotes": len(embryos), "minCount": MIN_COUNT, "foldThresh": FOLD_THRESH,
-                 "depThresh": round(DEP_THRESH, 3), "nullB": NULL_B, "shellUm": SHELL_UM,
+        "radii": RADII, "segs": SEGS, "segMeta": SEG_META, "embryos": embryos,
+        "meta": {"nZygotes": len(embryos), "minCount": MIN_COUNT,
                  "unit_um_per_plot": XY_UM, "defaultRadiusIdx": RADII.index(9)},
     }
     with gzip.open(OUT, "wt") as fh:
         json.dump(doc, fh, separators=(",", ":"))
-    print(f"\nwrote {len(embryos)} sperm zygotes · {len(by_gene)} genes "
-          f"({os.path.getsize(OUT)/1024:.0f} KB)")
+    ngenes = len({g for e in embryos for g in e["genes"]})
+    print(f"\nwrote {len(embryos)} sperm zygotes · {ngenes} genes ({os.path.getsize(OUT)/1024:.0f} KB)")
 
 
 if __name__ == "__main__":

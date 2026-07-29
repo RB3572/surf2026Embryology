@@ -1,0 +1,35 @@
+/* Compare Division Planes — project-specific styling (builds on style.css tokens). */
+
+.cp-planes { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #eef1f5; }
+.cp-planes .ctl-label { margin-bottom: 2px; }
+.cp-toggles { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.zt { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #334155; cursor: pointer; }
+.zt input { accent-color: #e11d48; }
+.zt-sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; border: 1px solid rgba(0,0,0,.15); }
+.zt-dot { width: 9px; height: 9px; border-radius: 50%; background: #f59e0b; display: inline-block; }
+.ctl-inline { display: inline-flex; align-items: center; gap: 6px; }
+.ctl-inline .ctl-label { font-size: 11px; color: #64748b; }
+.ctl-inline select, .ctl-inline input { font-size: 12px; padding: 3px 6px; border: 1px solid #d5d9e0; border-radius: 6px; background: #fff; }
+
+.cp-readout { margin-top: 10px; padding-top: 10px; border-top: 1px solid #eef1f5; font-size: 12px; }
+.cp-r-head { font-size: 12.5px; color: #0f172a; margin-bottom: 5px; }
+.cp-r-line { display: flex; align-items: center; gap: 6px; color: #334155; padding: 1px 0; }
+.cp-r-line.cp-r-na { color: #94a3b8; }
+.cp-sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block; border: 1px solid rgba(0,0,0,.12); flex: none; }
+.cp-sig { color: #16a34a; font-weight: 700; }
+
+.cp-note { font-size: 11.5px; color: #64748b; line-height: 1.5; margin: 4px 0 8px; }
+.cp-note sub { font-size: 9px; }
+.cp-plot { width: 100%; height: 100%; min-height: 260px; }
+.cp-empty { padding: 28px 12px; text-align: center; color: #94a3b8; font-size: 12.5px; font-style: italic; }
+.cp-pair-ctl { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-bottom: 8px; }
+
+/* right-drawer ranking controls */
+.cp-rank-planes { display: flex; flex-direction: column; gap: 5px; margin: 8px 0; }
+.cp-rank-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; margin-top: 4px; }
+.cp-seg { display: inline-flex; border: 1px solid #d5d9e0; border-radius: 8px; overflow: hidden; }
+.cp-seg button { font: 600 11.5px system-ui, sans-serif; color: #475569; background: #fff; border: none; padding: 4px 12px; cursor: pointer; }
+.cp-seg button + button { border-left: 1px solid #d5d9e0; }
+.cp-seg button.active { background: #e11d48; color: #fff; }
+.cp-rank-row input[type=number] { width: 56px; }
+.cp-best-head span:nth-child(3), .cp-best-head span:nth-child(4) { font-size: 10px; }

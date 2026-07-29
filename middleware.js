@@ -25,7 +25,7 @@ const PROJECT_OF = {
   "pronuclei.html": "pronuclei", "extpt.html": "extpt", "segments.html": "segments",
   "zygote-planes.html": "zygote-planes", "sperm-division.html": "sperm-division",
   "equatorial-planes.html": "equatorial-planes", "planes-all.html": "planes-all",
-  "sperm-sphere.html": "sperm-sphere",
+  "sperm-sphere.html": "sperm-sphere", "compare-planes.html": "compare-planes",
   "pronuclei-assignments.html": "pronuclei-assignments", "sperm-pca.html": "sperm-pca",
   "diffusion.html": "diffusion",
   "axes.html": "axes", "alphabeta.html": "alphabeta",

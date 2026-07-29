@@ -140,6 +140,25 @@
         <div class="help-callout">Because the plane is fixed by geometry (not chosen per gene), a gene's significance is just how
         unevenly <i>it</i> falls across the animal/vegetal divide — tested against a fair-coin null with a permutation p-value.</div>` },
 
+    "compare-planes": { eyebrow: "Compare Division Planes · the method", title: "Four planes, one ruler",
+      html: `<p class="lede">Four projects each pick a "dividing plane" for the zygote a different way. This puts all four
+        side by side and scores them with the <b>same</b> metric, so you can ask: do they agree, and which genes make them agree?</p>
+        <h3>The four planes</h3>
+        <ul><li><b style="color:#a855f7">Polar-axis best</b> — the best of 18 planes that all contain the polar-body axis (per gene).</li>
+        <li><b style="color:#f59e0b">Exhaustive best</b> — the single best plane from the every-plane search (~20,000 orientations, per gene).</li>
+        <li><b style="color:#0ea5e9">Equatorial</b> — fixed: perpendicular to the animal–vegetal (polar-body) axis.</li>
+        <li><b style="color:#ff2d95">Sperm · COM · PB</b> — fixed: through the sperm, the cell centre of mass and the polar-body centroid (sperm zygotes only).</li></ul>
+        <h3>The one ruler</h3>
+        <p>For every plane we measure the same thing — a gene's <b>concentration asymmetry</b> on the <b>cell body only</b>
+        (pronuclei and polar body are excluded from both the counts and the side volumes): each side's transcripts ÷ that side's
+        volume, then |c<sub>A</sub>−c<sub>B</sub>| / (c<sub>A</sub>+c<sub>B</sub>). A two-sided <b>binomial p</b> compares it to a uniform split.</p>
+        <h3>How to read it</h3>
+        <ul><li>3-D: the four coloured squares are the planes (toggle any on/off); dots are the gene split by whichever plane you choose.</li>
+        <li><b>Arrangement</b> shows each plane's angle to the polar axis across zygotes (agreement); <b>Asymmetry + p</b> bars the four planes for this zygote;
+        <b>Compare two</b> takes any pair and reports their angle + an alignment score across zygotes; <b>Significance grid</b> and <b>Orientation spread</b> add the per-plane picture.</li>
+        <li>The right rail ranks genes by how <b>alike (or unlike)</b> your chosen planes are placed — the mean angle between them, averaged over zygotes.</li></ul>
+        <div class="help-callout">Two planes are compared by the angle between their normals (0° = the same plane orientation, 90° = orthogonal); alignment = 1 − angle/90°.</div>` },
+
     "planes-all": { eyebrow: "Division Plane Sweep — every plane · the method", title: "The best plane, unrestricted",
       html: `<p class="lede">The classic Division Plane Sweep only tries 18 planes that all contain the polar-body axis. Here we drop
         that restriction and ask the bigger question: over <b>every</b> plane orientation through the cell centre — the normal swept

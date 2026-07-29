@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compare Division Planes · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="compare-planes.css" />
+  <script src="plotly.min.js"></script>
+  <script src="viewer-core.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#e11d48;box-shadow:0 0 0 4px color-mix(in srgb,#e11d48 18%,transparent)"></span>
+      <span class="brand-name">Compare&nbsp;Division&nbsp;Planes</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Zygotes"></nav>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">Controls</span>
+        <button class="help-btn" data-help="compare-planes" style="margin-left:auto" aria-label="What is this?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="controls-row">
+          <label class="ctl"><span class="ctl-label">Gene</span>
+            <select id="gene-select" aria-label="Gene"></select></label>
+        </div>
+        <div class="cp-planes" id="plane-toggles">
+          <span class="ctl-label">Show planes</span>
+          <label class="zt"><input type="checkbox" id="pl-polar" data-plane="polar" checked><span class="zt-sw" style="background:#a855f7"></span>Polar-axis best</label>
+          <label class="zt"><input type="checkbox" id="pl-exhaustive" data-plane="exhaustive" checked><span class="zt-sw" style="background:#f59e0b"></span>Exhaustive best</label>
+          <label class="zt"><input type="checkbox" id="pl-equatorial" data-plane="equatorial" checked><span class="zt-sw" style="background:#0ea5e9"></span>Equatorial</label>
+          <label class="zt"><input type="checkbox" id="pl-sperm" data-plane="sperm" checked><span class="zt-sw" style="background:#ff2d95"></span>Sperm · COM · PB</label>
+        </div>
+        <div class="cp-toggles">
+          <label class="zt"><input type="checkbox" id="dots-show" checked><span class="zt-dot"></span>Gene dots (split by a plane)</label>
+          <label class="ctl ctl-inline"><span class="ctl-label">split by</span>
+            <select id="split-by">
+              <option value="polar">Polar-axis best</option>
+              <option value="exhaustive">Exhaustive best</option>
+              <option value="equatorial" selected>Equatorial</option>
+              <option value="sperm">Sperm · COM · PB</option>
+            </select></label>
+        </div>
+        <div class="cp-readout" id="cp-readout"></div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Select a zygote</div>
+        <div class="ph-sub">Choose a zygote above to see its four candidate division planes in 3-D and compare how they carve the transcriptome.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden><div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span></div>
+  </main>
+
+  <!-- bottom drawer -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Plane comparison <span class="drawer-gene" id="drawer-gene"></span></span>
+      <span class="drawer-hint">agreement · asymmetry · pairwise · significance · orientation</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="xs-graph-tabs" id="cp-tabs" role="tablist" aria-label="Panels">
+        <button type="button" class="xs-gtab active" data-tab="arrange" role="tab" aria-selected="true">Arrangement</button>
+        <button type="button" class="xs-gtab" data-tab="asym" role="tab" aria-selected="false">Asymmetry + p</button>
+        <button type="button" class="xs-gtab" data-tab="pair" role="tab" aria-selected="false">Compare two</button>
+        <button type="button" class="xs-gtab" data-tab="heat" role="tab" aria-selected="false">Significance grid</button>
+        <button type="button" class="xs-gtab" data-tab="orient" role="tab" aria-selected="false">Orientation spread</button>
+      </div>
+      <div class="xs-panels" id="cp-panels">
+        <div class="xs-panel" data-tab="arrange" role="tabpanel">
+          <div class="mini-title">How the four planes agree across zygotes <span class="mini-sub" id="cp-arrange-sub"></span></div>
+          <div class="cp-note" id="cp-arrange-note"></div>
+          <div class="xs-resizable"><div id="cp-arrange" class="cp-plot"></div></div>
+        </div>
+        <div class="xs-panel" data-tab="asym" role="tabpanel" hidden>
+          <div class="mini-title">Concentration asymmetry of each plane · this zygote <span class="mini-sub" id="cp-asym-sub"></span></div>
+          <div class="cp-note">Bars = |c<sub>A</sub>−c<sub>B</sub>| / (c<sub>A</sub>+c<sub>B</sub>) on the cell body (pronuclei &amp; polar body excluded). p = two-sided binomial vs a uniform split.</div>
+          <div class="xs-resizable"><div id="cp-asym" class="cp-plot"></div></div>
+        </div>
+        <div class="xs-panel" data-tab="pair" role="tabpanel" hidden>
+          <div class="cp-pair-ctl">
+            <label class="ctl ctl-inline"><span class="ctl-label">Plane A</span><select id="pair-a"></select></label>
+            <label class="ctl ctl-inline"><span class="ctl-label">Plane B</span><select id="pair-b"></select></label>
+          </div>
+          <div class="mini-title">Plane A vs Plane B across zygotes <span class="mini-sub" id="cp-pair-sub"></span></div>
+          <div class="cp-note" id="cp-pair-note"></div>
+          <div class="xs-resizable"><div id="cp-pair" class="cp-plot"></div></div>
+        </div>
+        <div class="xs-panel" data-tab="heat" role="tabpanel" hidden>
+          <div class="mini-title">Per-plane significance across zygotes <span class="mini-sub" id="cp-heat-sub"></span></div>
+          <div class="cp-note">Colour = −log₁₀ p of each plane's asymmetry for this gene, per zygote (brighter = more significant).</div>
+          <div class="xs-resizable"><div id="cp-heat" class="cp-plot"></div></div>
+        </div>
+        <div class="xs-panel" data-tab="orient" role="tabpanel" hidden>
+          <div class="mini-title">Orientation vs the polar-body axis <span class="mini-sub" id="cp-orient-sub"></span></div>
+          <div class="cp-note">Angle between each pathway's plane and the polar-body (animal–vegetal) axis, across the zygotes carrying this gene. Tight = the pathway prefers a consistent orientation.</div>
+          <div class="xs-resizable"><div id="cp-orient" class="cp-plot"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- right drawer: gene ranking by cross-plane agreement -->
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Rank by agreement</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Which genes place the planes alike?</div>
+        <div class="rdrawer-desc">Pick <b>≥2</b> plane types; genes are ranked by the mean pairwise angle between those planes (averaged over the zygotes that carry the gene). <b>Agree</b> = smallest angles first; <b>Disagree</b> = largest first.</div>
+        <div class="cp-rank-planes" id="cp-rank-planes"></div>
+        <div class="cp-rank-row">
+          <div class="cp-seg" id="cp-rank-mode" role="group">
+            <button type="button" data-mode="agree" class="active">Agree</button>
+            <button type="button" data-mode="disagree">Disagree</button>
+          </div>
+          <label class="ctl ctl-inline"><span class="ctl-label" title="Only rank genes with at least this many cell-body transcripts, summed across zygotes">Min transcripts</span>
+            <input type="number" id="cp-rank-min" min="1" step="1" value="10" /></label>
+        </div>
+      </div>
+      <div class="best-list" id="cp-rank-list"></div>
+    </div>
+  </aside>
+
+  <script src="help.js"></script>
+  <script src="compare-planes.js"></script>
+</body>
+</html>

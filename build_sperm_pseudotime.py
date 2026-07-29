@@ -68,11 +68,14 @@ def main():
 
         maternal = pron[female]["com"] if female is not None else None
         paternal = pron[1 - female]["com"] if female is not None else None
+        # interpronuclei distance (raw pronuclei surface gap, µm) — the alternate "clock" axis
+        gap = e.get("legacy_surface_gap_um")
         out.append({
             "id": eid, "label": r["label"], "date": e.get("date_short", ""),
             "tau": round(float(e["tau"]), 4),
             "tau_lo": round(float(e.get("lo95", e["tau"])), 4),
             "tau_hi": round(float(e.get("hi95", e["tau"])), 4),
+            "gap": round(float(gap), 2) if gap is not None else None,
             "split": split, "female": female,
             "sperm": sp, "pron": pron, "polar": polar, "polar_label": polar_label,
             "dist_um": {"polar": um(polar), "maternal": um(maternal), "paternal": um(paternal)},
@@ -88,7 +91,14 @@ def main():
         ],
         "sperm_color": "#ff2d95",
         "model_version": json.load(open(PT))["meta"].get("model_version", ""),
+        "clocks": [
+            {"key": "tau", "field": "tau", "label": "Pronuclei-to-COM clock (τ)",
+             "axis": "pseudotime τ  (0 = pronuclear formation → 1 = NEBD)", "hasInterval": True},
+            {"key": "gap", "field": "gap", "label": "Interpronuclei distance",
+             "axis": "interpronuclei distance (µm)  — larger = earlier", "hasInterval": False},
+        ],
         "n": len(out), "n_split": n_split, "n_with_polar": n_polar,
+        "n_with_gap": sum(1 for e in out if e.get("gap") is not None),
         "embryos": out,
     }
     with open(OUT, "w") as fh:

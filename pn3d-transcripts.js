@@ -1,4 +1,4 @@
-/* Transcripts vs Pseudotime (structure clock) — viewer.
+/* Pronuclei-to-COM Clock (structure-clock τ) — viewer.
  *
  * Organised like the other zygote viewers: a scrolling embryo bar at the top, the
  * selected embryo's 3-D structure in the main window, and a bottom drawer whose

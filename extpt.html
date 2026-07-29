@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Transcripts Across Stages (zygote → 2-cell) · SURF 2026</title>
+  <title>Extended-Time Pronuclei-COM Clock · SURF 2026</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="extpt.css" />
   <script src="plotly.min.js" charset="utf-8"></script>
@@ -14,7 +14,7 @@
     <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
     <div class="brand">
       <span class="brand-dot" style="background:#14b8a6;box-shadow:0 0 0 4px color-mix(in srgb,#14b8a6 18%,transparent)"></span>
-      <span class="brand-name">Transcripts&nbsp;Across&nbsp;Stages</span>
+      <span class="brand-name">Extended&#8209;Time&nbsp;Pronuclei&#8209;COM&nbsp;Clock</span>
       <span class="brand-sub" id="embryo-count"></span>
     </div>
     <nav class="tabs" id="tabs" aria-label="Embryos"></nav>
@@ -37,7 +37,8 @@
           <span class="pn-t-desc">plots that gene's molecules inside the embryo</span></label>
         <div class="pn-readout" id="pn-readout"></div>
         <div class="pn-note">One pseudotime axis spans three stages — <b>zygote → early-2-cell →
-          late-2-cell</b>. Zygotes are ordered by the pronuclei-distance clock; 2-cell embryos have
+          late-2-cell</b>. Zygotes are ordered by the <b>pronuclei-to-COM clock (τ)</b> by default
+          (switchable to the interpronuclei distance via <b>Zygote clock</b>); 2-cell embryos have
           no pronuclei, so within their stage they are ordered by the <b>2-cell order</b> menu below
           (total transcripts, or a ZGA marker gene). For zygotes the 3-D view shows the two pronuclei
           + min-distance line.</div>
@@ -134,6 +135,12 @@
           <select id="norm-sel" title="Raw transcript count, or normalized by the embryo's total transcripts (a fraction — controls for embryo-to-embryo size differences across stages).">
             <option value="count">Count</option>
             <option value="total">÷ total count (fraction)</option>
+          </select>
+        </label>
+        <label class="pn-reg-label">Zygote clock
+          <select id="zyg-clock-sel" title="How to order the zygotes along pseudotime. 'Pronuclei-to-COM (τ)' uses the calibrated structure clock (the two pronuclei's summed distance to the cell centre of mass, mapped to time). 'Interpronuclei distance' orders by the raw gap between the two pronuclei (larger gap = earlier).">
+            <option value="tau">Pronuclei-to-COM (τ)</option>
+            <option value="distance">Interpronuclei distance</option>
           </select>
         </label>
         <label class="pn-reg-label">2-cell order

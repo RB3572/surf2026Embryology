@@ -22,6 +22,7 @@
     plotHost: $("#plot-host"), placeholder: $("#placeholder"),
     loading: $("#loading"), loadingText: $("#loading-text"),
     objSelect: $("#obj-select"), showAll: $("#show-all"), showBody: $("#show-body"),
+    clockSelect: $("#clock-select"),
     readout: $("#sp-readout"), legend: $("#sp-legend"),
     drawer: $("#drawer"), drawerHandle: $("#drawer-handle"), drawerObj: $("#drawer-obj"),
     stat: $("#sp-stat"), scatter: $("#sp-scatter"), note: $("#sp-note"), exportCsv: $("#export-csv"),
@@ -30,7 +31,8 @@
   const OBJ_COLOR = { polar: PB, maternal: F, paternal: M };
 
   const state = { doc: null, byId: {}, obj: "polar", currentId: null, scene: null,
-                  drawerOpen: false, sceneCache: {} };
+                  drawerOpen: false, sceneCache: {}, clock: "tau" };
+  const activeClock = () => (state.doc.clocks || []).find((c) => c.key === state.clock) || (state.doc.clocks || [])[0];
 
   // ---------- boot ----------
   (async function init() {
@@ -62,6 +64,15 @@
     });
     els.showAll.addEventListener("change", render3D);
     els.showBody.addEventListener("change", render3D);
+    // clock toggle: pronuclei-to-COM τ (default) vs interpronuclei distance → re-plots the scatter x-axis
+    if (els.clockSelect) {
+      els.clockSelect.addEventListener("click", (e) => {
+        const b = e.target.closest("[data-clock]"); if (!b) return;
+        state.clock = b.dataset.clock;
+        els.clockSelect.querySelectorAll("button").forEach((x) => x.classList.toggle("active", x === b));
+        renderReadout(); renderScatter();
+      });
+    }
     els.exportCsv.addEventListener("click", exportCsv);
     wireDrawer();
   }
@@ -155,8 +166,9 @@
     else big = `${um} <small>µm</small>`;
     els.readout.innerHTML =
       `<div class="sp-big">${big}</div>` +
-      `<div class="sp-sub">sperm → <b>${OBJ_LABEL[state.obj]}</b><br>` +
-      `pseudotime τ = <b>${e.tau}</b> <small>(0 = PN formation → 1 = NEBD)</small>` +
+      `<div class="sp-sub">sperm → <b>${OBJ_LABEL[state.obj]}</b> centre of mass<br>` +
+      `pronuclei→COM clock τ = <b>${e.tau}</b> <small>(0 = PN formation → 1 = NEBD)</small>` +
+      (e.gap != null ? `<br>interpronuclei distance = <b>${e.gap}</b> µm` : "") +
       (e.split ? `<br><span class="sp-split">pronuclei are an even split — maternal/paternal undefined</span>` : "") +
       `</div>`;
   }
@@ -190,28 +202,31 @@
     if (els.drawer.hidden || !state.doc) return;
     els.drawerObj.textContent = OBJ_LABEL[state.obj];
     const col = OBJ_COLOR[state.obj];
+    const clk = activeClock();
+    const hint = $("#drawer-hint");
+    if (hint) hint.textContent = `one point per sperm-labelled zygote · x = ${clk.key === "tau" ? "calibrated τ" : "interpronuclei distance"}, y = sperm-to-object distance`;
     const pts = state.doc.embryos
-      .map((e) => ({ e, y: e.dist_um[state.obj] }))
-      .filter((p) => p.y != null);
-    const xs = pts.map((p) => p.e.tau), ys = pts.map((p) => p.y);
+      .map((e) => ({ e, y: e.dist_um[state.obj], x: e[clk.field] }))
+      .filter((p) => p.y != null && p.x != null);
+    const xs = pts.map((p) => p.x), ys = pts.map((p) => p.y);
     const cur = state.currentId;
     const isCur = pts.map((p) => p.e.id === cur);
 
     const markers = {
       type: "scatter", mode: "markers", name: OBJ_LABEL[state.obj],
       x: xs, y: ys,
-      error_x: {
+      error_x: clk.hasInterval ? {
         type: "data", symmetric: false,
         array: pts.map((p) => Math.max(0, p.e.tau_hi - p.e.tau)),
         arrayminus: pts.map((p) => Math.max(0, p.e.tau - p.e.tau_lo)),
         color: "rgba(120,130,150,0.35)", thickness: 1, width: 0,
-      },
+      } : undefined,
       marker: {
         size: isCur.map((c) => (c ? 15 : 9)),
         color: col, opacity: 0.85,
         line: { color: isCur.map((c) => (c ? "#111827" : "#fff")), width: isCur.map((c) => (c ? 2.5 : 1)) },
       },
-      text: pts.map((p) => `${p.e.label}  ·  τ ${p.e.tau}  ·  ${p.y} µm`),
+      text: pts.map((p) => `${p.e.label}  ·  ${clk.key === "tau" ? "τ " + p.e.tau : p.e.gap + " µm gap"}  ·  ${p.y} µm`),
       hovertemplate: "%{text}<extra></extra>", customdata: pts.map((p) => p.e.id),
     };
     const traces = [markers];
@@ -226,8 +241,10 @@
     const layout = {
       margin: { l: 54, r: 12, t: 8, b: 42 }, showlegend: false,
       paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "#fcfdfe",
-      xaxis: { title: { text: "pseudotime τ  (0 = pronuclear formation → 1 = NEBD)", font: { size: 12 } },
-        gridcolor: "#eef1f5", zeroline: false, range: [-0.03, Math.max(...xs) * 1.05 + 0.02] },
+      xaxis: { title: { text: clk.axis, font: { size: 12 } },
+        gridcolor: "#eef1f5", zeroline: false,
+        range: clk.key === "tau" ? [-0.03, Math.max(...xs) * 1.05 + 0.02]
+                                  : [Math.min(...xs) * 0.9, Math.max(...xs) * 1.05] },
       yaxis: { title: { text: `sperm → ${OBJ_LABEL[state.obj]} distance (µm)`, font: { size: 12 } },
         gridcolor: "#eef1f5", zeroline: false, rangemode: "tozero" },
     };
@@ -242,12 +259,14 @@
     const dropped = state.doc.embryos.length - pts.length;
     els.stat.innerHTML = fit
       ? `n = <b>${pts.length}</b> · Pearson r = <b>${r.toFixed(2)}</b> · ` +
-        `slope <b>${fit.b1.toFixed(0)}</b> µm/τ · p ${fmtP(fit.p)}` +
+        `slope <b>${fit.b1.toFixed(clk.key === "tau" ? 0 : 2)}</b> µm/${clk.key === "tau" ? "τ" : "µm"} · p ${fmtP(fit.p)}` +
         (Math.abs(r) > 0 && fit.p < 0.05 ? ` <span class="sig">significant</span>` : "")
       : `n = <b>${pts.length}</b>`;
     els.note.innerHTML =
-      `Distance is measured in 3-D from the sperm to the ${OBJ_LABEL[state.obj]} centroid. ` +
-      `τ is the calibrated pronuclear clock (${state.doc.model_version}); horizontal bars are its 95% interval. ` +
+      `Distance is measured in 3-D from the sperm to the ${OBJ_LABEL[state.obj]} centre of mass (COM). ` +
+      (clk.key === "tau"
+        ? `τ is the calibrated pronuclei-to-COM clock (${state.doc.model_version}); horizontal bars are its 95% interval. `
+        : `The x-axis is the interpronuclei distance — the raw surface gap between the two pronuclei (larger = earlier). `) +
       (dropped > 0
         ? `<b>${dropped}</b> zygote${dropped === 1 ? "" : "s"} omitted ` +
           (state.obj === "polar" ? "(no polar body labelled)." : "(pronuclei are an even split, so maternal/paternal is undefined).")
@@ -256,8 +275,8 @@
 
   // ---------- export + stats ----------
   function exportCsv() {
-    const rows = [["zygote", "tau", "tau_lo", "tau_hi", "sperm_to_polar_um", "sperm_to_maternal_um", "sperm_to_paternal_um", "split"]];
-    state.doc.embryos.forEach((e) => rows.push([e.id, e.tau, e.tau_lo, e.tau_hi,
+    const rows = [["zygote", "tau", "tau_lo", "tau_hi", "interpronuclei_gap_um", "sperm_to_polar_um", "sperm_to_maternal_um", "sperm_to_paternal_um", "split"]];
+    state.doc.embryos.forEach((e) => rows.push([e.id, e.tau, e.tau_lo, e.tau_hi, e.gap ?? "",
       e.dist_um.polar ?? "", e.dist_um.maternal ?? "", e.dist_um.paternal ?? "", e.split]));
     const blob = new Blob([rows.map((r) => r.join(",")).join("\n")], { type: "text/csv" });
     const a = document.createElement("a");

@@ -35,6 +35,7 @@
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
   const rankNEl = $("#rank-n"), rankPosEl = $("#rank-pos"), rankNegEl = $("#rank-neg");
   const normSel = $("#norm-sel"), flipToggle = $("#flip-toggle"), subclockSel = $("#subclock-sel");
+  const zygClockSel = $("#zyg-clock-sel");
   // ZGA marker genes that RISE after ZGA (mean 2-cell ≫ zygote) with good 2-cell coverage — data-derived
   // presets for ordering the 2-cell embryos along pseudotime.
   const ZGA_PRESETS = ["MuERV-L", "Zscan4a", "Zfp352", "Obox8", "Kdm4dl", "Mt1"];
@@ -47,18 +48,26 @@
                   currentId: null, scene: null, fit: null, drawerOpen: false, showDots: false,
                   regType: "linear", dotSize: 1.5, pseudotime: false,
                   region: "all", norm: "count", flip: false, segData: null,
-                  geneSet: [], setRequireAll: false, graphTab: "gene", subClock: "total" };
+                  geneSet: [], setRequireAll: false, graphTab: "gene", subClock: "total",
+                  zygClock: "tau", tauById: {} };
   const PLOT_OF = { gene: geneScatter, total: scatterPlot, set: setScatter };
   const shown = (el) => !!(el && el.offsetParent);   // in the active (non-hidden) panel & laid out
   let vcExtras = null;   // dot-size + atlas-link row (VCore.addWindowExtras)
 
   (async function init() {
     try {
-      const [m, ga] = await Promise.all([
+      const [m, ga, ptDoc] = await Promise.all([
         (await fetch("data/extpt_manifest.json")).json(),
         V.loadGz("data/extpt_genes.json.gz"),
+        // the calibrated pronuclei-to-COM clock τ (optional — page works without it)
+        fetch("data/pronuclei_pseudotime.json").then((r) => (r.ok ? r.json() : null)).catch(() => null),
       ]);
       state.points = m.embryos; state.genesAgg = ga; state.segData = null; state.region = "all";
+      state.tauById = {};
+      if (ptDoc) (ptDoc.embryos || []).forEach((e) => { if (e.tau != null) state.tauById[e.id] = e.tau; });
+      // default to the pronuclei-to-COM clock (τ); fall back to the interpronuclei distance if τ is unavailable
+      state.zygClock = state.points.some((p) => p.stage === "zygote" && state.tauById[p.id] != null) ? "tau" : "distance";
+      state.points.forEach((p) => (p.tau = state.tauById[p.id] != null ? state.tauById[p.id] : null));
       state.points.forEach((p) => (state.byId[p.id] = p));
       state.genesAgg.embryos.forEach((e) => (state.gaById[e.id] = e));
       computePseudotime();                              // assigns p.pt to every embryo
@@ -69,7 +78,8 @@
       V.buildTabs(tabsEl, m.embryos, selectEmbryo, (e) => ({
         label: e.label, sub: e.date_short,
         title: `${STAGE_NAME[e.stage]} · ${e.label}` +
-          (e.stage === "zygote" ? ` · dist ${e.distance} µm` : "") + ` · ${e.total.toLocaleString()} transcripts`,
+          (e.stage === "zygote" ? `${e.tau != null ? ` · τ ${e.tau.toFixed(2)}` : ""} · dist ${e.distance} µm` : "") +
+          ` · ${e.total.toLocaleString()} transcripts`,
       }));
       wireDrawer(); wireRdrawer(); wireGraphTabs(); renderRanks();
       vcExtras = V.addWindowExtras($("#controls-body"), { defaultSize: state.dotSize, onDotSize: (s) => { state.dotSize = s; if (state.scene) render(); } });
@@ -82,6 +92,9 @@
       flipToggle.addEventListener("change", () => { state.flip = flipToggle.checked; renderAllScatters(); });
       // 2-cell sub-clock (total transcripts / a marker gene) → recomputes pseudotime everywhere
       subclockSel.addEventListener("change", () => { state.subClock = subclockSel.value; refreshPseudotime(); });
+      // zygote clock: pronuclei-to-COM (τ) vs interpronuclei distance → reorders the zygote block
+      if (zygClockSel) { zygClockSel.value = state.zygClock;
+        zygClockSel.addEventListener("change", () => { state.zygClock = zygClockSel.value; refreshPseudotime(); }); }
       // gene-set config
       setAdd.addEventListener("change", () => { addSetGene(setAdd.value); setAdd.value = ""; });
       setPresetsEl.addEventListener("click", (e) => { const b = e.target.closest(".pn-set-preset"); if (b) addPreset(parseInt(b.dataset.i, 10)); });
@@ -107,7 +120,11 @@
     const groups = { zygote: [], e2c: [], l2c: [] };
     state.points.forEach((p) => { if (groups[p.stage]) groups[p.stage].push(p); });
     const key = (p) => {                                  // ascending = earlier → later
-      if (p.stage === "zygote") return -(p.distance || 0);
+      if (p.stage === "zygote") {
+        // pronuclei-to-COM clock (τ): ascending τ = earlier → later.
+        if (state.zygClock === "tau" && state.tauById[p.id] != null) return state.tauById[p.id];
+        return -(p.distance || 0);                        // interpronuclei distance: larger gap = earlier
+      }
       if (!sg) return p.total || 0;
       const e = state.gaById[p.id]; return (e && e.genes[sg]) || 0;   // marker-gene count (0 if absent)
     };
@@ -262,7 +279,8 @@
     const pt = ptOf(s.id);
     pnReadout.innerHTML =
       `<div class="pn-big"><span style="color:${STAGE_COLOR[meta.stage] || "#111"}">${STAGE_NAME[meta.stage] || "—"}</span> <span class="pn-lbl">stage</span></div>` +
-      (isZyg ? `<div class="pn-big"><span>${(s._md ? s._md.distUm : s.distance_um)}</span> µm <span class="pn-lbl">pronuclei distance</span></div>` : "") +
+      (isZyg && state.tauById[s.id] != null ? `<div class="pn-big"><span>${state.tauById[s.id].toFixed(2)}</span> <span class="pn-lbl">pronuclei→COM clock τ</span></div>` : "") +
+      (isZyg ? `<div class="pn-big"><span>${(s._md ? s._md.distUm : s.distance_um)}</span> µm <span class="pn-lbl">interpronuclei distance</span></div>` : "") +
       `<div class="pn-big"><span>${(s.total_transcripts || 0).toLocaleString()}</span> <span class="pn-lbl">total transcripts</span></div>` +
       `<div class="pn-resid">pseudotime here: <b>${pt != null ? pt.toFixed(2) : "–"}</b> <span class="pn-lbl">(0–3 across the three stages)</span></div>` +
       `<div class="pn-resid"><b>${gene()}</b> here: ${gc != null ? gc.toLocaleString() + " transcripts" : "not in this embryo's panel"}</div>` +

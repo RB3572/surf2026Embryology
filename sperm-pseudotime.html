@@ -36,6 +36,13 @@
             <button type="button" data-obj="paternal">Paternal ♂</button>
           </div>
         </div>
+        <div class="ctl-block">
+          <span class="ctl-label">Clock (x-axis)</span>
+          <div class="seg-obj" id="clock-select" role="group">
+            <button type="button" data-clock="tau" class="active" title="The calibrated pronuclei-to-COM structure clock (the two pronuclei's summed distance to the cell centre of mass, mapped to pseudotime τ).">Pronuclei→COM (τ)</button>
+            <button type="button" data-clock="gap" title="The raw interpronuclei distance — the surface gap between the two pronuclei (larger = earlier).">Interpronuclei dist.</button>
+          </div>
+        </div>
         <div class="ctl-toggles">
           <label class="ctl-chk"><input type="checkbox" id="show-all" checked><span>show all objects</span></label>
           <label class="ctl-chk"><input type="checkbox" id="show-body" checked><span>cell body</span></label>
@@ -68,7 +75,7 @@
     <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
     <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
       <span class="drawer-title">Sperm distance vs pseudotime <span class="drawer-gene" id="drawer-obj"></span></span>
-      <span class="drawer-hint">one point per sperm-labelled zygote · x = calibrated τ, y = sperm-to-object distance</span>
+      <span class="drawer-hint" id="drawer-hint">one point per sperm-labelled zygote · x = calibrated τ, y = sperm-to-object distance</span>
       <span class="drawer-chevron" aria-hidden="true"></span>
     </button>
     <div class="drawer-body" id="drawer-body">

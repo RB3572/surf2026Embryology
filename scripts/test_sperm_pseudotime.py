@@ -100,6 +100,22 @@ def main():
     check("sperm→paternal distance rises with τ (r > 0.3)", r > 0.3, f"r={r:.2f}")
     check("positive slope of tens of µm per τ", slope > 5, f"{slope:.0f} µm/τ")
 
+    print("\n[interpronuclei-distance clock]")
+    clocks = d.get("clocks") or []
+    check("two selectable clocks (tau + gap)", [c["key"] for c in clocks] == ["tau", "gap"],
+          str([c.get("key") for c in clocks]))
+    check("only the τ clock carries a 95% interval",
+          [c.get("hasInterval") for c in clocks] == [True, False])
+    bad_gap = 0
+    for e in E:
+        exp = pt[e["id"]].get("legacy_surface_gap_um")
+        exp = round(float(exp), 2) if exp is not None else None
+        if e.get("gap") != exp:
+            bad_gap += 1
+    check("gap reproduces legacy_surface_gap_um from the clock source", bad_gap == 0, f"{bad_gap} mismatch")
+    check("declared n_with_gap matches",
+          d.get("n_with_gap") == sum(1 for e in E if e.get("gap") is not None))
+
     print("\n[provenance]")
     txt = open(AGG, "rb").read()
     leaks = [s for s in (b"/Users/", b"/Volumes/", b"C:\\") if s in txt]

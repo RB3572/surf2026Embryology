@@ -353,7 +353,7 @@
         <p>If a gene's split stays lopsided after the shape is normalized, the asymmetry is about <b>where the molecules are</b>,
         not about the cell being an odd shape. It's a shape-control for the pre-patterning question.</p>` },
 
-    "pronuclei": { eyebrow: "Pronuclei Distance · the model", title: "A clock you can read from a ruler",
+    "pronuclei": { eyebrow: "Interpronuclei Distance Clock · the model", title: "A clock you can read from a ruler",
       html: `<p class="lede">Mark a child's height on the wall each year. The marks creep upward, and the <b>spacing</b> becomes
         a clock — you can read <i>age</i> from <i>height</i>. We do the same with the zygote, reading developmental <b>time</b>
         from a physical <b>distance</b>.</p>
@@ -478,23 +478,27 @@
         <p>Pick what to measure the distance to: the <b>polar body</b>, the <b>maternal pronucleus ♀</b>, or the
         <b>paternal pronucleus ♂</b>. Maternal vs paternal comes from the <b>Maternal/Paternal Pronucleus ID</b> project's
         consensus (four tests, majority vote). The 3-D view draws the sperm (pink diamond), the two pronuclei and the
-        polar body, with a dashed line to the object you chose.</p>
+        polar body, with a dashed line to the object you chose. Every distance is measured to the object's
+        <b>centre of mass (COM)</b>.</p>
         <h3>The clock</h3>
-        <p>The x-axis is the calibrated <b>pronuclear pseudotime τ</b> (0 = pronuclear formation → 1 = NEBD, model
-        pnpt-3.0.0); the horizontal bars are its 95% interval. Only zygotes with a <b>labelled sperm</b> are included.</p>
+        <p>By default the x-axis is the <b>pronuclei-to-COM clock</b> — the calibrated pseudotime τ (0 = pronuclear
+        formation → 1 = NEBD, model pnpt-3.0.0), with its 95% interval as horizontal bars. The <b>Clock</b> toggle can
+        switch the x-axis to the raw <b>interpronuclei distance</b> (the surface gap between the two pronuclei; larger =
+        earlier). Only zygotes with a <b>labelled sperm</b> are included.</p>
         <h3>What it shows</h3>
         <p>The sperm sits right on the <b>paternal</b> pronucleus (~15-20 µm) — as it should, since that pronucleus forms
         from the sperm — and that distance <i>grows</i> with τ as the paternal pronucleus migrates inward, away from the
         fixed cortical entry point. Distance to the maternal pronucleus and the polar body stays roughly flat. Four zygotes
         have an even-split pronucleus call, so they have no defined maternal/paternal and drop out of those two views.</p>` },
-    "extpt": { eyebrow: "Extended Pseudotime · the idea", title: "One clock across three stages",
+    "extpt": { eyebrow: "Extended-Time Pronuclei-COM Clock · the idea", title: "One clock across three stages",
       html: `<p class="lede">The pronuclei give zygotes a ruler for developmental time. This project extends that ruler
         past the first division — laying <b>zygote → early-2-cell → late-2-cell</b> along a single pseudotime axis so you
         can watch a gene's transcripts rise and fall across the whole maternal-to-zygotic transition.</p>
         <h3>The axis</h3>
         <p>Three stage blocks in developmental order (zygote 0–1, early-2C 1–2, late-2C 2–3), coloured and banded. Within
-        the zygote block, embryos are ordered by the <b>pronuclei-distance clock</b> (larger gap = earlier). Points are
-        coloured by stage; the fitted model runs across all three.</p>
+        the zygote block, embryos are ordered by the <b>pronuclei-to-COM clock</b> (the calibrated τ — the two pronuclei's
+        summed distance to the cell centre of mass, mapped to time) by default, or by the raw <b>interpronuclei distance</b>
+        (larger gap = earlier) via the <b>Zygote clock</b> menu. Points are coloured by stage; the fitted model runs across all three.</p>
         <h3>Is there a clock for the 2-cell embryos?</h3>
         <p>Not a geometric one — once the cell divides there are no pronuclei to measure. So you choose how to order them
         with the <b>2-cell order</b> menu:</p>

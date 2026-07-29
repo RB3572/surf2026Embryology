@@ -6,7 +6,7 @@
 @media (min-width: 900px) { .tx-input-grid { grid-template-columns: 1fr 1fr; } }
 
 .tx-planes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px; }
-.tx-planes .pn-plane img { aspect-ratio: 1/1; }
+/* XZ/YZ aspect is set inline per-image in JS (fixPlaneAspect) to correct the anisotropic Z. */
 
 .tx-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11.5px;
   color: #64748b; margin: 10px 0 2px; }
@@ -40,3 +40,35 @@
 
 .tx-warn { background: #fffbeb; border: 1px solid #fde68a; border-left: 3px solid #b45309;
   border-radius: 8px; padding: 8px 11px; font-size: 12px; color: #7c2d12; margin-top: 10px; }
+
+/* ── full transcript-analysis suite (scatter tab): model control + gene sets ── */
+.tx-reg-ctl { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; margin-bottom: 8px; }
+.ctl-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
+.ctl-inline .ctl-label { font-size: 11px; font-weight: 600; color: #475569; }
+.ctl-inline select { font-size: 12px; padding: 3px 6px; border: 1px solid #d5d9e0; border-radius: 6px; background: #fff; }
+.tx-reg-note { font-size: 11.5px; color: #64748b; line-height: 1.4; flex: 1 1 220px; min-width: 180px; }
+.tx-reg-ctl .plot-download { margin-left: auto; }
+.pn-params { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10.5px; color: #64748b; }
+.pn-pval { border-bottom: 1px dotted #94a3b8; cursor: help; }
+.tx-empty { padding: 26px 10px; text-align: center; color: #94a3b8; font-size: 12.5px; font-style: italic; }
+
+.tx-set-head { margin-top: 16px; padding-top: 12px; border-top: 1px solid #e6e8ec; display: flex; flex-direction: column; gap: 8px; }
+.pn-set-presets { display: flex; flex-wrap: wrap; gap: 5px; }
+.pn-set-preset { font: 600 11px system-ui, sans-serif; color: #475569; background: #fff;
+  border: 1px solid #d5d9e0; border-radius: 999px; padding: 3px 10px; cursor: pointer; }
+.pn-set-preset:hover { border-color: #7c3aed; color: #7c3aed; background: color-mix(in srgb, #7c3aed 8%, #fff); }
+.pn-set-preset.pn-set-dyn { border-color: color-mix(in srgb, #7c3aed 45%, #d5d9e0); color: #6d28d9; }
+.pn-set-preset.pn-set-dyn:hover { background: color-mix(in srgb, #7c3aed 14%, #fff); }
+.pn-set-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; }
+.pn-set-add { font-size: 12px; padding: 3px 6px; border: 1px solid #d5d9e0; border-radius: 6px; background: #fff; }
+.pn-set-clear { font: 600 11px system-ui, sans-serif; color: #64748b; background: #fff;
+  border: 1px solid #d5d9e0; border-radius: 6px; padding: 3px 10px; cursor: pointer; }
+.pn-set-clear:hover { border-color: #dc2626; color: #dc2626; }
+.pn-set-chips { display: flex; flex-wrap: wrap; gap: 5px; min-height: 4px; }
+.pn-set-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600;
+  color: #334155; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 2px 4px 2px 8px; }
+.pn-set-chip.absent { opacity: .5; }
+.pn-set-x { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px;
+  border: none; border-radius: 4px; background: transparent; color: #94a3b8; cursor: pointer; font-size: 13px; line-height: 1; }
+.pn-set-x:hover { background: #fdecec; color: #dc2626; }
+.pn-set-empty { font-size: 11.5px; color: #94a3b8; font-style: italic; }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pronuclei-to-COM Clock · SURF 2026</title>
+  <title>Transcripts vs Structure Clock (τ) · SURF 2026</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="pn3d.css" />
   <link rel="stylesheet" href="pn3d-transcripts.css" />
@@ -15,7 +15,7 @@
     <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
     <div class="brand">
       <span class="brand-dot" style="background:#7c3aed;box-shadow:0 0 0 4px color-mix(in srgb,#7c3aed 18%,transparent)"></span>
-      <span class="brand-name">Pronuclei&#8209;to&#8209;COM&nbsp;Clock</span>
+      <span class="brand-name">Transcripts&nbsp;vs&nbsp;Structure&nbsp;Clock&nbsp;(τ)</span>
       <span class="brand-sub" id="embryo-count"></span>
     </div>
     <nav class="tabs" id="tabs" aria-label="Zygotes"></nav>
@@ -35,16 +35,10 @@
         </div>
         <div class="controls-row">
           <label class="ctl"><span class="ctl-label">y-axis</span>
-            <select id="norm-sel">
+            <select id="norm-sel" title="Raw transcript count, count ÷ the embryo's total (fraction), or count ÷ cell volume (concentration, per µm³ — cell volume is the sphere-equivalent from the segmented radius).">
               <option value="count">raw count</option>
               <option value="frac">fraction of total</option>
-            </select></label>
-          <label class="ctl"><span class="ctl-label">Fit</span>
-            <select id="fit-sel">
-              <option value="linear">linear</option>
-              <option value="log">log(count)</option>
-              <option value="power">power</option>
-              <option value="none">none</option>
+              <option value="conc">concentration (÷ volume)</option>
             </select></label>
         </div>
         <div class="controls-row">
@@ -123,14 +117,46 @@
           <div class="tx-note" id="tx-input-note"></div>
         </div>
 
-        <!-- 2 · SCATTER -->
+        <!-- 2 · SCATTER SUITE -->
         <div class="xs-panel" data-tab="scatter" role="tabpanel" hidden>
-          <div class="plot-head">
-            <div class="mini-title">Transcript count vs pseudotime <span class="mini-sub" id="tx-scatter-sub"></span></div>
-            <button class="plot-download" id="tx-scatter-dl" type="button" title="Download CSV" aria-label="Download CSV">↓</button>
+          <div class="tx-reg-ctl">
+            <label class="ctl-inline"><span class="ctl-label">Model</span>
+              <select id="tx-model" title="Regression model fitted to every scatter (transcripts vs τ). R² is reported on each model's natural scale.">
+                <option value="linear">Linear</option>
+                <option value="quadratic">Quadratic</option>
+                <option value="exp">Exponential</option>
+                <option value="log">Logarithmic</option>
+                <option value="power">Power law</option>
+                <option value="logistic">Logistic (sigmoid)</option>
+                <option value="poisson">Poisson (GLM)</option>
+                <option value="negbin">Negative binomial (GLM)</option>
+                <option value="binomial">Binomial (GLM, logit)</option>
+                <option value="loess">LOESS (local smoother)</option>
+              </select></label>
+            <span class="tx-reg-note" id="tx-reg-note"></span>
+            <button class="plot-download" id="tx-scatter-dl" type="button" title="Download the selected-gene scatter as CSV" aria-label="Download CSV">↓</button>
           </div>
+
+          <div class="plot-head"><div class="mini-title">Selected gene vs τ <span class="mini-sub" id="tx-scatter-sub"></span></div></div>
           <div class="xs-resizable"><div id="tx-scatter" class="tx-plot"></div></div>
           <div class="tx-note" id="tx-stat"></div>
+
+          <div class="plot-head"><div class="mini-title">All transcripts vs τ <span class="mini-sub" id="tx-total-sub"></span></div></div>
+          <div class="xs-resizable"><div id="tx-total" class="tx-plot"></div></div>
+          <div class="tx-note" id="tx-total-stat"></div>
+
+          <div class="tx-set-head">
+            <div class="mini-title">Gene set vs τ <span class="mini-sub" id="tx-set-sub"></span></div>
+            <div class="pn-set-presets" id="tx-set-presets"></div>
+            <div class="pn-set-row">
+              <select id="tx-set-add" class="pn-set-add" title="Add one gene to the set"></select>
+              <label class="zt" title="With this on, a zygote is plotted only if its panel contains EVERY gene in the set (strict). Off: any-present (summed over the genes it has)."><input type="checkbox" id="tx-set-requireall"><span>require all genes present</span></label>
+              <button type="button" id="tx-set-clear" class="pn-set-clear">clear</button>
+            </div>
+            <div class="pn-set-chips" id="tx-set-chips"></div>
+          </div>
+          <div class="xs-resizable"><div id="tx-set" class="tx-plot"></div></div>
+          <div class="tx-note" id="tx-set-stat"></div>
         </div>
 
         <!-- 3 · GENES -->
@@ -154,6 +180,7 @@
     </div>
   </section>
 
+  <script src="pn-analysis.js"></script>
   <script src="pn3d-transcripts.js"></script>
 </body>
 </html>

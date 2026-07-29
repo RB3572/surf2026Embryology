@@ -142,6 +142,7 @@
             <label class="xs-tg"><input type="checkbox" id="xs-align-only"><span>only this embryo</span></label>
             <label class="xs-tg"><input type="checkbox" id="xs-align-plane" checked><span>division plane</span></label>
             <label class="xs-tg"><input type="checkbox" id="xs-align-legend" checked><span>legend</span></label>
+            <label class="xs-tg"><input type="checkbox" id="xs-align-sperm"><span>sperm</span></label>
             <span class="xs-sigkey" id="xs-align-key"><span class="xs-sk-lab">p ≤ .001</span><span class="xs-sk-bar"></span><span class="xs-sk-lab">n.s. (p ≥ 1)</span></span>
             <span class="xs-sk-cur"><span class="xs-sw-cur"></span> this embryo</span>
           </div>
@@ -227,6 +228,7 @@
         <button class="rtab" data-best="diffVol">Δ · vol</button>
         <button class="rtab" data-best="diffCnt">Δ · count</button>
         <button class="rtab" data-best="concord">Concordance</button>
+        <button class="rtab" data-best="global">Global</button>
       </div>
       <div class="rconcord-controls" id="rconcord-controls" hidden>
         <label class="ctl"><span class="ctl-label">Rank by</span>
@@ -234,6 +236,10 @@
             <option value="frac">Concordance fraction</option>
             <option value="p">p value</option>
           </select></label>
+      </div>
+      <div class="rconcord-controls" id="rglobal-controls" hidden>
+        <label class="ctl"><span class="ctl-label" title="Only rank genes with at least this many transcripts summed across all zygotes">Min transcripts (total)</span>
+          <input type="number" id="rglobal-min" min="1" step="1" value="20" /></label>
       </div>
       <div class="best-list" id="best-list"></div>
     </div>

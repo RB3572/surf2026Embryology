@@ -59,6 +59,7 @@
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle");
   const rtabsEl = $("#rtabs"), bestListEl = $("#best-list");
   const rconcordControls = $("#rconcord-controls"), rconcordRank = $("#rconcord-rank");
+  const rglobalControls = $("#rglobal-controls"), rglobalMin = $("#rglobal-min");
 
   const state = {
     manifest: [], currentId: null, scene: null, userGene: null, planeIdx: 0,
@@ -67,6 +68,7 @@
     gmAnchor: "gene", gmDraw: null, gmDrawKey: null,   // γ/μ grid: real anchor vs random control
     gmDensity: true, spDensity: true,                  // concordance by density (count ÷ side volume)
     concordRank: "frac", _concord: null,               // right-drawer concordance tab
+    globalMin: 20,                                      // min total transcripts for the Global ranking
     circ: false, aggCirc: null, _aggCircP: null,
   };
   // circularize accessors: when the "blow up the balloon" toggle is on, every read of
@@ -84,6 +86,9 @@
       const m = await (await fetch("data/equatorial_manifest.json")).json();
       state.manifest = m.embryos;
       state.nPlanes = m.n_planes || 1; state.step = m.step_deg || 0;
+      // sperm positions in the aligned-outline frame (optional — enables the "sperm" toggle)
+      fetch("data/equatorial_sperm.json").then((r) => (r.ok ? r.json() : null))
+        .then((sp) => { if (sp) { state.spermData = sp; if (state.xsTab === "align") renderAlignedOutlines(); } }).catch(() => {});
       countEl.textContent = `${m.embryos.length} zygotes · equatorial plane`;
       V.buildTabs(tabsEl, m.embryos, selectEmbryo, (e) => ({
         label: e.label, sub: e.date_short,
@@ -362,8 +367,40 @@
     bestListEl.innerHTML = rows.length ? html
       : `<div class="best-plane-note">No gene reaches ${CONCORD_MIN_COV} zygotes in this aggregate.</div>`;
   }
+  // GLOBAL ranking: every gene by its AVERAGE significance across all zygotes (not just the current one)
+  function renderGlobalList() {
+    const agg = curAGG(); if (!agg || !agg.embryos) return;
+    const key = state.crossKey, minc = state.globalMin;
+    const per = {};
+    agg.embryos.forEach((e) => {
+      for (const g of (agg.genes_all || [])) {
+        const gs = geneSplit(e, g, key); if (!gs || !gs.n) continue;
+        const a = per[g] || (per[g] = { sumlog: 0, sump: 0, n: 0, tot: 0 });
+        a.sumlog += -Math.log10(Math.max(gs.p, 1e-6)); a.sump += gs.p; a.n++; a.tot += gs.n;
+      }
+    });
+    const rows = Object.entries(per).map(([g, a]) => ({ gene: g, nlp: a.sumlog / a.n, meanP: a.sump / a.n, n: a.n, tot: a.tot }))
+      .filter((r) => r.tot >= minc).sort((a, b) => b.nlp - a.nlp || a.meanP - b.meanP);
+    const cur = gene();
+    let html = `<div class="best-plane-note">Every gene ranked by its <b>average significance across all ${agg.embryos.length} zygotes</b> ` +
+      `(mean −log₁₀ p at each zygote's <b>${BESTKEY_LABEL[key]}</b> plane · ${state.crossMode === "vol" ? "density" : "count"}), genes with <b>≥ ${minc}</b> transcripts total.</div>`;
+    html += `<div class="best-head"><span></span><span>gene</span><span>n</span><span>⟨−log₁₀p⟩</span><span>mean p</span></div>`;
+    html += rows.slice(0, 300).map((r, i) =>
+      `<div class="best-row${r.gene === cur ? " current" : ""}" data-gene="${r.gene}" title="${r.gene} · ${r.n} zygotes · ${r.tot} transcripts · mean p ${fmtP(r.meanP)}">` +
+      `<span class="best-num">${i + 1}</span><span class="best-gene">${r.gene}</span>` +
+      `<span class="best-null">${r.n}</span><span class="best-real">${r.nlp.toFixed(2)}</span>` +
+      `<span class="best-p${r.meanP <= 0.05 ? " sig" : ""}">${fmtP(r.meanP)}</span></div>`).join("");
+    bestListEl.innerHTML = rows.length ? html : `<div class="best-plane-note">No gene reaches ${minc} transcripts total.</div>`;
+  }
+
   function renderBestList() {
     if (rconcordControls) rconcordControls.hidden = state.bestTab !== "concord";
+    if (rglobalControls) rglobalControls.hidden = state.bestTab !== "global";
+    if (state.bestTab === "global") {
+      bestListEl.innerHTML = `<div class="best-plane-note">Averaging each gene's significance across all zygotes…</div>`;
+      ensureAgg().then(() => { if (state.bestTab === "global") renderGlobalList(); });
+      return;
+    }
     if (state.bestTab === "concord") {
       bestListEl.innerHTML = `<div class="best-plane-note">Scoring every gene as an anchor…</div>`;
       ensureAgg().then(() => { if (state.bestTab === "concord") renderConcordList(); });
@@ -1203,6 +1240,10 @@
       state.concordRank = rconcordRank.value;
       if (state.bestTab === "concord") renderConcordList();
     });
+    if (rglobalMin) rglobalMin.addEventListener("input", () => {
+      state.globalMin = Math.max(1, parseInt(rglobalMin.value, 10) || 1);
+      if (state.bestTab === "global") renderGlobalList();
+    });
     bestListEl.addEventListener("click", (e) => {
       const row = e.target.closest(".best-row"); if (!row) return;
       const g = row.dataset.gene;
@@ -1256,7 +1297,7 @@
     syncBarModeControls();
     xsPlane.addEventListener("change", () => { state.crossKey = xsPlane.value;
       if (state.agg) renderCrossAgg();
-      if (state.bestTab === "concord") renderBestList();   // ranking depends on the plane choice
+      if (state.bestTab === "concord" || state.bestTab === "global") renderBestList();   // ranking depends on the plane choice
     });
     [xsBody, xsPb, xsCrossLegend, xsCrossHighColor, xsCrossLowColor, xsCrossFillColor, xsCrossBodyColor, xsCrossPbColor, xsCrossPnColor]
       .forEach((el) => el.addEventListener("change", renderCurrentCrossSection));

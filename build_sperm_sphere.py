@@ -50,7 +50,7 @@ OUT = os.path.join(DATA, "sperm_sphere.json.gz")
 XY_UM, Z_UM = BP.XY_UM, BP.Z_UM           # 0.15, 1.0
 DS_XY, DS_Z = BP.DS_XY, BP.DS_Z           # 4, 2
 CYTO = BP.CYTO                            # 1
-RADII = [5, 7, 9, 11, 13, 15, 18]        # µm sweep
+RADII = [5, 8, 10, 12, 15, 18, 20, 24, 28, 32, 36, 40, 45]   # µm sweep (default 20)
 MIN_COUNT = 10                           # min in-cell transcripts (all segments) to report a gene
 
 # segment categories, in display order
@@ -188,7 +188,7 @@ def main():
     doc = {
         "radii": RADII, "segs": SEGS, "segMeta": SEG_META, "embryos": embryos,
         "meta": {"nZygotes": len(embryos), "minCount": MIN_COUNT,
-                 "unit_um_per_plot": XY_UM, "defaultRadiusIdx": RADII.index(9)},
+                 "unit_um_per_plot": XY_UM, "defaultRadiusIdx": RADII.index(20)},
     }
     with gzip.open(OUT, "wt") as fh:
         json.dump(doc, fh, separators=(",", ":"))

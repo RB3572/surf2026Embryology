@@ -20,6 +20,7 @@
   const placeholder = $("#placeholder"), loadingEl = $("#loading"), loadingTxt = $("#loading-text");
   const geneSelect = $("#gene-select"), modeSelect = $("#mode-select");
   const planeShow = $("#plane-show"), axisShow = $("#axis-show"), spermShow = $("#sperm-show"), dotsShow = $("#dots-show");
+  const allPlanesShow = $("#all-planes-show");
   const readoutEl = $("#pa-readout");
   const drawer = $("#drawer"), drawerHandle = $("#drawer-handle"), drawerBody = $("#drawer-body"), drawerGene = $("#drawer-gene");
   const rdrawer = $("#rdrawer"), rdrawerHandle = $("#rdrawer-handle"), bestList = $("#best-list");
@@ -139,6 +140,24 @@
       const u = [ap[0] / an, ap[1] / an, ap[2] / an];
       traces.push({ type: "scatter3d", mode: "lines", name: "Polar-body axis", x: [c[0] - R * u[0], c[0] + R * u[0]], y: [c[1] - R * u[1], c[1] + R * u[1]], z: [c[2] - R * u[2], c[2] + R * u[2]], line: { color: AXIS_C, width: 6 }, hovertemplate: "Polar-body axis<extra></extra>", legendrank: 40000 });
       traces.push({ type: "scatter3d", mode: "markers", name: "Polar body", x: [A.pb_plot[0]], y: [A.pb_plot[1]], z: [A.pb_plot[2]], marker: { size: 7, color: AXIS_C, line: { width: 1, color: "#fff" } }, hovertemplate: "Polar body<extra></extra>", legendrank: 40001 });
+    }
+    // every gene's best plane for this zygote, as ONE mesh coloured per-plane by significance
+    if (allPlanesShow.checked && A.genes) {
+      const com = A.com_um, L = A.L_um * 1.5, vol = state.mode === "vol";
+      const X = [], Y = [], Z = [], I = [], J = [], K = [], FC = []; let base = 0;
+      A.genes.forEach((r) => {
+        const idx = vol ? r.iVol : r.iCnt, p = vol ? r.pVol : r.pCnt;
+        if (idx == null) return;
+        const n = normalOf(idx), ref = Math.abs(n[2]) < 0.9 ? [0, 0, 1] : [1, 0, 0];
+        const t = unit(cross(n, ref)), w = unit(cross(n, t)), col = viridis(sigT(p));
+        [[1, 1], [1, -1], [-1, -1], [-1, 1]].forEach(([s1, s2]) => {
+          const pp = toPlot([com[0] + L * (s1 * t[0] + s2 * w[0]), com[1] + L * (s1 * t[1] + s2 * w[1]), com[2] + L * (s1 * t[2] + s2 * w[2])], zs);
+          X.push(pp[0]); Y.push(pp[1]); Z.push(pp[2]);
+        });
+        I.push(base, base); J.push(base + 1, base + 2); K.push(base + 2, base + 3); FC.push(col, col); base += 4;
+      });
+      if (X.length) traces.push({ type: "mesh3d", x: X, y: Y, z: Z, i: I, j: J, k: K, facecolor: FC,
+        opacity: 0.13, name: "all gene planes", showlegend: true, legendrank: 30000, hoverinfo: "skip", flatshading: true });
     }
     if (planeShow.checked && b) traces.push(planeQuad(A.com_um, normalOf(b.idx), A.L_um * 1.6, zs, PLANE_C, 0.3, `${g} best plane`, 41000));
     if (spermShow.checked && state.spermData) {
@@ -302,7 +321,7 @@
   function wireControls() {
     geneSelect.addEventListener("change", onGene);
     modeSelect.addEventListener("change", () => { state.mode = modeSelect.value; render(); renderReadout(); renderActive(); renderRanks(); });
-    [planeShow, axisShow, dotsShow].forEach((c) => c.addEventListener("change", render));
+    [planeShow, axisShow, dotsShow, allPlanesShow].forEach((c) => c.addEventListener("change", render));
     spermShow.addEventListener("change", () => { if (spermShow.checked) ensureSperm().then(render); else render(); });
   }
   function openDrawer(open) { state.drawerOpen = open; drawer.dataset.open = open ? "true" : "false"; drawerHandle.setAttribute("aria-expanded", String(open)); drawerGene.textContent = `· ${gene()}`; if (open) { renderActive(); requestAnimationFrame(resizeAll); } }

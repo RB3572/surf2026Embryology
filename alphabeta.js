@@ -9,14 +9,16 @@
   const el = (tag, cls) => { const e = document.createElement(tag); if (cls) e.className = cls; return e; };
   const STAGES = ["early", "late"];
 
-  // canonical display name (TYPE-PROBESET-fovN), matching the Division Planes project / embryo_naming.py
+  // canonical display name (TYPE-PROBESET-fovN), matching embryo_naming.py
   const _STAGE_PREFIX = { oocyte: "O", zygote: "Z", e2c: "e2c", l2c: "l2c", early2cell: "e2c", late2cell: "l2c" };
   const embryoLabel = (id) => {
     const raw = String(id == null ? "" : id).split("__").pop();
+    const probe = (window.EMBRYO_PROBESETS || {})[raw];
+    if (!probe) return id;
     let m;
-    if ((m = raw.match(/^\d{8}_(oocyte|zygote|e2c|l2c|early2cell|late2cell)_p(\d+)_(.+)$/i)) ||
-        (m = raw.match(/^\d{8}_(l2c)_blastomere_p(\d+)_(.+)$/i)))
-      return `${_STAGE_PREFIX[m[1].toLowerCase()]}-P${m[2]}-fov${m[3]}`;
+    if ((m = raw.match(/^\d{8}_(oocyte|zygote|e2c|l2c|early2cell|late2cell)_p\d+_(.+)$/i)) ||
+        (m = raw.match(/^\d{8}_(l2c)_blastomere_p\d+_(.+)$/i)))
+      return `${_STAGE_PREFIX[m[1].toLowerCase()]}-P${probe}-fov${m[2]}`;
     return id;
   };
   const idYear = (id) => { const m = String(id || "").split("__").pop().match(/^(\d{4})\d{4}/); return m ? m[1] : ""; };

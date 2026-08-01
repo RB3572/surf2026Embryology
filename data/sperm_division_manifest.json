@@ -2,7 +2,7 @@
  "embryos": [
   {
    "id": "20251226_zygote_p1_1",
-   "label": "Z-P1_1-fov1",
+   "label": "Z-P2-fov1",
    "date_short": "Dec 26",
    "n_genes": 109,
    "n_transcripts": 158525,
@@ -13,7 +13,7 @@
   },
   {
    "id": "20251226_zygote_p1_10",
-   "label": "Z-P1_1-fov10",
+   "label": "Z-P2-fov10",
    "date_short": "Dec 26",
    "n_genes": 107,
    "n_transcripts": 127694,
@@ -24,7 +24,7 @@
   },
   {
    "id": "20251226_zygote_p1_11",
-   "label": "Z-P1_0-fov11",
+   "label": "Z-P1-fov11",
    "date_short": "Dec 26",
    "n_genes": 110,
    "n_transcripts": 136193,
@@ -35,7 +35,7 @@
   },
   {
    "id": "20251226_zygote_p1_7",
-   "label": "Z-P1_0-fov7",
+   "label": "Z-P1-fov7",
    "date_short": "Dec 26",
    "n_genes": 109,
    "n_transcripts": 181338,
@@ -46,7 +46,7 @@
   },
   {
    "id": "20251226_zygote_p1_8",
-   "label": "Z-P1_0-fov8",
+   "label": "Z-P1-fov8",
    "date_short": "Dec 26",
    "n_genes": 107,
    "n_transcripts": 140000,
@@ -57,7 +57,7 @@
   },
   {
    "id": "20260407_zygote_p1_0_2",
-   "label": "Z-P1_1-fov0_2",
+   "label": "Z-P2-fov0_2",
    "date_short": "Apr 7",
    "n_genes": 100,
    "n_transcripts": 12683,
@@ -68,7 +68,7 @@
   },
   {
    "id": "20260407_zygote_p1_1",
-   "label": "Z-P1_1-fov1",
+   "label": "Z-P2-fov1",
    "date_short": "Apr 7",
    "n_genes": 93,
    "n_transcripts": 7271,
@@ -79,7 +79,7 @@
   },
   {
    "id": "20260407_zygote_p1_12",
-   "label": "Z-P1_0-fov12",
+   "label": "Z-P1-fov12",
    "date_short": "Apr 7",
    "n_genes": 103,
    "n_transcripts": 6775,
@@ -90,7 +90,7 @@
   },
   {
    "id": "20260407_zygote_p1_2",
-   "label": "Z-P1_1-fov2",
+   "label": "Z-P2-fov2",
    "date_short": "Apr 7",
    "n_genes": 99,
    "n_transcripts": 53563,
@@ -101,7 +101,7 @@
   },
   {
    "id": "20260407_zygote_p1_3",
-   "label": "Z-P1_0-fov3",
+   "label": "Z-P1-fov3",
    "date_short": "Apr 7",
    "n_genes": 102,
    "n_transcripts": 4586,
@@ -112,7 +112,7 @@
   },
   {
    "id": "20260407_zygote_p1_4",
-   "label": "Z-P1_0-fov4",
+   "label": "Z-P1-fov4",
    "date_short": "Apr 7",
    "n_genes": 104,
    "n_transcripts": 5526,
@@ -123,7 +123,7 @@
   },
   {
    "id": "20260407_zygote_p1_6_1",
-   "label": "Z-P1_1-fov6_1",
+   "label": "Z-P2-fov6_1",
    "date_short": "Apr 7",
    "n_genes": 94,
    "n_transcripts": 8727,
@@ -134,7 +134,7 @@
   },
   {
    "id": "20260425_zygote_p2_1",
-   "label": "Z-P2_0-fov1",
+   "label": "Z-P3-fov1",
    "date_short": "Apr 25",
    "n_genes": 122,
    "n_transcripts": 147176,
@@ -145,7 +145,7 @@
   },
   {
    "id": "20260425_zygote_p2_13",
-   "label": "Z-P2_1-fov13",
+   "label": "Z-P4-fov13",
    "date_short": "Apr 25",
    "n_genes": 87,
    "n_transcripts": 358432,
@@ -156,7 +156,7 @@
   },
   {
    "id": "20260425_zygote_p2_16",
-   "label": "Z-P2_1-fov16",
+   "label": "Z-P4-fov16",
    "date_short": "Apr 25",
    "n_genes": 76,
    "n_transcripts": 268890,
@@ -167,7 +167,7 @@
   },
   {
    "id": "20260425_zygote_p2_17",
-   "label": "Z-P2_0-fov17",
+   "label": "Z-P3-fov17",
    "date_short": "Apr 25",
    "n_genes": 123,
    "n_transcripts": 446332,
@@ -178,7 +178,7 @@
   },
   {
    "id": "20260425_zygote_p2_18_1",
-   "label": "Z-P2_0-fov18_1",
+   "label": "Z-P3-fov18_1",
    "date_short": "Apr 25",
    "n_genes": 123,
    "n_transcripts": 61296,
@@ -189,7 +189,7 @@
   },
   {
    "id": "20260425_zygote_p2_20",
-   "label": "Z-P2_0-fov20",
+   "label": "Z-P3-fov20",
    "date_short": "Apr 25",
    "n_genes": 104,
    "n_transcripts": 95404,
@@ -200,7 +200,7 @@
   },
   {
    "id": "20260425_zygote_p2_23",
-   "label": "Z-P2_0-fov23",
+   "label": "Z-P3-fov23",
    "date_short": "Apr 25",
    "n_genes": 118,
    "n_transcripts": 286014,
@@ -211,7 +211,7 @@
   },
   {
    "id": "20260425_zygote_p2_4",
-   "label": "Z-P2_0-fov4",
+   "label": "Z-P3-fov4",
    "date_short": "Apr 25",
    "n_genes": 120,
    "n_transcripts": 209628,
@@ -222,7 +222,7 @@
   },
   {
    "id": "20260425_zygote_p2_5",
-   "label": "Z-P2_0-fov5",
+   "label": "Z-P3-fov5",
    "date_short": "Apr 25",
    "n_genes": 125,
    "n_transcripts": 392530,
@@ -233,7 +233,7 @@
   },
   {
    "id": "20260425_zygote_p2_7_1",
-   "label": "Z-P2_0-fov7_1",
+   "label": "Z-P3-fov7_1",
    "date_short": "Apr 25",
    "n_genes": 133,
    "n_transcripts": 489412,
@@ -244,7 +244,7 @@
   },
   {
    "id": "20260425_zygote_p2_8_1",
-   "label": "Z-P2_0-fov8_1",
+   "label": "Z-P3-fov8_1",
    "date_short": "Apr 25",
    "n_genes": 122,
    "n_transcripts": 161046,

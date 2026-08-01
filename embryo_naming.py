@@ -31,7 +31,7 @@ def raw_embryo_id(embryo_id: str) -> str:
 
 
 def probeset_for(embryo_id: str) -> str | None:
-    """Return the four-way probeset assignment (1_0, 1_1, 2_0, or 2_1)."""
+    """Return the displayed probeset assignment (1, 2, 3, or 4)."""
     return _PROBESETS.get(raw_embryo_id(embryo_id))
 
 

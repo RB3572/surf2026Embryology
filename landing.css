@@ -24,6 +24,41 @@ body {
   box-shadow: 0 0 0 4px color-mix(in srgb, #16a34a 18%, transparent); }
 .lp-brand { font-weight: 700; font-size: 15px; }
 .lp-brand-sub { font-family: var(--mono); font-size: 11px; color: var(--ink-soft); }
+.lp-naming-help {
+  margin-left: auto;
+  width: 28px; height: 28px;
+  border: 1px solid var(--line); border-radius: 50%;
+  background: var(--surface); color: var(--ink-2);
+  font-family: var(--mono); font-weight: 700; cursor: pointer;
+}
+.lp-naming-help:hover,
+.lp-naming-help:focus-visible {
+  color: #16a34a; border-color: #16a34a;
+  background: color-mix(in srgb, #16a34a 8%, var(--surface)); outline: none;
+}
+.lp-naming-dialog {
+  width: min(92vw, 510px); padding: 0; border: 1px solid var(--line); border-radius: 18px;
+  background: var(--surface); color: var(--ink); box-shadow: 0 24px 80px rgba(10, 14, 25, .24);
+}
+.lp-naming-dialog::backdrop { background: rgba(15, 23, 42, .36); backdrop-filter: blur(2px); }
+.lp-naming-dialog-card { position: relative; padding: 1.6rem; }
+.lp-naming-dialog-kicker {
+  margin: 0 0 .35rem; font-family: var(--mono); font-size: .7rem; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase; color: #16a34a;
+}
+.lp-naming-dialog h2 { margin: 0; font-size: 1.35rem; letter-spacing: -.02em; }
+.lp-naming-dialog p { margin: .8rem 0 0; color: var(--ink-2); font-size: .92rem; line-height: 1.55; }
+.lp-naming-dialog dl { margin: 1.1rem 0 0; display: grid; gap: .5rem; }
+.lp-naming-dialog dl div { display: grid; grid-template-columns: 140px 1fr; gap: .8rem; padding: .55rem .65rem; border-radius: 9px; background: var(--line-2); }
+.lp-naming-dialog dt { font-family: var(--mono); font-size: .79rem; font-weight: 700; }
+.lp-naming-dialog dd { margin: 0; color: var(--ink-2); font-size: .82rem; }
+.lp-naming-dialog-close {
+  position: absolute; top: .65rem; right: .65rem; width: 30px; height: 30px;
+  border: 0; border-radius: 50%; background: transparent; color: var(--ink-soft);
+  font-size: 1.5rem; line-height: 1; cursor: pointer;
+}
+.lp-naming-dialog-close:hover,
+.lp-naming-dialog-close:focus-visible { background: var(--line-2); color: var(--ink); outline: none; }
 
 .lp-main { max-width: 920px; margin: 0 auto; padding: 48px 26px 80px; }
 .lp-hero h1 { font-size: 34px; margin: 0 0 8px; letter-spacing: -0.5px; }
@@ -100,6 +135,13 @@ body {
 }
 
 /* log out — top-right of the landing navbar, red */
-.lp-logout { margin-left: auto; color: #dc2626; font-size: 13px; font-weight: 600;
+.lp-logout { margin-left: 0; color: #dc2626; font-size: 13px; font-weight: 600;
   text-decoration: none; padding: 5px 12px; border: 1px solid transparent; border-radius: 8px; }
 .lp-logout:hover { border-color: #dc2626; background: color-mix(in srgb, #dc2626 8%, transparent); }
+
+@media (max-width: 640px) {
+  .lp-top { padding: 14px 16px; }
+  .lp-brand-sub { display: none; }
+  .lp-naming-dialog-card { padding: 1.35rem; }
+  .lp-naming-dialog dl div { grid-template-columns: 1fr; gap: .15rem; }
+}

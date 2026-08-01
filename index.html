@@ -11,8 +11,31 @@
     <span class="lp-dot" aria-hidden="true"></span>
     <span class="lp-brand">Rishi Bhargava · SURF 2026</span>
     <span class="lp-brand-sub">Spatial Transcriptomics</span>
+    <button class="lp-naming-help" id="naming-help" type="button"
+            aria-haspopup="dialog" aria-controls="naming-dialog"
+            title="How embryo names are written" aria-label="Explain embryo naming">
+      ?
+    </button>
     <a class="lp-logout" href="/logout">Log out</a>
   </header>
+
+  <dialog class="lp-naming-dialog" id="naming-dialog" aria-labelledby="naming-dialog-title">
+    <form method="dialog" class="lp-naming-dialog-card">
+      <button class="lp-naming-dialog-close" type="submit" aria-label="Close naming guide">&times;</button>
+      <p class="lp-naming-dialog-kicker">Embryo naming guide</p>
+      <h2 id="naming-dialog-title">Reading an embryo name</h2>
+      <p>Names combine the developmental stage, probeset, and field of view. The year or full
+        date shown alongside a name is the acquisition date.</p>
+      <dl>
+        <div><dt>Z-P1-fov12</dt><dd>Zygote, probeset 1, field of view 12</dd></div>
+        <div><dt>e2c-P3-fov7</dt><dd>Early 2-cell, probeset 3, field of view 7</dd></div>
+        <div><dt>FOV 12a / 12b</dt><dd>Multiple embryos from one field of view</dd></div>
+      </dl>
+      <p>Stage abbreviations: <strong>O</strong> = oocyte, <strong>Z</strong> = zygote,
+        <strong>e2c</strong> = early 2-cell, and <strong>l2c</strong> = late 2-cell.
+        Probesets 1–4 are the four MERFISH gene panels.</p>
+    </form>
+  </dialog>
 
   <main class="lp-main">
     <section class="lp-hero">
@@ -278,6 +301,16 @@
   </main>
   <script src="/analytics.js" defer></script>
   <script>
+    (function () {
+      var help = document.getElementById("naming-help");
+      var dialog = document.getElementById("naming-dialog");
+      if (!help || !dialog) return;
+      help.addEventListener("click", function () { dialog.showModal(); });
+      dialog.addEventListener("click", function (event) {
+        if (event.target === dialog) dialog.close();
+      });
+    }());
+
     // Admin sessions get a readable surf_admin cookie; pull the gated admin card fragment
     // (404 for everyone else) and drop it in as the first project card.
     if (/(?:^|;\s*)surf_admin=1(?:;|$)/.test(document.cookie)) {

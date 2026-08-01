@@ -173,7 +173,7 @@
  "per_zygote": [
   {
    "id": "20251226_zygote_p1_1",
-   "label": "Z-P1_1-fov1",
+   "label": "Z-P2-fov1",
    "qc": "caution",
    "true_distance": 38.98,
    "pred_distance": 10.978,
@@ -181,7 +181,7 @@
   },
   {
    "id": "20251226_zygote_p1_10",
-   "label": "Z-P1_1-fov10",
+   "label": "Z-P2-fov10",
    "qc": "pass",
    "true_distance": 3.89,
    "pred_distance": 11.342,
@@ -189,7 +189,7 @@
   },
   {
    "id": "20251226_zygote_p1_2_2",
-   "label": "Z-P1_1-fov2_2",
+   "label": "Z-P2-fov2_2",
    "qc": "pass",
    "true_distance": 2.73,
    "pred_distance": 8.995,
@@ -197,7 +197,7 @@
   },
   {
    "id": "20251226_zygote_p1_4",
-   "label": "Z-P1_0-fov4",
+   "label": "Z-P1-fov4",
    "qc": "pass",
    "true_distance": 0.3,
    "pred_distance": 11.558,
@@ -205,7 +205,7 @@
   },
   {
    "id": "20251226_zygote_p1_7",
-   "label": "Z-P1_0-fov7",
+   "label": "Z-P1-fov7",
    "qc": "pass",
    "true_distance": 17.64,
    "pred_distance": 10.1,
@@ -213,7 +213,7 @@
   },
   {
    "id": "20251226_zygote_p1_8",
-   "label": "Z-P1_0-fov8",
+   "label": "Z-P1-fov8",
    "qc": "pass",
    "true_distance": 28.01,
    "pred_distance": 7.085,
@@ -221,7 +221,7 @@
   },
   {
    "id": "20260407_zygote_p1_0_1",
-   "label": "Z-P1_1-fov0_1",
+   "label": "Z-P2-fov0_1",
    "qc": "pass",
    "true_distance": 2.66,
    "pred_distance": 5.52,
@@ -229,7 +229,7 @@
   },
   {
    "id": "20260407_zygote_p1_0_2",
-   "label": "Z-P1_1-fov0_2",
+   "label": "Z-P2-fov0_2",
    "qc": "pass",
    "true_distance": 6.62,
    "pred_distance": 5.205,
@@ -237,7 +237,7 @@
   },
   {
    "id": "20260407_zygote_p1_1",
-   "label": "Z-P1_1-fov1",
+   "label": "Z-P2-fov1",
    "qc": "pass",
    "true_distance": 3.86,
    "pred_distance": 4.984,
@@ -245,7 +245,7 @@
   },
   {
    "id": "20260407_zygote_p1_10",
-   "label": "Z-P1_0-fov10",
+   "label": "Z-P1-fov10",
    "qc": "caution",
    "true_distance": 1.24,
    "pred_distance": 4.882,
@@ -253,7 +253,7 @@
   },
   {
    "id": "20260407_zygote_p1_11",
-   "label": "Z-P1_0-fov11",
+   "label": "Z-P1-fov11",
    "qc": "pass",
    "true_distance": 0.3,
    "pred_distance": 8.605,
@@ -261,7 +261,7 @@
   },
   {
    "id": "20260407_zygote_p1_12",
-   "label": "Z-P1_0-fov12",
+   "label": "Z-P1-fov12",
    "qc": "pass",
    "true_distance": 1.35,
    "pred_distance": 5.271,
@@ -269,7 +269,7 @@
   },
   {
    "id": "20260407_zygote_p1_2",
-   "label": "Z-P1_1-fov2",
+   "label": "Z-P2-fov2",
    "qc": "pass",
    "true_distance": 12.25,
    "pred_distance": 5.502,
@@ -277,7 +277,7 @@
   },
   {
    "id": "20260407_zygote_p1_3",
-   "label": "Z-P1_0-fov3",
+   "label": "Z-P1-fov3",
    "qc": "pass",
    "true_distance": 9.14,
    "pred_distance": 4.564,
@@ -285,7 +285,7 @@
   },
   {
    "id": "20260407_zygote_p1_4",
-   "label": "Z-P1_0-fov4",
+   "label": "Z-P1-fov4",
    "qc": "pass",
    "true_distance": 0.42,
    "pred_distance": 5.492,
@@ -293,7 +293,7 @@
   },
   {
    "id": "20260407_zygote_p1_5",
-   "label": "Z-P1_0-fov5",
+   "label": "Z-P1-fov5",
    "qc": "pass",
    "true_distance": 5.48,
    "pred_distance": 6.107,
@@ -301,7 +301,7 @@
   },
   {
    "id": "20260407_zygote_p1_6_0",
-   "label": "Z-P1_1-fov6_0",
+   "label": "Z-P2-fov6_0",
    "qc": "pass",
    "true_distance": 1.59,
    "pred_distance": 5.212,
@@ -309,7 +309,7 @@
   },
   {
    "id": "20260407_zygote_p1_6_1",
-   "label": "Z-P1_1-fov6_1",
+   "label": "Z-P2-fov6_1",
    "qc": "pass",
    "true_distance": 1.08,
    "pred_distance": 5.26,
@@ -317,7 +317,7 @@
   },
   {
    "id": "20260407_zygote_p1_7_0",
-   "label": "Z-P1_0-fov7_0",
+   "label": "Z-P1-fov7_0",
    "qc": "pass",
    "true_distance": 1.9,
    "pred_distance": 7.372,
@@ -325,7 +325,7 @@
   },
   {
    "id": "20260407_zygote_p1_7_1",
-   "label": "Z-P1_1-fov7_1",
+   "label": "Z-P2-fov7_1",
    "qc": "pass",
    "true_distance": 0.3,
    "pred_distance": 7.658,
@@ -333,7 +333,7 @@
   },
   {
    "id": "20260407_zygote_p1_8_0",
-   "label": "Z-P1_0-fov8_0",
+   "label": "Z-P1-fov8_0",
    "qc": "pass",
    "true_distance": 0.3,
    "pred_distance": 4.716,
@@ -341,7 +341,7 @@
   },
   {
    "id": "20260407_zygote_p1_8_1",
-   "label": "Z-P1_0-fov8_1",
+   "label": "Z-P1-fov8_1",
    "qc": "pass",
    "true_distance": 0.3,
    "pred_distance": 4.716,
@@ -349,7 +349,7 @@
   },
   {
    "id": "20260409_zygote_p2_9",
-   "label": "Z-P2_0-fov9",
+   "label": "Z-P3-fov9",
    "qc": "caution",
    "true_distance": 2.32,
    "pred_distance": 13.083,
@@ -357,7 +357,7 @@
   },
   {
    "id": "20260425_zygote_p2_0",
-   "label": "Z-P2_1-fov0",
+   "label": "Z-P4-fov0",
    "qc": "pass",
    "true_distance": 27.89,
    "pred_distance": 12.837,
@@ -365,7 +365,7 @@
   },
   {
    "id": "20260425_zygote_p2_1",
-   "label": "Z-P2_0-fov1",
+   "label": "Z-P3-fov1",
    "qc": "pass",
    "true_distance": 22.4,
    "pred_distance": 14.667,
@@ -373,7 +373,7 @@
   },
   {
    "id": "20260425_zygote_p2_10",
-   "label": "Z-P2_0-fov10",
+   "label": "Z-P3-fov10",
    "qc": "pass",
    "true_distance": 0.3,
    "pred_distance": 14.303,
@@ -381,7 +381,7 @@
   },
   {
    "id": "20260425_zygote_p2_12",
-   "label": "Z-P2_1-fov12",
+   "label": "Z-P4-fov12",
    "qc": "pass",
    "true_distance": 19.76,
    "pred_distance": 13.537,
@@ -389,7 +389,7 @@
   },
   {
    "id": "20260425_zygote_p2_13",
-   "label": "Z-P2_1-fov13",
+   "label": "Z-P4-fov13",
    "qc": "out-of-domain",
    "true_distance": 25.05,
    "pred_distance": 14.374,
@@ -397,7 +397,7 @@
   },
   {
    "id": "20260425_zygote_p2_14",
-   "label": "Z-P2_0-fov14",
+   "label": "Z-P3-fov14",
    "qc": "pass",
    "true_distance": 2.06,
    "pred_distance": 11.679,
@@ -405,7 +405,7 @@
   },
   {
    "id": "20260425_zygote_p2_16",
-   "label": "Z-P2_1-fov16",
+   "label": "Z-P4-fov16",
    "qc": "pass",
    "true_distance": 22.99,
    "pred_distance": 5.526,
@@ -413,7 +413,7 @@
   },
   {
    "id": "20260425_zygote_p2_17",
-   "label": "Z-P2_0-fov17",
+   "label": "Z-P3-fov17",
    "qc": "caution",
    "true_distance": 31.31,
    "pred_distance": 14.024,
@@ -421,7 +421,7 @@
   },
   {
    "id": "20260425_zygote_p2_18_0",
-   "label": "Z-P2_1-fov18_0",
+   "label": "Z-P4-fov18_0",
    "qc": "caution",
    "true_distance": 46.59,
    "pred_distance": 14.515,
@@ -429,7 +429,7 @@
   },
   {
    "id": "20260425_zygote_p2_18_1",
-   "label": "Z-P2_0-fov18_1",
+   "label": "Z-P3-fov18_1",
    "qc": "pass",
    "true_distance": 16.77,
    "pred_distance": 19.253,
@@ -437,7 +437,7 @@
   },
   {
    "id": "20260425_zygote_p2_19_1",
-   "label": "Z-P2_0-fov19_1",
+   "label": "Z-P3-fov19_1",
    "qc": "caution",
    "true_distance": 32.7,
    "pred_distance": 16.49,
@@ -445,7 +445,7 @@
   },
   {
    "id": "20260425_zygote_p2_2",
-   "label": "Z-P2_0-fov2",
+   "label": "Z-P3-fov2",
    "qc": "out-of-domain",
    "true_distance": 2.1,
    "pred_distance": 11.79,
@@ -453,7 +453,7 @@
   },
   {
    "id": "20260425_zygote_p2_20",
-   "label": "Z-P2_0-fov20",
+   "label": "Z-P3-fov20",
    "qc": "pass",
    "true_distance": 0.3,
    "pred_distance": 18.327,
@@ -461,7 +461,7 @@
   },
   {
    "id": "20260425_zygote_p2_21",
-   "label": "Z-P2_0-fov21",
+   "label": "Z-P3-fov21",
    "qc": "pass",
    "true_distance": 2.41,
    "pred_distance": 13.036,
@@ -469,7 +469,7 @@
   },
   {
    "id": "20260425_zygote_p2_22_0",
-   "label": "Z-P2_1-fov22_0",
+   "label": "Z-P4-fov22_0",
    "qc": "pass",
    "true_distance": 0.67,
    "pred_distance": 12.812,
@@ -477,7 +477,7 @@
   },
   {
    "id": "20260425_zygote_p2_22_1",
-   "label": "Z-P2_1-fov22_1",
+   "label": "Z-P4-fov22_1",
    "qc": "caution",
    "true_distance": 27.75,
    "pred_distance": 10.023,
@@ -485,7 +485,7 @@
   },
   {
    "id": "20260425_zygote_p2_23",
-   "label": "Z-P2_0-fov23",
+   "label": "Z-P3-fov23",
    "qc": "pass",
    "true_distance": 10.98,
    "pred_distance": 13.913,
@@ -493,7 +493,7 @@
   },
   {
    "id": "20260425_zygote_p2_25_0",
-   "label": "Z-P2_0-fov25_0",
+   "label": "Z-P3-fov25_0",
    "qc": "pass",
    "true_distance": 0.3,
    "pred_distance": 15.739,
@@ -501,7 +501,7 @@
   },
   {
    "id": "20260425_zygote_p2_26",
-   "label": "Z-P2_1-fov26",
+   "label": "Z-P4-fov26",
    "qc": "pass",
    "true_distance": 0.3,
    "pred_distance": 13.707,
@@ -509,7 +509,7 @@
   },
   {
    "id": "20260425_zygote_p2_4",
-   "label": "Z-P2_0-fov4",
+   "label": "Z-P3-fov4",
    "qc": "pass",
    "true_distance": 1.34,
    "pred_distance": 10.84,
@@ -517,7 +517,7 @@
   },
   {
    "id": "20260425_zygote_p2_5",
-   "label": "Z-P2_0-fov5",
+   "label": "Z-P3-fov5",
    "qc": "pass",
    "true_distance": 3.35,
    "pred_distance": 13.816,
@@ -525,7 +525,7 @@
   },
   {
    "id": "20260425_zygote_p2_6",
-   "label": "Z-P2_0-fov6",
+   "label": "Z-P3-fov6",
    "qc": "pass",
    "true_distance": 18.14,
    "pred_distance": 13.637,
@@ -533,7 +533,7 @@
   },
   {
    "id": "20260425_zygote_p2_7_0",
-   "label": "Z-P2_0-fov7_0",
+   "label": "Z-P3-fov7_0",
    "qc": "pass",
    "true_distance": 10.78,
    "pred_distance": 14.84,
@@ -541,7 +541,7 @@
   },
   {
    "id": "20260425_zygote_p2_7_1",
-   "label": "Z-P2_0-fov7_1",
+   "label": "Z-P3-fov7_1",
    "qc": "pass",
    "true_distance": 7.51,
    "pred_distance": 15.08,
@@ -549,7 +549,7 @@
   },
   {
    "id": "20260425_zygote_p2_8_0",
-   "label": "Z-P2_1-fov8_0",
+   "label": "Z-P4-fov8_0",
    "qc": "pass",
    "true_distance": 5.24,
    "pred_distance": 21.965,
@@ -557,7 +557,7 @@
   },
   {
    "id": "20260425_zygote_p2_8_1",
-   "label": "Z-P2_0-fov8_1",
+   "label": "Z-P3-fov8_1",
    "qc": "caution",
    "true_distance": 25.63,
    "pred_distance": 16.533,
@@ -565,7 +565,7 @@
   },
   {
    "id": "20260425_zygote_p2_9_0",
-   "label": "Z-P2_1-fov9_0",
+   "label": "Z-P4-fov9_0",
    "qc": "out-of-domain",
    "true_distance": 24.82,
    "pred_distance": 14.658,
@@ -573,7 +573,7 @@
   },
   {
    "id": "20260425_zygote_p2_9_1",
-   "label": "Z-P2_1-fov9_1",
+   "label": "Z-P4-fov9_1",
    "qc": "pass",
    "true_distance": 27.3,
    "pred_distance": 14.464,

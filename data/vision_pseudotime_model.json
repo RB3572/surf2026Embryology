@@ -350,7 +350,7 @@
  "per_zygote": [
   {
    "id": "20251226_zygote_p1_1",
-   "label": "Z-P1_1-fov1",
+   "label": "Z-P2-fov1",
    "qc": "caution",
    "true_tau": 0.0,
    "pred_tau": 0.1401,
@@ -362,7 +362,7 @@
   },
   {
    "id": "20251226_zygote_p1_10",
-   "label": "Z-P1_1-fov10",
+   "label": "Z-P2-fov10",
    "qc": "pass",
    "true_tau": 0.1405,
    "pred_tau": 0.1401,
@@ -374,7 +374,7 @@
   },
   {
    "id": "20251226_zygote_p1_2_2",
-   "label": "Z-P1_1-fov2_2",
+   "label": "Z-P2-fov2_2",
    "qc": "pass",
    "true_tau": 0.0867,
    "pred_tau": 0.1894,
@@ -386,7 +386,7 @@
   },
   {
    "id": "20251226_zygote_p1_4",
-   "label": "Z-P1_0-fov4",
+   "label": "Z-P1-fov4",
    "qc": "pass",
    "true_tau": 0.0867,
    "pred_tau": 0.1405,
@@ -398,7 +398,7 @@
   },
   {
    "id": "20251226_zygote_p1_7",
-   "label": "Z-P1_0-fov7",
+   "label": "Z-P1-fov7",
    "qc": "pass",
    "true_tau": 0.1401,
    "pred_tau": 0.146,
@@ -410,7 +410,7 @@
   },
   {
    "id": "20251226_zygote_p1_8",
-   "label": "Z-P1_0-fov8",
+   "label": "Z-P1-fov8",
    "qc": "pass",
    "true_tau": 0.0525,
    "pred_tau": 0.2003,
@@ -422,7 +422,7 @@
   },
   {
    "id": "20260407_zygote_p1_0_1",
-   "label": "Z-P1_1-fov0_1",
+   "label": "Z-P2-fov0_1",
    "qc": "pass",
    "true_tau": 0.2419,
    "pred_tau": 0.2419,
@@ -434,7 +434,7 @@
   },
   {
    "id": "20260407_zygote_p1_0_2",
-   "label": "Z-P1_1-fov0_2",
+   "label": "Z-P2-fov0_2",
    "qc": "pass",
    "true_tau": 0.127,
    "pred_tau": 0.2419,
@@ -446,7 +446,7 @@
   },
   {
    "id": "20260407_zygote_p1_1",
-   "label": "Z-P1_1-fov1",
+   "label": "Z-P2-fov1",
    "qc": "pass",
    "true_tau": 0.37,
    "pred_tau": 0.2404,
@@ -458,7 +458,7 @@
   },
   {
    "id": "20260407_zygote_p1_10",
-   "label": "Z-P1_0-fov10",
+   "label": "Z-P1-fov10",
    "qc": "caution",
    "true_tau": 0.5475,
    "pred_tau": 0.2419,
@@ -470,7 +470,7 @@
   },
   {
    "id": "20260407_zygote_p1_11",
-   "label": "Z-P1_0-fov11",
+   "label": "Z-P1-fov11",
    "qc": "pass",
    "true_tau": 0.4649,
    "pred_tau": 0.2003,
@@ -482,7 +482,7 @@
   },
   {
    "id": "20260407_zygote_p1_12",
-   "label": "Z-P1_0-fov12",
+   "label": "Z-P1-fov12",
    "qc": "pass",
    "true_tau": 0.5475,
    "pred_tau": 0.2404,
@@ -494,7 +494,7 @@
   },
   {
    "id": "20260407_zygote_p1_2",
-   "label": "Z-P1_1-fov2",
+   "label": "Z-P2-fov2",
    "qc": "pass",
    "true_tau": 0.2404,
    "pred_tau": 0.2404,
@@ -506,7 +506,7 @@
   },
   {
    "id": "20260407_zygote_p1_3",
-   "label": "Z-P1_0-fov3",
+   "label": "Z-P1-fov3",
    "qc": "pass",
    "true_tau": 0.3267,
    "pred_tau": 0.2218,
@@ -518,7 +518,7 @@
   },
   {
    "id": "20260407_zygote_p1_4",
-   "label": "Z-P1_0-fov4",
+   "label": "Z-P1-fov4",
    "qc": "pass",
    "true_tau": 0.2003,
    "pred_tau": 0.2528,
@@ -530,7 +530,7 @@
   },
   {
    "id": "20260407_zygote_p1_5",
-   "label": "Z-P1_0-fov5",
+   "label": "Z-P1-fov5",
    "qc": "pass",
    "true_tau": 0.1527,
    "pred_tau": 0.2528,
@@ -542,7 +542,7 @@
   },
   {
    "id": "20260407_zygote_p1_6_0",
-   "label": "Z-P1_1-fov6_0",
+   "label": "Z-P2-fov6_0",
    "qc": "pass",
    "true_tau": 0.3842,
    "pred_tau": 0.2419,
@@ -554,7 +554,7 @@
   },
   {
    "id": "20260407_zygote_p1_6_1",
-   "label": "Z-P1_1-fov6_1",
+   "label": "Z-P2-fov6_1",
    "qc": "pass",
    "true_tau": 0.5303,
    "pred_tau": 0.2419,
@@ -566,7 +566,7 @@
   },
   {
    "id": "20260407_zygote_p1_7_0",
-   "label": "Z-P1_0-fov7_0",
+   "label": "Z-P1-fov7_0",
    "qc": "pass",
    "true_tau": 0.4649,
    "pred_tau": 0.2218,
@@ -578,7 +578,7 @@
   },
   {
    "id": "20260407_zygote_p1_7_1",
-   "label": "Z-P1_1-fov7_1",
+   "label": "Z-P2-fov7_1",
    "qc": "pass",
    "true_tau": 0.6434,
    "pred_tau": 0.2003,
@@ -590,7 +590,7 @@
   },
   {
    "id": "20260407_zygote_p1_8_0",
-   "label": "Z-P1_0-fov8_0",
+   "label": "Z-P1-fov8_0",
    "qc": "pass",
    "true_tau": 0.4649,
    "pred_tau": 0.2404,
@@ -602,7 +602,7 @@
   },
   {
    "id": "20260407_zygote_p1_8_1",
-   "label": "Z-P1_0-fov8_1",
+   "label": "Z-P1-fov8_1",
    "qc": "pass",
    "true_tau": 0.2528,
    "pred_tau": 0.2528,
@@ -614,7 +614,7 @@
   },
   {
    "id": "20260409_zygote_p2_9",
-   "label": "Z-P2_0-fov9",
+   "label": "Z-P3-fov9",
    "qc": "caution",
    "true_tau": 0.9449,
    "pred_tau": 0.0867,
@@ -626,7 +626,7 @@
   },
   {
    "id": "20260425_zygote_p2_0",
-   "label": "Z-P2_1-fov0",
+   "label": "Z-P4-fov0",
    "qc": "pass",
    "true_tau": 0.0525,
    "pred_tau": 0.0867,
@@ -638,7 +638,7 @@
   },
   {
    "id": "20260425_zygote_p2_1",
-   "label": "Z-P2_0-fov1",
+   "label": "Z-P3-fov1",
    "qc": "pass",
    "true_tau": 0.109,
    "pred_tau": 0.0867,
@@ -650,7 +650,7 @@
   },
   {
    "id": "20260425_zygote_p2_10",
-   "label": "Z-P2_0-fov10",
+   "label": "Z-P3-fov10",
    "qc": "pass",
    "true_tau": 0.4143,
    "pred_tau": 0.0867,
@@ -662,7 +662,7 @@
   },
   {
    "id": "20260425_zygote_p2_12",
-   "label": "Z-P2_1-fov12",
+   "label": "Z-P4-fov12",
    "qc": "pass",
    "true_tau": 0.0867,
    "pred_tau": 0.0867,
@@ -674,7 +674,7 @@
   },
   {
    "id": "20260425_zygote_p2_13",
-   "label": "Z-P2_1-fov13",
+   "label": "Z-P4-fov13",
    "qc": "out-of-domain",
    "true_tau": 0.0,
    "pred_tau": 0.109,
@@ -686,7 +686,7 @@
   },
   {
    "id": "20260425_zygote_p2_14",
-   "label": "Z-P2_0-fov14",
+   "label": "Z-P3-fov14",
    "qc": "pass",
    "true_tau": 0.3842,
    "pred_tau": 0.109,
@@ -698,7 +698,7 @@
   },
   {
    "id": "20260425_zygote_p2_16",
-   "label": "Z-P2_1-fov16",
+   "label": "Z-P4-fov16",
    "qc": "pass",
    "true_tau": 0.0525,
    "pred_tau": 0.2003,
@@ -710,7 +710,7 @@
   },
   {
    "id": "20260425_zygote_p2_17",
-   "label": "Z-P2_0-fov17",
+   "label": "Z-P3-fov17",
    "qc": "caution",
    "true_tau": 0.0,
    "pred_tau": 0.0867,
@@ -722,7 +722,7 @@
   },
   {
    "id": "20260425_zygote_p2_18_0",
-   "label": "Z-P2_1-fov18_0",
+   "label": "Z-P4-fov18_0",
    "qc": "caution",
    "true_tau": 0.0,
    "pred_tau": 0.0867,
@@ -734,7 +734,7 @@
   },
   {
    "id": "20260425_zygote_p2_18_1",
-   "label": "Z-P2_0-fov18_1",
+   "label": "Z-P3-fov18_1",
    "qc": "pass",
    "true_tau": 0.186,
    "pred_tau": 0.0525,
@@ -746,7 +746,7 @@
   },
   {
    "id": "20260425_zygote_p2_19_1",
-   "label": "Z-P2_0-fov19_1",
+   "label": "Z-P3-fov19_1",
    "qc": "caution",
    "true_tau": 0.0374,
    "pred_tau": 0.0525,
@@ -758,7 +758,7 @@
   },
   {
    "id": "20260425_zygote_p2_2",
-   "label": "Z-P2_0-fov2",
+   "label": "Z-P3-fov2",
    "qc": "out-of-domain",
    "true_tau": 0.0,
    "pred_tau": 0.1401,
@@ -770,7 +770,7 @@
   },
   {
    "id": "20260425_zygote_p2_20",
-   "label": "Z-P2_0-fov20",
+   "label": "Z-P3-fov20",
    "qc": "pass",
    "true_tau": 0.2218,
    "pred_tau": 0.0525,
@@ -782,7 +782,7 @@
   },
   {
    "id": "20260425_zygote_p2_21",
-   "label": "Z-P2_0-fov21",
+   "label": "Z-P3-fov21",
    "qc": "pass",
    "true_tau": 0.6263,
    "pred_tau": 0.109,
@@ -794,7 +794,7 @@
   },
   {
    "id": "20260425_zygote_p2_22_0",
-   "label": "Z-P2_1-fov22_0",
+   "label": "Z-P4-fov22_0",
    "qc": "pass",
    "true_tau": 0.6677,
    "pred_tau": 0.109,
@@ -806,7 +806,7 @@
   },
   {
    "id": "20260425_zygote_p2_22_1",
-   "label": "Z-P2_1-fov22_1",
+   "label": "Z-P4-fov22_1",
    "qc": "caution",
    "true_tau": 0.0,
    "pred_tau": 0.1401,
@@ -818,7 +818,7 @@
   },
   {
    "id": "20260425_zygote_p2_23",
-   "label": "Z-P2_0-fov23",
+   "label": "Z-P3-fov23",
    "qc": "pass",
    "true_tau": 0.0525,
    "pred_tau": 0.0867,
@@ -830,7 +830,7 @@
   },
   {
    "id": "20260425_zygote_p2_25_0",
-   "label": "Z-P2_0-fov25_0",
+   "label": "Z-P3-fov25_0",
    "qc": "pass",
    "true_tau": 0.55,
    "pred_tau": 0.0867,
@@ -842,7 +842,7 @@
   },
   {
    "id": "20260425_zygote_p2_26",
-   "label": "Z-P2_1-fov26",
+   "label": "Z-P4-fov26",
    "qc": "pass",
    "true_tau": 0.6434,
    "pred_tau": 0.0867,
@@ -854,7 +854,7 @@
   },
   {
    "id": "20260425_zygote_p2_4",
-   "label": "Z-P2_0-fov4",
+   "label": "Z-P3-fov4",
    "qc": "pass",
    "true_tau": 0.298,
    "pred_tau": 0.1401,
@@ -866,7 +866,7 @@
   },
   {
    "id": "20260425_zygote_p2_5",
-   "label": "Z-P2_0-fov5",
+   "label": "Z-P3-fov5",
    "qc": "pass",
    "true_tau": 0.2003,
    "pred_tau": 0.109,
@@ -878,7 +878,7 @@
   },
   {
    "id": "20260425_zygote_p2_6",
-   "label": "Z-P2_0-fov6",
+   "label": "Z-P3-fov6",
    "qc": "pass",
    "true_tau": 0.0525,
    "pred_tau": 0.109,
@@ -890,7 +890,7 @@
   },
   {
    "id": "20260425_zygote_p2_7_0",
-   "label": "Z-P2_0-fov7_0",
+   "label": "Z-P3-fov7_0",
    "qc": "pass",
    "true_tau": 0.0525,
    "pred_tau": 0.1024,
@@ -902,7 +902,7 @@
   },
   {
    "id": "20260425_zygote_p2_7_1",
-   "label": "Z-P2_0-fov7_1",
+   "label": "Z-P3-fov7_1",
    "qc": "pass",
    "true_tau": 0.0558,
    "pred_tau": 0.0867,
@@ -914,7 +914,7 @@
   },
   {
    "id": "20260425_zygote_p2_8_0",
-   "label": "Z-P2_1-fov8_0",
+   "label": "Z-P4-fov8_0",
    "qc": "pass",
    "true_tau": 0.109,
    "pred_tau": 0.0374,
@@ -926,7 +926,7 @@
   },
   {
    "id": "20260425_zygote_p2_8_1",
-   "label": "Z-P2_0-fov8_1",
+   "label": "Z-P3-fov8_1",
    "qc": "caution",
    "true_tau": 0.0,
    "pred_tau": 0.0525,
@@ -938,7 +938,7 @@
   },
   {
    "id": "20260425_zygote_p2_9_0",
-   "label": "Z-P2_1-fov9_0",
+   "label": "Z-P4-fov9_0",
    "qc": "out-of-domain",
    "true_tau": 0.0,
    "pred_tau": 0.109,
@@ -950,7 +950,7 @@
   },
   {
    "id": "20260425_zygote_p2_9_1",
-   "label": "Z-P2_1-fov9_1",
+   "label": "Z-P4-fov9_1",
    "qc": "pass",
    "true_tau": 0.0525,
    "pred_tau": 0.109,

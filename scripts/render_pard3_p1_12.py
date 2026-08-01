@@ -447,7 +447,7 @@ def render_projection(scene: dict, basis, *, show_pronucleus_labels: bool, stem:
     fig, ax = plt.subplots(figsize=(8.2, 7.2))
     add_title(
         fig,
-        f"2D projection of {GENE} asymmetry in Z-P1_0-fov12",
+        f"2D projection of {GENE} asymmetry in Z-P1-fov12",
         "Projection along the candidate division plane; each point is one segment-1 transcript",
     )
     ax.add_patch(Polygon(body_hull, closed=True, facecolor="#DCEAF3", edgecolor=INK, linewidth=1.4, alpha=0.36, zorder=1))

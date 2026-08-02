@@ -82,6 +82,37 @@
    "size_kb": 333
   },
   {
+   "id": "20251226_zygote_p1_2_2",
+   "stage": "zygote",
+   "stage_label": "Zygote",
+   "label": "Z-P2-fov2_2",
+   "angles": {
+    "aspect_ratio": 1.813,
+    "plane_vs_pb": {
+     "deg": 31.291282738631836,
+     "cos": 0.8545
+    },
+    "plane_vs_sperm": {
+     "deg": 33.613476592366375,
+     "cos": 0.8328
+    },
+    "plane_vs_shape": {
+     "deg": 47.07727350103492,
+     "cos": 0.681
+    },
+    "pb_vs_shape": {
+     "deg": 38.450719392753726,
+     "cos": 0.7831
+    },
+    "av_vs_sperm": {
+     "deg": 34.800386736751925,
+     "cos": 0.8211
+    }
+   },
+   "has_pb": true,
+   "size_kb": 331
+  },
+  {
    "id": "20251226_zygote_p1_7",
    "stage": "zygote",
    "stage_label": "Zygote",
@@ -144,6 +175,25 @@
    "size_kb": 335
   },
   {
+   "id": "20260212_l2c_p2_0_0",
+   "stage": "twocell",
+   "stage_label": "2-cell (late)",
+   "label": "l2c-P3-fov0_0",
+   "angles": {
+    "aspect_ratio": 1.944,
+    "plane_vs_sperm": {
+     "deg": 66.42491067745142,
+     "cos": 0.4
+    },
+    "plane_vs_shape": {
+     "deg": 1.7233535056822618,
+     "cos": 0.9995
+    }
+   },
+   "has_pb": false,
+   "size_kb": 294
+  },
+  {
    "id": "20260212_l2c_p2_0_1",
    "stage": "twocell",
    "stage_label": "2-cell (late)",
@@ -175,6 +225,37 @@
    "size_kb": 190
   },
   {
+   "id": "20260407_zygote_p1_0_1",
+   "stage": "zygote",
+   "stage_label": "Zygote",
+   "label": "Z-P2-fov0_1",
+   "angles": {
+    "aspect_ratio": 1.238,
+    "plane_vs_pb": {
+     "deg": 33.41863611015587,
+     "cos": 0.8347
+    },
+    "plane_vs_sperm": {
+     "deg": 0.49093585822556607,
+     "cos": 1.0
+    },
+    "plane_vs_shape": {
+     "deg": 50.983441579882644,
+     "cos": 0.6295
+    },
+    "pb_vs_shape": {
+     "deg": 60.51819898524878,
+     "cos": 0.4921
+    },
+    "av_vs_sperm": {
+     "deg": 33.58259490374416,
+     "cos": 0.8331
+    }
+   },
+   "has_pb": true,
+   "size_kb": 218
+  },
+  {
    "id": "20260407_zygote_p1_0_2",
    "stage": "zygote",
    "stage_label": "Zygote",
@@ -203,7 +284,7 @@
     }
    },
    "has_pb": true,
-   "size_kb": 201
+   "size_kb": 200
   },
   {
    "id": "20260407_zygote_p1_1",
@@ -234,7 +315,7 @@
     }
    },
    "has_pb": true,
-   "size_kb": 198
+   "size_kb": 197
   },
   {
    "id": "20260407_zygote_p1_12",
@@ -358,7 +439,7 @@
     }
    },
    "has_pb": true,
-   "size_kb": 234
+   "size_kb": 233
   },
   {
    "id": "20260407_zygote_p1_5",
@@ -378,6 +459,37 @@
    },
    "has_pb": false,
    "size_kb": 180
+  },
+  {
+   "id": "20260407_zygote_p1_6_0",
+   "stage": "zygote",
+   "stage_label": "Zygote",
+   "label": "Z-P2-fov6_0",
+   "angles": {
+    "aspect_ratio": 1.238,
+    "plane_vs_pb": {
+     "deg": 67.49809839654885,
+     "cos": 0.3827
+    },
+    "plane_vs_sperm": {
+     "deg": 21.08105433628366,
+     "cos": 0.9331
+    },
+    "plane_vs_shape": {
+     "deg": 76.2295076139661,
+     "cos": 0.238
+    },
+    "pb_vs_shape": {
+     "deg": 37.63023075521507,
+     "cos": 0.792
+    },
+    "av_vs_sperm": {
+     "deg": 86.60583166563003,
+     "cos": 0.0592
+    }
+   },
+   "has_pb": true,
+   "size_kb": 234
   },
   {
    "id": "20260407_zygote_p1_6_1",
@@ -409,6 +521,37 @@
    },
    "has_pb": true,
    "size_kb": 215
+  },
+  {
+   "id": "20260407_zygote_p1_7_0",
+   "stage": "zygote",
+   "stage_label": "Zygote",
+   "label": "Z-P1-fov7_0",
+   "angles": {
+    "aspect_ratio": 1.228,
+    "plane_vs_pb": {
+     "deg": 46.6558090414003,
+     "cos": 0.6864
+    },
+    "plane_vs_sperm": {
+     "deg": 72.45621088376015,
+     "cos": 0.3014
+    },
+    "plane_vs_shape": {
+     "deg": 51.593717175476186,
+     "cos": 0.6212
+    },
+    "pb_vs_shape": {
+     "deg": 10.540138249099865,
+     "cos": 0.9831
+    },
+    "av_vs_sperm": {
+     "deg": 72.16049213078912,
+     "cos": 0.3064
+    }
+   },
+   "has_pb": true,
+   "size_kb": 223
   },
   {
    "id": "20260407_zygote_p1_7_1",
@@ -458,7 +601,26 @@
     }
    },
    "has_pb": true,
-   "size_kb": 268
+   "size_kb": 267
+  },
+  {
+   "id": "20260408_e2c_p2_15_0",
+   "stage": "twocell",
+   "stage_label": "2-cell (early)",
+   "label": "e2c-P3-fov15_0",
+   "angles": {
+    "aspect_ratio": 1.611,
+    "plane_vs_sperm": {
+     "deg": 85.90725852477767,
+     "cos": 0.0714
+    },
+    "plane_vs_shape": {
+     "deg": 0.8247077890295675,
+     "cos": 0.9999
+    }
+   },
+   "has_pb": false,
+   "size_kb": 300
   },
   {
    "id": "20260408_e2c_p2_15_1",
@@ -570,7 +732,7 @@
     }
    },
    "has_pb": true,
-   "size_kb": 230
+   "size_kb": 229
   },
   {
    "id": "20260408_e2c_p2_20",
@@ -632,7 +794,7 @@
     }
    },
    "has_pb": true,
-   "size_kb": 241
+   "size_kb": 240
   },
   {
    "id": "20260409_l2c_p2_5",
@@ -787,7 +949,7 @@
     }
    },
    "has_pb": true,
-   "size_kb": 308
+   "size_kb": 307
   },
   {
    "id": "20260424_e2c_p1_10",
@@ -880,7 +1042,7 @@
     }
    },
    "has_pb": true,
-   "size_kb": 280
+   "size_kb": 279
   },
   {
    "id": "20260424_e2c_p1_19_2",
@@ -911,7 +1073,7 @@
     }
    },
    "has_pb": true,
-   "size_kb": 261
+   "size_kb": 260
   },
   {
    "id": "20260424_e2c_p1_4",
@@ -973,7 +1135,7 @@
     }
    },
    "has_pb": true,
-   "size_kb": 314
+   "size_kb": 313
   },
   {
    "id": "20260425_zygote_p2_1",
@@ -1004,7 +1166,7 @@
     }
    },
    "has_pb": true,
-   "size_kb": 298
+   "size_kb": 297
   },
   {
    "id": "20260425_zygote_p2_13",
@@ -1100,6 +1262,37 @@
    "size_kb": 325
   },
   {
+   "id": "20260425_zygote_p2_18_0",
+   "stage": "zygote",
+   "stage_label": "Zygote",
+   "label": "Z-P4-fov18_0",
+   "angles": {
+    "aspect_ratio": 1.349,
+    "plane_vs_pb": {
+     "deg": 12.210161604062803,
+     "cos": 0.9774
+    },
+    "plane_vs_sperm": {
+     "deg": 27.506335962912832,
+     "cos": 0.887
+    },
+    "plane_vs_shape": {
+     "deg": 27.59528137912073,
+     "cos": 0.8862
+    },
+    "pb_vs_shape": {
+     "deg": 15.40443722162544,
+     "cos": 0.9641
+    },
+    "av_vs_sperm": {
+     "deg": 39.6370055212769,
+     "cos": 0.7701
+    }
+   },
+   "has_pb": true,
+   "size_kb": 182
+  },
+  {
    "id": "20260425_zygote_p2_18_1",
    "stage": "zygote",
    "stage_label": "Zygote",
@@ -1159,7 +1352,7 @@
     }
    },
    "has_pb": true,
-   "size_kb": 250
+   "size_kb": 249
   },
   {
    "id": "20260425_zygote_p2_23",
@@ -1190,7 +1383,7 @@
     }
    },
    "has_pb": true,
-   "size_kb": 323
+   "size_kb": 322
   },
   {
    "id": "20260425_zygote_p2_26",
@@ -1209,7 +1402,7 @@
     }
    },
    "has_pb": false,
-   "size_kb": 224
+   "size_kb": 223
   },
   {
    "id": "20260425_zygote_p2_4",
@@ -1274,6 +1467,37 @@
    "size_kb": 348
   },
   {
+   "id": "20260425_zygote_p2_7_0",
+   "stage": "zygote",
+   "stage_label": "Zygote",
+   "label": "Z-P3-fov7_0",
+   "angles": {
+    "aspect_ratio": 1.227,
+    "plane_vs_pb": {
+     "deg": 67.05124209277487,
+     "cos": 0.3899
+    },
+    "plane_vs_sperm": {
+     "deg": 71.63087217026843,
+     "cos": 0.3151
+    },
+    "plane_vs_shape": {
+     "deg": 78.39277436927688,
+     "cos": 0.2012
+    },
+    "pb_vs_shape": {
+     "deg": 11.341970399723236,
+     "cos": 0.9805
+    },
+    "av_vs_sperm": {
+     "deg": 62.56341647504328,
+     "cos": 0.4608
+    }
+   },
+   "has_pb": true,
+   "size_kb": 335
+  },
+  {
    "id": "20260425_zygote_p2_7_1",
    "stage": "zygote",
    "stage_label": "Zygote",
@@ -1305,6 +1529,37 @@
    "size_kb": 366
   },
   {
+   "id": "20260425_zygote_p2_8_0",
+   "stage": "zygote",
+   "stage_label": "Zygote",
+   "label": "Z-P4-fov8_0",
+   "angles": {
+    "aspect_ratio": 1.245,
+    "plane_vs_pb": {
+     "deg": 69.48642376856988,
+     "cos": 0.3504
+    },
+    "plane_vs_sperm": {
+     "deg": 37.35468061563215,
+     "cos": 0.7949
+    },
+    "plane_vs_shape": {
+     "deg": 86.84465978908565,
+     "cos": 0.055
+    },
+    "pb_vs_shape": {
+     "deg": 47.822827646187214,
+     "cos": 0.6714
+    },
+    "av_vs_sperm": {
+     "deg": 73.30756296827995,
+     "cos": 0.2872
+    }
+   },
+   "has_pb": true,
+   "size_kb": 209
+  },
+  {
    "id": "20260425_zygote_p2_8_1",
    "stage": "zygote",
    "stage_label": "Zygote",
@@ -1333,9 +1588,9 @@
     }
    },
    "has_pb": true,
-   "size_kb": 278
+   "size_kb": 277
   }
  ],
- "n_zygote": 26,
- "n_twocell": 19
+ "n_zygote": 33,
+ "n_twocell": 21
 }

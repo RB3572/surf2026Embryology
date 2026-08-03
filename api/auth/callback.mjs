@@ -146,8 +146,9 @@ you to the lab, then sign in again.</p>
   }
 
   // 5. Our own session cookie. Carries the display identity (so the admin console is readable
-  //    without re-querying Lab Logger) and an admin flag.
-  const isAdmin = isAdminUser(userId, labRole);
+  //    without re-querying Lab Logger) and an admin flag. Admin is the ADMIN_USER_IDS
+  //    allowlist ONLY — a Lab Logger admin/PI role does not confer it here.
+  const isAdmin = isAdminUser(userId);
 
   // Bind any email-seeded project-access row to this user id, so a restriction created before
   // the person ever signed in applies from their very first visit. Never fatal.

@@ -133,18 +133,43 @@ test("normalizeProvider returns null for anything else, so we show the chooser",
 });
 
 // ── admin derivation ───────────────────────────────────────────────────────
-test("isAdminUser honours lab role and the explicit id list", () => {
+test("only the ADMIN_USER_IDS allowlist confers admin", () => {
   const prev = process.env.ADMIN_USER_IDS;
-  process.env.ADMIN_USER_IDS = "";
-  assert.equal(isAdminUser("u1", "admin"), true);
-  assert.equal(isAdminUser("u1", "pi"), true);
-  assert.equal(isAdminUser("u1", "member"), false);
-  assert.equal(isAdminUser("u1", ""), false);
-
   process.env.ADMIN_USER_IDS = "u-alpha, u-beta";
-  assert.equal(isAdminUser("u-alpha", "member"), true);
-  assert.equal(isAdminUser("u-beta", "member"), true);
-  assert.equal(isAdminUser("u-gamma", "member"), false);
+  assert.equal(isAdminUser("u-alpha"), true);
+  assert.equal(isAdminUser("u-beta"), true);      // whitespace around the comma is tolerated
+  assert.equal(isAdminUser("u-gamma"), false);
+  process.env.ADMIN_USER_IDS = prev;
+});
+
+test("a Lab Logger admin/PI role does NOT confer admin here", () => {
+  // Lab membership is managed by other people. If a lab role granted this console, promoting
+  // somebody in Lab Logger would silently hand them the site's analytics.
+  const prev = process.env.ADMIN_USER_IDS;
+  process.env.ADMIN_USER_IDS = "the-only-admin";
+  for (const role of ["admin", "pi", "owner", "member", ""]) {
+    assert.equal(isAdminUser("someone-else", role), false,
+      `lab role "${role}" must not confer admin`);
+  }
+  assert.equal(isAdminUser("the-only-admin", "member"), true);
+  process.env.ADMIN_USER_IDS = prev;
+});
+
+test("nobody is admin when ADMIN_USER_IDS is unset (fail closed)", () => {
+  const prev = process.env.ADMIN_USER_IDS;
+  delete process.env.ADMIN_USER_IDS;
+  assert.equal(isAdminUser("anyone"), false);
+  assert.equal(isAdminUser("anyone", "admin"), false);
+  process.env.ADMIN_USER_IDS = prev;
+});
+
+test("isAdminUser rejects an empty/missing user id", () => {
+  const prev = process.env.ADMIN_USER_IDS;
+  // An empty allowlist entry must never match an empty subject.
+  process.env.ADMIN_USER_IDS = "a,,b";
+  assert.equal(isAdminUser(""), false);
+  assert.equal(isAdminUser(undefined), false);
+  assert.equal(isAdminUser(null), false);
   process.env.ADMIN_USER_IDS = prev;
 });
 

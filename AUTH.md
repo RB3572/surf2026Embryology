@@ -73,7 +73,11 @@ Guards, all of which are load-bearing:
 
 ## Roles
 
-Admin = listed in `ADMIN_USER_IDS`, **or** your Lab Logger `lab_members.role` is `admin` or `pi`.
+Admin = **listed in `ADMIN_USER_IDS`, and nothing else.** A Lab Logger `admin`/`pi` lab role does
+*not* confer it: lab membership is managed by other people, so inheriting it would silently hand
+this site's console to anyone promoted in Lab Logger. With `ADMIN_USER_IDS` unset, nobody is an
+admin and `/admin` 404s for everyone (fail closed).
+
 Admins get `/admin` (usage analytics + project access) and always see every project.
 
 ## Per-project access
@@ -100,7 +104,7 @@ member out of the whole site. The gate that matters (lab membership) has already
 | `SESSION_SECRET` | yes | `openssl rand -base64 32`. **Rotating it signs everyone out.** |
 | `ALLOWED_LAB_IDS` | yes | Comma-separated lab uuids |
 | `SESSION_TTL_HOURS` | no | Default 12, clamped 1–720 |
-| `ADMIN_USER_IDS` | no | Comma-separated Supabase user ids |
+| `ADMIN_USER_IDS` | for admin | Comma-separated Supabase user ids. The **only** way to be an admin; unset = nobody. |
 | `SITE_ORIGIN` | no | Overrides the origin used to build `redirect_to` |
 | `DATABASE_URL` | no | Neon, for analytics + project access |
 

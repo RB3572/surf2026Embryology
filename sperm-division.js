@@ -67,6 +67,11 @@
     gmDensity: true, spDensity: true,                  // concordance by density (count ÷ side volume)
     concordRank: "frac", _concord: null,               // right-drawer concordance tab
     circ: false, aggCirc: null, _aggCircP: null,
+    // Zygotes with no labelled sperm have no sperm-defined plane, so they carry no
+    // sperm_division scene. They are still listed (greyed) and still openable: we fall back to
+    // the planes_all scene, which exists for every zygote, and show the body + transcripts +
+    // polar-body axis with every sperm-derived panel in an explicit empty state.
+    hasPlane: new Set(), noSperm: false, _spermPrefs: {},
   };
   // circularize accessors: when the "blow up the balloon" toggle is on, every read of
   // the current embryo's analysis / transcripts, and the cross-embryo aggregate, uses
@@ -81,13 +86,32 @@
   (async function init() {
     try {
       const m = await (await fetch("data/sperm_division_manifest.json")).json();
-      state.manifest = m.embryos;
       state.nPlanes = m.n_planes || 1; state.step = m.step_deg || 0;
-      countEl.textContent = `${m.embryos.length} zygotes · sperm-defined plane`;
-      V.buildTabs(tabsEl, m.embryos, selectEmbryo, (e) => ({
-        label: e.label, sub: e.date_short,
-        title: `${e.label} · ${e.n_transcripts.toLocaleString()} transcripts`,
-      }));
+      m.embryos.forEach((e) => state.hasPlane.add(e.id));
+
+      // Every zygote is listed, not just the sperm-positive ones. Those without a labelled
+      // sperm have no sperm-defined plane, so they are greyed — still selectable, but they
+      // open a body-only view. The extra ids come from planes_all, which covers all zygotes
+      // and whose scenes we reuse for them (no additional data to ship).
+      let all = m.embryos;
+      try {
+        const pa = await (await fetch("data/planes_all_manifest.json")).json();
+        const byId = new Map(m.embryos.map((e) => [e.id, e]));
+        all = pa.embryos.map((e) => byId.get(e.id) || { ...e, no_sperm: true });
+      } catch (_) { /* planes_all unavailable → fall back to the sperm-only cohort */ }
+
+      state.manifest = all;
+      const nSperm = all.filter((e) => state.hasPlane.has(e.id)).length;
+      countEl.textContent = `${all.length} zygotes · ${nSperm} with a sperm-defined plane`;
+      V.buildTabs(tabsEl, all, selectEmbryo, (e) => {
+        const ok = state.hasPlane.has(e.id);
+        return {
+          label: e.label, sub: e.date_short, cls: ok ? "" : "tab-nosperm",
+          title: ok
+            ? `${e.label} · ${(e.n_transcripts || 0).toLocaleString()} transcripts`
+            : `${e.label} · no sperm labelled — no sperm-defined plane (click to view the embryo)`,
+        };
+      });
       // single sperm-defined plane (selector hidden)
       planeSelect.innerHTML = `<option value="0">Sperm plane</option>`;
       state.planeIdx = 0;
@@ -105,13 +129,18 @@
     V.markActiveTab(tabsEl, id);
     showLoading(`Loading ${state.byLabel(id)}…`);
     try {
-      const scene = await V.loadGz(`data/sperm_division/${id}.json.gz`);
+      // No sperm ⇒ no sperm_division scene; reuse the planes_all scene for a body-only view.
+      state.noSperm = !state.hasPlane.has(id);
+      if (state.noSperm) state.circ = false;      // circularization is a sperm-plane construct
+      const scene = await V.loadGz(
+        state.noSperm ? `data/planes_all/${id}.json.gz` : `data/sperm_division/${id}.json.gz`);
       if (state.currentId !== id) return;
       state.scene = scene;
       populateGenes(scene);
       if (vcExtras) vcExtras.setAtlas(id);
       controlsEl.hidden = false; placeholder.hidden = true;
       drawer.hidden = false; rdrawer.hidden = false;
+      syncSpermControls();
       render(); renderChart(); renderBestList();
       if (state.drawerOpen) renderCrossAgg();
 
@@ -182,9 +211,79 @@
   }
 
   // ---------- 3-D render ----------
+  /** The view for a zygote with no labelled sperm: body meshes, the selected gene's transcripts
+   *  (unsplit — there is no plane to split them by) and the polar-body axis, which is defined
+   *  independently of the sperm and is still worth seeing. */
+  function renderNoSperm(s, A, g) {
+    const traces = V.bodyTraces(s);
+    const tx = (s.transcripts || {})[g];
+    if (tx) {
+      traces.push({ type: "scatter3d", mode: "markers", name: `${g}`,
+        x: tx.x, y: tx.y, z: (tx.gz || []).map((v) => v * s.z_scale),
+        marker: { size: state.dotSize, color: BLUE, opacity: 0.85, line: { width: 0 } },
+        hovertemplate: `${g}<extra></extra>`, legendrank: 20000 });
+    }
+    if (A && axisShow.checked && A.com_plot && A.axis_plot) {
+      const c = A.com_plot, ax = A.axis_plot;
+      const an = Math.hypot(ax[0], ax[1], ax[2]) || 1;
+      const ex = s.extents, R = 0.62 * Math.max(ex.x[1] - ex.x[0], ex.y[1] - ex.y[0], ex.z[1] - ex.z[0]);
+      const u = [ax[0] / an, ax[1] / an, ax[2] / an];
+      traces.push({ type: "scatter3d", mode: "lines", name: "Polar-body axis",
+        x: [c[0] - R * u[0], c[0] + R * u[0]], y: [c[1] - R * u[1], c[1] + R * u[1]],
+        z: [c[2] - R * u[2], c[2] + R * u[2]],
+        line: { color: AXIS_C, width: 6 }, hovertemplate: "Polar-body axis<extra></extra>", legendrank: 40000 });
+      if (A.pb_plot) traces.push({ type: "scatter3d", mode: "markers", name: "Polar body",
+        x: [A.pb_plot[0]], y: [A.pb_plot[1]], z: [A.pb_plot[2]],
+        marker: { size: 7, color: AXIS_C, symbol: "circle", line: { width: 1, color: "#fff" } },
+        hovertemplate: "Polar body<extra></extra>", legendrank: 40001 });
+      traces.push({ type: "scatter3d", mode: "markers", name: "cell COM",
+        x: [c[0]], y: [c[1]], z: [c[2]],
+        marker: { size: 6, color: COM_C, symbol: "circle", line: { width: 1, color: "#fff" } },
+        hovertemplate: "cell centre of mass (segment 1)<extra></extra>", legendrank: 41503 });
+    }
+    Plotly.react(plotHost, traces, V.sceneLayout(s.extents, s.id), V.plotConfig);
+  }
+
+  /** Message shown wherever a sperm-derived panel has nothing to say. */
+  const NO_SPERM_MSG = "No sperm labelled for this embryo, so the sperm-defined plane cannot be " +
+    "built. The embryo, its transcripts and the polar-body axis are shown; every sperm-based " +
+    "statistic is unavailable.";
+  function noSpermNote(extra) {
+    return `<div class="sd-nosperm">${NO_SPERM_MSG}${extra ? " " + extra : ""}</div>`;
+  }
+  /** Lock every sperm-plane control on an embryo that has none, and post a banner. */
+  function syncSpermControls() {
+    const off = state.noSperm;
+    [planeShow, spermShow, allShow, circShow].forEach((c) => {
+      if (!c) return;
+      if (off) {
+        // Remember how the user had it, but only on the way IN — syncSpermControls can run
+        // again while already disabled, which would otherwise overwrite the preference with
+        // the forced-off value and lose it for good.
+        if (!c.disabled) state._spermPrefs[c.id] = c.checked;
+        c.checked = false; c.disabled = true;
+      } else {
+        c.disabled = false;
+        if (c.id in state._spermPrefs) { c.checked = state._spermPrefs[c.id]; delete state._spermPrefs[c.id]; }
+      }
+      const lab = c.closest("label");
+      if (lab) {
+        lab.classList.toggle("zt-off", off);
+        lab.title = off ? "Needs a labelled sperm — none for this embryo." : "";
+      }
+    });
+    let b = $("#sd-nosperm-banner");
+    if (off && !b) {
+      b = el("div"); b.id = "sd-nosperm-banner"; b.className = "sd-nosperm sd-nosperm-banner";
+      b.textContent = NO_SPERM_MSG;
+      controlsEl.querySelector(".controls-body").prepend(b);
+    } else if (!off && b) { b.remove(); }
+  }
+
   function render() {
     const s = state.scene; if (!s) return;
     const zs = s.z_scale, A = curA(), k = state.planeIdx, g = gene();
+    if (state.noSperm) { renderNoSperm(s, A, g); return; }
     // when circularized, render the balloon-inflated segment-1 mesh in place of the real one
     const circOn = state.circ && s.circ && s.circ.mesh1;
     const bodyScene = circOn
@@ -264,6 +363,17 @@
   }
   function renderChart() {
     const s = state.scene; if (!s) return;
+    if (state.noSperm) {
+      // Purge, or Plotly keeps the previous embryo's graph state attached to the div.
+      try { Plotly.purge(chartEl); } catch (_) {}
+      chartEl.classList.remove("js-plotly-plot");
+      chartEl.innerHTML = noSpermNote();
+      // These are written separately from the chart — leaving them would show the PREVIOUS
+      // embryo's sperm-plane statistics against a zygote that has no sperm plane at all.
+      chartReadout.innerHTML = "";
+      if (chartSub) chartSub.textContent = "· no sperm plane";
+      return;
+    }
     const g = gene(), k = state.planeIdx, row = geneRow(g, k);
     chartSub.textContent = `· ${g} · sperm plane`;
     if (!row) { Plotly.purge(chartEl); chartEl.classList.remove("js-plotly-plot"); chartEl.innerHTML = '<div class="chart-readout">Gene not in this embryo.</div>'; chartReadout.innerHTML = ""; return; }
@@ -373,6 +483,7 @@
   }
   function renderBestList() {
     if (rconcordControls) rconcordControls.hidden = state.bestTab !== "concord";
+    if (state.noSperm) { bestListEl.innerHTML = noSpermNote("Pick a zygote that has one to rank its genes."); return; }
     if (state.bestTab === "concord") {
       bestListEl.innerHTML = `<div class="best-plane-note">Scoring every gene as an anchor…</div>`;
       ensureAgg().then(() => { if (state.bestTab === "concord") renderConcordList(); });
@@ -536,7 +647,8 @@
     }));
   }
   function renderCurrentCrossSection() {
-    if (!state.scene || !xsOutlines.offsetParent) return;   // skip when its tab is hidden
+    if (!state.scene || !xsOutlines.offsetParent) return;
+    if (state.noSperm) { xsOutlines.innerHTML = noSpermNote(); return; }   // skip when its tab is hidden
     const s = state.scene, A = curA(), g = gene(), basis = sectionBasis();
     const pb = Number(A.polar_body_label), pns = pronucleusLabels(); syncPronucleusControls(pns);
     const traces = [], limits = [];
@@ -626,7 +738,8 @@
     if (out.length < 3) return null; out.push(out[0]); return out;
   }
   function renderAlignedOutlines() {
-    if (!xsAlign || !xsAlign.offsetParent) return;               // skip when its tab is hidden
+    if (!xsAlign || !xsAlign.offsetParent) return;
+    if (state.noSperm) { xsAlign.innerHTML = noSpermNote(); return; }               // skip when its tab is hidden
     const agg = curAGG(); if (!agg) return;
     const ki = bestKeyIndex(), g = gene(), step = state.step || 10, key = state.crossKey;
     const onlyCur = xsAlignOnly && xsAlignOnly.checked;
@@ -704,7 +817,8 @@
     return [lo, hi];
   }
   function renderBars() {
-    if (!xsBars.offsetParent) return;                       // skip when its tab is hidden
+    if (!xsBars.offsetParent) return;
+    if (state.noSperm) { xsBars.innerHTML = noSpermNote(); return; }                       // skip when its tab is hidden
     const agg = curAGG(); if (!agg) return;
     const ki = bestKeyIndex(), g = gene();
     // DENSITY mode: each side's count ÷ that side's volume (adjacent bars); needs per-side volumes.
@@ -965,7 +1079,8 @@
   // NOTE: injected via innerHTML, so the "<" must be escaped.
   function gmFmtP(p) { return p < 0.001 ? "&lt; 0.001" : "= " + p.toFixed(3); }
   function renderGammaMu() {
-    if (!xsGm || !xsGm.offsetParent) return;                // skip when its tab is hidden
+    if (!xsGm || !xsGm.offsetParent) return;
+    if (state.noSperm) { xsGm.innerHTML = noSpermNote(); return; }                // skip when its tab is hidden
     const m = gmModel();
     if (!m) return;
     const A = m.anchor, showingNull = m.isNull && m.hasGp;

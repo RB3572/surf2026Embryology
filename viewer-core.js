@@ -47,7 +47,9 @@ window.VCore = (function () {
     embryos.forEach((m) => {
       const s = spec(m);
       const b = document.createElement("button");
-      b.className = "tab"; b.dataset.id = m.id; b.title = s.title || s.label;
+      // spec.cls lets a project mark tabs that are selectable but degraded — e.g. an embryo
+      // with no labelled sperm in a sperm-defined analysis.
+      b.className = "tab" + (s.cls ? " " + s.cls : ""); b.dataset.id = m.id; b.title = s.title || s.label;
       const yr = idYear(m.id);
       b.innerHTML = `<span class="tab-label">${s.label}</span>` +
                     `<span class="tab-date">${s.sub || ""}</span>` +

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Sign in · SURF 2026</title>
+<style>
+  :root { color-scheme: light; --fg:#1f2430; --muted:#5b6472; --line:#e1e6ed; --accent:#2f6df3; }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:#f7f8fa; color:var(--fg); padding:1.5rem;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  .card {
+    width:100%; max-width:23rem; background:#fff; border:1px solid var(--line);
+    border-radius:14px; padding:2rem 1.9rem 1.7rem; text-align:center;
+    box-shadow:0 1px 2px rgba(16,24,40,.04), 0 8px 24px rgba(16,24,40,.06);
+  }
+  .dot { width:10px; height:10px; border-radius:50%; background:#16a34a;
+         display:inline-block; margin-right:.5rem; vertical-align:middle; }
+  h1 { font-size:1.12rem; margin:0 0 .3rem; letter-spacing:-.01em; }
+  .sub { font-size:.86rem; color:var(--muted); margin:0 0 1.4rem; line-height:1.5; }
+  a.btn {
+    display:flex; align-items:center; justify-content:center; gap:.6rem;
+    padding:.7rem 1rem; margin-top:.6rem; border:1px solid var(--line);
+    border-radius:9px; background:#fff; color:var(--fg); text-decoration:none;
+    font-size:.92rem; font-weight:600; transition:background .12s, border-color .12s;
+  }
+  a.btn:hover { background:#f4f6f9; border-color:#cfd6e0; }
+  svg { width:18px; height:18px; display:block; }
+  .note { margin-top:1.1rem; font-size:.8rem; color:var(--muted); line-height:1.5;
+          background:#f4f6f9; border-radius:8px; padding:.6rem .7rem; }
+  .foot { margin-top:1.1rem; font-size:.76rem; color:var(--muted); line-height:1.5; }
+  .foot a, .note a { color:var(--accent); }
+</style>
+</head>
+<body>
+  <main class="card">
+    <h1><span class="dot"></span>SURF 2026 · Spatial Transcriptomics</h1>
+    <p class="sub">Access is limited to members of the Zernicka-Goetz Lab.
+       Sign in with the account you use for Lab&nbsp;Logger.</p>
+
+    <a class="btn" id="google" href="/api/auth/login?provider=google">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Continue with Google
+    </a>
+
+    <a class="btn" id="apple" href="/api/auth/login?provider=apple">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#000" d="M16.4 12.8c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.8-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.5-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.5 0 2 .8 3.3.8 1.4 0 2.2-1.2 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9-.1 0-2.6-1-2.6-4zM14 4.9c.7-.9 1.2-2.1 1.1-3.3-1 0-2.3.7-3.1 1.6-.7.8-1.2 2-1.1 3.2 1.2.1 2.4-.6 3.1-1.5z"/></svg>
+      Continue with Apple
+    </a>
+
+    <p class="note" id="signedout" hidden>You've been signed out. Choose a provider to sign back in.</p>
+
+    <p class="foot">Not a member yet? Ask your PI or a lab admin to add you to the lab in
+       <a href="https://www.lab-logger.com">Lab&nbsp;Logger</a>.</p>
+  </main>
+
+  <script>
+    // Preserve the page the user was originally trying to reach. Same-site paths only —
+    // "//evil.com" and absolute URLs are rejected, or ?next= becomes an open redirect.
+    // (The server re-validates this too; see lib/session.mjs safeNext.)
+    (function () {
+      var qs = new URLSearchParams(location.search);
+      var next = qs.get("next");
+      if (next && next.charAt(0) === "/" && next.slice(0, 2) !== "//") {
+        ["google", "apple"].forEach(function (id) {
+          var a = document.getElementById(id);
+          if (a) a.href += "&next=" + encodeURIComponent(next);
+        });
+      }
+      if (qs.has("signedout")) {
+        var n = document.getElementById("signedout");
+        if (n) n.hidden = false;
+      }
+    })();
+  </script>
+</body>
+</html>

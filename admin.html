@@ -24,25 +24,28 @@
     <section class="ad-kpis" id="ad-kpis"></section>
 
     <section class="ad-block">
-      <h2>People <span class="ad-sub">by password / login</span></h2>
+      <h2>People <span class="ad-sub">by Lab Logger account</span></h2>
       <div class="ad-tablewrap"><table class="ad-table" id="ad-users"></table></div>
     </section>
 
     <section class="ad-block">
-      <h2>Logins &amp; passwords <span class="ad-sub">the password for each login (share these) · add a new login</span></h2>
-      <div class="ad-tablewrap"><table class="ad-table" id="ad-logins"></table></div>
-      <form class="ad-adduser" id="ad-adduser" autocomplete="off">
-        <input type="text" id="ad-nu-name" placeholder="Login name (e.g. Jane Doe)" aria-label="New login name" required>
-        <input type="text" id="ad-nu-pw" placeholder="Password" aria-label="New password" required>
-        <select id="ad-nu-role" aria-label="Role"><option value="user">User</option><option value="admin">Admin</option></select>
-        <button type="submit" class="ad-btn ad-btn-go">Add login</button>
-        <span class="ad-adduser-note" id="ad-adduser-note"></span>
-      </form>
+      <h2>Who can get in <span class="ad-sub">membership is managed in Lab Logger, not here</span></h2>
+      <p class="ad-access-note">Anyone in the <b>Zernicka-Goetz Lab</b> on
+        <a href="https://www.lab-logger.com" target="_blank" rel="noopener">Lab&nbsp;Logger</a>
+        can sign in with Google or Apple. Add or remove someone there and it takes effect here —
+        there are no passwords and no user list on this site. Lab <b>admins</b> and the <b>PI</b>
+        automatically get this console.</p>
     </section>
 
     <section class="ad-block">
-      <h2>Project access <span class="ad-sub">which projects each login can open (admins always see all)</span></h2>
+      <h2>Project access <span class="ad-sub">which projects each member can open (admins always see all)</span></h2>
       <div class="ad-tablewrap"><table class="ad-table" id="ad-access"></table></div>
+      <form class="ad-adduser" id="ad-preseed" autocomplete="off">
+        <input type="email" id="ad-ps-email" placeholder="Restrict someone by email (before they first sign in)"
+               aria-label="Email to pre-restrict" required>
+        <button type="submit" class="ad-btn ad-btn-go">Add row</button>
+        <span class="ad-adduser-note" id="ad-preseed-note"></span>
+      </form>
       <div class="ad-access-note" id="ad-access-note"></div>
     </section>
 

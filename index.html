@@ -16,7 +16,7 @@
             title="How embryo names are written" aria-label="Explain embryo naming">
       ?
     </button>
-    <a class="lp-logout" href="/logout">Log out</a>
+    <a class="lp-logout" href="/api/auth/logout">Log out</a>
   </header>
 
   <dialog class="lp-naming-dialog" id="naming-dialog" aria-labelledby="naming-dialog-title">
@@ -312,18 +312,17 @@
       });
     }());
 
-    // Admin sessions get a readable surf_admin cookie; pull the gated admin card fragment
-    // (404 for everyone else) and drop it in as the first project card.
-    if (/(?:^|;\s*)surf_admin=1(?:;|$)/.test(document.cookie)) {
-      fetch("/admin.card.html", { cache: "no-store" })
-        .then(function (r) { return r.ok ? r.text() : ""; })
-        .then(function (h) {
-          // its own grid, above the groups — so it never lands inside a project group
-          var g = document.getElementById("lp-admin-grid") || document.querySelector(".lp-grid");
-          if (h && g) g.insertAdjacentHTML("afterbegin", h);
-        })
-        .catch(function () {});
-    }
+    // Pull the admin card fragment and drop it in as the first project card. The fragment is
+    // server-gated: the edge middleware 404s it for anyone whose session isn't an admin, so
+    // simply trying the fetch is the check — no client-readable "am I admin" cookie needed.
+    fetch("/admin.card.html", { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.text() : ""; })
+      .then(function (h) {
+        // its own grid, above the groups — so it never lands inside a project group
+        var g = document.getElementById("lp-admin-grid") || document.querySelector(".lp-grid");
+        if (h && g) g.insertAdjacentHTML("afterbegin", h);
+      })
+      .catch(function () {});
     // Hide project cards this login can't open (server enforces it too — see middleware.js).
     fetch("/api/access", { cache: "no-store" })
       .then(function (r) { return r.json(); })

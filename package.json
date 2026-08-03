@@ -4,6 +4,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@neondatabase/serverless": "^0.10.4"
+    "@neondatabase/serverless": "^0.10.4",
+    "@vercel/edge": "^1.2.1"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
   }
 }

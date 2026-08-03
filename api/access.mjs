@@ -1,78 +1,122 @@
-// GET/POST /api/access — per-user project access.
-//   GET               (any authed user)  → { me: [projects] | null }   (null = all projects)
-//   GET ?matrix=1     (admin only)        → { projects:[{key,label}], users:[{usr,role,projects|null}] }
-//   POST {usr,projects}(admin only)       → upsert that user's allowed-project list ([] = none, absent row = all)
+// GET/POST/DELETE /api/access — per-person project access.
 //
-// Stored in the Neon `access` table (usr TEXT PK, projects TEXT[]). A user with NO row sees every
-// project; a row restricts them to exactly that list. Kathy is seeded to the two pronuclei projects.
-// Identity (base + admin-added logins) comes from the shared accounts module.
-import { neon } from "@neondatabase/serverless";
-import { cookieVal, accountByToken, allAccounts } from "../accounts.mjs";
+//   GET                (any lab member) → { me: [projects] | null, admin }   null = all projects
+//   GET ?matrix=1      (admin only)     → { projects, users:[{key,user_id,email,name,projects,pending}] }
+//   POST {key|email, projects}(admin)   → restrict that person to exactly `projects`
+//   DELETE ?key=…      (admin only)     → drop the restriction (back to every project)
+//
+// Keyed on the Supabase user id. An admin may also restrict someone by EMAIL before they have
+// ever signed in; that row is rebound to their real user id on first sign-in (see
+// lib/projects.mjs bindAccessRow), so the restriction applies from their very first visit.
 
-// The canonical project list (key = the page's basename without .html). Keep in sync with the
-// landing cards + middleware PROJECT_OF.
-export const PROJECTS = [
-  { key: "pronuclei", label: "Transcripts vs Pronuclear Distance" },
-  { key: "extpt", label: "Transcripts Across Stages (zygote → 2-cell)" },
-  { key: "segments", label: "Gene Enrichment by Segment" },
-  { key: "zygote-planes", label: "Division Plane Sweep (18 candidates)" },
-  { key: "sperm-division", label: "Sperm-Defined Division Plane" },
-  { key: "pronuclei-assignments", label: "Maternal / Paternal Pronucleus ID" },
-  { key: "diffusion", label: "mRNA Diffusion Rates" },
-  { key: "sperm-pca", label: "Sperm Location Prediction (PCA)" },
-  { key: "axes", label: "Fertilization Geometry vs First Cleavage" },
-  { key: "alphabeta", label: "2-Cell Blastomere α/β Labelling" },
-  { key: "pseudotime-calibration", label: "Pronuclear Distance Clock" },
-  { key: "vision-pseudotime", label: "Pronuclear Image Clock (pilot)" },
-  { key: "pronuclear-pseudotime", label: "Pronuclear Structure Clock (3D)" },
-  { key: "pn3d-transcripts", label: "Transcripts vs Pseudotime (structure clock)" },
-];
-const KEYS = new Set(PROJECTS.map((p) => p.key));
-const DEFAULTS = { "Kathy Tam": ["pronuclei", "extpt"] };   // seeded on first run
+import { neon } from "@neondatabase/serverless";
+import { SESSION_COOKIE, verifyToken, readCookie } from "../lib/session.mjs";
+import {
+  PROJECTS, PROJECT_KEYS, hasDb, pendingKey,
+  allowedProjectsFor, setProjects, clearProjects, allAccessRows,
+} from "../lib/projects.mjs";
 
 const CONN = process.env.DATABASE_URL || process.env.POSTGRES_URL ||
              process.env.DATABASE_URL_UNPOOLED || process.env.POSTGRES_URL_NON_POOLING;
 const sql = CONN ? neon(CONN) : null;
-let ready = false;
 
-async function ensureSchema() {
-  if (ready || !sql) return;
-  await sql`CREATE TABLE IF NOT EXISTS access (usr TEXT PRIMARY KEY, projects TEXT[])`;
-  const n = await sql`SELECT COUNT(*)::int AS c FROM access`;
-  if (!n[0].c) for (const [u, ps] of Object.entries(DEFAULTS))
-    await sql`INSERT INTO access (usr, projects) VALUES (${u}, ${ps}) ON CONFLICT (usr) DO NOTHING`;
-  ready = true;
-}
+const json = (res, status, body) => {
+  res.statusCode = status;
+  res.setHeader("content-type", "application/json");
+  res.setHeader("Cache-Control", "no-store");
+  res.end(JSON.stringify(body));
+};
+
 export default async function handler(req, res) {
-  const acct = await accountByToken(cookieVal(req.headers.cookie, "surf_gate"));
-  if (!acct) { res.status(401).json({ ok: false }); return; }
-  if (!sql) { res.status(200).json({ ok: false, err: "no-database-url", me: null, projects: PROJECTS }); return; }
+  const session = await verifyToken(
+    readCookie(req.headers.cookie, SESSION_COOKIE), process.env.SESSION_SECRET);
+  if (!session) return json(res, 401, { ok: false });
+
+  if (!hasDb) {
+    return json(res, 200, { ok: false, err: "no-database-url", me: null,
+                            admin: !!session.adm, projects: PROJECTS });
+  }
+
   try {
-    await ensureSchema();
     if (req.method === "POST") {
-      if (acct.role !== "admin") { res.status(404).json({ error: "Not Found" }); return; }
-      let b = req.body; if (typeof b === "string") { try { b = JSON.parse(b); } catch { b = {}; } }
-      const usr = String((b && b.usr) || "");
-      const projects = Array.isArray(b && b.projects) ? b.projects.filter((p) => KEYS.has(p)) : [];
-      const accs = await allAccounts();
-      if (!usr || !accs.some((u) => u.user === usr)) { res.status(400).json({ ok: false, err: "unknown user" }); return; }
-      await sql`INSERT INTO access (usr, projects) VALUES (${usr}, ${projects})
-                ON CONFLICT (usr) DO UPDATE SET projects = ${projects}`;
-      res.status(200).json({ ok: true }); return;
+      if (!session.adm) return json(res, 404, { error: "Not Found" });
+      let b = req.body;
+      if (typeof b === "string") { try { b = JSON.parse(b); } catch { b = {}; } }
+      b = b || {};
+
+      // Either an existing key (user id / pending:… ) or a raw email to pre-seed.
+      const email = String(b.email || "").trim();
+      const key = String(b.key || b.user_id || "").trim() || (email ? pendingKey(email) : "");
+      if (!key) return json(res, 400, { ok: false, err: "need a user id or an email" });
+
+      const projects = Array.isArray(b.projects)
+        ? b.projects.filter((p) => PROJECT_KEYS.has(p)) : [];
+      await setProjects(key, projects, { email: email || null, name: b.name || null });
+      return json(res, 200, { ok: true });
     }
-    const rows = await sql`SELECT usr, projects FROM access`;
-    const map = {}; rows.forEach((r) => (map[r.usr] = r.projects));
+
+    if (req.method === "DELETE") {
+      if (!session.adm) return json(res, 404, { error: "Not Found" });
+      let key = (req.query && req.query.key) || "";
+      if (!key) {
+        let b = req.body;
+        if (typeof b === "string") { try { b = JSON.parse(b); } catch { b = {}; } }
+        key = (b && (b.key || b.user_id)) || "";
+      }
+      key = String(key).trim();
+      if (!key) return json(res, 400, { ok: false, err: "which person?" });
+      await clearProjects(key);
+      return json(res, 200, { ok: true });
+    }
+
+    // ---- GET ?matrix=1 — the admin console's editing grid ----
     if (req.query && req.query.matrix) {
-      if (acct.role !== "admin") { res.status(404).json({ error: "Not Found" }); return; }
-      const accs = await allAccounts();
-      res.status(200).json({ ok: true, projects: PROJECTS,
-        users: accs.map((u) => ({ usr: u.user, role: u.role, projects: map[u.user] == null ? null : map[u.user] })) });
-      return;
+      if (!session.adm) return json(res, 404, { error: "Not Found" });
+      const rows = await allAccessRows();
+      const byKey = new Map(rows.map((r) => [r.user_id, r]));
+
+      // Everyone we know about = people with a restriction + everyone who has ever visited
+      // (the analytics table is where signed-in identities show up).
+      let seen = [];
+      try {
+        const t = await sql`SELECT to_regclass('public.events') AS t`;
+        if (t[0]?.t) {
+          seen = await sql`SELECT user_id, MAX(email) AS email, MAX(usr) AS name,
+                                  MAX(ts) AS last_seen
+                           FROM events WHERE user_id IS NOT NULL
+                           GROUP BY user_id ORDER BY MAX(ts) DESC`;
+        }
+      } catch (_) { /* analytics is optional */ }
+
+      const users = [];
+      for (const s of seen) {
+        const r = byKey.get(s.user_id);
+        users.push({
+          key: s.user_id, user_id: s.user_id,
+          email: r?.email || s.email || "", name: r?.name || s.name || "",
+          projects: r ? r.projects : null, pending: false, last_seen: s.last_seen,
+        });
+        byKey.delete(s.user_id);
+      }
+      // Rows for people who haven't signed in yet (email pre-seeds), plus any restriction on
+      // someone with no analytics rows.
+      for (const r of byKey.values()) {
+        const isPending = r.user_id.startsWith("pending:");
+        users.push({
+          key: r.user_id, user_id: isPending ? "" : r.user_id,
+          email: r.email || (isPending ? r.user_id.slice("pending:".length) : ""),
+          name: r.name || "", projects: r.projects,
+          pending: isPending, last_seen: null,
+        });
+      }
+      return json(res, 200, { ok: true, projects: PROJECTS, users });
     }
-    // default: the caller's own access (null = all projects)
-    const mine = map[acct.user];
-    res.status(200).json({ ok: true, me: mine == null ? null : mine, admin: acct.role === "admin" });
+
+    // ---- GET — the caller's own access (null = every project) ----
+    const mine = session.adm ? null : await allowedProjectsFor(session.sub, { force: true });
+    return json(res, 200, { ok: true, me: mine, admin: !!session.adm });
   } catch (e) {
-    res.status(200).json({ ok: false, err: String((e && e.message) || e).slice(0, 200), me: null, projects: PROJECTS });
+    return json(res, 200, { ok: false, err: String((e && e.message) || e).slice(0, 200),
+                            me: null, admin: !!session.adm, projects: PROJECTS });
   }
 }

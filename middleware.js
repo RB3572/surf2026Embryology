@@ -1,154 +1,141 @@
-// Password-gate the whole site at the edge (Vercel Routing/Edge Middleware).
+// Vercel Edge Middleware — the real access gate for the SURF 2026 embryology site.
 //
-// Runs BEFORE any file is served, so nothing — pages, scripts, or the /data files — is
-// reachable without a valid password. Framework-agnostic: plain Web APIs, no imports.
-// Returning nothing continues to the static file; returning a Response short-circuits.
+// Authorization is delegated entirely to Lab Logger: you are in if you are a member of an
+// allowed lab (checked at sign-in against Supabase under the user's own RLS). There is no
+// user list and no password in this repo.
 //
-// Each password maps to an identity. `token` is the opaque cookie value (server-side only,
-// never shipped to the browser, unguessable) so a session can be attributed to a person for
-// analytics. `role: "admin"` unlocks the admin console; every /admin* path is 404 (not 403)
-// for everyone else, so its existence is never even revealed.
+// This runs BEFORE any file is served, which is the whole point: the valuable part of this
+// site is the build_*.py output under /data plus the per-project pages, and those are plain
+// static assets. Client-side JS could not protect them; this does.
+//
+// Unauthenticated:
+//   • HTML navigation  -> redirect to /login?next=…
+//   • anything else    -> 401 (so fetch()/curl for /data gets a clean refusal)
 
-import { neon } from "@neondatabase/serverless";
-// Logins live in the shared accounts module (single source of truth across middleware + every
-// /api function). BASE accounts resolve with no DB call, so the gate never depends on the database.
-import { COOKIE, MAX_AGE, cookieVal, accountByToken, accountByPassword } from "./accounts.mjs";
-
-// ---- per-user project access (managed from the admin console; see api/access.mjs) ----
-// A non-admin user restricted to a project list is redirected to the landing for any other
-// project page. The list is read from Neon and cached; a DB failure fails OPEN (allow) so a
-// database hiccup can never lock authenticated users out of the whole site.
-const CONN = process.env.DATABASE_URL || process.env.POSTGRES_URL ||
-             process.env.DATABASE_URL_UNPOOLED || process.env.POSTGRES_URL_NON_POOLING;
-const accessSql = CONN ? neon(CONN) : null;
-const PROJECT_OF = {
-  "pronuclei.html": "pronuclei", "extpt.html": "extpt", "segments.html": "segments",
-  "zygote-planes.html": "zygote-planes", "sperm-division.html": "sperm-division",
-  "equatorial-planes.html": "equatorial-planes", "planes-all.html": "planes-all",
-  "sperm-sphere.html": "sperm-sphere", "compare-planes.html": "compare-planes",
-  "pronuclei-assignments.html": "pronuclei-assignments", "sperm-pca.html": "sperm-pca",
-  "diffusion.html": "diffusion",
-  "axes.html": "axes", "alphabeta.html": "alphabeta",
-  "pseudotime-calibration.html": "pseudotime-calibration",
-  "vision-pseudotime.html": "vision-pseudotime",
-  "pronuclear-pseudotime.html": "pronuclear-pseudotime",
-  "pn3d-transcripts.html": "pn3d-transcripts",
-  "stage-expression.html": "stage-expression",
-  "sperm-pseudotime.html": "sperm-pseudotime",
-};
-let _accMap = null, _accAt = 0;
-async function allowedProjects(user) {          // → array of allowed keys, or null = all projects
-  const now = Date.now();
-  if (accessSql && (!_accMap || now - _accAt > 60000)) {
-    try {
-      const rows = await accessSql`SELECT usr, projects FROM access`;
-      const m = {}; rows.forEach((r) => (m[r.usr] = r.projects));
-      _accMap = m; _accAt = now;
-    } catch (_) { if (!_accMap) _accMap = {}; }  // keep last-known; empty = everyone sees all
-  } else if (!accessSql && !_accMap) { _accMap = {}; }
-  const v = _accMap && _accMap[user];
-  return Array.isArray(v) ? v : null;
-}
+import { next } from "@vercel/edge";
+import {
+  SESSION_COOKIE, PROVIDER_COOKIE, AUTOTRY_COOKIE,
+  verifyToken, readCookie, normalizeProvider, safeNext,
+} from "./lib/session.mjs";
+import { projectForPath, allowedProjectsFor } from "./lib/projects.mjs";
 
 export const config = {
-  matcher: "/((?!_vercel).*)", // gate every path except Vercel's own internals
+  // Guard EVERY path that serves content — pages, /data, scripts, styles, images — not just
+  // HTML. Excluded: the auth endpoints themselves (or sign-in could never complete) and
+  // Vercel's internals. /login IS matched, so a direct or bookmarked visit can still
+  // auto-continue; it is never redirected to itself (see the guard below).
+  matcher: ["/((?!api/auth|_vercel|favicon\\.ico|robots\\.txt).*)"],
 };
 
 export default async function middleware(request) {
-  const url = new URL(request.url);
-  const cookies = request.headers.get("cookie") || "";
-  const account = await accountByToken(cookieVal(cookies, COOKIE));
+  const secret = process.env.SESSION_SECRET;
 
-  // Log out: clear the session cookies and bounce to the gate.
-  if (url.pathname === "/logout") {
-    const headers = new Headers({ location: "/", "cache-control": "no-store" });
-    headers.append("set-cookie", `${COOKIE}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax`);
-    headers.append("set-cookie", `surf_admin=; Path=/; Max-Age=0; Secure; SameSite=Lax`);
-    return new Response(null, { status: 303, headers });
-  }
-
-  // Admin-only surface. Anything under /admin (page, assets, data) is 404 unless this is an
-  // admin session — indistinguishable from "does not exist", so non-admins never see it.
-  const p = url.pathname;
-  const adminOnly = p === "/admin" || p.startsWith("/admin/") || p.startsWith("/admin.") ||
-                    p.startsWith("/api/admin");
-  if (adminOnly && (!account || account.role !== "admin")) {
-    return new Response("Not Found", {
-      status: 404,
-      headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" },
+  // FAIL CLOSED: a misconfigured deployment denies rather than serving the dataset.
+  if (!secret) {
+    return new Response("Auth is not configured on this deployment.", {
+      status: 503,
+      headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8" },
     });
   }
 
-  // Authenticated → project-access check, then serve. (The admin console card is revealed on the
-  // landing client-side from the gated /admin.card.html fragment — see index.html — because an
-  // edge self-fetch to inject it deadlocks on a custom domain. The fragment + page stay 404 for
-  // everyone else, so the console is still invisible to non-admins.)
-  if (account) {
-    if (account.role !== "admin") {
-      const proj = PROJECT_OF[p.replace(/^\//, "")];
+  const url = new URL(request.url);
+  const session = await verifyToken(
+    readCookie(request.headers.get("cookie"), SESSION_COOKIE), secret);
+
+  if (session) {
+    const p = url.pathname;
+
+    // The admin console and its API are admin-only. Answer 404 rather than 403 so a
+    // non-admin member cannot even tell the page exists.
+    const adminOnly = p === "/admin" || p.startsWith("/admin/") || p.startsWith("/admin.") ||
+                      p.startsWith("/api/admin");
+    if (adminOnly && !session.adm) {
+      return new Response("Not Found", {
+        status: 404,
+        headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8" },
+      });
+    }
+
+    // Per-person project access. Admins always see everything; a restricted member asking for
+    // a project outside their list is bounced to the landing page. Fails OPEN on a DB error.
+    if (!session.adm) {
+      const proj = projectForPath(p);
       if (proj) {
         try {
-          const allowed = await allowedProjects(account.user);
+          const allowed = await allowedProjectsFor(session.sub);
           if (allowed && !allowed.includes(proj)) {
-            const to = new URL("/", url); to.searchParams.set("denied", proj);
+            const to = new URL("/", url);
+            to.searchParams.set("denied", proj);
             return Response.redirect(to.toString(), 303);
           }
-        } catch (_) { /* fail-open: serve */ }
+        } catch (_) { /* fail open: serve */ }
       }
     }
-    return;
+
+    // Authenticated: serve, but make sure no shared cache ever stores an authenticated
+    // response and hands it to somebody else.
+    const res = next();
+    res.headers.set("Vary", "Cookie");
+    return res;
   }
 
-  // login form submitted
-  if (request.method === "POST") {
-    let pwd = "";
-    try { pwd = String((await request.formData()).get("password") || ""); } catch (_) { /* malformed */ }
-    const match = await accountByPassword(pwd);
-    if (match) {
-      const headers = new Headers({ location: url.pathname + url.search, "cache-control": "no-store" });
-      headers.append("set-cookie", `${COOKIE}=${match.token}; Path=/; Max-Age=${MAX_AGE}; HttpOnly; Secure; SameSite=Lax`);
-      // readable (non-HttpOnly) hint so the landing knows to pull in the admin card; useless to
-      // forge — the card fragment + console are still server-gated to the admin token.
-      if (match.role === "admin") headers.append("set-cookie", `surf_admin=1; Path=/; Max-Age=${MAX_AGE}; Secure; SameSite=Lax`);
-      return new Response(null, { status: 303, headers });
-    }
-    return gate(true); // wrong password
+  const wantsHtml = (request.headers.get("accept") || "").includes("text/html");
+
+  if (!wantsHtml) {
+    return new Response("Unauthorized", {
+      status: 401,
+      headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8" },
+    });
   }
 
-  return gate(false);
-}
+  // ---- Continuous sign-in --------------------------------------------------
+  // We can't read Lab Logger's Supabase session (different origin, and third-party cookies
+  // are dead), so we must bounce through the identity provider. That bounce IS silent when
+  // the user already has a Google/Apple session — the only friction is our own provider
+  // chooser. So skip the chooser whenever the provider is known: from the incoming link
+  // (?provider=google, which Lab Logger can add) or from the last successful sign-in on this
+  // browser. Result: arriving from Lab Logger costs zero clicks.
+  //
+  // We never GUESS. With no signal we show the chooser, because sending an Apple user to
+  // Google can silently authenticate a DIFFERENT account that isn't in the lab.
+  const cookies = request.headers.get("cookie");
+  const hinted = normalizeProvider(url.searchParams.get("provider"));
+  const remembered = normalizeProvider(readCookie(cookies, PROVIDER_COOKIE));
+  const provider = hinted || remembered;
+  // If a silent attempt just failed we'd loop; fall back to the chooser once.
+  const alreadyTried = readCookie(cookies, AUTOTRY_COOKIE) === "1";
+  // After an explicit sign-out, never bounce them straight back in — otherwise signing out
+  // would be impossible.
+  const justSignedOut = url.searchParams.has("signedout");
+  const onLoginPage = url.pathname === "/login" || url.pathname === "/login.html";
 
-function gate(wrong) {
-  return new Response(gateHtml(wrong), {
-    status: 401,
-    headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" },
-  });
-}
+  const nextPath = onLoginPage
+    ? safeNext(url.searchParams.get("next"))
+    : url.pathname + url.search;
 
-// Minimal black-and-white gate: a password box and a submit button, nothing else.
-function gateHtml(wrong) {
-  return `<!doctype html><html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Password</title>
-<style>
-  :root { color-scheme: light; }
-  * { box-sizing: border-box; }
-  html, body { height: 100%; margin: 0; }
-  body { background: #fff; color: #000; display: grid; place-items: center; padding: 24px;
-    font: 15px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-  form { display: flex; flex-direction: column; gap: 12px; width: 240px; }
-  input, button { font-size: 15px; padding: 11px 12px; border: 1px solid #000; border-radius: 0;
-    background: #fff; color: #000; outline: none; }
-  input:focus { border-width: 2px; padding: 10px 11px; }
-  button { cursor: pointer; font-weight: 600; }
-  button:hover, button:focus { background: #000; color: #fff; }
-  form.err input { animation: shake .28s; }
-  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
-</style></head>
-<body>
-  <form method="post" autocomplete="off"${wrong ? ' class="err"' : ""}>
-    <input name="password" type="password" autofocus required placeholder="Password" aria-label="Password">
-    <button type="submit">Enter</button>
-  </form>
-</body></html>`;
+  if (provider && !alreadyTried && !justSignedOut) {
+    const go = new URL("/api/auth/login", url.origin);
+    go.searchParams.set("provider", provider);
+    go.searchParams.set("next", nextPath);
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: go.toString(),
+        // 60s breaker: cleared by a successful callback.
+        "Set-Cookie": `${AUTOTRY_COOKIE}=1; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=60`,
+        "Cache-Control": "no-store",
+      },
+    });
+  }
+
+  // Already on the sign-in page: serve it rather than redirecting to itself.
+  if (onLoginPage) {
+    const res = next();
+    res.headers.set("Cache-Control", "no-store");
+    return res;
+  }
+
+  const login = new URL("/login", url.origin);
+  login.searchParams.set("next", nextPath);
+  return Response.redirect(login, 302);
 }

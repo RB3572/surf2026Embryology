@@ -19,25 +19,36 @@
         : `<tr><td class="ad-empty" colspan="${head.length}">no data yet</td></tr>`}</tbody>`;
   };
 
-  let filterUser = "";   // "" = all users; otherwise a single login name
+  // "" = everyone; otherwise a person KEY (a Supabase user id, or a display name for rows
+  // recorded before the SSO migration).
+  let filterUser = "";
+  let filterLabel = "";
 
   function populateFilter(users) {
     const sel = $("#ad-user-filter");
-    const names = users.map((u) => u.usr).filter(Boolean);
-    if (filterUser && !names.includes(filterUser)) names.unshift(filterUser);   // keep an out-of-range choice
+    const opts = users.map((u) => ({ key: u.person, label: u.usr || u.email || u.person }))
+      .filter((o) => o.key);
+    if (filterUser && !opts.some((o) => o.key === filterUser)) {
+      opts.unshift({ key: filterUser, label: filterLabel || filterUser });   // keep an out-of-range choice
+    }
     sel.innerHTML = `<option value="">All users</option>` +
-      names.map((n) => `<option value="${esc(n)}"${n === filterUser ? " selected" : ""}>${esc(n)}</option>`).join("");
+      opts.map((o) => `<option value="${esc(o.key)}"${o.key === filterUser ? " selected" : ""}>${esc(o.label)}</option>`).join("");
     sel.value = filterUser;
   }
   function renderFilterBar() {
     const bar = $("#ad-filterbar");
     if (!filterUser) { bar.hidden = true; bar.innerHTML = ""; return; }
     bar.hidden = false;
-    bar.innerHTML = `<span>Filtered to <b>${esc(filterUser)}</b> — projects, genes, downloads and activity below are for this login only.</span>` +
+    bar.innerHTML = `<span>Filtered to <b>${esc(filterLabel || filterUser)}</b> — projects, genes, downloads and activity below are for this person only.</span>` +
       `<button type="button" class="ad-clear" id="ad-clear">Show all users ✕</button>`;
     $("#ad-clear").addEventListener("click", () => setFilter(""));
   }
-  function setFilter(u) { if (u === filterUser) return; filterUser = u; $("#ad-user-filter").value = u; load(); }
+  function setFilter(u, label) {
+    if (u === filterUser) return;
+    filterUser = u; filterLabel = label || "";
+    $("#ad-user-filter").value = u;
+    load();
+  }
 
   async function load() {
     $("#ad-status").textContent = "loading…";
@@ -70,14 +81,21 @@
       ["Genes tracked", (d.genes || []).length],
     ].map(([k, v]) => `<div class="ad-kpi"><div class="ad-kpi-n">${esc(v)}</div><div class="ad-kpi-k">${esc(k)}</div></div>`).join("");
 
+    const people = d.users || [];
     table($("#ad-users"), ["Person", "Views", "Downloads", "Projects", "Active days", "Events", "Last seen"],
-      (d.users || []).map((u) => [
-        `<b>${esc(u.usr || "—")}</b>`, u.views || 0, u.downloads || 0, u.projects || 0,
+      people.map((u) => [
+        `<b>${esc(u.usr || u.email || "—")}</b>` +
+          (u.email && u.usr ? ` <span class="ad-dim">${esc(u.email)}</span>` : ""),
+        u.views || 0, u.downloads || 0, u.projects || 0,
         u.active_days || 0, u.events || 0, `${esc(fmtTs(u.last_seen))} <span class="ad-dim">(${ago(u.last_seen)})</span>`]));
     $("#ad-users").classList.add("ad-clickable");   // click a person to filter to them
-    $("#ad-users").querySelectorAll("tbody tr").forEach((tr) => {
-      const n = (tr.querySelector(".ad-first") || {}).textContent;
-      tr.classList.toggle("ad-active", !!filterUser && n === filterUser);
+    // Carry the person KEY on the row — display names are not unique and are no longer the key.
+    $("#ad-users").querySelectorAll("tbody tr").forEach((tr, i) => {
+      const u = people[i];
+      if (!u) return;
+      tr.dataset.person = u.person || "";
+      tr.dataset.label = u.usr || u.email || u.person || "";
+      tr.classList.toggle("ad-active", !!filterUser && u.person === filterUser);
     });
 
     table($("#ad-projects"), ["Project", "Views", "Events", "People"],
@@ -107,84 +125,82 @@
     catch (e) { note.textContent = "failed to load: " + e.message; return; }
     if (!d.ok) { el.innerHTML = ""; note.textContent = "access config unavailable — " + (d.err || "database error"); return; }
     const projs = d.projects || [];
-    const head = `<thead><tr><th class="ad-first">Login</th>${projs.map((p) => `<th title="${esc(p.label)}">${esc(p.label)}</th>`).join("")}</tr></thead>`;
+    const head = `<thead><tr><th class="ad-first">Member</th>${projs.map((p) => `<th title="${esc(p.label)}">${esc(p.label)}</th>`).join("")}</tr></thead>`;
     const body = (d.users || []).map((u) => {
-      const isAdmin = u.role === "admin", all = u.projects == null;
+      const all = u.projects == null;
       const set = new Set(u.projects || []);
       const cells = projs.map((p) => {
-        const on = isAdmin || all || set.has(p.key);
-        return `<td class="ad-acc"><input type="checkbox" data-usr="${esc(u.usr)}" data-proj="${p.key}"${on ? " checked" : ""}${isAdmin ? " disabled" : ""}></td>`;
+        const on = all || set.has(p.key);
+        return `<td class="ad-acc"><input type="checkbox" data-key="${esc(u.key)}" data-proj="${p.key}"${on ? " checked" : ""}></td>`;
       }).join("");
-      return `<tr><td class="ad-first"><b>${esc(u.usr)}</b>${isAdmin ? ' <span class="ad-dim">(admin · all)</span>' : all ? ' <span class="ad-dim">(all)</span>' : ""}</td>${cells}</tr>`;
+      const who = esc(u.name || u.email || u.user_id || u.key);
+      const tag = u.pending
+        ? ' <span class="ad-dim">(pending first sign-in)</span>'
+        : all ? ' <span class="ad-dim">(all)</span>' : "";
+      const sub = u.name && u.email ? `<br><span class="ad-dim">${esc(u.email)}</span>` : "";
+      return `<tr><td class="ad-first"><b>${who}</b>${tag}${sub}</td>${cells}</tr>`;
     }).join("");
     el.innerHTML = head + `<tbody>${body}</tbody>`;
-    note.textContent = "Uncheck a project to hide it from that login (they are redirected to the landing). Admins always have full access.";
+    note.textContent = "Uncheck a project to hide it from that member (they are redirected to the landing). " +
+      "Ticking every box removes the restriction. Admins and the PI always have full access.";
     el.querySelectorAll("input[type=checkbox]").forEach((cb) => cb.addEventListener("change", onAccessToggle));
   }
   async function onAccessToggle(e) {
-    const usr = e.target.dataset.usr;
-    const checked = [...$("#ad-access").querySelectorAll(`input[data-usr="${CSS.escape(usr)}"]`)].filter((c) => c.checked).map((c) => c.dataset.proj);
-    $("#ad-access-note").textContent = "saving…";
+    const key = e.target.dataset.key;
+    const boxes = [...$("#ad-access").querySelectorAll(`input[data-key="${CSS.escape(key)}"]`)];
+    const checked = boxes.filter((c) => c.checked).map((c) => c.dataset.proj);
+    const note = $("#ad-access-note");
+    note.textContent = "saving…";
     try {
-      const d = await (await fetch("/api/access", { method: "POST", credentials: "same-origin",
-        headers: { "content-type": "application/json" }, body: JSON.stringify({ usr, projects: checked }) })).json();
-      $("#ad-access-note").textContent = d.ok ? `Saved — ${usr} now has ${checked.length} project(s).` : "save failed: " + (d.err || "unknown");
-    } catch (err) { $("#ad-access-note").textContent = "save failed: " + err.message; }
+      // All boxes ticked = no restriction at all, so drop the row entirely.
+      const clearAll = checked.length === boxes.length;
+      const d = clearAll
+        ? await (await fetch("/api/access?key=" + encodeURIComponent(key),
+            { method: "DELETE", credentials: "same-origin" })).json()
+        : await (await fetch("/api/access", { method: "POST", credentials: "same-origin",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ key, projects: checked }) })).json();
+      note.textContent = d.ok
+        ? (clearAll ? "Saved — full access restored." : `Saved — ${checked.length} project(s).`)
+        : "save failed: " + (d.err || "unknown");
+    } catch (err) { note.textContent = "save failed: " + err.message; }
   }
 
-  // ---- logins & passwords ----
-  async function loadUsers() {
-    const el = $("#ad-logins"), note = $("#ad-adduser-note");
-    let d;
-    try { d = await (await fetch("/api/users", { credentials: "same-origin", cache: "no-store" })).json(); }
-    catch (e) { el.innerHTML = ""; note.textContent = "failed to load: " + e.message; return; }
-    if (!d.ok) { el.innerHTML = ""; note.textContent = "logins unavailable — " + (d.err || "error"); return; }
-    const rows = (d.accounts || []).map((a) => {
-      const role = a.role === "admin" ? `<span class="ad-role-admin">admin</span>` : `<span class="ad-dim">user</span>`;
-      const last = a.kind === "added"
-        ? `<button type="button" class="ad-rm" data-usr="${esc(a.usr)}" title="Remove this login">Remove</button>`
-        : `<span class="ad-dim">built-in</span>`;
-      return [`<b>${esc(a.usr)}</b>`, role, `<code class="ad-pw">${esc(a.pw)}</code>`, last];
-    });
-    table(el, ["Login", "Role", "Password", ""], rows);
-    el.querySelectorAll(".ad-rm").forEach((b) => b.addEventListener("click", () => removeUser(b.dataset.usr)));
-    if (d.hasDb === false && !note.textContent)
-      note.textContent = "No database configured — added logins won't persist (built-in logins still work).";
-  }
-  async function removeUser(usr) {
-    if (!window.confirm(`Remove the login "${usr}"? They will no longer be able to sign in.`)) return;
-    const note = $("#ad-adduser-note"); note.textContent = "removing…";
-    try {
-      const d = await (await fetch("/api/users?usr=" + encodeURIComponent(usr), { method: "DELETE", credentials: "same-origin" })).json();
-      note.textContent = d.ok ? `Removed “${usr}”.` : "remove failed: " + (d.err || "unknown");
-      if (d.ok) { loadUsers(); loadAccess(); }
-    } catch (e) { note.textContent = "remove failed: " + e.message; }
-  }
-  $("#ad-adduser").addEventListener("submit", async (e) => {
+  // Pre-restrict somebody by email, before they have ever signed in. The row is rebound to
+  // their real Supabase user id on first sign-in, so the limit applies from their first visit.
+  $("#ad-preseed").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const usr = $("#ad-nu-name").value.trim(), pw = $("#ad-nu-pw").value, role = $("#ad-nu-role").value;
-    const note = $("#ad-adduser-note");
-    if (!usr || !pw) { note.textContent = "enter a login name and a password"; return; }
+    const email = $("#ad-ps-email").value.trim();
+    const note = $("#ad-preseed-note");
+    if (!email) { note.textContent = "enter an email"; return; }
     note.textContent = "adding…";
     try {
-      const d = await (await fetch("/api/users", { method: "POST", credentials: "same-origin",
-        headers: { "content-type": "application/json" }, body: JSON.stringify({ usr, pw, role }) })).json();
+      // Start with no projects; the admin then ticks what they should see.
+      const d = await (await fetch("/api/access", { method: "POST", credentials: "same-origin",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email, projects: [] }) })).json();
       if (d.ok) {
-        note.textContent = `Added “${usr}” — they can sign in with that password now.`;
-        $("#ad-nu-name").value = ""; $("#ad-nu-pw").value = "";
-        loadUsers(); loadAccess();
+        note.textContent = `Added ${email} — now tick the projects they should see.`;
+        $("#ad-ps-email").value = "";
+        loadAccess();
       } else note.textContent = "couldn't add: " + (d.err || "unknown");
     } catch (err) { note.textContent = "couldn't add: " + err.message; }
   });
 
-  loadUsers();
+  // NOTE: there is no login/password management any more. Who may sign in is decided entirely
+  // by Lab Logger lab membership (checked against Supabase at sign-in), so this console only
+  // narrows what an already-authorised member can open.
+
   loadAccess();
 
-  $("#ad-user-filter").addEventListener("change", (e) => setFilter(e.target.value));
+  $("#ad-user-filter").addEventListener("change", (e) => {
+    const sel = e.target;
+    setFilter(sel.value, sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : "");
+  });
   $("#ad-users").addEventListener("click", (e) => {
     const tr = e.target.closest("tbody tr"); if (!tr) return;
-    const name = (tr.querySelector(".ad-first") || {}).textContent;
-    if (name && name !== "—") setFilter(name === filterUser ? "" : name);   // click the active row again to clear
+    const key = tr.dataset.person;
+    if (key) setFilter(key === filterUser ? "" : key, tr.dataset.label);   // click again to clear
   });
   $("#ad-refresh").addEventListener("click", load);
   load();

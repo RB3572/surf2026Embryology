@@ -1,4 +1,63 @@
-/* Compare Division Planes — project-specific styling (builds on style.css tokens). */
+/* Compare Division Planes — project-specific styling (builds on style.css tokens).
+ *
+ * The .xs-* drawer chrome (tab strip, panel padding, resizable plot box) and the .best-*
+ * ranking rows are per-project in this codebase rather than living in style.css — every sibling
+ * project carries its own copy. This sheet was missing them, so the drawer tabs fell back to raw
+ * OS <button> chrome and .xs-resizable had NO HEIGHT, which left every plot collapsed to nothing.
+ * Mirrors sperm-sphere.css, with this project's crimson accent. */
+
+:root { --cp: #e11d48; }
+
+/* ---- bottom drawer: tab strip ---- */
+.xs-graph-tabs { flex: 0 0 auto; display: flex; gap: 2px; padding: 0 16px; overflow-x: auto;
+  border-bottom: 1px solid var(--line); scrollbar-width: none; }
+.xs-graph-tabs::-webkit-scrollbar { display: none; }
+.xs-gtab { font-family: var(--sans); font-size: 12.5px; font-weight: 600; color: var(--ink-2);
+  padding: 7px 13px; border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+.xs-gtab:hover { color: var(--ink); }
+.xs-gtab.active { color: var(--ink); border-bottom-color: var(--cp); }
+.xs-gtab:focus-visible { outline: 2px solid var(--cp); outline-offset: -2px; border-radius: 4px; }
+
+/* ---- bottom drawer: panels ---- */
+.xs-panels { flex: 1 1 auto; overflow: auto; padding: 10px 16px 14px; min-height: 0; }
+.xs-panel { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+.xs-panel[hidden] { display: none; }
+
+/* Without an explicit height the Plotly div collapses and the panel renders empty. */
+.xs-resizable { position: relative; width: 100%; max-width: 100%; height: 340px;
+  min-height: 180px; min-width: 240px; resize: both; overflow: hidden; }
+.xs-resizable > .cp-plot { flex: none; width: 100%; height: 100%; min-height: 0; }
+.xs-resizable::after { content: ""; position: absolute; right: 3px; bottom: 3px; width: 11px; height: 11px;
+  pointer-events: none; opacity: .55;
+  background: linear-gradient(135deg, transparent 0 50%, var(--ink-soft) 50% 60%, transparent 60% 72%, var(--ink-soft) 72% 82%, transparent 82%); }
+
+/* ---- right drawer: gene ranking rows ---- */
+.best-list { flex: 1 1 auto; overflow-y: auto; padding: 6px 8px 16px; border-top: 1px solid var(--line); }
+.best-head {
+  display: grid; grid-template-columns: 22px minmax(0,1fr) 58px 44px; gap: 6px;
+  padding: 4px 8px; font-family: var(--mono); font-size: 9.5px; text-transform: uppercase;
+  letter-spacing: .4px; color: var(--ink-soft); position: sticky; top: 0;
+  background: var(--surface); border-bottom: 1px solid var(--line-2);
+}
+.best-row {
+  display: grid; grid-template-columns: 22px minmax(0,1fr) 58px 44px; gap: 6px; align-items: center;
+  padding: 6px 8px; border-radius: 7px; cursor: pointer; border: 1px solid transparent; font-size: 12px;
+}
+.best-row:hover { background: var(--line-2); }
+.best-row.current { border-color: var(--cp); background: color-mix(in srgb, var(--cp) 8%, var(--surface)); }
+.best-num { font-family: var(--mono); font-size: 10.5px; color: var(--ink-soft); text-align: right; }
+.best-gene { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.best-real { color: #2563eb; font-variant-numeric: tabular-nums; text-align: right;
+  font-family: var(--mono); font-size: 11px; }
+.best-p { font-variant-numeric: tabular-nums; text-align: right; font-family: var(--mono);
+  font-size: 11px; color: var(--ink-2); }
+.best-plane-note {
+  padding: 8px 12px; font-size: 12px; color: var(--ink-2);
+  background: color-mix(in srgb, var(--cp) 8%, var(--surface)); border-bottom: 1px solid var(--line-2);
+}
+.best-plane-note b { color: var(--ink); }
+
 
 .cp-planes { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #eef1f5; }
 .cp-planes .ctl-label { margin-bottom: 2px; }

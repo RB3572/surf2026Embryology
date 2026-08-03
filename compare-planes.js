@@ -155,6 +155,18 @@
   function renderActive() { $("#drawer-gene").textContent = `· ${gene()}`; (RENDER[state.tab] || renderArrange)(); }
   const shown = (el) => !!(el && el.offsetParent);
   function plotInto(div, traces, layout) { Plotly.react(div, traces, layout, { responsive: true, displaylogo: false, displayModeBar: false }); }
+  /** Prepare a panel for plotInto().
+   *
+   *  Plotly.react() PATCHES the existing graph DOM rather than rebuilding it. Blanking
+   *  innerHTML while gd._fullLayout is still attached therefore makes the next react() a silent
+   *  no-op — the first render works and every re-render comes back empty. So: leave a live graph
+   *  alone (react updates it in place, which is also why it animates), and only clear the div
+   *  when it holds a placeholder. The "no data" branches call Plotly.purge() first, which drops
+   *  _fullLayout, so their placeholder is correctly cleared here on the way back. */
+  function resetPlot(div) {
+    if (div._fullLayout && div.classList.contains("js-plotly-plot")) return;
+    div.innerHTML = "";
+  }
   const baseLayout = (xt, yt) => ({ margin: { l: 54, r: 12, t: 10, b: 46 }, showlegend: false, paper_bgcolor: "transparent", plot_bgcolor: "#fcfdfe",
     xaxis: { title: { text: xt, font: { size: 11 } }, gridcolor: "#eef1f5", zeroline: false, tickfont: { size: 9 } },
     yaxis: { title: { text: yt, font: { size: 11 } }, gridcolor: "#eef1f5", zeroline: false, tickfont: { size: 9 } }, font: { size: 11, color: "#334155" } });
@@ -173,7 +185,7 @@
     const g = gene(), rows = geneRows(g);
     $("#cp-arrange-sub").textContent = `· ${g} · ${rows.length} zygotes`;
     if (rows.length < 2) { Plotly.purge(div); div.innerHTML = `<div class="cp-empty">Need ≥2 zygotes carrying ${g}.</div>`; $("#cp-arrange-note").textContent = ""; return; }
-    div.innerHTML = "";
+    resetPlot(div);
     // per embryo: each plane's angle to the polar-body axis (0–90°), one series per plane
     const order = rows.map((o) => ({ o, m: meanPairAngle(o.recs, state.planes.map((p) => p.key)) || 0 })).sort((a, b) => a.m - b.m).map((x) => x.o);
     const labels = order.map((o) => o.e.label);
@@ -183,7 +195,11 @@
       marker: { size: 9, color: p.color, line: { color: "#fff", width: 1 } },
       hovertemplate: `${p.label} · %{x} · %{y:.0f}° from polar axis<extra></extra>`,
     }));
-    const lay = baseLayout("", "angle to polar-body axis (°)"); lay.xaxis.tickangle = -45; lay.xaxis.tickfont = { size: 8 }; lay.yaxis.range = [-3, 93]; lay.showlegend = true; lay.legend = { orientation: "h", y: 1.12, x: 0, font: { size: 9 } };
+    const lay = baseLayout("", "angle to polar-body axis (°)"); lay.xaxis.tickangle = -45; lay.xaxis.tickfont = { size: 8 }; lay.yaxis.range = [-3, 93];
+    // Legend sits ABOVE the axes, so the top margin has to make room for it — baseLayout's
+    // default t:10 leaves none and the keys land on top of the data.
+    lay.showlegend = true; lay.margin.t = 46;
+    lay.legend = { orientation: "h", y: 1.03, x: 0, yanchor: "bottom", font: { size: 9 } };
     plotInto(div, traces, lay);
     // summary: mean pairwise angle among all 4 planes across embryos
     const mps = rows.map((o) => meanPairAngle(o.recs, state.planes.map((p) => p.key))).filter((v) => v != null);
@@ -197,7 +213,7 @@
     $("#cp-asym-sub").textContent = `· ${g} · ${e.label}`;
     const rows = state.planes.map((p) => ({ p, r: planeRec(e, g, p.key) })).filter((o) => o.r);
     if (!rows.length) { Plotly.purge(div); div.innerHTML = `<div class="cp-empty">${g} has no plane data in ${e.label}.</div>`; return; }
-    div.innerHTML = "";
+    resetPlot(div);
     const tr = { type: "bar", x: rows.map((o) => o.p.label), y: rows.map((o) => asym(o.r)), marker: { color: rows.map((o) => o.p.color) },
       text: rows.map((o) => { const pv = pOf(o.r); return `p ${fmtP(pv)}${sig(pv) ? " *" : ""}`; }), textposition: "outside", textfont: { size: 10 },
       customdata: rows.map((o) => { const [a, b] = conc(o.r); return [o.r.nA, o.r.nB, pOf(o.r)]; }),
@@ -216,7 +232,7 @@
     const rows = geneRows(g).filter((o) => o.recs[A] && o.recs[B]);
     $("#cp-pair-sub").textContent = `· ${g} · ${state.labelOf[A]} vs ${state.labelOf[B]} · ${rows.length} zygotes`;
     if (!rows.length) { Plotly.purge(div); div.innerHTML = `<div class="cp-empty">No zygote has both planes for ${g}.</div>`; $("#cp-pair-note").textContent = ""; return; }
-    div.innerHTML = "";
+    resetPlot(div);
     const data = rows.map((o) => ({ label: o.e.label, ang: angleDeg(o.recs[A].n, o.recs[B].n), aA: asym(o.recs[A]), aB: asym(o.recs[B]), cur: o.e.id === state.currentId }))
       .sort((a, b) => a.ang - b.ang);
     const tr = { type: "bar", x: data.map((d) => d.label), y: data.map((d) => d.ang),
@@ -236,7 +252,7 @@
     const g = gene(), rows = geneRows(g);
     $("#cp-heat-sub").textContent = `· ${g} · ${rows.length} zygotes`;
     if (!rows.length) { Plotly.purge(div); div.innerHTML = `<div class="cp-empty">No zygote carries ${g}.</div>`; return; }
-    div.innerHTML = "";
+    resetPlot(div);
     const order = rows.map((o) => ({ o, m: meanPairAngle(o.recs, state.planes.map((p) => p.key)) || 0 })).sort((a, b) => a.m - b.m).map((x) => x.o);
     const z = state.planes.map((p) => order.map((o) => { const r = o.recs[p.key]; if (!r) return null; return -Math.log10(Math.max(pOf(r), 1e-6)); }));
     const tr = { type: "heatmap", z, x: order.map((o) => o.e.label), y: state.planes.map((p) => p.label),
@@ -252,7 +268,7 @@
     const g = gene(), rows = geneRows(g);
     $("#cp-orient-sub").textContent = `· ${g} · ${rows.length} zygotes`;
     if (rows.length < 2) { Plotly.purge(div); div.innerHTML = `<div class="cp-empty">Need ≥2 zygotes carrying ${g}.</div>`; return; }
-    div.innerHTML = "";
+    resetPlot(div);
     // box/strip per plane of angle-to-polar-axis
     const box = state.planes.map((p) => ({
       type: "box", name: p.label, boxpoints: "all", jitter: 0.5, pointpos: 0, marker: { size: 6, color: p.color }, line: { color: p.color }, fillcolor: p.color + "22",

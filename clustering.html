@@ -66,7 +66,20 @@
       <div class="rz rz-se" data-corner="se"></div>
     </div>
 
-    <div class="plot-host" id="plot-host"></div>
+    <div class="cl-split">
+      <div class="cl-pane">
+        <div class="cl-pane-hd"><span class="cl-pane-t">Gene map</span>
+          <span class="cl-pane-s">each dot a gene · placed by where it sits</span></div>
+        <div class="plot-host" id="plot-host"></div>
+      </div>
+      <div class="cl-pane cl-pane-emb">
+        <div class="cl-pane-hd"><span class="cl-pane-t">In the embryo</span>
+          <span class="cl-pane-s" id="emb-sub"></span>
+          <label class="zt cl-pane-tg" title="Also draw the transcripts of the other genes in this cluster, so you can see whether they really do occupy the same region."><input type="checkbox" id="show-mates"><span>cluster mates</span></label>
+        </div>
+        <div class="plot-host" id="embryo-host"></div>
+      </div>
+    </div>
     <div class="placeholder" id="placeholder">
       <div class="ph-inner">
         <div class="ph-title">Loading gene map…</div>

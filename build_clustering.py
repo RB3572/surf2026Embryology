@@ -153,8 +153,9 @@ def main():
     ids = [e["id"] for e in json.load(open(MANIFEST))["embryos"]]
     print(f"clustering: {len(ids)} zygotes\n")
 
-    # gene -> list of per-embryo signatures
+    # gene -> list of per-embryo signatures; and the embryo showing each gene best
     sigs = {}
+    best = {}          # gene -> (n_transcripts, embryo_id)
     n_used = 0
     for eid in ids:
         emb = load_embryo(eid)
@@ -170,6 +171,8 @@ def main():
             if len(P) < MIN_TX:
                 continue
             sigs.setdefault(g, []).append(enrichment(counts(P, emb["com"], emb["axis"], emb["R"]), f_bg))
+            if len(P) > best.get(g, (0, None))[0]:
+                best[g] = (len(P), eid)
 
     genes = sorted(g for g, v in sigs.items() if len(v) >= MIN_EMB)
     if len(genes) < 10:
@@ -240,6 +243,7 @@ def main():
                 "gene": g,
                 "n_emb": int(n_emb[i]),
                 "profile": [round(float(v), 4) for v in X[i]],
+                "best_emb": best[g][1], "best_n": int(best[g][0]),
                 "mds": [float(mds[i][0]), float(mds[i][1])],
                 "tsne": [float(tsne[i][0]), float(tsne[i][1])],
             }

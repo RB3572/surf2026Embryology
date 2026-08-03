@@ -20,7 +20,7 @@
   const state = {
     data: null, genes: [], byGene: {}, k: 8, layout: "mds",
     gene: null, labels: [], clusters: [], labels_: null, tab: "sig",
-    drawerOpen: false, rdrawerOpen: false, showLabels: false,
+    drawerOpen: false, rdrawerOpen: false, showLabels: false, showMates: false,
   };
 
   /* Cluster greys. Spread across a light band so no cluster shouts; the SELECTED cluster is
@@ -102,7 +102,7 @@
     if (!(g in state.byGene)) return;
     state.gene = g;
     $("#gene-select").value = g;
-    renderMap(); renderReadout(); renderMembers(); renderActive();
+    renderMap(); renderReadout(); renderMembers(); renderActive(); renderEmbryo();
     $("#drawer-gene").textContent = `· ${g}`;
   }
 
@@ -170,6 +170,63 @@
       });
       host._clWired = true;
     }
+  }
+
+  /* ───────── the embryo the gene actually lives in ─────────
+   * The map is an abstraction; this is the thing itself. Renders the standard segmentation
+   * (cytoplasm · pronuclei · polar body — whatever labels that embryo has, in the site's usual
+   * colours via V.bodyTraces) with the selected gene's transcripts on top, in the embryo that
+   * holds the most of it. Turning on "cluster mates" overlays the rest of the cluster, which is
+   * the honest test of the whole project: do they really share a region?
+   */
+  const sceneCache = {};
+  async function renderEmbryo() {
+    const host = $("#embryo-host"), g = state.gene, rec = state.byGene[g];
+    const eid = rec.best_emb;
+    $("#emb-sub").textContent = `${eid.replace(/^\d{8}_/, "")} · ${rec.best_n.toLocaleString()} transcripts`;
+    let s = sceneCache[eid];
+    if (!s) {
+      try { s = sceneCache[eid] = await V.loadGz(`data/planes_all/${eid}.json.gz`); }
+      catch (_) { host.innerHTML = `<div class="cl-note" style="padding:14px">Scene unavailable for ${eid}.</div>`; return; }
+    }
+    if (state.gene !== g) return;                 // a newer selection won the race
+
+    const zs = s.z_scale;
+    const traces = V.bodyTraces(s);               // cytoplasm + pronuclei + polar body
+    const put = (t, name, color, size, rank, op) => {
+      if (!t || !t.x || !t.x.length) return;
+      const m = t.s1 || null;
+      const x = [], y = [], z = [];
+      for (let i = 0; i < t.x.length; i++) {
+        if (m && !m[i]) continue;                 // cell body only — what the signature used
+        x.push(t.x[i]); y.push(t.y[i]); z.push(t.gz[i] * zs);
+      }
+      if (!x.length) return;
+      traces.push({ type: "scatter3d", mode: "markers", name, x, y, z,
+        marker: { size, color, opacity: op, line: { width: 0 } },
+        hovertemplate: `${name}<extra></extra>`, legendrank: rank });
+    };
+
+    if (state.showMates) {
+      const c = clusterOf(g);
+      const mates = state.clusters[c].members.filter((x) => x !== g && s.transcripts[x]);
+      // one merged trace: individually they would flood the legend
+      const x = [], y = [], z = [];
+      for (const mg of mates) {
+        const t = s.transcripts[mg], mm = t.s1 || null;
+        for (let i = 0; i < t.x.length; i++) {
+          if (mm && !mm[i]) continue;
+          x.push(t.x[i]); y.push(t.y[i]); z.push(t.gz[i] * zs);
+        }
+      }
+      if (x.length) traces.push({
+        type: "scatter3d", mode: "markers", name: `cluster ${c + 1} · ${mates.length} other genes`,
+        x, y, z, marker: { size: 1.6, color: DARK, opacity: .30, line: { width: 0 } },
+        hovertemplate: `cluster ${c + 1}<extra></extra>`, legendrank: 20001 });
+    }
+    put(s.transcripts[g], g, SEL, 2.6, 20000, 0.95);
+
+    Plotly.react(host, traces, V.sceneLayout(s.extents, eid), V.plotConfig);
   }
 
   function renderReadout() {
@@ -383,9 +440,11 @@
     $("#k-range").addEventListener("input", (e) => {
       applyK(parseInt(e.target.value, 10));
       renderMap(); renderReadout(); renderMembers(); renderActive();
+      if (state.showMates) renderEmbryo();
     });
     $("#layout-sel").addEventListener("change", (e) => { state.layout = e.target.value; renderMap(); });
     $("#show-labels").addEventListener("change", (e) => { state.showLabels = e.target.checked; renderMap(); });
+    $("#show-mates").addEventListener("change", (e) => { state.showMates = e.target.checked; renderEmbryo(); });
 
     // bottom drawer
     $("#drawer-handle").addEventListener("click", () => openDrawer($("#drawer").dataset.open !== "true"));
@@ -451,6 +510,8 @@
       }
     });
 
-    window.addEventListener("resize", () => { try { Plotly.Plots.resize($("#plot-host")); } catch (_) {} });
+    window.addEventListener("resize", () => {
+      for (const id of ["#plot-host", "#embryo-host"]) { try { Plotly.Plots.resize($(id)); } catch (_) {} }
+    });
   }
 })();

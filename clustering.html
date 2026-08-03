@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spatial Gene Clustering · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="help.css" />
+  <link rel="stylesheet" href="clustering.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <script src="embryo-probesets.js"></script>
+  <script src="viewer-core.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#0f766e;box-shadow:0 0 0 4px color-mix(in srgb,#0f766e 18%,transparent)"></span>
+      <span class="brand-name">Spatial&nbsp;Gene&nbsp;Clustering</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <div class="cl-topsearch">
+      <input type="search" id="gene-search" placeholder="find a gene…" aria-label="Find a gene" autocomplete="off">
+      <div class="cl-suggest" id="gene-suggest" hidden></div>
+    </div>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">Controls</span>
+        <button class="help-btn" data-help="clustering" style="margin-left:auto"
+                aria-label="What is this analysis?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="controls-row">
+          <label class="ctl"><span class="ctl-label">Gene</span>
+            <select id="gene-select" aria-label="Gene"></select></label>
+        </div>
+
+        <div class="cl-krow">
+          <div class="cl-ktop"><span class="ctl-label">Clusters</span>
+            <span class="cl-kval" id="k-val">8</span></div>
+          <input type="range" id="k-range" min="4" max="12" step="1" value="8" />
+          <div class="cl-khint" id="k-hint"></div>
+        </div>
+
+        <div class="controls-row">
+          <label class="ctl"><span class="ctl-label">Layout</span>
+            <select id="layout-sel" title="How the 12-D signatures are flattened to two dimensions. MDS keeps the true distances as faithfully as it can; t-SNE pulls groups apart so they read more clearly, at the cost of distorting the space between them.">
+              <option value="mds">MDS · faithful distances</option>
+              <option value="tsne">t-SNE · separated groups</option>
+            </select></label>
+        </div>
+
+        <div class="cl-toggles">
+          <label class="zt"><input type="checkbox" id="show-labels"><span>Label cluster members</span></label>
+        </div>
+
+        <div class="cl-readout" id="cl-readout"></div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Loading gene map…</div>
+        <div class="ph-sub">Every gene is placed by where its transcripts sit inside the zygote.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- bottom drawer -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Where this gene sits <span class="drawer-gene" id="drawer-gene"></span></span>
+      <span class="drawer-hint">signature · cluster profiles · nearest genes · how the clusters were made</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="xs-graph-tabs" id="cl-tabs" role="tablist" aria-label="Panels">
+        <button type="button" class="xs-gtab active" data-tab="sig" role="tab" aria-selected="true">Signature</button>
+        <button type="button" class="xs-gtab" data-tab="profiles" role="tab" aria-selected="false">Cluster profiles</button>
+        <button type="button" class="xs-gtab" data-tab="near" role="tab" aria-selected="false">Nearest genes</button>
+        <button type="button" class="xs-gtab" data-tab="method" role="tab" aria-selected="false">How it works</button>
+      </div>
+      <div class="xs-panels" id="cl-panels">
+
+        <div class="xs-panel" data-tab="sig" role="tabpanel">
+          <div class="mini-title">Selected gene vs its cluster <span class="mini-sub" id="cl-sig-sub"></span></div>
+          <div class="cl-note">Enrichment is measured against <b>that embryo's own transcript distribution</b>, then
+            averaged over the embryos carrying the gene. Above 0 = more of this gene there than transcripts generally;
+            below 0 = less. Radial shells are equal-<i>volume</i>, so a flat line means no radial preference.</div>
+          <div class="xs-resizable"><div id="cl-sig" class="cl-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="profiles" role="tabpanel" hidden>
+          <div class="mini-title">Every cluster's mean signature <span class="mini-sub" id="cl-prof-sub"></span></div>
+          <div class="cl-note">Each row is one cluster. This is what the grouping actually keyed on — read across to see
+            which part of the cell each cluster prefers.</div>
+          <div class="xs-resizable"><div id="cl-prof" class="cl-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="near" role="tabpanel" hidden>
+          <div class="mini-title">Closest genes by spatial signature <span class="mini-sub" id="cl-near-sub"></span></div>
+          <div class="cl-note">Correlation distance between mean signatures — the same measure the clustering used.
+            Nearby genes need not share a cluster: the cut has to fall somewhere.</div>
+          <div class="xs-resizable"><div id="cl-near" class="cl-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="method" role="tabpanel" hidden>
+          <div class="mini-title">How the clusters were made</div>
+          <div class="cl-method" id="cl-method"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- right drawer: members of the selected cluster -->
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Cluster members</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title" id="cl-mem-title">Cluster</div>
+        <div class="rdrawer-desc" id="cl-mem-desc"></div>
+      </div>
+      <div class="best-list" id="cl-members"></div>
+    </div>
+  </aside>
+
+  <script src="clustering.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+  <script src="gene-info.js"></script>
+</body>
+</html>

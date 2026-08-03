@@ -594,6 +594,14 @@
         <p>A <b>randomized null</b> (shuffled sperm positions) shows what accuracy chance alone would give — the real prediction
         has to beat it to mean anything.</p>` },
 
+    "clustering": { eyebrow: "Spatial clustering · the map", title: "Genes that sit in the same place",
+      body: [
+        "Every dot is a gene, placed by WHERE its transcripts sit inside the zygote — not by how much of it there is. Genes near each other share a spatial habit.",
+        "Each gene's signature is 6 equal-volume radial shells (core → cortex) plus 6 bins along the polar-body axis (vegetal → animal), measured as log2 enrichment against <b>that embryo's own transcript distribution</b>. Dividing by the embryo's own background is what removes cell shape, size, orientation and detection efficiency.",
+        "Colour carries one message: every cluster is a grey, the selected gene's cluster darkens, and the single red dot is the gene you picked.",
+        "<b>Why not cluster genes that co-vary across embryos?</b> Each embryo is imaged with one probeset and the probesets are disjoint — one panel shares zero genes with the others — so genes from different panels are never measured in the same embryo. A per-gene signature in a shared frame is what lets all of them be compared at once.",
+        "The silhouette is around 0.23: real structure, but a gradient rather than a sharp partition. Use the Nearest genes panel rather than the cluster cut when a specific pair matters."
+      ] },
     "alphabeta": { eyebrow: "Sperm α/β · the chart", title: "Which twin is α?",
       html: `<p class="lede">The two-cell embryo has two blastomeres that look almost identical. Several independent "tests"
         each nominate one of them as <b>alpha</b> — but a test only says "this one," not whether "this one" is the same twin

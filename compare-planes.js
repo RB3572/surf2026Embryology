@@ -81,6 +81,33 @@
   const cur = () => state.byId[state.currentId];
   const gene = () => state.gene;
 
+  /** The sperm·COM·polar-body plane needs a labelled sperm (and a polar body) to be defined at
+   *  all, so it simply does not exist for 20 of the 50 zygotes. `e.sd` is that plane's record. */
+  const spermPlaneAvailable = (e) => !!(e && e.sd);
+
+  /** Grey out and lock every sperm-plane control on an embryo that has no sperm, rather than
+   *  leaving a live toggle that silently draws nothing when switched on. The user's preference
+   *  in state.planesOn.sperm is preserved, so the toggle comes back as they left it on the next
+   *  embryo that does have a sperm plane. */
+  function syncSpermControls() {
+    const ok = spermPlaneAvailable(cur());
+    const cb = $("#pl-sperm");
+    if (cb) {
+      cb.disabled = !ok;
+      cb.checked = ok && state.planesOn.sperm;
+      const lab = cb.closest("label");
+      if (lab) {
+        lab.classList.toggle("zt-off", !ok);
+        lab.title = ok ? "" : "No sperm labelled for this embryo — this plane cannot be defined.";
+      }
+    }
+    // The same plane is offered as a "split by" option; selecting it here would split the gene
+    // dots by a plane that doesn't exist, so disable it and fall back.
+    const sel = $("#split-by"), opt = sel && sel.querySelector('option[value="sperm"]');
+    if (opt) opt.disabled = !ok;
+    if (!ok && state.splitBy === "sperm") { state.splitBy = "equatorial"; if (sel) sel.value = "equatorial"; }
+  }
+
   async function selectEmbryo(id) {
     if (id === state.currentId && state.scene) return;
     state.currentId = id; V.markActiveTab($("#tabs"), id);
@@ -89,7 +116,7 @@
       let sc = state.sceneCache[id];
       if (!sc) { sc = await V.loadGz(`data/planes_all/${id}.json.gz`); state.sceneCache[id] = sc; }
       if (state.currentId !== id) return;
-      state.scene = sc; fillGenes();
+      state.scene = sc; fillGenes(); syncSpermControls();
       if (!state.vcExtras) state.vcExtras = V.addWindowExtras($("#controls-body"), { defaultSize: state.dotSize, onDotSize: (s) => { state.dotSize = s; render3D(); } });
       state.vcExtras.setAtlas && state.vcExtras.setAtlas(id);
       $("#controls").hidden = false; $("#placeholder").hidden = true; $("#drawer").hidden = false; $("#rdrawer").hidden = false;
@@ -147,7 +174,10 @@
     $("#cp-readout").innerHTML = `<div class="cp-r-head"><b>${g}</b> · ${e.genes[g].nc} cell-body transcripts</div>` +
       rows.map((o) => o.r
         ? `<div class="cp-r-line"><span class="cp-sw" style="background:${o.p.color}"></span>${o.p.label}: asym <b>${o.a.toFixed(3)}</b> · <span class="${sig(o.pv) ? "cp-sig" : ""}">p ${fmtP(o.pv)}</span></div>`
-        : `<div class="cp-r-line cp-r-na"><span class="cp-sw" style="background:${o.p.color}"></span>${o.p.label}: —</div>`).join("");
+        // Say WHY the row is empty. For the sperm plane on a sperm-less embryo that is a
+        // property of the embryo, not of the gene, so name it explicitly.
+        : `<div class="cp-r-line cp-r-na"><span class="cp-sw" style="background:${o.p.color}"></span>${o.p.label}: ${
+            o.p.key === "sperm" && !spermPlaneAvailable(e) ? "<i>no sperm labelled</i>" : "—"}</div>`).join("");
   }
 
   // ───────── bottom-drawer tabs ─────────
@@ -322,7 +352,7 @@
   function setGene(g) { state.gene = g; $("#gene-select").value = g; render3D(); renderReadout(); renderActive(); renderRank(); }
   function wire() {
     $("#gene-select").addEventListener("change", (e) => setGene(e.target.value));
-    $("#plane-toggles").addEventListener("change", (e) => { const c = e.target.closest("input[data-plane]"); if (!c) return; state.planesOn[c.dataset.plane] = c.checked; render3D(); });
+    $("#plane-toggles").addEventListener("change", (e) => { const c = e.target.closest("input[data-plane]"); if (!c || c.disabled) return; state.planesOn[c.dataset.plane] = c.checked; render3D(); });
     $("#dots-show").addEventListener("change", (e) => { state.dotsOn = e.target.checked; render3D(); });
     $("#split-by").addEventListener("change", (e) => { state.splitBy = e.target.value; render3D(); });
     $("#cp-tabs").addEventListener("click", (e) => { const t = e.target.closest(".xs-gtab"); if (t) switchTab(t.dataset.tab); });

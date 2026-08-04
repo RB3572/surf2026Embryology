@@ -40,7 +40,11 @@
 
 /* ---- GFP panel ---- */
 .sm-gfp-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.sm-mark-tg { margin-left: auto; }
+/* Sits next to the title, NOT pushed right: with the ranking drawer open, a right-aligned
+   control ends up underneath it and effectively invisible. */
+.sm-mark-tg { margin-left: 4px; padding: 2px 9px; border: 1px solid var(--line);
+  border-radius: 999px; background: var(--surface); font-weight: 600; }
+.sm-mark-tg:hover { border-color: #cfd6e0; }
 .sm-gfp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 12px; margin-top: 6px; }
 .sm-gfp-cell { border: 1px solid var(--line); border-radius: 12px; overflow: hidden;

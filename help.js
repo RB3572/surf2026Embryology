@@ -594,6 +594,14 @@
         <p>A <b>randomized null</b> (shuffled sperm positions) shows what accuracy chance alone would give — the real prediction
         has to beat it to mean anything.</p>` },
 
+    "contact": { eyebrow: "Contact enrichment · the interface", title: "Genes at the blastomere contact",
+      body: [
+        "A 2-cell embryo has an interface — the flat face where the two blastomeres press together. This asks whether any gene concentrates there.",
+        "The two blastomeres are the two largest segments (the scene ships voxel volumes, so this is read off rather than assumed). Their centroids define an axis; every transcript gets a signed position along it, with <b>0</b> at the interface. The contact region is the slab within ±D µm, and D is a slider.",
+        "Only transcripts inside the two blastomeres count — nuclei and the polar body are separate compartments, and a nucleus sitting near the interface would otherwise masquerade as contact enrichment.",
+        "<b>The null is the rest of the transcriptome, not uniform space.</b> Measuring transcripts per µm³ would need the volume of the slab∩cell intersection, and we ship meshes rather than voxel masks. Instead each gene is compared to where that same embryo's transcripts generally sit: fold = (k/n) ÷ f0. That needs no volume estimate and absorbs cell shape, size and detection efficiency.",
+        "Fold > 1 means over-represented at the interface. p is a two-sided binomial against f0."
+      ] },
     "clustering": { eyebrow: "Spatial clustering · the map", title: "Genes that sit in the same place",
       body: [
         "Every dot is a gene, placed by WHERE its transcripts sit inside the zygote — not by how much of it there is. Genes near each other share a spatial habit.",

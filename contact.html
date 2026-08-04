@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blastomere Contact Enrichment · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="help.css" />
+  <link rel="stylesheet" href="contact.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <script src="embryo-probesets.js"></script>
+  <script src="viewer-core.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#7c3aed;box-shadow:0 0 0 4px color-mix(in srgb,#7c3aed 18%,transparent)"></span>
+      <span class="brand-name">Blastomere&nbsp;Contact&nbsp;Enrichment</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Embryos"></nav>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">Controls</span>
+        <button class="help-btn" data-help="contact" style="margin-left:auto"
+                aria-label="What is this analysis?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="controls-row">
+          <label class="ctl"><span class="ctl-label">Gene</span>
+            <select id="gene-select" aria-label="Gene"></select></label>
+        </div>
+
+        <div class="ct-radius">
+          <div class="ct-radius-top"><span class="ctl-label">Contact slab</span>
+            <span class="ct-radius-val" id="radius-val">± 6 µm</span></div>
+          <input type="range" id="radius-range" min="0" max="9" step="1" value="5" />
+          <div class="ct-radius-hint">half-thickness either side of the interface</div>
+        </div>
+
+        <div class="ct-toggles">
+          <label class="zt"><input type="checkbox" id="slab-show" checked /><span class="zt-sw" style="background:#7c3aed"></span>Contact slab</label>
+          <label class="zt"><input type="checkbox" id="dots-show" checked /><span class="zt-sw" style="background:#2563eb"></span>Gene dots</label>
+          <label class="zt"><input type="checkbox" id="axis-show" /><span class="zt-sw" style="background:#111"></span>Interface axis</label>
+        </div>
+
+        <div class="ct-readout" id="ct-readout"></div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Select a 2-cell embryo</div>
+        <div class="ph-sub">Choose an embryo above to see the interface where its two blastomeres
+          meet, and whether the selected gene piles up there.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- bottom drawer -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Contact enrichment <span class="drawer-gene" id="drawer-gene"></span></span>
+      <span class="drawer-hint">this embryo · across early-2C · across late-2C · across all 2-cell · every gene</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="xs-graph-tabs" id="ct-tabs" role="tablist" aria-label="Panels">
+        <button type="button" class="xs-gtab active" data-tab="one" role="tab" aria-selected="true">This embryo</button>
+        <button type="button" class="xs-gtab" data-tab="e2c" role="tab" aria-selected="false">All early-2C</button>
+        <button type="button" class="xs-gtab" data-tab="l2c" role="tab" aria-selected="false">All late-2C</button>
+        <button type="button" class="xs-gtab" data-tab="all" role="tab" aria-selected="false">All 2-cell</button>
+        <button type="button" class="xs-gtab" data-tab="genes" role="tab" aria-selected="false">Compare all genes</button>
+      </div>
+      <div class="xs-panels" id="ct-panels">
+
+        <div class="xs-panel" data-tab="one" role="tabpanel">
+          <div class="mini-title">Where this gene sits along the interface axis <span class="mini-sub" id="ct-one-sub"></span></div>
+          <div class="ct-note">Every transcript projected onto the axis running from one blastomere,
+            through the interface at <b>0</b>, into the other. The shaded band is the contact slab.
+            The grey curve is <b>all</b> transcripts in this embryo — the null this gene is judged
+            against.</div>
+          <div class="xs-resizable"><div id="ct-one" class="ct-plot"></div></div>
+          <div class="ct-stat" id="ct-one-stat"></div>
+        </div>
+
+        <div class="xs-panel" data-tab="e2c" role="tabpanel" hidden>
+          <div class="mini-title">This gene across every early-2-cell embryo <span class="mini-sub" id="ct-e2c-sub"></span></div>
+          <div class="ct-note">One bar per embryo: fold enrichment in the contact slab against that
+            embryo's own transcript distribution. Error bars are the 95% binomial range under the
+            null; dashed line = no enrichment.</div>
+          <div class="xs-resizable"><div id="ct-e2c" class="ct-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="l2c" role="tabpanel" hidden>
+          <div class="mini-title">This gene across every late-2-cell embryo <span class="mini-sub" id="ct-l2c-sub"></span></div>
+          <div class="ct-note">As above, for the late-2-cell embryos.</div>
+          <div class="xs-resizable"><div id="ct-l2c" class="ct-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="all" role="tabpanel" hidden>
+          <div class="mini-title">This gene across all 2-cell embryos <span class="mini-sub" id="ct-all-sub"></span></div>
+          <div class="ct-note">Both stages together, coloured by stage, so a difference between
+            early and late shows up as a split rather than being averaged away.</div>
+          <div class="xs-resizable"><div id="ct-all" class="ct-plot"></div></div>
+          <div class="ct-stat" id="ct-all-stat"></div>
+        </div>
+
+        <div class="xs-panel" data-tab="genes" role="tabpanel" hidden>
+          <div class="ct-genes-ctl">
+            <label class="ctl ctl-inline"><span class="ctl-label">Stage</span>
+              <select id="genes-stage">
+                <option value="both">Both 2-cell stages</option>
+                <option value="e2c">Early 2-cell only</option>
+                <option value="l2c">Late 2-cell only</option>
+              </select></label>
+            <label class="ctl ctl-inline"><span class="ctl-label" title="Only rank genes with at least this many blastomere transcripts pooled across the chosen embryos">Min transcripts</span>
+              <input type="number" id="genes-min" min="20" step="10" value="300" /></label>
+          </div>
+          <div class="mini-title">Every gene, ranked by contact enrichment <span class="mini-sub" id="ct-genes-sub"></span></div>
+          <div class="ct-note">Counts pooled over the chosen embryos, each embryo contributing its
+            own expected fraction. Click a bar to select that gene.</div>
+          <div class="xs-resizable"><div id="ct-genes" class="ct-plot"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- right drawer: rankings -->
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Gene ranking</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Most enriched at the contact</div>
+        <div class="rdrawer-desc">Pooled across the chosen stage at the current slab thickness.
+          Click a gene to view it.</div>
+        <div class="ct-rank-row">
+          <div class="ct-seg" id="ct-rank-stage" role="group">
+            <button type="button" data-stage="both" class="active">Both</button>
+            <button type="button" data-stage="e2c">Early</button>
+            <button type="button" data-stage="l2c">Late</button>
+          </div>
+          <div class="ct-seg" id="ct-rank-dir" role="group">
+            <button type="button" data-dir="enr" class="active">Enriched</button>
+            <button type="button" data-dir="dep">Depleted</button>
+          </div>
+        </div>
+        <label class="ctl ct-rank-min"><span class="ctl-label">Min transcripts</span>
+          <input type="number" id="rank-min" min="20" step="10" value="300" /></label>
+      </div>
+      <div class="best-list" id="ct-rank-list"></div>
+    </div>
+  </aside>
+
+  <script src="contact.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+  <script src="gene-info.js"></script>
+</body>
+</html>

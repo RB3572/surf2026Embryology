@@ -1,0 +1,80 @@
+/* Sperm Alignment (2-cell) — project styling (builds on style.css tokens). */
+
+:root { --al: #0d9488; --al-a: #c98a3f; --al-b: #4a7db5; }
+
+/* ---- the .xs-* drawer chrome is per-project in this codebase ---- */
+.xs-graph-tabs { flex: 0 0 auto; display: flex; gap: 2px; padding: 0 16px; overflow-x: auto;
+  border-bottom: 1px solid var(--line); scrollbar-width: none; }
+.xs-graph-tabs::-webkit-scrollbar { display: none; }
+.xs-gtab { font-family: var(--sans); font-size: 12.5px; font-weight: 600; color: var(--ink-2);
+  padding: 7px 13px; border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+.xs-gtab:hover { color: var(--ink); }
+.xs-gtab.active { color: var(--ink); border-bottom-color: var(--al); }
+.xs-panels { flex: 1 1 auto; overflow: auto; padding: 10px 16px 14px; min-height: 0; }
+.xs-panel { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+.xs-panel[hidden] { display: none; }
+.xs-resizable { position: relative; width: 100%; max-width: 100%; height: 420px;
+  min-height: 240px; min-width: 280px; resize: both; overflow: hidden; }
+.xs-resizable > .al-plot { flex: none; width: 100%; height: 100%; min-height: 0; }
+.xs-resizable::after { content: ""; position: absolute; right: 3px; bottom: 3px; width: 11px; height: 11px;
+  pointer-events: none; opacity: .55;
+  background: linear-gradient(135deg, transparent 0 50%, var(--ink-soft) 50% 60%, transparent 60% 72%, var(--ink-soft) 72% 82%, transparent 82%); }
+
+.al-plot { width: 100%; height: 100%; min-height: 260px; }
+.al-note { font-size: 11.5px; color: var(--ink-2); line-height: 1.5; margin: 2px 0 8px; }
+.al-note b { color: var(--ink); }
+.al-empty, .al-empty-list { padding: 26px 14px; text-align: center; color: var(--muted);
+  font-size: 12.5px; font-style: italic; }
+
+.al-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.al-tgs { display: inline-flex; gap: 12px; flex-wrap: wrap; margin-left: auto; }
+.al-inline { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; }
+.al-inline select { font-size: 12px; padding: 3px 7px; border: 1px solid #d5d9e0;
+  border-radius: 7px; background: #fff; }
+.zt { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: #334155; cursor: pointer; }
+.zt input { accent-color: var(--al); }
+
+/* ---- controls window ---- */
+.al-readout { margin-top: 10px; padding-top: 10px; border-top: 1px solid #eef1f5; font-size: 12px; }
+.al-r-head { font-size: 12.5px; font-weight: 700; color: #0f172a; margin-bottom: 5px; }
+.al-r-line { display: flex; align-items: center; gap: 6px; color: #334155; padding: 1.5px 0; }
+.al-r-line .k { color: var(--muted); }
+.al-r-line .v { margin-left: auto; font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--ink); }
+.al-r-line.is-sperm .v { color: #16a34a; font-weight: 700; }
+.al-r-sep { margin-top: 8px; padding-top: 7px; border-top: 1px solid #eef1f5;
+  font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .5px;
+  color: var(--ink-soft); }
+.al-warn { margin-top: 7px; padding: 7px 9px; border-radius: 8px; font-size: 11.5px;
+  line-height: 1.45; color: #7c2d12; background: #fff7ed; border: 1px solid #fed7aa; }
+
+/* ---- right drawer ---- */
+.al-sel { display: block; margin-top: 8px; }
+.al-sel select { width: 100%; font-size: 12.5px; padding: 5px 8px; border: 1px solid #d5d9e0;
+  border-radius: 8px; background: #fff; }
+.al-minwrap { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.al-minwrap input[type="range"] { flex: 1 1 auto; accent-color: var(--al); }
+.al-minval { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--al);
+  min-width: 18px; text-align: right; }
+
+.best-list { flex: 1 1 auto; overflow-y: auto; padding: 6px 8px 16px; border-top: 1px solid var(--line); }
+.al-head-row, .al-row { display: grid; grid-template-columns: 22px minmax(0,1fr) 54px 30px; gap: 7px; }
+.al-head-row { padding: 4px 8px; font-family: var(--mono); font-size: 9.5px; text-transform: uppercase;
+  letter-spacing: .4px; color: var(--ink-soft); position: sticky; top: 0;
+  background: var(--surface); border-bottom: 1px solid var(--line-2); }
+.al-row { align-items: center; padding: 6px 8px; border-radius: 7px; cursor: pointer;
+  border: 1px solid transparent; font-size: 12px; }
+.al-row:hover { background: var(--line-2); }
+.al-row.current { border-color: var(--al); background: color-mix(in srgb, var(--al) 8%, var(--surface)); }
+.al-row .n { font-family: var(--mono); font-size: 10.5px; color: var(--ink-soft); text-align: right; }
+.al-row .e { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.al-row.current .e { color: var(--al); font-weight: 700; }
+.al-row .d { font-family: var(--mono); font-size: 11px; text-align: right;
+  font-variant-numeric: tabular-nums; color: #2563eb; }
+.al-row .g { font-family: var(--mono); font-size: 10px; text-align: right; color: var(--muted); }
+.al-pb { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  color: #16a34a; background: #dcfce7; border-radius: 5px; padding: 1px 4px; }
+
+/* embryos with no labelled sperm are still selectable, just visibly secondary */
+.tabs .tab.is-muted { opacity: .5; }
+.tabs .tab.is-muted:hover { opacity: .8; }

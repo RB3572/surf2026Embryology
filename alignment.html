@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sperm Alignment (2-cell) · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="help.css" />
+  <link rel="stylesheet" href="alignment.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <script src="embryo-probesets.js"></script>
+  <script src="viewer-core.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#0d9488;box-shadow:0 0 0 4px color-mix(in srgb,#0d9488 18%,transparent)"></span>
+      <span class="brand-name">Sperm&nbsp;Alignment&nbsp;(2-cell)</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Embryos"></nav>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">Anchor</span>
+        <button class="help-btn" data-help="alignment" style="margin-left:auto"
+                aria-label="What is this analysis?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="controls-row">
+          <label class="ctl"><span class="ctl-label">Anchor</span>
+            <select id="anchor-select" aria-label="Anchor"></select></label>
+        </div>
+        <div class="controls-row">
+          <label class="ctl"><span class="ctl-label">Stage</span>
+            <select id="stage-select" aria-label="Stage">
+              <option value="all">Early + late 2-cell</option>
+              <option value="e2c">Early 2-cell only</option>
+              <option value="l2c">Late 2-cell only</option>
+            </select></label>
+        </div>
+        <div class="al-readout" id="al-readout"></div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Pick a 2-cell embryo</div>
+        <div class="ph-sub">Choose an embryo above to see it in 3-D with its sperm.
+          The cross-section below overlays every embryo the anchor can orient.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- bottom drawer -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Aligned cross-section <span class="drawer-gene" id="drawer-anchor"></span></span>
+      <span class="drawer-hint">every embryo the anchor can orient · which anchors agree</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="xs-graph-tabs" id="al-tabs" role="tablist" aria-label="Panels">
+        <button type="button" class="xs-gtab active" data-tab="cross" role="tab" aria-selected="true">Cross-section</button>
+        <button type="button" class="xs-gtab" data-tab="agree" role="tab" aria-selected="false">Anchor agreement</button>
+      </div>
+      <div class="xs-panels" id="al-panels">
+
+        <div class="xs-panel" data-tab="cross" role="tabpanel">
+          <div class="al-head">
+            <div class="mini-title">All 2-cell embryos in the anchor's frame <span class="mini-sub" id="al-cross-sub"></span></div>
+            <span class="al-tgs">
+              <label class="zt"><input type="checkbox" id="tg-outlines" checked><span>every embryo</span></label>
+              <label class="zt"><input type="checkbox" id="tg-mean" checked><span>average outline</span></label>
+              <label class="zt"><input type="checkbox" id="tg-blobs" checked><span>nuclei + polar body</span></label>
+              <label class="zt"><input type="checkbox" id="tg-project" checked><span>snap sperm to the outline</span></label>
+            </span>
+          </div>
+          <div class="al-note">The anchor sets both things the blastomere axis cannot: which
+            blastomere is drawn on the <b>right</b> (the one holding more of the anchor gene per µm³,
+            or nearer the polar body), and which way is <b>up</b> (the anchor's own direction). Each
+            sperm is then snapped to the average outline of the blastomere it sits in.</div>
+          <div class="xs-resizable" id="al-cross-wrap"><div id="al-cross" class="al-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="agree" role="tabpanel" hidden>
+          <div class="al-head">
+            <div class="mini-title">Anchors that produce the same picture <span class="mini-sub" id="al-agree-sub"></span></div>
+            <label class="ctl al-inline"><span class="ctl-label">Show</span>
+              <select id="agree-n">
+                <option value="20">top 20 anchors</option>
+                <option value="30" selected>top 30 anchors</option>
+                <option value="50">top 50 anchors</option>
+              </select></label>
+          </div>
+          <div class="al-note">Two anchors agree when they put the sperm in the same place. Each
+            square is the mean of cos(Δθ) over the embryos <b>both</b> anchors can orient — <b>+1</b>
+            (dark) means the two cross-sections are interchangeable, <b>−1</b> means one is the other
+            turned inside out. Pale squares are pairs with too little overlap to compare; with
+            disjoint probesets that is most of them, which is itself the point.</div>
+          <div class="xs-resizable" id="al-agree-wrap"><div id="al-agree" class="al-plot"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- right drawer: the anchor ranking -->
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Anchor ranking</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Which anchor organises the sperm?</div>
+        <div class="rdrawer-desc">Every anchor is scored on the sperm it can actually orient.
+          Click one to make it the anchor.</div>
+        <label class="ctl al-sel"><span class="ctl-label">Rank by</span>
+          <select id="rank-select">
+            <option value="side">Most sperm on one side</option>
+            <option value="tight">Least variation in sperm position</option>
+            <option value="spread">Most variation in sperm position</option>
+          </select></label>
+        <div class="al-minwrap">
+          <span class="ctl-label">Minimum sperm</span>
+          <input type="range" id="min-sperm" min="3" max="12" step="1" value="6">
+          <output class="al-minval" id="min-sperm-val">6</output>
+        </div>
+      </div>
+      <div class="best-list" id="al-list"></div>
+    </div>
+  </aside>
+
+  <script src="alignment.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

@@ -605,6 +605,15 @@
         "<b>ZIP this embryo</b> saves its four frames as PNG; <b>ZIP the whole list</b> does the same for every ranked embryo as JPEG, since the same images as PNG run to hundreds of megabytes. Both include a README with the measurements.",
         "Not every embryo has GFP frames: some sperm were located on the MERFISH image without being pointed at in the GFP stack. Those rows have no dot in the ranking."
       ] },
+    "alignment": { eyebrow: "Sperm alignment · the anchor", title: "Where the sperm sits — once you choose",
+      body: [
+        "A 2-cell embryo hands you exactly one unambiguous direction: the line joining the two blastomere centres. Which blastomere comes <b>first</b>, and which way is <b>up</b>, are not in the data. So a pile of 2-cell embryos cannot be overlaid until you supply a rule — and that rule is the <b>anchor</b>.",
+        "<b>The anchor supplies both missing pieces.</b> Which blastomere is drawn on the right (α): for a gene, the one holding more of it per µm³; for the polar body, the one it sits nearer. And which way is up: the anchor's own direction, perpendicular to the axis. The cross-section is then the plane containing the axis and the anchor, so every embryo carrying the anchor lands in one shared frame.",
+        "Each sperm gets an angle θ around its own blastomere's centre, and is snapped to that blastomere's average outline. θ is what the rankings and the heatmap are made of: <b>one-sidedness</b> is the α/β split, <b>variation</b> is the circular spread 1−R of those angles.",
+        "<b>⚠️ An anchor is only ever a claim about the embryos it can orient.</b> The probesets are disjoint, so no gene is measured in every embryo. Across the 91 two-cell embryos the best gene reaches 42; of the 21 that also have a labelled sperm, the best gene reaches 10. Every anchor therefore carries its own n, nothing is ranked below the minimum you set, and a top-of-the-list gene scoring 6/6 is six embryos — not a result about the stage.",
+        "The polar body is the exception: it needs no panel, so it orients 42 embryos and 18 of the 21 with a sperm. It is the only anchor here with a biological claim to being a real axis rather than a convention.",
+        "<b>Anchor agreement</b> asks which anchors are interchangeable: the mean of cos(Δθ) over the embryos both can orient. Dark means the two produce the same picture. Most pairs are too disjoint to compare at all, which is the honest shape of this dataset.",
+      ] },
     "contact": { eyebrow: "Contact enrichment · the interface", title: "Genes at the blastomere contact",
       body: [
         "A 2-cell embryo has an interface — the flat face where the two blastomeres press together. This asks whether any gene concentrates there.",

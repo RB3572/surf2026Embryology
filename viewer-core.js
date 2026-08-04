@@ -64,18 +64,197 @@ window.VCore = (function () {
     if (a) a.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
   }
 
+  // ---- dark "glass render" mode -------------------------------------------------------------
+  // A rendering mode for the 3-D scenes only — the page chrome stays light. Cells become
+  // translucent white glass envelopes and the smaller nested structures (pronuclei, polar body)
+  // glow, on a near-black scene. Ported from the MERFISH atlas viewer, with one change: that
+  // viewer classifies regions by voxel count, which we do not ship, so bounding-box volume of the
+  // mesh is used instead — same ">=40% of the largest" rule, derived rather than hardcoded, so it
+  // works for any embryo whatever its label numbering.
+  const DARK_BG = "#04050a";
+  const DARK_NUCLEUS_COLORS = ["#22d3ee", "#ff2fd0", "#facc15", "#4ade80",
+                               "#fb923c", "#a78bfa", "#f87171", "#38bdf8"];
+  const DARK_DOT = 0.5;            // dark render reads best with tiny bright dots
+  const DARK_KEY = "surf_dark";
+  let darkOn = false;
+  try { darkOn = localStorage.getItem(DARK_KEY) === "1"; } catch (_) {}
+  const dotSliders = new Set();    // every Dot size control on the page, so all stay in step
+  const isDark = () => darkOn;
+
+  function bboxVol(verts) {
+    let xn = Infinity, yn = Infinity, zn = Infinity, xx = -Infinity, yx = -Infinity, zx = -Infinity;
+    for (let i = 0; i < verts.length; i += 3) {
+      const a = verts[i], b = verts[i + 1], c = verts[i + 2];
+      if (a < xn) xn = a; if (a > xx) xx = a;
+      if (b < yn) yn = b; if (b > yx) yx = b;
+      if (c < zn) zn = c; if (c > zx) zx = c;
+    }
+    if (!isFinite(xn)) return 0;
+    return Math.max(xx - xn, 0) * Math.max(yx - yn, 0) * Math.max(zx - zn, 0);
+  }
+
+  /** label -> {type:'cell'|'nucleus', color} for a scene, by relative mesh size. */
+  function classifyDark(scene) {
+    const out = new Map();
+    const labels = [...(scene.mask_labels || [])].sort((a, b) => a - b);
+    const vol = {};
+    let maxV = 0;
+    for (const l of labels) {
+      const m = (scene.region_meshes || {})[String(l)];
+      vol[l] = m && m.verts ? bboxVol(m.verts) : 0;
+      if (vol[l] > maxV) maxV = vol[l];
+    }
+    let ni = 0;
+    for (const l of labels) {
+      if (maxV <= 0 || vol[l] >= 0.4 * maxV) out.set(l, { type: "cell", color: "#ffffff" });
+      else out.set(l, { type: "nucleus", color: DARK_NUCLEUS_COLORS[ni++ % DARK_NUCLEUS_COLORS.length] });
+    }
+    return out;
+  }
+
+  const DARK_CELL = { opacity: 0.10,
+    lighting: { ambient: 0.12, diffuse: 0.5, specular: 1.0, roughness: 0.06, fresnel: 2.0 } };
+  const DARK_NUC = { opacity: 0.34,
+    lighting: { ambient: 0.28, diffuse: 0.65, specular: 1.0, roughness: 0.18 } };
+  const DARK_LIGHTPOS = { x: 100, y: 200, z: 300 };
+
+  /* Restyle the 3-D plots already on screen, so toggling is instant and no project needs to
+   * listen for anything. bodyTraces/sceneLayout below are dark-aware too, so a later re-render
+   * by the project stays consistent. Original light values are stashed on the trace the first
+   * time we touch it, which is what lets the toggle go back. */
+  function applyDarkToPlot(gd) {
+    if (!gd || !gd._fullLayout || !gd.data) return;
+    if (!gd._fullLayout.scene) return;            // 3-D scenes only; drawer charts stay light
+    // ONLY the segmentation meshes get the glass treatment. Projects also draw analysis meshes
+    // — division planes, spheres — and a tilted flat plane has a full-cube bounding box, so
+    // sizing would rank it above the cytoplasm and hand the plane the "cell" style while the
+    // actual embryo turned into a nucleus. bodyTraces names anatomy "body M<label>"; anything
+    // else is an overlay and keeps its own colour, which is right: it is data, not anatomy.
+    const ANATOMY = /^body M\d+$/;
+    const meshIdx = [], meshVol = [];
+    gd.data.forEach((t, i) => {
+      if (t.type !== "mesh3d" || !ANATOMY.test(String(t.name || ""))) return;
+      meshIdx.push(i);
+      const v = [];
+      for (let k = 0; k < t.x.length; k++) v.push(t.x[k], t.y[k], t.z[k]);
+      meshVol.push(bboxVol(v));
+    });
+    const maxV = Math.max(0, ...meshVol);
+    let ni = 0;
+    meshIdx.forEach((i, n) => {
+      const t = gd.data[i];
+      if (t._vcLight === undefined) {
+        t._vcLight = { color: t.color, opacity: t.opacity, lighting: t.lighting,
+                       lightposition: t.lightposition };
+      }
+      if (darkOn) {
+        const cell = maxV <= 0 || meshVol[n] >= 0.4 * maxV;
+        const st = cell ? DARK_CELL : DARK_NUC;
+        t.color = cell ? "#ffffff" : DARK_NUCLEUS_COLORS[ni++ % DARK_NUCLEUS_COLORS.length];
+        t.opacity = st.opacity; t.lighting = st.lighting; t.lightposition = DARK_LIGHTPOS;
+      } else {
+        Object.assign(t, t._vcLight);
+      }
+    });
+    gd.data.forEach((t) => {
+      if (t.type !== "scatter3d" || !t.marker) return;
+      if (t.marker._vcSize === undefined) {
+        t.marker._vcSize = t.marker.size; t.marker._vcOp = t.marker.opacity;
+      }
+      t.marker.size = darkOn ? DARK_DOT : t.marker._vcSize;
+      t.marker.opacity = darkOn ? 1.0 : t.marker._vcOp;
+    });
+    try {
+      Plotly.update(gd, {}, {
+        "scene.bgcolor": darkOn ? DARK_BG : "rgba(0,0,0,0)",
+        paper_bgcolor: darkOn ? DARK_BG : "rgba(0,0,0,0)",
+        template: darkOn ? "plotly_dark" : "plotly_white",
+        "legend.bgcolor": darkOn ? "rgba(12,14,20,0.82)" : "rgba(255,255,255,0.82)",
+        "legend.bordercolor": darkOn ? "#2a3040" : "#e7e9ef",
+        "legend.font.color": darkOn ? "#e6ecff" : "#334155",
+      });
+    } catch (_) {}
+  }
+
+  function applyDark(on, { silent = false } = {}) {
+    darkOn = !!on;
+    try { localStorage.setItem(DARK_KEY, darkOn ? "1" : "0"); } catch (_) {}
+    document.body.classList.toggle("vc-dark", darkOn);
+    document.querySelectorAll(".vc-darkbtn").forEach((b) => {
+      b.classList.toggle("on", darkOn);
+      b.setAttribute("aria-pressed", String(darkOn));
+      b.title = darkOn ? "Switch back to the light render" : "Dark glass render of the 3-D scene";
+    });
+    dotSliders.forEach((s) => s.sync());
+    document.querySelectorAll(".js-plotly-plot").forEach(applyDarkToPlot);
+    if (!silent) window.dispatchEvent(new CustomEvent("vcore:dark", { detail: { dark: darkOn } }));
+  }
+
+  // Navbar toggle, injected into whatever .topbar the page has — every project gets it without
+  // touching 21 HTML files.
+  (function darkToggle() {
+    if (typeof document === "undefined" || window.__vcDark) return;
+    window.__vcDark = true;
+    const css = document.createElement("style");
+    css.textContent =
+      ".vc-darkbtn{margin-left:10px;flex:none;display:inline-flex;align-items:center;gap:6px;" +
+      "font:600 12px/1 var(--sans,system-ui);color:var(--ink-2,#3c4453);background:var(--surface,#f3f3f1);" +
+      "border:1px solid var(--line,#e7e9ef);border-radius:999px;padding:6px 11px;cursor:pointer;" +
+      "transition:background .15s,color .15s,border-color .15s}" +
+      ".vc-darkbtn:hover{border-color:#cfd6e0}" +
+      ".vc-darkbtn.on{background:#0b0d13;border-color:#0b0d13;color:#e6ecff}" +
+      ".vc-darkbtn .vc-dd{width:9px;height:9px;border-radius:50%;background:currentColor;opacity:.75}" +
+      "body.vc-dark .plot-host,body.vc-dark .stage{background:" + DARK_BG + "}";
+    (document.head || document.documentElement).appendChild(css);
+
+    const mount = () => {
+      const bar = document.querySelector(".topbar");
+      if (!bar || bar.querySelector(".vc-darkbtn")) return;
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "vc-darkbtn"; b.setAttribute("aria-pressed", "false");
+      b.innerHTML = '<span class="vc-dd"></span>Dark render';
+      b.addEventListener("click", () => applyDark(!darkOn));
+      b.hidden = true;                          // revealed once a 3-D scene actually exists
+      bar.appendChild(b);
+      applyDark(darkOn, { silent: true });      // reflect the persisted preference
+      // Some pages are pure 2-D (grids, charts). Offering a "dark render" there would be a
+      // control that does nothing, so the button only appears once a 3-D scene is on the page.
+      const has3d = () => [...document.querySelectorAll(".js-plotly-plot")]
+        .some((gd) => gd._fullLayout && gd._fullLayout.scene);
+      const reveal = () => {
+        if (!has3d()) return false;
+        b.hidden = false;
+        applyDark(darkOn, { silent: true });    // style the scene that just appeared
+        return true;
+      };
+      if (!reveal()) {
+        const obs = new MutationObserver(() => { if (reveal()) obs.disconnect(); });
+        obs.observe(document.body, { childList: true, subtree: true });
+        setTimeout(() => obs.disconnect(), 20000);
+      }
+    };
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount);
+    else mount();
+  })();
+
   // Plotly 3-D scene layout locked to the embryo extents (axes hidden).
   function sceneLayout(ex, uirev) {
     const pad = (r) => { const p = (r[1] - r[0]) * 0.05 || 1; return [r[0] - p, r[1] + p]; };
     const rx = pad(ex.x), ry = pad(ex.y), rz = pad(ex.z);
     const sx = rx[1] - rx[0], sy = ry[1] - ry[0], sz = rz[1] - rz[0];
     const m = Math.max(sx, sy, sz) || 1;
+    const dk = darkOn;
     return {
-      template: "plotly_white", paper_bgcolor: "rgba(0,0,0,0)",
+      template: dk ? "plotly_dark" : "plotly_white",
+      paper_bgcolor: dk ? DARK_BG : "rgba(0,0,0,0)",
       margin: { l: 0, r: 0, t: 0, b: 0 }, autosize: true, showlegend: true,
-      legend: { itemsizing: "constant", font: { size: 12 }, bgcolor: "rgba(255,255,255,0.82)",
-                bordercolor: "#e7e9ef", borderwidth: 1, x: 0.99, xanchor: "right", y: 0.98, yanchor: "top" },
+      legend: { itemsizing: "constant",
+                font: { size: 12, color: dk ? "#e6ecff" : undefined },
+                bgcolor: dk ? "rgba(12,14,20,0.82)" : "rgba(255,255,255,0.82)",
+                bordercolor: dk ? "#2a3040" : "#e7e9ef", borderwidth: 1,
+                x: 0.99, xanchor: "right", y: 0.98, yanchor: "top" },
       scene: {
+        bgcolor: dk ? DARK_BG : undefined,
         xaxis: { visible: false, range: rx, autorange: false },
         yaxis: { visible: false, range: ry, autorange: false },
         zaxis: { visible: false, range: rz, autorange: false },
@@ -93,6 +272,7 @@ window.VCore = (function () {
   // Translucent segmentation-body meshes.
   function bodyTraces(scene) {
     const out = [];
+    let dkMap = null;                    // classified lazily, only when the dark render is on
     for (const lbl of [...scene.mask_labels].sort((a, b) => a - b)) {
       const mesh = scene.region_meshes[String(lbl)];
       if (!mesh) continue;
@@ -102,10 +282,17 @@ window.VCore = (function () {
       for (let i = 0; i < nV; i++) { x[i] = v[i * 3]; y[i] = v[i * 3 + 1]; z[i] = v[i * 3 + 2]; }
       const ii = new Array(nF), jj = new Array(nF), kk = new Array(nF);
       for (let i = 0; i < nF; i++) { ii[i] = f[i * 3]; jj[i] = f[i * 3 + 1]; kk[i] = f[i * 3 + 2]; }
-      out.push({ type: "mesh3d", x, y, z, i: ii, j: jj, k: kk, color: def.color,
-        opacity: Math.min(def.opacity, 0.13), name: `body M${lbl}`, showlegend: true,
+      const dc = darkOn ? (dkMap || (dkMap = classifyDark(scene))).get(lbl) : null;
+      const st = dc ? (dc.type === "cell" ? DARK_CELL : DARK_NUC) : null;
+      out.push({ type: "mesh3d", x, y, z, i: ii, j: jj, k: kk,
+        color: dc ? dc.color : def.color,
+        opacity: st ? st.opacity : Math.min(def.opacity, 0.13),
+        name: `body M${lbl}`, showlegend: true,
         flatshading: false, hoverinfo: "skip",
-        lighting: { ambient: 0.65, diffuse: 0.6, specular: 0.15, roughness: 0.9 }, legendrank: lbl });
+        lighting: st ? st.lighting
+                     : { ambient: 0.65, diffuse: 0.6, specular: 0.15, roughness: 0.9 },
+        lightposition: st ? DARK_LIGHTPOS : undefined,
+        legendrank: lbl });
     }
     return out;
   }
@@ -221,7 +408,19 @@ window.VCore = (function () {
       ' title="Open this embryo in the MERFISH atlas">Atlas ↗</a>';
     body.appendChild(row);
     const range = row.querySelector("input"), out = row.querySelector("output"), link = row.querySelector("a");
-    range.addEventListener("input", () => { out.textContent = range.value; if (opts.onDotSize) opts.onDotSize(+range.value); });
+    // Light and dark keep independent dot sizes — the glass render reads best with tiny dots, and
+    // it would be tedious to re-set the slider every time you toggle.
+    const sizes = { light: size, dark: DARK_DOT };
+    const put = (v) => { range.value = v; out.textContent = v; };
+    range.addEventListener("input", () => {
+      out.textContent = range.value;
+      sizes[darkOn ? "dark" : "light"] = +range.value;
+      if (opts.onDotSize) opts.onDotSize(+range.value);
+    });
+    const entry = { sync: () => { put(sizes[darkOn ? "dark" : "light"]);
+                                  if (opts.onDotSize) opts.onDotSize(+range.value); } };
+    dotSliders.add(entry);
+    put(sizes[darkOn ? "dark" : "light"]);      // open in the right mode's size
     return { size: () => +range.value, setAtlas: (id) => { if (id) link.href = atlasLink(id); } };
   }
 
@@ -315,7 +514,8 @@ window.VCore = (function () {
     else start();
   })();
 
-  return { loadGz, buildTabs, markActiveTab, sceneLayout, plotConfig, bodyTraces,
+  return { isDark, applyDark, classifyDark, DARK_BG,
+           loadGz, buildTabs, markActiveTab, sceneLayout, plotConfig, bodyTraces,
            wireWindow, XY, umToPlot, plotToUm, atlasLink, addWindowExtras, pronMinDist,
            embryoLabel, idYear };
 })();

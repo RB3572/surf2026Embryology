@@ -151,6 +151,33 @@ def main():
     check("every gene clears min_tx",
           all(r[0] + r[1] >= m["min_tx"] for e in emb for r in e["genes"].values()))
 
+    section("nucleus / polar-body surfaces")
+    blobs = [(e["id"], b) for e in emb for b in e.get("blobs", [])]
+    check("every embryo ships at least one blob", len(blobs) >= len(emb), str(len(blobs)))
+    check("blob maps are nt × np", all(len(b["r"]) == b["nt"] * b["np"] for _, b in blobs))
+    check("blob maps are byte-quantised", all(0 <= min(b["r"]) and max(b["r"]) <= 255 for _, b in blobs))
+    check("every blob map reaches its own maximum",
+          all(max(b["r"]) > 200 for _, b in blobs))
+    # These are drawn as real plane-surface intersections, so a radius that is zero anywhere would
+    # put a spike in the outline, and an implausible one would put a nucleus outside its cell.
+    check("no blob has a zero radius anywhere (slices would spike)",
+          all(min(b["r"]) > 0 for _, b in blobs),
+          str([i for i, b in blobs if min(b["r"]) == 0][:3]))
+    rr = [b["rmax"] for _, b in blobs]
+    check("blob radii are physical (2-40 µm)", all(2 <= r <= 40 for r in rr),
+          f"{min(rr):.1f}–{max(rr):.1f}")
+    check("every blob is named nucleus or polar", all(b["kind"] in ("nucleus", "polar") for _, b in blobs))
+    check("at most one polar body per embryo",
+          all(sum(1 for b in e.get("blobs", []) if b["kind"] == "polar") <= 1 for e in emb))
+    bad_in = []
+    for e in emb:
+        for b in e.get("blobs", []):
+            c = np.array(b["c"])
+            if min(np.linalg.norm(c - np.array(e["com_a"])),
+                   np.linalg.norm(c - np.array(e["com_b"]))) > 90:
+                bad_in.append((e["id"], b["label"]))
+    check("blobs sit near the embryo, not off in space", not bad_in, str(bad_in[:3]))
+
     section("provenance")
     check("version recorded", str(m.get("version", "")).startswith("alignment-"))
     check("no absolute paths in the artifact",

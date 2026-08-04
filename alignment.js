@@ -359,39 +359,71 @@
 
   const avg = (a) => a.reduce((x, y) => x + y, 0) / (a.length || 1);
 
-  /** Nuclei and polar body as projected ellipses — exact for an ellipsoid in any plane. */
+  const cross3 = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2],
+                            a[0] * b[1] - a[1] * b[0]];
+
+  /** The blob's surface radius in a given direction, from its r(θ, φ) map. */
+  function blobRadius(e, b, dir) {
+    const ct = Math.max(-1, Math.min(1, dot(dir, e.u)));
+    const th = Math.acos(ct);
+    const ph = Math.atan2(dot(dir, e.e2), dot(dir, e.e1));
+    const ti = Math.min(b.nt - 1, Math.max(0, Math.floor(th / Math.PI * b.nt)));
+    const pj = Math.min(b.np - 1, Math.max(0, Math.floor((ph + Math.PI) / (2 * Math.PI) * b.np)));
+    return b.r[ti * b.np + pj] / 255 * b.rmax;
+  }
+
+  /** A REAL cross-section of a nucleus or polar body: the curve where the plane meets its
+   *  surface, or null when the plane misses it entirely.
+   *
+   *  The plane contains x̂ and ŷ and passes through mid, so its normal is ẑ = x̂ × ŷ and the blob
+   *  centroid sits a signed distance d from it. The nearest point of the plane to the centroid is
+   *  |d| away along −sign(d)·ẑ; if the surface radius in that direction is already less than |d|
+   *  the plane does not reach the blob and there is nothing to draw. Otherwise each in-plane
+   *  direction is walked outward until the surface is crossed. */
+  function sliceBlob(e, f, b) {
+    const xh = mul(e.u, f.s), yh = f.yhat, zh = cross3(xh, yh);
+    const dv = sub(b.c, e.mid);
+    const d = dot(dv, zh), ad = Math.abs(d);
+    if (ad > 1e-9 && blobRadius(e, b, mul(zh, -Math.sign(d))) <= ad) return null;   // misses
+    const cx = dot(dv, xh), cy = dot(dv, yh);
+    const N = 48, pts = [];
+    for (let k = 0; k < N; k++) {
+      const a = k / N * 2 * Math.PI, ca = Math.cos(a), sa = Math.sin(a);
+      const v = add(mul(xh, ca), mul(yh, sa));
+      // g(s) > 0 while still inside the surface; bisect for the crossing
+      const g = (s) => {
+        const rho = Math.hypot(d, s);
+        if (rho < 1e-9) return 1;
+        const w = add(mul(zh, -d), mul(v, s));
+        return blobRadius(e, b, mul(w, 1 / rho)) - rho;
+      };
+      if (g(0) <= 0) return null;
+      let lo = 0, hi = b.rmax * 1.05;
+      for (let it = 0; it < 22; it++) {
+        const md = (lo + hi) / 2;
+        if (g(md) > 0) lo = md; else hi = md;
+      }
+      pts.push([cx + lo * ca, cy + lo * sa]);
+    }
+    pts.push(pts[0]);
+    return pts;
+  }
+
   function blobTraces(rows) {
     const out = [];
     let namedNuc = false, namedPb = false;
     rows.forEach((r) => {
-      const e = r.e, f = r.f;
-      (e.blobs || []).forEach((b, i) => {
-        const isPb = e.blobs.length >= 3 && i === e.blobs.length - 1;
-        const c = toXY(e, f, b.c);
-        // the 2-D covariance of the projection is P Σ Pᵀ with P the frame's two in-plane axes
-        const xh = mul(e.u, f.s), yh = f.yhat;
-        const S = [[b.cov[0], b.cov[1], b.cov[2]], [b.cov[1], b.cov[3], b.cov[4]], [b.cov[2], b.cov[4], b.cov[5]]];
-        const mv = (M, v) => [dot(M[0], v), dot(M[1], v), dot(M[2], v)];
-        const sxx = dot(xh, mv(S, xh)), syy = dot(yh, mv(S, yh)), sxy = dot(xh, mv(S, yh));
-        const pts = [];
-        for (let k = 0; k <= 40; k++) {
-          const t = k / 40 * 2 * Math.PI;
-          // 2σ contour of the projected covariance
-          const ct = Math.cos(t), st = Math.sin(t);
-          const tr = sxx + syy, det = Math.max(sxx * syy - sxy * sxy, 1e-9);
-          const l1 = tr / 2 + Math.sqrt(Math.max(tr * tr / 4 - det, 0));
-          const l2 = tr / 2 - Math.sqrt(Math.max(tr * tr / 4 - det, 0));
-          const ang = 0.5 * Math.atan2(2 * sxy, sxx - syy);
-          const a1 = 2 * Math.sqrt(Math.max(l1, 0)), a2 = 2 * Math.sqrt(Math.max(l2, 0));
-          pts.push([c[0] + a1 * ct * Math.cos(ang) - a2 * st * Math.sin(ang),
-                    c[1] + a1 * ct * Math.sin(ang) + a2 * st * Math.cos(ang)]);
-        }
+      (r.e.blobs || []).forEach((b) => {
+        const pts = sliceBlob(r.e, r.f, b);
+        if (!pts) return;                       // the plane does not pass through this one
+        const isPb = b.kind === "polar";
         const showLegend = isPb ? !namedPb : !namedNuc;
         if (isPb) namedPb = true; else namedNuc = true;
         out.push({ type: "scatter", mode: "lines", x: pts.map((q) => q[0]), y: pts.map((q) => q[1]),
           name: isPb ? "polar body" : "nuclei",
-          line: { color: isPb ? C_PB : C_NUC, width: isPb ? 1.6 : 1.1, dash: isPb ? "solid" : "dash" },
-          opacity: isPb ? 0.7 : 0.5, hoverinfo: "skip", showlegend: showLegend });
+          line: { color: isPb ? C_PB : C_NUC, width: isPb ? 1.6 : 1.1,
+                  dash: isPb ? "solid" : "dash", shape: "spline" },
+          opacity: isPb ? 0.75 : 0.5, hoverinfo: "skip", showlegend: showLegend });
       });
     });
     return out;

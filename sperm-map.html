@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sperm Location Browser · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="help.css" />
+  <link rel="stylesheet" href="sperm-map.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <script src="embryo-probesets.js"></script>
+  <script src="viewer-core.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#e11d48;box-shadow:0 0 0 4px color-mix(in srgb,#e11d48 18%,transparent)"></span>
+      <span class="brand-name">Sperm&nbsp;Location&nbsp;Browser</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">This embryo</span>
+        <button class="help-btn" data-help="sperm-map" style="margin-left:auto"
+                aria-label="What is this?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="sm-toggles">
+          <label class="zt"><input type="checkbox" id="sperm-show" checked /><span class="zt-sw" style="background:#e11d48"></span>Sperm</label>
+          <label class="zt"><input type="checkbox" id="marks-show" checked /><span class="zt-sw" style="background:#7c3aed"></span>Landmarks</label>
+          <label class="zt"><input type="checkbox" id="plane-show" checked /><span class="zt-sw" style="background:#0ea5e9"></span>Junction plane <span class="sm-2c">(2-cell)</span></label>
+        </div>
+        <div class="sm-readout" id="sm-readout"></div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Pick an embryo from the ranking</div>
+        <div class="ph-sub">Open <b>Sperm ranking</b> on the right, choose a stage and how to sort,
+          then click an embryo to see where its sperm sits.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- bottom drawer -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Sperm evidence <span class="drawer-gene" id="drawer-emb"></span></span>
+      <span class="drawer-hint">the GFP frames the sperm was called from · how this embryo compares</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="xs-graph-tabs" id="sm-tabs" role="tablist" aria-label="Panels">
+        <button type="button" class="xs-gtab active" data-tab="gfp" role="tab" aria-selected="true">GFP image</button>
+        <button type="button" class="xs-gtab" data-tab="dist" role="tab" aria-selected="false">Distribution</button>
+      </div>
+      <div class="xs-panels" id="sm-panels">
+
+        <div class="xs-panel" data-tab="gfp" role="tabpanel">
+          <div class="sm-gfp-head">
+            <div class="mini-title">The GFP frames this sperm was called from <span class="mini-sub" id="sm-gfp-sub"></span></div>
+            <label class="zt sm-mark-tg"><input type="checkbox" id="gfp-mark" checked><span>mark the sperm</span></label>
+          </div>
+          <div class="sm-gfp-grid" id="sm-gfp"></div>
+          <div class="sm-note" id="sm-gfp-note"></div>
+        </div>
+
+        <div class="xs-panel" data-tab="dist" role="tabpanel" hidden>
+          <div class="mini-title">Where the sperm sits across this whole group <span class="mini-sub" id="sm-dist-sub"></span></div>
+          <div class="sm-note">Left: the distribution of the current sort measure, with this embryo
+            marked. Right: every sperm in the group projected into a shared cross-section — for
+            2-cell that frame is the junction (0 = the interface); for zygotes it is the distance
+            from the centre, normalised so embryos of different sizes overlay.</div>
+          <div class="sm-dist-grid">
+            <div class="xs-resizable"><div id="sm-hist" class="sm-plot"></div></div>
+            <div class="xs-resizable"><div id="sm-cross" class="sm-plot"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- right drawer: the ranking -->
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Sperm ranking</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Find an embryo by its sperm</div>
+        <div class="rdrawer-desc">Choose a stage, then how to order it. Click any row to open it.</div>
+        <label class="ctl sm-sel"><span class="ctl-label">Stage</span>
+          <select id="stage-sel">
+            <option value="zygote">Zygote</option>
+            <option value="twocell">2-cell</option>
+          </select></label>
+        <label class="ctl sm-sel" id="sub-wrap" hidden><span class="ctl-label">Which 2-cell</span>
+          <select id="sub-sel">
+            <option value="all">Early + late</option>
+            <option value="e2c">Early 2-cell only</option>
+            <option value="l2c">Late 2-cell only</option>
+          </select></label>
+        <label class="ctl sm-sel"><span class="ctl-label">Sort by</span>
+          <select id="sort-sel"></select></label>
+        <div class="sm-dir" id="sm-dir" role="group">
+          <button type="button" data-dir="near" class="active">Nearest first</button>
+          <button type="button" data-dir="far">Furthest first</button>
+        </div>
+      </div>
+      <div class="best-list" id="sm-list"></div>
+    </div>
+  </aside>
+
+  <script src="sperm-map.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

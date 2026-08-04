@@ -594,6 +594,14 @@
         <p>A <b>randomized null</b> (shuffled sperm positions) shows what accuracy chance alone would give — the real prediction
         has to beat it to mean anything.</p>` },
 
+    "sperm-map": { eyebrow: "Sperm location · the browser", title: "Finding embryos by their sperm",
+      body: [
+        "Every embryo here has a manually-labelled sperm. This ranks them by where that sperm sits relative to the structures that might matter.",
+        "<b>Zygote:</b> distance to the cortex (nearest point on the cell surface), to the polar body, and to the maternal and paternal pronuclei — maternal/paternal identity comes from the consensus in the Pronucleus ID project.",
+        "<b>2-cell:</b> distance to the <b>junction</b> between the two blastomeres. The junction is the plane through the midpoint of the two blastomere centroids, normal to the line joining them — the same construction the Contact Enrichment project uses, so the two agree. The distance is signed, so it also says which blastomere the sperm is in.",
+        "The GFP tab shows the frames the call was actually made from: the z-slice the labeller marked, in both channels, plus a max-Z projection of each. These are pre-rendered because the site is static and cannot reach the acquisition drive — 488 is drawn green, 405 blue, using the same brightness window as the labelling tool.",
+        "Not every embryo has GFP frames: some sperm were located on the MERFISH image without being pointed at in the GFP stack. Those rows have no dot in the ranking."
+      ] },
     "contact": { eyebrow: "Contact enrichment · the interface", title: "Genes at the blastomere contact",
       body: [
         "A 2-cell embryo has an interface — the flat face where the two blastomeres press together. This asks whether any gene concentrates there.",

@@ -45,8 +45,40 @@
 .sm-mark-tg { margin-left: 4px; padding: 2px 9px; border: 1px solid var(--line);
   border-radius: 999px; background: var(--surface); font-weight: 600; }
 .sm-mark-tg:hover { border-color: #cfd6e0; }
-.sm-gfp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+.sm-zips { display: inline-flex; gap: 6px; margin-left: auto; }
+.sm-zip { font: 600 11px var(--sans); color: var(--ink-2); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; cursor: pointer; }
+.sm-zip:hover { border-color: #cfd6e0; color: var(--ink); }
+.sm-zip:disabled { opacity: .6; cursor: default; }
+
+/* one block per channel: its frames, then its controls directly underneath */
+.sm-gfp-chs { margin-top: 6px; }
+.sm-ch + .sm-ch { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line-2); }
+.sm-ch-head { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-soft); }
+/* capped, not 1fr: with only two frames per channel a fractional track stretches each one to
+   half the drawer, which is far larger than a 1600px still needs to be read */
+.sm-gfp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 330px));
   gap: 12px; margin-top: 6px; }
+
+.sm-ch-ctl { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px;
+  padding: 7px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.sm-cl { font-size: 10.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--ink-soft); }
+.sm-sws { display: inline-flex; gap: 4px; }
+.sm-sw { width: 16px; height: 16px; padding: 0; border-radius: 50%; cursor: pointer;
+  border: 1px solid rgba(0,0,0,.22); }
+.sm-sw:hover { transform: scale(1.14); }
+.sm-sw.on { box-shadow: 0 0 0 2px var(--surface), 0 0 0 3.5px var(--ink); }
+.sm-sl { display: inline-flex; align-items: center; gap: 6px; }
+.sm-sl input[type="range"] { width: 104px; accent-color: var(--sm); }
+.sm-out { font-family: var(--mono); font-size: 10.5px; color: var(--ink-2);
+  font-variant-numeric: tabular-nums; min-width: 34px; }
+.sm-rst { margin-left: auto; font: 600 11px var(--sans); color: var(--ink-2); background: none;
+  border: 1px solid var(--line); border-radius: 7px; padding: 2px 9px; cursor: pointer; }
+.sm-rst:hover { border-color: #cfd6e0; color: var(--ink); }
+.sm-defs { position: absolute; width: 0; height: 0; }
+.sm-gfp-cap .dl { font-family: var(--sans); cursor: pointer; }
 .sm-gfp-cell { border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
   background: #06070c; position: relative; }
 .sm-gfp-cap { display: flex; align-items: center; gap: 6px; padding: 6px 9px;

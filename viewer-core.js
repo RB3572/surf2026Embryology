@@ -76,10 +76,43 @@ window.VCore = (function () {
                                "#fb923c", "#a78bfa", "#f87171", "#38bdf8"];
   const DARK_DOT = 0.5;            // dark render reads best with tiny bright dots
   const DARK_KEY = "surf_dark";
+  // The sperm is the one landmark that appears in nearly every project, and it was a different
+  // colour in each (crimson, amber, orange, pink). One constant, so it reads the same everywhere
+  // and cannot drift again. Green, because the sperm is what the GFP channel shows.
+  const SPERM_COLOR = "#16a34a";
+  const DARK_MIN_CLOUD = 25;       // fewer points than this is an annotation, not a dot cloud
+  const DARK_MIN_LUM = 0.34;       // below this, a colour is lifted until it reads on DARK_BG
   let darkOn = false;
   try { darkOn = localStorage.getItem(DARK_KEY) === "1"; } catch (_) {}
   const dotSliders = new Set();    // every Dot size control on the page, so all stay in step
   const isDark = () => darkOn;
+
+  /** '#abc' | '#aabbcc' | 'rgb(...)' -> [r,g,b], else null (arrays/colorscales are left alone). */
+  function parseColor(c) {
+    if (typeof c !== "string") return null;
+    const s = c.trim();
+    let m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(s);
+    if (m) {
+      const h = m[1].length === 3 ? m[1].split("").map((x) => x + x).join("") : m[1];
+      return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+    }
+    m = /^rgba?\(([^)]+)\)/i.exec(s);
+    if (m) {
+      const p = m[1].split(",").map((v) => parseFloat(v));
+      if (p.length >= 3 && p.slice(0, 3).every((v) => isFinite(v))) return [p[0], p[1], p[2]];
+    }
+    return null;
+  }
+
+  /** Lift a colour toward white until it clears DARK_MIN_LUM. Hue is preserved. */
+  function liftForDark(c) {
+    const p = parseColor(c);
+    if (!p) return c;                                   // per-point arrays, named colours: as-is
+    const L = (0.2126 * p[0] + 0.7152 * p[1] + 0.0722 * p[2]) / 255;
+    if (L >= DARK_MIN_LUM) return c;
+    const k = Math.min(0.88, 0.95 * (DARK_MIN_LUM - L) / DARK_MIN_LUM);
+    return "rgb(" + p.map((v) => Math.round(v + (255 - v) * k)).join(",") + ")";
+  }
 
   function bboxVol(verts) {
     let xn = Infinity, yn = Infinity, zn = Infinity, xx = -Infinity, yx = -Infinity, zx = -Infinity;
@@ -156,13 +189,58 @@ window.VCore = (function () {
         Object.assign(t, t._vcLight);
       }
     });
+    // Overlay meshes — division planes, spheres — are not anatomy and keep their own colour, but
+    // that colour was chosen against a white page, so lift it if it would sink into DARK_BG.
     gd.data.forEach((t) => {
-      if (t.type !== "scatter3d" || !t.marker) return;
-      if (t.marker._vcSize === undefined) {
-        t.marker._vcSize = t.marker.size; t.marker._vcOp = t.marker.opacity;
+      if (t.type !== "mesh3d" || ANATOMY.test(String(t.name || ""))) return;
+      if (t._vcMesh === undefined) t._vcMesh = { color: t.color };
+      t.color = darkOn ? liftForDark(t._vcMesh.color) : t._vcMesh.color;
+    });
+
+    gd.data.forEach((t) => {
+      if (t.type !== "scatter3d") return;
+      const m = t.marker;
+      if (t._vcOverlay === undefined) {
+        t._vcOverlay = {
+          size: m && m.size, op: m && m.opacity, mcol: m && m.color,
+          mline: m && m.line ? m.line.color : undefined,
+          lcol: t.line && t.line.color, tcol: t.textfont && t.textfont.color,
+        };
       }
-      t.marker.size = darkOn ? DARK_DOT : t.marker._vcSize;
-      t.marker.opacity = darkOn ? 1.0 : t.marker._vcOp;
+      const o = t._vcOverlay;
+      if (!darkOn) {
+        if (m) { m.size = o.size; m.opacity = o.op; }
+        // Colours are only put back if the dark pass actually changed them. Restoring
+        // unconditionally would undo a colour the project set while dark was on — the stash is
+        // from the first time this trace was touched, which may be several renders ago.
+        if (o.lifted) {
+          if (m) { m.color = o.mcol; if (m.line && o.mline !== undefined) m.line.color = o.mline; }
+          if (t.line && o.lcol !== undefined) t.line.color = o.lcol;
+          if (t.textfont && o.tcol !== undefined) t.textfont.color = o.tcol;
+        }
+        return;
+      }
+      // Shrinking to DARK_DOT is for transcript CLOUDS. A landmark glyph — the sperm diamond,
+      // a polar-body marker, a COM — is a handful of points, and at size 0.5 it disappears, which
+      // is what made the dark render less informative than the light one. Point count separates
+      // the two without any project having to declare which is which; a non-circle symbol is a
+      // glyph by construction.
+      if (m) {
+        const n = Array.isArray(t.x) ? t.x.length : 0;
+        const glyph = n < DARK_MIN_CLOUD ||
+                      (m.symbol && m.symbol !== "circle" && !Array.isArray(m.symbol));
+        m.size = glyph ? o.size : DARK_DOT;
+        m.opacity = 1.0;
+        if (glyph) {
+          m.color = liftForDark(o.mcol);
+          if (m.line) m.line.color = liftForDark(o.mline);   // white outlines already read well
+          o.lifted = true;
+        }
+      }
+      // Construction lines and 3-D text are picked for a white page; near-black on near-black is
+      // invisible, so anything too dark is lifted until it reads against DARK_BG.
+      if (t.line && o.lcol !== undefined) { t.line.color = liftForDark(o.lcol); o.lifted = true; }
+      if (t.textfont && o.tcol !== undefined) { t.textfont.color = liftForDark(o.tcol); o.lifted = true; }
     });
     try {
       Plotly.update(gd, {}, {
@@ -197,13 +275,16 @@ window.VCore = (function () {
     window.__vcDark = true;
     const css = document.createElement("style");
     css.textContent =
-      ".vc-darkbtn{margin-left:10px;flex:none;display:inline-flex;align-items:center;gap:6px;" +
-      "font:600 12px/1 var(--sans,system-ui);color:var(--ink-2,#3c4453);background:var(--surface,#f3f3f1);" +
-      "border:1px solid var(--line,#e7e9ef);border-radius:999px;padding:6px 11px;cursor:pointer;" +
+      // Last child + margin-left:auto — always flush to the right edge of the bar, whatever
+      // else the project put in there.
+      ".vc-darkbtn{margin-left:auto;flex:none;align-self:center;display:inline-flex;" +
+      "align-items:center;justify-content:center;width:28px;height:28px;padding:0;" +
+      "color:var(--ink-2,#3c4453);background:var(--surface,#f3f3f1);" +
+      "border:1px solid var(--line,#e7e9ef);border-radius:50%;cursor:pointer;" +
       "transition:background .15s,color .15s,border-color .15s}" +
       ".vc-darkbtn:hover{border-color:#cfd6e0}" +
-      ".vc-darkbtn.on{background:#0b0d13;border-color:#0b0d13;color:#e6ecff}" +
-      ".vc-darkbtn .vc-dd{width:9px;height:9px;border-radius:50%;background:currentColor;opacity:.75}" +
+      ".vc-darkbtn.on{background:#0b0d13;border-color:#0b0d13;color:#ffd782}" +
+      ".vc-darkbtn svg{width:14px;height:14px;display:block}" +
       "body.vc-dark .plot-host,body.vc-dark .stage{background:" + DARK_BG + "}";
     (document.head || document.documentElement).appendChild(css);
 
@@ -212,7 +293,9 @@ window.VCore = (function () {
       if (!bar || bar.querySelector(".vc-darkbtn")) return;
       const b = document.createElement("button");
       b.type = "button"; b.className = "vc-darkbtn"; b.setAttribute("aria-pressed", "false");
-      b.innerHTML = '<span class="vc-dd"></span>Dark render';
+      b.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+        '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+      b.setAttribute("aria-label", "Dark render");
       b.addEventListener("click", () => applyDark(!darkOn));
       b.hidden = true;                          // revealed once a 3-D scene actually exists
       bar.appendChild(b);
@@ -514,7 +597,7 @@ window.VCore = (function () {
     else start();
   })();
 
-  return { isDark, applyDark, classifyDark, DARK_BG,
+  return { isDark, applyDark, classifyDark, DARK_BG, SPERM_COLOR, liftForDark,
            loadGz, buildTabs, markActiveTab, sceneLayout, plotConfig, bodyTraces,
            wireWindow, XY, umToPlot, plotToUm, atlasLink, addWindowExtras, pronMinDist,
            embryoLabel, idYear };

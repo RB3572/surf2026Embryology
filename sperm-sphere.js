@@ -10,7 +10,7 @@
   const $ = (s) => document.querySelector(s);
   const V = window.VCore;
   const XY = 0.15;
-  const SPERM_C = "#db2777", SPHERE_C = "#f472b6";
+  const SPERM_C = V.SPERM_COLOR, SPHERE_C = "#f472b6";
   const IN_C = "#db2777", OUT_C = "#c7ccd4";
   const ENR_C = "#dc2626", DEP_C = "#2563eb", REF_C = "#94a3b8", NULL_C = "rgba(148,163,184,0.28)";
 

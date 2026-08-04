@@ -9,7 +9,7 @@
   const el = (tag, cls) => { const e = document.createElement(tag); if (cls) e.className = cls; return e; };
   const V = window.VCore;
   const XY = 0.15;
-  const AXIS_C = "#111827", PLANE_C = "#f97316", SPERM_C = "#f59e0b";
+  const AXIS_C = "#111827", PLANE_C = "#f97316", SPERM_C = V.SPERM_COLOR;
   const BLUE = "#2166ac", RED = "#b2182b", GREEN = "#16a34a";
 
   // Plotly.react corrupts if the div was cleared with innerHTML="" while it was

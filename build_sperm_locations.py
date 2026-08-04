@@ -55,7 +55,21 @@ GFP_W = 1600                # rendered width; source frames are 2304². JPEG, no
 GFP_JPEG_Q = 88             # single-channel fluorescence, and PNG would cost ~185 MB vs ~35 MB
 GFP_LO, GFP_HI = 50.0, 99.7   # the same percentile window the labelling tool uses…
 GFP_GAMMA = 2.24              # …and the same gamma, so these look like what was labelled
-CH_COLOR = {0: (0, 1, 0), 1: (0.25, 0.45, 1.0)}   # 488 → green, 405 → blue
+# Frames ship as GREYSCALE. Colour, gain and black point are applied in the browser, so the
+# viewer can retune them per channel without a rebuild — and a grey JPEG is the smaller file.
+
+# A max projection is only as good as the planes you let into it. Two things ruin it here:
+#   1. Plane 0 of every stack is a degenerate calibration frame — p99.9 ≈ 17-25k and a
+#      saturated 65535 max, against 150-300 in every real plane. Maxing over it paints that
+#      frame across the whole projection AND drags the display window ~150x above the sperm.
+#   2. Even among real planes, 488 debris well outside the embryo (z ≈ 190-310 in these
+#      stacks) is ~5x brighter than the sperm and sits nowhere near it.
+# So: drop artifact planes outright, then project only across the embryo's own z extent,
+# which the 405 channel marks cleanly (baseline ~200, ~800+ through the embryo).
+HOT_PLANE_MULT = 6.0    # a plane this much brighter than the stack's median plane is an artifact
+PROJ_PAD = 12           # planes kept either side of the detected extent
+PROJ_MIN, PROJ_MAX = 15, 140     # implausible extents fall back to a window around the sperm
+PROJ_FALLBACK = 30      # ± planes around the labelled sperm when detection is not trustworthy
 
 
 def um(p, zs):
@@ -148,20 +162,86 @@ def stretch(a):
     return np.clip((a - lo) / max(1.0, hi - lo), 0, 1) ** GFP_GAMMA
 
 
-def save_png(arr01, ch, path):
+def save_gray(arr01, path):
+    """Greyscale only — the browser applies the channel colour."""
     from PIL import Image
-    r, g, b = CH_COLOR.get(ch, (1, 1, 1))
     H, W = arr01.shape
-    rgb = np.zeros((H, W, 3), np.uint8)
-    rgb[..., 0] = (arr01 * 255 * r).astype(np.uint8)
-    rgb[..., 1] = (arr01 * 255 * g).astype(np.uint8)
-    rgb[..., 2] = (arr01 * 255 * b).astype(np.uint8)
-    Image.fromarray(rgb).resize((GFP_W, int(H * GFP_W / W))).save(
-        path, "JPEG", quality=GFP_JPEG_Q, optimize=True, subsampling=0)
+    g = (np.clip(arr01, 0, 1) * 255).astype(np.uint8)
+    Image.fromarray(g, "L").resize((GFP_W, int(H * GFP_W / W)), Image.LANCZOS).save(
+        path, "JPEG", quality=GFP_JPEG_Q, optimize=True)
+
+
+def plane_brightness(fl, nz, ch, step):
+    """p99.9 per sampled plane — bright enough to track objects, robust to hot pixels."""
+    zs = list(range(0, nz, step))
+    return np.array(zs), np.array(
+        [float(np.percentile(np.asarray(fl[2 * z + ch])[::6, ::6], 99.9)) for z in zs])
+
+
+def usable_planes(fl, nz, step):
+    """Planes that are not acquisition artifacts, as a boolean mask over all nz planes."""
+    zs, b = plane_brightness(fl, nz, 0, step)
+    med = float(np.median(b))
+    ok = np.ones(nz, bool)
+    for z, v in zip(zs, b):
+        if med > 0 and v > HOT_PLANE_MULT * med:
+            ok[max(0, z - step + 1):min(nz, z + step)] = False   # the sampled plane and its span
+    return ok, med
+
+
+def embryo_window(fl, nz, z_sperm, step, ok):
+    """The z range the embryo occupies, from the 405 channel. Falls back to a window around
+    the sperm when the profile does not give a clean, plausible extent."""
+    fb = (max(0, z_sperm - PROJ_FALLBACK), min(nz, z_sperm + PROJ_FALLBACK + 1), "sperm")
+    zs, b = plane_brightness(fl, nz, 1, step)
+    keep = np.array([ok[z] for z in zs])
+    if keep.sum() < 6:
+        return fb
+    zs, b = zs[keep], b[keep]
+    base, peak = float(np.median(b)), float(b.max())
+    if peak <= base * 1.25:                       # no structure to find
+        return fb
+    thr = base + 0.25 * (peak - base)
+    above = zs[b >= thr]
+    if not len(above):
+        return fb
+    # the contiguous run (in sampled steps) containing the sperm, else the longest run
+    runs, cur = [], [above[0]]
+    for z in above[1:]:
+        if z - cur[-1] <= step * 2:
+            cur.append(z)
+        else:
+            runs.append(cur)
+            cur = [z]
+    runs.append(cur)
+    run = next((r for r in runs if r[0] - step <= z_sperm <= r[-1] + step),
+               max(runs, key=len))
+    z0, z1 = int(run[0]) - PROJ_PAD, int(run[-1]) + PROJ_PAD + 1
+    # The plane the sperm was actually called on must be in the projection — it is the one plane
+    # we know contains the thing this image exists to show. The 405 extent is sampled every
+    # `step` planes and can land just short of it, so widen rather than trust the run's edges.
+    z0 = min(z0, z_sperm - PROJ_PAD)
+    z1 = max(z1, z_sperm + PROJ_PAD + 1)
+    z0, z1 = max(0, z0), min(nz, z1)
+    if not (PROJ_MIN <= z1 - z0 <= PROJ_MAX):
+        return fb
+    return z0, z1, "405"
+
+
+def project(fl, ch, z0, z1, ok):
+    """Max over the usable planes of [z0, z1)."""
+    acc = None
+    for z in range(z0, z1):
+        if not ok[z]:
+            continue
+        fr = np.asarray(fl[2 * z + ch])
+        acc = fr if acc is None else np.maximum(acc, fr)
+    return acc
 
 
 def render_gfp(rows_by_id):
-    """One z-slice per channel at the labelled z, plus a max-Z projection per channel."""
+    """One z-slice per channel at the labelled z, plus a max-Z projection per channel taken
+    over the embryo's own z extent with acquisition-artifact planes excluded."""
     try:
         import tifffile
     except ImportError:
@@ -180,32 +260,31 @@ def render_gfp(rows_by_id):
             fl = m.reshape(-1, H, W)
             nz = fl.shape[0] // 2
             files = {}
+            step = max(1, nz // 60)
+            ok, med = usable_planes(fl, nz, step)
+            z0, z1, how = embryo_window(fl, nz, z - 1, step, ok)
+            n_used = int(ok[z0:z1].sum())
             for ch in (0, 1):
                 k = min(fl.shape[0] - 1, max(0, 2 * (z - 1) + ch))
                 fn = f"{eid}_ch{ch}.jpg"
-                save_png(stretch(np.asarray(fl[k])), ch, os.path.join(GFP_DIR, fn))
+                save_gray(stretch(np.asarray(fl[k])), os.path.join(GFP_DIR, fn))
                 files[f"ch{ch}"] = fn
-                # max-Z projection over the whole stack, sampled so a deep stack stays quick
-                step = max(1, nz // 60)
-                acc = None
-                for zz in range(0, nz, step):
-                    idx = 2 * zz + ch
-                    if idx >= fl.shape[0]:
-                        break
-                    fr = np.asarray(fl[idx])
-                    acc = fr if acc is None else np.maximum(acc, fr)
+                acc = project(fl, ch, z0, z1, ok)
                 if acc is not None:
                     fn = f"{eid}_mip{ch}.jpg"
-                    save_png(stretch(acc), ch, os.path.join(GFP_DIR, fn))
+                    save_gray(stretch(acc), os.path.join(GFP_DIR, fn))
                     files[f"mip{ch}"] = fn
             out[eid] = {
                 "files": files, "z": z, "nz": int(nz),
+                "proj": {"z0": int(z0), "z1": int(z1), "n": n_used,
+                         "dropped": int((~ok).sum()), "how": how},
                 "src_w": int(W), "src_h": int(H), "w": GFP_W,
                 "x": int(float(r["gfp_x_px"])) if str(r.get("gfp_x_px") or "").strip() else None,
                 "y": int(float(r["gfp_y_px"])) if str(r.get("gfp_y_px") or "").strip() else None,
                 "name": os.path.basename(path),
             }
-            print(f"    gfp {eid}: z {z}/{nz}  ({len(files)} images)")
+            print(f"    gfp {eid}: z {z}/{nz}  proj {z0}-{z1} ({n_used} planes, {how}), "
+                  f"{int((~ok).sum())} artifact planes dropped")
         except Exception as e:                       # noqa: BLE001
             print(f"    !! gfp {eid}: {e}")
     return out

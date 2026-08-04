@@ -14,13 +14,103 @@
   const $ = (s, r = document) => r.querySelector(s);
   const V = window.VCore;
   const XY = 0.15;
-  const SPERM = "#e11d48", MARK = "#7c3aed", PLANE = "#0ea5e9";
+  const SPERM = V.SPERM_COLOR, MARK = "#7c3aed", PLANE = "#0ea5e9";
+
+  // The GFP frames ship GREYSCALE — colour, gain and black point are applied here, so the two
+  // channels can be retuned without rebuilding a single image. 488 is green and 405 blue by
+  // default, which is how the labelling tool draws them.
+  const GFP_DEF = { 0: { color: "#22c55e", gain: 1, black: 0 },
+                    1: { color: "#3b82f6", gain: 1, black: 0 } };
+  const GFP_KEY = "surf_sperm_map_gfp";
+  const SWATCHES = ["#22c55e", "#22d3ee", "#3b82f6", "#ff2fd0", "#f59e0b", "#ef4444", "#e8ecf5"];
 
   const state = {
     data: null, byId: {}, stage: "zygote", sub: "all", sort: "cortex", dir: "near",
     currentId: null, scene: null, cache: {}, tab: "gfp",
     spermOn: true, marksOn: true, planeOn: true, gfpMark: true, drawerOpen: false,
+    gfpCh: loadGfpPrefs(),
   };
+
+  function loadGfpPrefs() {
+    const d = { 0: { ...GFP_DEF[0] }, 1: { ...GFP_DEF[1] } };
+    try {
+      const s = JSON.parse(localStorage.getItem(GFP_KEY) || "{}");
+      [0, 1].forEach((c) => {
+        if (!s[c]) return;
+        if (typeof s[c].color === "string") d[c].color = s[c].color;
+        if (isFinite(s[c].gain)) d[c].gain = Math.min(6, Math.max(0.2, +s[c].gain));
+        if (isFinite(s[c].black)) d[c].black = Math.min(0.9, Math.max(0, +s[c].black));
+      });
+    } catch (_) {}
+    return d;
+  }
+  const saveGfpPrefs = () => {
+    try { localStorage.setItem(GFP_KEY, JSON.stringify(state.gfpCh)); } catch (_) {}
+  };
+
+  const hexRgb = (h) => {
+    const m = /^#([0-9a-f]{6})$/i.exec(String(h).trim());
+    if (!m) return [255, 255, 255];
+    return [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16));
+  };
+
+  /* The marker ring has to stay legible whatever tint the channel is wearing — a green ring on a
+   * green image is no ring at all. Pick whichever candidate sits furthest from the tint in RGB. */
+  const RINGS = ["#ff2d55", "#ffffff", "#00e5ff"];
+  function ringFor(tint) {
+    const t = hexRgb(tint);
+    const dist = (c) => { const p = hexRgb(c);
+      return Math.hypot(p[0] - t[0], p[1] - t[1], p[2] - t[2]); };
+    return dist(RINGS[0]) >= 150 ? RINGS[0]
+         : RINGS.slice(1).reduce((a, b) => (dist(b) > dist(a) ? b : a));
+  }
+
+  /* Colour + window/level as an SVG filter, so moving a slider restyles the images already on
+   * screen instead of re-fetching them. feComponentTransfer does out = gain·(in − black) on the
+   * grey value; feColorMatrix then maps that grey onto the channel's colour. */
+  const NS = "http://www.w3.org/2000/svg";
+  const gfpFilters = {};
+  function ensureFilters() {
+    if (gfpFilters[0]) return;
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", "sm-defs");
+    svg.setAttribute("aria-hidden", "true");
+    const defs = document.createElementNS(NS, "defs");
+    svg.appendChild(defs);
+    [0, 1].forEach((ch) => {
+      const f = document.createElementNS(NS, "filter");
+      f.setAttribute("id", "smf" + ch);
+      f.setAttribute("color-interpolation-filters", "sRGB");
+      const ct = document.createElementNS(NS, "feComponentTransfer");
+      const funcs = ["feFuncR", "feFuncG", "feFuncB"].map((t) => {
+        const fn = document.createElementNS(NS, t);
+        fn.setAttribute("type", "linear");
+        ct.appendChild(fn);
+        return fn;
+      });
+      const mat = document.createElementNS(NS, "feColorMatrix");
+      mat.setAttribute("type", "matrix");
+      f.appendChild(ct); f.appendChild(mat); defs.appendChild(f);
+      gfpFilters[ch] = { funcs, mat };
+    });
+    document.body.appendChild(svg);
+  }
+
+  function applyChannel(ch) {
+    ensureFilters();
+    const c = state.gfpCh[ch], f = gfpFilters[ch];
+    f.funcs.forEach((fn) => {
+      fn.setAttribute("slope", c.gain.toFixed(4));
+      fn.setAttribute("intercept", (-c.black * c.gain).toFixed(4));
+    });
+    const [r, g, b] = hexRgb(c.color).map((v) => v / 255);
+    f.mat.setAttribute("values",
+      `${r} 0 0 0 0  ${g} 0 0 0 0  ${b} 0 0 0 0  0 0 0 1 0`);
+    // the ring is drawn in SVG on top of the image, outside the filter, so it is repainted here
+    document.querySelectorAll(`.sm-gfp-cell[data-ch="${ch}"] .sm-ring`).forEach((el) => {
+      el.setAttribute("stroke", ringFor(c.color));
+    });
+  }
 
   const meta = () => state.data.meta;
   const cur = () => state.byId[state.currentId];
@@ -39,6 +129,8 @@
     $("#embryo-count").textContent =
       `${m.n} sperm-labelled embryos · ${m.n_zygote} zygote · ${m.n_e2c} early + ${m.n_l2c} late 2-cell` +
       ` · ${m.n_gfp} with GFP frames`;
+    // the legend swatch has to track the shared sperm colour, not a hardcoded hex
+    $("#sw-sperm").style.background = SPERM;
     fillSorts();
     wire();
     $("#rdrawer").hidden = false; $("#drawer").hidden = false;
@@ -193,37 +285,212 @@
       return;
     }
     const dir = meta().gfp_dir;
-    const CAP = {
-      ch0: "488 · GFP · z-slice", ch1: "405 · z-slice",
-      mip0: "488 · GFP · max-Z projection", mip1: "405 · max-Z projection",
-    };
-    const order = ["ch0", "ch1", "mip0", "mip1"].filter((k) => g.files[k]);
+    const pj = g.proj || null;
+    const CH = [
+      { ch: 0, name: "488 · GFP", slice: "ch0", mip: "mip0" },
+      { ch: 1, name: "405", slice: "ch1", mip: "mip1" },
+    ];
+    const projCap = pj ? `max-Z · planes ${pj.z0}–${pj.z1}` : "max-Z projection";
     // the marker only means anything on the slice the sperm was called on, not on a projection
-    // through the whole stack — but the x,y is still where it is, so it is drawn on both and
-    // labelled accordingly.
+    // through the stack — but the x,y is still where it is, so it is drawn on both.
     const sx = g.x != null ? (g.x / g.src_w) * 100 : null;
     const sy = g.y != null ? (g.y / g.src_h) * 100 : null;
-    wrap.innerHTML = order.map((k) => {
-      const href = `${dir}/${g.files[k]}`;
-      const mark = (state.gfpMark && sx != null)
-        ? `<svg viewBox="0 0 100 100" preserveAspectRatio="none">
-             <circle cx="${sx}" cy="${sy}" r="2.2" fill="none" stroke="${SPERM}" stroke-width="0.7"
-                     vector-effect="non-scaling-stroke"/>
-             <line x1="${sx - 5}" y1="${sy}" x2="${sx - 3}" y2="${sy}" stroke="${SPERM}" stroke-width="0.6" vector-effect="non-scaling-stroke"/>
-             <line x1="${sx + 3}" y1="${sy}" x2="${sx + 5}" y2="${sy}" stroke="${SPERM}" stroke-width="0.6" vector-effect="non-scaling-stroke"/>
-           </svg>` : "";
-      return `<div class="sm-gfp-cell">
-        <div class="sm-gfp-cap">${CAP[k]}
-          <a class="dl" href="${href}" download="${g.files[k]}" title="Download this frame at ${g.w}px">↓ full size</a>
+    const ring = (ch) => (state.gfpMark && sx != null)
+      ? `<svg viewBox="0 0 100 100" preserveAspectRatio="none">
+           <circle class="sm-ring" cx="${sx}" cy="${sy}" r="2.2" fill="none"
+                   stroke="${ringFor(state.gfpCh[ch].color)}" stroke-width="0.7"
+                   vector-effect="non-scaling-stroke"/>
+           <line class="sm-ring" x1="${sx - 5}" y1="${sy}" x2="${sx - 3}" y2="${sy}"
+                 stroke="${ringFor(state.gfpCh[ch].color)}" stroke-width="0.6" vector-effect="non-scaling-stroke"/>
+           <line class="sm-ring" x1="${sx + 3}" y1="${sy}" x2="${sx + 5}" y2="${sy}"
+                 stroke="${ringFor(state.gfpCh[ch].color)}" stroke-width="0.6" vector-effect="non-scaling-stroke"/>
+         </svg>` : "";
+
+    const tile = (ch, key, cap) => {
+      if (!g.files[key]) return "";
+      const href = `${dir}/${g.files[key]}`;
+      return `<div class="sm-gfp-cell" data-ch="${ch}" data-key="${key}">
+        <div class="sm-gfp-cap">${cap}
+          <button type="button" class="dl sm-dl1" data-key="${key}" data-ch="${ch}"
+                  title="Save this frame at ${g.w}px, exactly as it looks here">↓ full size</button>
         </div>
-        <div class="sm-gfp-wrap"><img src="${href}" alt="${CAP[k]}" loading="lazy">${mark}</div>
+        <div class="sm-gfp-wrap"><img src="${href}" alt="${cap}" loading="lazy"
+             style="filter:url(#smf${ch})">${ring(ch)}</div>
       </div>`;
-    }).join("");
+    };
+
+    const controls = (ch) => {
+      const c = state.gfpCh[ch];
+      const sw = SWATCHES.map((s) => `<button type="button" class="sm-sw${s.toLowerCase() === c.color.toLowerCase() ? " on" : ""}" ` +
+        `data-ch="${ch}" data-color="${s}" style="background:${s}" title="${s}" aria-label="Colour ${s}"></button>`).join("");
+      return `<div class="sm-ch-ctl" data-ch="${ch}">
+        <span class="sm-cl">colour</span><span class="sm-sws">${sw}</span>
+        <label class="sm-sl"><span class="sm-cl">brightness</span>
+          <input type="range" class="sm-gain" data-ch="${ch}" min="0.2" max="6" step="0.05" value="${c.gain}">
+          <output class="sm-out">${(+c.gain).toFixed(2)}×</output></label>
+        <label class="sm-sl"><span class="sm-cl">black point</span>
+          <input type="range" class="sm-black" data-ch="${ch}" min="0" max="0.9" step="0.01" value="${c.black}">
+          <output class="sm-out">${Math.round(c.black * 100)}%</output></label>
+        <button type="button" class="sm-rst" data-ch="${ch}" title="Back to the default colour and brightness">reset</button>
+      </div>`;
+    };
+
+    wrap.innerHTML = CH.map((c) => `
+      <section class="sm-ch" data-ch="${c.ch}">
+        <div class="sm-ch-head">${c.name}</div>
+        <div class="sm-gfp-grid">${tile(c.ch, c.slice, `z-slice · z ${g.z}`)}${tile(c.ch, c.mip, projCap)}</div>
+        ${controls(c.ch)}
+      </section>`).join("");
+    [0, 1].forEach(applyChannel);
+
+    const dropped = pj && pj.dropped ? pj.dropped : 0;
     $("#sm-gfp-note").innerHTML =
-      `Rendered at <b>${g.w}px</b> from the ${g.src_w}px source with the same brightness window the ` +
-      `labelling tool uses, so these look like what was labelled. <b>↓ full size</b> saves the ` +
-      `full-resolution frame. The marker is the pixel that was clicked; on a projection it shows ` +
-      `the same x,y through the whole stack.`;
+      `Rendered at <b>${g.w}px</b> from the ${g.src_w}px source, in greyscale — the colour and ` +
+      `brightness above are applied in your browser, so retuning them costs nothing and the ` +
+      `download matches what you see. ` +
+      (pj
+        ? `The projection is a max over <b>${pj.n} planes (${pj.z0}–${pj.z1} of ${g.nz})</b>, the ` +
+          `embryo's own z extent` + (pj.how === "405" ? " as marked by the 405 channel" : "") +
+          (dropped ? `, with ${dropped} acquisition-artifact plane${dropped > 1 ? "s" : ""} dropped` : "") +
+          `. Projecting the whole stack instead lets a single saturated calibration frame set the ` +
+          `contrast window and the sperm disappears. `
+        : "") +
+      `The ring is the pixel that was clicked.`;
+  }
+
+  // ───────── image export ─────────
+  /* Archives are built by zip.js (STORE method, shared so the test suite validates the same
+   * bytes the browser ships). */
+  const makeZip = (files) => window.SurfZip.zipBlob(files);
+
+  const loadImg = (src) => new Promise((res, rej) => {
+    const i = new Image();
+    i.onload = () => res(i); i.onerror = () => rej(new Error("load " + src));
+    i.src = src;
+  });
+
+  const saveBlob = (blob, name) => {
+    const u = URL.createObjectURL(blob), a = document.createElement("a");
+    a.href = u; a.download = name; document.body.appendChild(a); a.click();
+    a.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000);
+  };
+
+  /* Bake the channel's colour + window/level into pixels. The SVG filter does this for the
+   * screen, but a downloaded file has to carry the look with it, so the same arithmetic is
+   * repeated here rather than hoping a canvas honours filter:url(). */
+  async function renderExport(g, key, ch, withRing) {
+    const img = await loadImg(`${meta().gfp_dir}/${g.files[key]}`);
+    const cv = document.createElement("canvas");
+    cv.width = img.naturalWidth; cv.height = img.naturalHeight;
+    const cx = cv.getContext("2d");
+    cx.drawImage(img, 0, 0);
+    const d = cx.getImageData(0, 0, cv.width, cv.height), p = d.data;
+    const c = state.gfpCh[ch], [tr, tg, tb] = hexRgb(c.color);
+    for (let i = 0; i < p.length; i += 4) {
+      let v = (p[i] / 255 - c.black) * c.gain;
+      v = v < 0 ? 0 : v > 1 ? 1 : v;
+      p[i] = v * tr; p[i + 1] = v * tg; p[i + 2] = v * tb;
+    }
+    cx.putImageData(d, 0, 0);
+    if (withRing && g.x != null) {
+      const s = cv.width / g.src_w, x = g.x * s, y = g.y * s, r = Math.max(10, cv.width * 0.022);
+      cx.strokeStyle = ringFor(c.color);
+      cx.lineWidth = Math.max(1.5, cv.width / 900);
+      cx.beginPath(); cx.arc(x, y, r, 0, Math.PI * 2); cx.stroke();
+      cx.beginPath();
+      cx.moveTo(x - r * 2.3, y); cx.lineTo(x - r * 1.35, y);
+      cx.moveTo(x + r * 1.35, y); cx.lineTo(x + r * 2.3, y);
+      cx.stroke();
+    }
+    return cv;
+  }
+
+  const toBytes = (cv, type, q) => new Promise((res) =>
+    cv.toBlob((b) => b.arrayBuffer().then((a) => res(new Uint8Array(a))), type, q));
+
+  const KEY_CAP = { ch0: "488_zslice", ch1: "405_zslice", mip0: "488_maxZ", mip1: "405_maxZ" };
+
+  async function embryoFiles(e, { png = true, prefix = "" } = {}) {
+    const g = state.data.gfp[e.id];
+    if (!g) return [];
+    const out = [];
+    for (const [key, ch] of [["ch0", 0], ["ch1", 1], ["mip0", 0], ["mip1", 1]]) {
+      if (!g.files[key]) continue;
+      const cv = await renderExport(g, key, ch, state.gfpMark);
+      out.push({ name: `${prefix}${e.id}_${KEY_CAP[key]}.${png ? "png" : "jpg"}`,
+                 data: await toBytes(cv, png ? "image/png" : "image/jpeg", 0.92) });
+    }
+    return out;
+  }
+
+  function readmeFor(list) {
+    // width comes off an actual entry rather than meta, which does not carry it
+    const w = (state.data.gfp[list[0] && list[0].id] || {}).w || 1600;
+    const L = [
+      "Sperm Location Browser — GFP frames", "",
+      `embryos in this archive: ${list.length}`,
+      `source frames: ${w}px, rendered from the acquisition stacks`,
+      "",
+      "Each embryo contributes up to four frames:",
+      "  <id>_488_zslice  the 488 (GFP) plane the sperm was called on",
+      "  <id>_405_zslice  the 405 plane at the same z",
+      "  <id>_488_maxZ    max projection over the embryo's z extent, 488",
+      "  <id>_405_maxZ    the same for 405",
+      "",
+      "The projection covers only the embryo's own z extent, with acquisition-artifact planes",
+      "excluded — plane 0 of these stacks saturates and would otherwise set the contrast window.",
+      "Colour and brightness are as set in the browser at export time.",
+      "", "embryo\tstage\t" + (meta().sorts[state.stage] || []).map((s) => s.key).join("\t"),
+    ];
+    list.forEach((e) => L.push(e.id + "\t" + (e.label || e.stage) + "\t" +
+      (meta().sorts[state.stage] || []).map((s) => (e.metrics[s.key] != null ? e.metrics[s.key] : "")).join("\t")));
+    return new TextEncoder().encode(L.join("\n"));
+  }
+
+  async function zipCurrent(btn) {
+    const e = cur(); if (!e) return;
+    const old = btn.textContent;
+    btn.disabled = true; btn.textContent = "packing…";
+    try {
+      const files = await embryoFiles(e, { png: true });
+      if (!files.length) { btn.textContent = "no frames"; return; }
+      files.push({ name: "README.txt", data: readmeFor([e]) });
+      saveBlob(makeZip(files), `sperm_gfp_${e.id}.zip`);
+    } catch (err) {
+      btn.textContent = "failed"; console.error(err); return;
+    } finally {
+      setTimeout(() => { btn.disabled = false; btn.textContent = old; }, 1200);
+    }
+  }
+
+  async function zipAll(btn) {
+    const list = ranked().map((r) => r.e).filter((e) => state.data.gfp[e.id]);
+    if (!list.length) return;
+    const old = btn.textContent;
+    btn.disabled = true;
+    const files = [];
+    try {
+      for (let i = 0; i < list.length; i++) {
+        btn.textContent = `packing ${i + 1}/${list.length}…`;
+        // JPEG for the bulk archive: the same frames as PNG run to a few hundred MB, which the
+        // browser has to hold in memory all at once before it can hand over a single blob.
+        files.push(...await embryoFiles(list[i], { png: false }));
+      }
+      files.push({ name: "README.txt", data: readmeFor(list) });
+      saveBlob(makeZip(files), `sperm_gfp_${state.stage}_${list.length}embryos.zip`);
+    } catch (err) {
+      btn.textContent = "failed"; console.error(err); return;
+    } finally {
+      setTimeout(() => { btn.disabled = false; btn.textContent = old; }, 1500);
+    }
+  }
+
+  async function saveOne(btn) {
+    const e = cur(), g = e && state.data.gfp[e.id];
+    if (!g) return;
+    const key = btn.dataset.key, ch = +btn.dataset.ch;
+    const cv = await renderExport(g, key, ch, state.gfpMark);
+    cv.toBlob((b) => saveBlob(b, `${e.id}_${KEY_CAP[key]}.png`), "image/png");
   }
 
   // ───────── bottom drawer: the distribution ─────────
@@ -328,6 +595,44 @@
     $("#marks-show").addEventListener("change", (e) => { state.marksOn = e.target.checked; render3D(); });
     $("#plane-show").addEventListener("change", (e) => { state.planeOn = e.target.checked; render3D(); });
     $("#gfp-mark").addEventListener("change", (e) => { state.gfpMark = e.target.checked; renderGfp(); });
+
+    // The channel controls live inside the re-rendered grid, so they are handled by delegation
+    // on the container rather than rebound on every embryo change.
+    const gfp = $("#sm-gfp");
+    gfp.addEventListener("click", (ev) => {
+      const sw = ev.target.closest(".sm-sw");
+      if (sw) {
+        const ch = +sw.dataset.ch;
+        state.gfpCh[ch].color = sw.dataset.color;
+        saveGfpPrefs(); applyChannel(ch);
+        gfp.querySelectorAll(`.sm-sw[data-ch="${ch}"]`)
+           .forEach((b) => b.classList.toggle("on", b === sw));
+        return;
+      }
+      const rst = ev.target.closest(".sm-rst");
+      if (rst) {
+        const ch = +rst.dataset.ch;
+        state.gfpCh[ch] = { ...GFP_DEF[ch] };
+        saveGfpPrefs(); renderGfp();
+        return;
+      }
+      const dl = ev.target.closest(".sm-dl1");
+      if (dl) saveOne(dl);
+    });
+    gfp.addEventListener("input", (ev) => {
+      const t = ev.target;
+      if (!t.classList.contains("sm-gain") && !t.classList.contains("sm-black")) return;
+      const ch = +t.dataset.ch, gain = t.classList.contains("sm-gain");
+      state.gfpCh[ch][gain ? "gain" : "black"] = +t.value;
+      const out = t.parentElement.querySelector(".sm-out");
+      if (out) out.textContent = gain ? (+t.value).toFixed(2) + "×" : Math.round(t.value * 100) + "%";
+      applyChannel(ch);
+    });
+    gfp.addEventListener("change", (ev) => {
+      if (ev.target.classList.contains("sm-gain") || ev.target.classList.contains("sm-black")) saveGfpPrefs();
+    });
+    $("#sm-zip1").addEventListener("click", (ev) => zipCurrent(ev.currentTarget));
+    $("#sm-zipall").addEventListener("click", (ev) => zipAll(ev.currentTarget));
 
     $("#drawer-handle").addEventListener("click", () => openDrawer($("#drawer").dataset.open !== "true"));
     $("#sm-tabs").addEventListener("click", (e) => {

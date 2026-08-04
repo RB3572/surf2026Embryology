@@ -10,6 +10,7 @@
   <script src="plotly.min.js" charset="utf-8"></script>
   <script src="embryo-probesets.js"></script>
   <script src="viewer-core.js"></script>
+  <script src="zip.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -31,7 +32,7 @@
       </div>
       <div class="controls-body" id="controls-body">
         <div class="sm-toggles">
-          <label class="zt"><input type="checkbox" id="sperm-show" checked /><span class="zt-sw" style="background:#e11d48"></span>Sperm</label>
+          <label class="zt"><input type="checkbox" id="sperm-show" checked /><span class="zt-sw" id="sw-sperm"></span>Sperm</label>
           <label class="zt"><input type="checkbox" id="marks-show" checked /><span class="zt-sw" style="background:#7c3aed"></span>Landmarks</label>
           <label class="zt"><input type="checkbox" id="plane-show" checked /><span class="zt-sw" style="background:#0ea5e9"></span>Junction plane <span class="sm-2c">(2-cell)</span></label>
         </div>
@@ -74,9 +75,15 @@
         <div class="xs-panel" data-tab="gfp" role="tabpanel">
           <div class="sm-gfp-head">
             <div class="mini-title">The GFP frames this sperm was called from <span class="mini-sub" id="sm-gfp-sub"></span></div>
-            <label class="zt sm-mark-tg" title="Draw the red circle at the pixel the sperm was clicked on"><input type="checkbox" id="gfp-mark" checked><span>circle the sperm</span></label>
+            <label class="zt sm-mark-tg" title="Draw the ring at the pixel the sperm was clicked on"><input type="checkbox" id="gfp-mark" checked><span>circle the sperm</span></label>
+            <span class="sm-zips">
+              <button type="button" class="sm-zip" id="sm-zip1"
+                      title="Every frame for this embryo, as PNG, coloured exactly as shown">⤓ ZIP this embryo</button>
+              <button type="button" class="sm-zip" id="sm-zipall"
+                      title="Every frame for every embryo in the ranking, as JPEG">⤓ ZIP the whole list</button>
+            </span>
           </div>
-          <div class="sm-gfp-grid" id="sm-gfp"></div>
+          <div class="sm-gfp-chs" id="sm-gfp"></div>
           <div class="sm-note" id="sm-gfp-note"></div>
         </div>
 

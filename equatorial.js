@@ -12,7 +12,7 @@
   const XY = 0.15;
   const AXIS_C = "#111827", PLANE_C = "#0ea5e9";
   const BLUE = "#2166ac", RED = "#b2182b", GREEN = "#16a34a";
-  const SPERM_C = "#f59e0b", COM_C = "#6d28d9";   // (sperm marker retained but unused) + cell-COM marker
+  const SPERM_C = V.SPERM_COLOR, COM_C = "#6d28d9";   // (sperm marker retained but unused) + cell-COM marker
 
   // Plotly.react corrupts if the div was cleared with innerHTML="" while it was
   // a live plot. Only clear non-Plotly content (e.g. an empty-state message).

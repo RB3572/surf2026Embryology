@@ -73,6 +73,39 @@ def main():
     check("both channels present for every entry",
           all("ch0" in g["files"] and "ch1" in g["files"] for g in gfp.values()))
 
+    # The projection is the whole reason these look like anything: plane 0 of every stack is a
+    # saturated calibration frame, so a naive whole-stack max sets the display window ~150x above
+    # the sperm and the embryo renders black. Guard the properties that keep that from returning.
+    print("\n[max-Z projection window]")
+    pj = {k: g["proj"] for k, g in gfp.items() if "proj" in g}
+    check("every entry records how it was projected", len(pj) == len(gfp), f"{len(pj)}/{len(gfp)}")
+    check("window is ordered and non-empty", all(p["z0"] < p["z1"] for p in pj.values()))
+    check("window lies inside the stack",
+          all(0 <= p["z0"] and p["z1"] <= gfp[k]["nz"] for k, p in pj.items()))
+    check("the labelled sperm plane is inside the window",
+          all(p["z0"] <= gfp[k]["z"] - 1 <= p["z1"] for k, p in pj.items()),
+          str([k for k, p in pj.items() if not p["z0"] <= gfp[k]["z"] - 1 <= p["z1"]][:3]))
+    # Not every stack carries a bad plane, so this is "the detector fires", not "always fires".
+    n_drop = sum(1 for p in pj.values() if p["dropped"] > 0)
+    check("the artifact-plane detector is actually firing",
+          n_drop >= 0.5 * len(pj), f"{n_drop}/{len(pj)} stacks had planes dropped")
+    check("but it never eats most of a stack",
+          all(p["dropped"] < 0.2 * gfp[k]["nz"] for k, p in pj.items()),
+          str(sorted((p["dropped"] / gfp[k]["nz"] for k, p in pj.items()), reverse=True)[:2]))
+    check("projection uses fewer planes than the window spans (drops are real)",
+          all(p["n"] <= p["z1"] - p["z0"] for p in pj.values()))
+    check("the window is a MINORITY of the stack — not a whole-stack max in disguise",
+          all((p["z1"] - p["z0"]) < 0.6 * gfp[k]["nz"] for k, p in pj.items()),
+          str(sorted(((p["z1"] - p["z0"]) / gfp[k]["nz"] for k, p in pj.items()), reverse=True)[:2]))
+    check("enough planes to be a projection, not a slice",
+          all(p["n"] >= 15 for p in pj.values()),
+          str(sorted(p["n"] for p in pj.values())[:3]))
+    check("detection method recorded and known",
+          all(p["how"] in ("405", "sperm") for p in pj.values()))
+    n405 = sum(1 for p in pj.values() if p["how"] == "405")
+    check("most embryos got a real 405-derived extent, not the fallback",
+          n405 >= 0.7 * len(pj), f"{n405}/{len(pj)} from 405")
+
     print("\n[provenance]")
     check("version recorded", str(m.get("version", "")).startswith("sperm-locations-"))
     check("no absolute paths in the artifact", "/Users/" not in json.dumps(d) and "/Volumes/" not in json.dumps(d))

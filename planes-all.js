@@ -11,7 +11,7 @@
   const $ = (s) => document.querySelector(s);
   const V = window.VCore;
   const XY = 0.15;
-  const AXIS_C = "#111827", PLANE_C = "#f59e0b", SPERM_C = "#ea580c";
+  const AXIS_C = "#111827", PLANE_C = "#f59e0b", SPERM_C = V.SPERM_COLOR;
   const BLUE = "#2166ac", RED = "#b2182b", GREEN = "#16a34a";
   const VIRIDIS = [[68,1,84],[72,40,120],[62,74,137],[49,104,142],[38,130,142],[31,158,137],[53,183,121],[110,206,88],[181,222,43],[253,231,37]];
 

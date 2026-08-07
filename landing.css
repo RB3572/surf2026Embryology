@@ -121,6 +121,22 @@ body {
   box-shadow: 0 14px 34px rgba(16,24,40,.10);
   border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
 }
+.lp-card-fig {
+  display: flex; align-items: center; justify-content: center;
+  align-self: stretch; height: 64px; margin: -22px -22px 4px;
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 16%, var(--line));
+}
+/* An <img src="…svg"> renders the SVG in its own opaque bitmap context, so
+   stroke="currentColor" inside it can never see this page's --accent. Paint it
+   with a CSS mask instead: the icon file supplies only the shape (its alpha),
+   background-color supplies the per-card colour. */
+.lp-card-fig-icon {
+  display: block; width: 58px; height: 40px; background-color: var(--accent);
+  -webkit-mask-size: contain; mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center;
+}
 .lp-card-tag {
   align-self: flex-start;
   font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .5px;

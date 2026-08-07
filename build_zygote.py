@@ -47,7 +47,7 @@ from scipy.ndimage import binary_fill_holes
 from scipy.spatial import ConvexHull
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ATLAS = "/Users/rishib/Desktop/MERFISH/Website2/MerfishAtlasWebsite/public/data/Zygote"
+ATLAS = os.path.join(os.environ.get("MERFISH_ATLAS", r"E:\MERFISH\Website2\MerfishAtlasWebsite\public\data"), "Zygote")
 SRC = os.path.join(HERE, "..", "TranscriptomicsData", "JustTifAndCSVData", "Zygote")
 OUT_DIR = os.path.join(HERE, "data", "zygote")
 OUT_MANIFEST = os.path.join(HERE, "data", "zygote_manifest.json")

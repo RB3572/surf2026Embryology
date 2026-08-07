@@ -9,7 +9,7 @@ machine-specific or private path.
 Data root resolution:
   1. env  PN3D_DATA_ROOT
   2. gitignored  pn3d_local.json  in the repo root: {"data_root": "..."}
-  3. default mount  /Volumes/HW/MEFISH Labels
+  3. default location  E:/AllMerfishRawData/MEFISH Labels
 """
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ import os
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(os.path.dirname(HERE))
 
-DEFAULT_DATA_ROOT = "/Volumes/HW/MEFISH Labels"
+DEFAULT_DATA_ROOT = os.path.join(os.environ.get("MERFISH_RAW", r"E:\AllMerfishRawData"), "MEFISH Labels")
 
 PN3D_DIR = os.path.join(REPO_ROOT, "calibration_data", "pn3d")
 DERIVED_DIR = os.path.join(PN3D_DIR, "derived")           # gitignored pixel/preview outputs

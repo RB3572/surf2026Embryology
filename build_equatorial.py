@@ -67,7 +67,22 @@ def analyze_equatorial(pos1, cell_com, a, genes, tx1, voxvol, ex, zs, rng):
     chord1 = unit(np.cross(a, ref))
     chord2 = unit(np.cross(a, chord1))
 
-    proj = (pos1 - cell_com) @ n
+    # The plane is placed where it splits the CYTOPLASM INTO EQUAL VOLUMES, not through the
+    # centroid. Every voxel of pos1 carries the same volume, so the equal-volume plane is exactly
+    # the MEDIAN of the voxel projections onto the axis — no search, no tolerance. The centroid is
+    # pulled toward whichever end is fatter, so the two differ whenever the zygote is not
+    # symmetric about its equator, which is most of them.
+    #
+    # pos1 is segment 1 only, so any SEPARATELY SEGMENTED pronucleus or polar body is already
+    # excluded from this volume. Where the segmentation did not resolve the pronuclei they sit
+    # inside label 1 and cannot be excluded; `pn_resolved` records which is the case per embryo
+    # so the page can say so rather than imply an exclusion that did not happen.
+    t = pos1 @ n
+    t_star = float(np.median(t))
+    plane_pt = cell_com + (t_star - float(cell_com @ n)) * n
+    com_offset = float(cell_com @ n) - t_star        # + = centroid sits animal of the equator
+
+    proj = t - t_star
     VA = max(float((proj > 0).sum()) * voxvol, voxvol)      # animal (polar-body) half volume
     VB = max(float((proj <= 0).sum()) * voxvol, voxvol)     # vegetal half volume
 
@@ -80,7 +95,7 @@ def analyze_equatorial(pos1, cell_com, a, genes, tx1, voxvol, ex, zs, rng):
         nn = len(P)
         if nn == 0:
             continue
-        gproj = (P - cell_com) @ n
+        gproj = (P - plane_pt) @ n
         a_o = int((gproj > 0).sum()); b_o = nn - a_o
         null_a = rng.binomial(nn, 0.5, N_NULL)
         null_a1 = int(rng.binomial(nn, 0.5)); nb1 = nn - null_a1
@@ -114,11 +129,14 @@ def analyze_equatorial(pos1, cell_com, a, genes, tx1, voxvol, ex, zs, rng):
         "m_plot": to_plot(chord2),          # depth (slab) direction
         "normal_um": [round(float(x), 6) for x in n], "L": L_um,
         "volA": round(VA, 1), "volB": round(VB, 1),
+        "comOffset": round(com_offset, 3),          # how far the centroid sits off the equator
+        "plane_plot": [round(c, 2) for c in to_plot(plane_pt)],
+        "plane_um": [round(float(c), 4) for c in plane_pt],
         "wpVol": round(wp_vol, 5), "wpCnt": round(wp_cnt, 5),
         "dmVol": round(dm_vol, 7), "dmCnt": round(dm_cnt, 5),
     }
     # MERIDIONAL outline: slab thin along chord2, projected onto (along-axis a, chord1).
-    outline = BZ.cross_section_outline(pos1, cell_com, chord2, a, chord1)
+    outline = BZ.cross_section_outline(pos1, plane_pt, chord2, a, chord1)
     return {
         "com_plot": [round(c, 2) for c in to_plot(cell_com)],
         "com_um": [round(float(c), 4) for c in cell_com],

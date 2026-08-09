@@ -5,6 +5,8 @@
  * Data: build_alphabeta.py -> data/alphabeta.json. Front-end only reads it.
  */
 (() => {
+  // NB: this page's script tags load viewer-core.js LAST (see alphabeta.html), so window.VCore
+  // must be read lazily (inside init(), below) rather than captured at parse time here.
   const $ = (s) => document.querySelector(s);
   const el = (tag, cls) => { const e = document.createElement(tag); if (cls) e.className = cls; return e; };
   const STAGES = ["early", "late"];
@@ -155,6 +157,13 @@
       $("#ab-loading").textContent = "Failed to load data: " + (err.message || err); return;
     }
     $("#ab-loading").hidden = true;
+    // Grid columns = embryos; keep them in the site-wide date -> probeset -> fov order rather
+    // than whatever order build_alphabeta.py happened to write.
+    const V = window.VCore;
+    STAGES.forEach((s) => {
+      state.data.stages[s].sort((a, b) =>
+        V.cmpEmbryo({ id: a.id, label: embryoLabel(a.id) }, { id: b.id, label: embryoLabel(b.id) }));
+    });
     STAGES.forEach((s) => { state.flips[s] = state.data.methods.map(() => false); });
     const nE = state.data.stages.early.length, nL = state.data.stages.late.length;
     const spE = state.data.stages.early.filter((r) => r.calls.sperm !== "NA").length;

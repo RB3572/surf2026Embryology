@@ -710,7 +710,9 @@
     if (!$("#fx-ood").checked) rows = rows.filter((r) => r.qc !== "out-of-domain");
     const by = $("#fx-order").value;
     rows.sort((a, b) => {
-      if (by === "label") return String(a.label).localeCompare(String(b.label), undefined, { numeric: true });
+      // "label" = the site-wide date -> probeset -> fov order; tau/legacy stay whatever the
+      // model or the legacy proxy actually predicts, which is the point of this view.
+      if (by === "label") return V.cmpEmbryo(a, b);
       if (by === "legacy") return (a.legacy_surface_gap_um ?? 1e9) - (b.legacy_surface_gap_um ?? 1e9);
       return (a.tau ?? 1e9) - (b.tau ?? 1e9);
     });

@@ -109,7 +109,7 @@
       if (out[st]) out[st].push(i);
     });
     for (const st of STAGE_ORDER)
-      out[st].sort((a, b) => S()[a].label.localeCompare(S()[b].label, undefined, { numeric: true }));
+      out[st].sort((a, b) => V.cmpEmbryo(S()[a], S()[b]));
     return out;
   }
 

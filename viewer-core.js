@@ -42,9 +42,31 @@ window.VCore = (function () {
     const prefix = _STAGE_PREFIX[norm] || _STAGE_PREFIX[idStage.toLowerCase()];
     return `${prefix}-P${probe}-fov${fov}`;
   }
+  // Embryo nav-bar order, used everywhere: date (from the id's leading YYYYMMDD) first, then
+  // probeset, then fov — all three read off the canonical "<TYPE>-P<probeset>-fov<fov>" label
+  // every build script already produces (see embryo_naming.py). Undated / unparseable entries
+  // sort after everything real rather than crashing or floating to the top.
+  function embryoSortKey(m) {
+    const raw = String((m && m.id) || "").split("__").pop();
+    const dateM = raw.match(/^(\d{8})/);
+    const date = dateM ? dateM[1] : "99999999";
+    const lm = String((m && m.label) || "").match(/-P(\d+)-fov(\d+)(.*)$/i);
+    const probe = lm ? parseInt(lm[1], 10) : 99;
+    const fov = lm ? parseInt(lm[2], 10) : 999999;
+    const suffix = lm ? lm[3] : String((m && m.label) || "");
+    return [date, probe, fov, suffix];
+  }
+  function cmpEmbryo(a, b) {
+    const ka = embryoSortKey(a), kb = embryoSortKey(b);
+    for (let i = 0; i < ka.length; i++) {
+      if (ka[i] < kb[i]) return -1;
+      if (ka[i] > kb[i]) return 1;
+    }
+    return 0;
+  }
   function buildTabs(tabsEl, embryos, onSelect, spec) {
     tabsEl.innerHTML = "";
-    embryos.forEach((m) => {
+    embryos.slice().sort(cmpEmbryo).forEach((m) => {
       const s = spec(m);
       const b = document.createElement("button");
       // spec.cls lets a project mark tabs that are selectable but degraded — e.g. an embryo
@@ -600,5 +622,5 @@ window.VCore = (function () {
   return { isDark, applyDark, classifyDark, DARK_BG, SPERM_COLOR, liftForDark,
            loadGz, buildTabs, markActiveTab, sceneLayout, plotConfig, bodyTraces,
            wireWindow, XY, umToPlot, plotToUm, atlasLink, addWindowExtras, pronMinDist,
-           embryoLabel, idYear };
+           embryoLabel, idYear, embryoSortKey, cmpEmbryo };
 })();

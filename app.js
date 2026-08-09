@@ -174,7 +174,8 @@
       tag.className = "stage-tag";
       tag.textContent = stage.replace("2-cell ", "2c ").replace(/[()]/g, "");
       g.appendChild(tag);
-      for (const e of groups.get(stage)) {
+      const ordered = V.cmpEmbryo ? groups.get(stage).slice().sort(V.cmpEmbryo) : groups.get(stage);
+      for (const e of ordered) {
         const btn = document.createElement("button");
         btn.className = "tab";
         btn.dataset.id = e.id;

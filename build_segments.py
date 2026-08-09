@@ -29,7 +29,7 @@ from embryo_naming import embryo_label
 import tifffile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ATLAS = "/Users/rishib/Desktop/MERFISH/Website2/MerfishAtlasWebsite/public/data"
+ATLAS = os.environ.get("MERFISH_ATLAS", r"E:\MERFISH\Website2\MerfishAtlasWebsite\public\data")
 SRC = os.path.join(HERE, "..", "TranscriptomicsData", "JustTifAndCSVData")
 OUT_DIR = os.path.join(HERE, "public", "data", "segments")
 OUT_MANIFEST = os.path.join(HERE, "public", "data", "segments_manifest.json")

@@ -23,7 +23,7 @@ project uses for the interface, kept deliberately identical so the two projects 
 
 GFP STILLS
 ----------
-The site is static and cannot reach /Volumes/HW, so the GFP frames are rendered here into
+The site is static and cannot reach the raw-data folder, so the GFP frames are rendered here into
 data/gfp/ as PNGs: for every embryo whose sperm was actually pointed at in the GFP image, the
 z-slice the labeller marked, in BOTH channels, plus a max-Z projection of each channel. The
 labelled sperm pixel travels in the JSON so the page can draw the marker as an overlay rather

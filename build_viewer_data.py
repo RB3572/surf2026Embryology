@@ -5,7 +5,7 @@ Build the viewer's per-embryo scene data for the 45 sperm-positive embryos.
 Source of the 3-D geometry: the MERFISH atlas already precomputes, for every
 embryo, a `scene.json.gz` (region meshes via marching-cubes on the segmentation
 label, per-gene transcript point clouds, extents, colors) using the pipeline in
-  /Users/rishib/Desktop/MERFISH/Website2/MerfishAtlasWebsite
+  E:/MERFISH/Website2/MerfishAtlasWebsite  (override with the MERFISH_ATLAS env var)
 We reuse that geometry VERBATIM (identical rendering style) but:
   * keep only the 45 embryos in data/sperm_transcriptomics/embryos.csv,
   * slim each scene to just what this minimal viewer needs
@@ -29,7 +29,7 @@ from embryo_naming import embryo_label
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, ".."))
 EMB_CSV = os.path.join(REPO, "data", "sperm_transcriptomics", "embryos.csv")
-ATLAS = "/Users/rishib/Desktop/MERFISH/Website2/MerfishAtlasWebsite/public/data"
+ATLAS = os.environ.get("MERFISH_ATLAS", r"E:\MERFISH\Website2\MerfishAtlasWebsite\public\data")
 OUT_SCENES = os.path.join(HERE, "public", "data", "scenes")
 OUT_MANIFEST = os.path.join(HERE, "public", "data", "manifest.json")
 

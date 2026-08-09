@@ -32,7 +32,7 @@ from scipy.spatial import cKDTree
 from scipy.ndimage import binary_dilation
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ATLAS = "/Users/rishib/Desktop/MERFISH/Website2/MerfishAtlasWebsite/public/data/Zygote"
+ATLAS = os.path.join(os.environ.get("MERFISH_ATLAS", r"E:\MERFISH\Website2\MerfishAtlasWebsite\public\data"), "Zygote")
 SRC = os.path.join(HERE, "..", "TranscriptomicsData", "JustTifAndCSVData", "Zygote")
 OUT_DIR = os.path.join(HERE, "public", "data", "pronuclei")
 OUT_MANIFEST = os.path.join(HERE, "public", "data", "pronuclei_manifest.json")

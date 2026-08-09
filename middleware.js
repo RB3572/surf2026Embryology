@@ -17,7 +17,7 @@ import {
   SESSION_COOKIE, PROVIDER_COOKIE, AUTOTRY_COOKIE,
   verifyToken, readCookie, normalizeProvider, safeNext,
 } from "./lib/session.mjs";
-import { projectForPath, allowedProjectsFor } from "./lib/projects.mjs";
+import { projectForPath, allowedProjectsFor, ADMIN_ONLY_PAGES } from "./lib/projects.mjs";
 
 export const config = {
   // Guard EVERY path that serves content — pages, /data, scripts, styles, images — not just
@@ -45,10 +45,12 @@ export default async function middleware(request) {
   if (session) {
     const p = url.pathname;
 
-    // The admin console and its API are admin-only. Answer 404 rather than 403 so a
-    // non-admin member cannot even tell the page exists.
+    // The admin console, its API, and a handful of admin-only project pages (see
+    // ADMIN_ONLY_PAGES) are all admin-only. Answer 404 rather than 403 so a non-admin member
+    // cannot even tell the page exists.
+    const bareKey = p.replace(/^\/+/, "").replace(/\/+$/, "").replace(/\.html?$/, "");
     const adminOnly = p === "/admin" || p.startsWith("/admin/") || p.startsWith("/admin.") ||
-                      p.startsWith("/api/admin");
+                      p.startsWith("/api/admin") || ADMIN_ONLY_PAGES.has(bareKey);
     if (adminOnly && !session.adm) {
       return new Response("Not Found", {
         status: 404,

@@ -41,10 +41,6 @@
   <main class="lp-main">
     <section class="lp-hero">
       <h1>Analysis models</h1>
-      <p>Four questions, in order: when did this embryo happen (pseudotime), where did the sperm
-         end up and does it set the body axis, where do transcripts actually sit, and which
-         pronucleus is whose. Each model card carries a small diagram of what it measures — hover
-         for the details.</p>
     </section>
 
     <!-- admin console card is injected here (gated; empty grids collapse via CSS) -->
@@ -53,118 +49,31 @@
     <!-- ══════════════════ 1 · PSEUDOTIME ══════════════════ -->
     <section class="lp-group" style="--accent:#4338ca">
       <h2 class="lp-group-h">1 · Pseudotime</h2>
-      <p class="lp-group-note">Placing a fixed embryo on a developmental time axis. The clock is
-         built and validated on public live-imaging data, then applied to this project's fixed
-         MERFISH embryos — those two things are kept separate below.</p>
 
       <div class="lp-sub">
-        <h3 class="lp-sub-h">1a · Model development &amp; calibration
-          <span class="lp-sub-count">trained + validated on live-imaged embryos</span></h3>
-        <p class="lp-sub-note">Building the clock and measuring how well it works. Validation is on
-           Scheffler 2021 live imaging, where developmental time is actually known.</p>
-        <div class="lp-grid">
-
-      <a class="lp-card" href="pronuclear-pseudotime.html" style="--accent:#4338ca">
-        <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/pronuclear-pseudotime.svg);mask-image:url(card-icons/pronuclear-pseudotime.svg)"></span></span>
-        <span class="lp-card-tag">3D MERFISH · calibrated τ + uncertainty</span>
-        <h2>Pronuclear Structure Clock (3D)</h2>
-        <p>From a static 3D zygote stack: audited segmentation (cell body · 2
-           pronuclei · polar body) → dimensionless geometry → a monotonic
-           probabilistic clock calibrated on live-imaging trajectories. Returns a
-           τ distribution with 50/80/95% intervals, QC/OOD badges, and 3D
-           orthogonal exploration — not an unjustified point estimate.</p>
-        <span class="lp-card-go">Open model →</span>
-      </a>
-
-      <a class="lp-card" href="pseudotime-calibration.html" style="--accent:#4f46e5">
-        <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/pseudotime-calibration.svg);mask-image:url(card-icons/pseudotime-calibration.svg)"></span></span>
-        <span class="lp-card-tag">53 live-imaged zygotes · 2,057 frames</span>
-        <h2>Pronuclear Distance Clock</h2>
-        <p>Train a leakage-safe geometric clock on public live-imaging data
-           (Scheffler 2021), validate it with embryo-grouped cross-validation,
-           then apply the frozen model to this project's fixed zygotes to give
-           each one a calibrated pseudotime τ with a 95% interval.</p>
-        <span class="lp-card-go">Open model →</span>
-      </a>
-
-      <a class="lp-card" href="vision-pseudotime.html" style="--accent:#0ea5e9">
-        <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/vision-pseudotime.svg);mask-image:url(card-icons/vision-pseudotime.svg)"></span></span>
-        <span class="lp-card-tag">Pilot · fixed-image pipeline</span>
-        <h2>Pronuclear Image Clock (pilot)</h2>
-        <p>A reproducible data pipeline toward estimating pseudotime τ from a
-           fixed zygote image: metadata-only TIFF audit, streaming 2.5D
-           projections, a hybrid image→segmentation→geometry→frozen-clock path,
-           and honest pilot/OOD/data-blocker warnings. Not yet a validated image
-           clock.</p>
-        <span class="lp-card-go">Open pilot →</span>
-      </a>
-
-        </div>
-      </div>
-
-      <div class="lp-sub">
-        <h3 class="lp-sub-h">1b · Pronuclei identity
-          <span class="lp-sub-count">which pronucleus is maternal, which is paternal</span></h3>
-        <p class="lp-sub-note">A prerequisite the other pseudotime and sperm models lean on: neither
-           the clock nor "how far is the sperm from its own pronucleus" means anything until the two
-           pronuclei are told apart.</p>
+        <h3 class="lp-sub-h">1a · Pronuclei identity</h3>
         <div class="lp-grid">
 
       <a class="lp-card" href="pronuclei-assignments.html" style="--accent:#db2777">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/pronuclei-assignments.svg);mask-image:url(card-icons/pronuclei-assignments.svg)"></span></span>
-        <span class="lp-card-tag">Zygotes with 2 pronuclei</span>
         <h2>Maternal / Paternal Pronucleus ID</h2>
-        <p>Which pronucleus is male and which is female? Several tests — distance to the
-           polar body (centre-of-mass and shell), relative size, and distance to the sperm —
-           each vote, and a consensus is taken. A ♀/♂ concordance grid per zygote, with the
-           distance lines drawn in 3-D.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
         </div>
       </div>
 
       <div class="lp-sub">
-        <h3 class="lp-sub-h">1c · Applied to our dataset
-          <span class="lp-sub-count">τ used as an axis on our MERFISH embryos</span></h3>
-        <p class="lp-sub-note">Using the clock to ask biological questions. τ here is an inferred
-           estimate — the fixed embryos have no measured time of their own.</p>
+        <h3 class="lp-sub-h">1b · Applied to our dataset</h3>
         <div class="lp-grid">
-
-      <a class="lp-card" href="pn3d-transcripts.html" style="--accent:#7c3aed">
-        <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/pn3d-transcripts.svg);mask-image:url(card-icons/pn3d-transcripts.svg)"></span></span>
-        <span class="lp-card-tag">τ from the 3D model · per-gene</span>
-        <h2>Transcripts vs Structure Clock (τ)</h2>
-        <p>Transcript counts against calibrated developmental pseudotime τ from the
-           pronuclear-structure clock. The full analysis suite — per-gene / total /
-           gene-set scatters, count · fraction · concentration, a 10-model regression
-           menu, gene ranking and presets — on a validated time axis with real
-           uncertainty (τ intervals + QC/OOD).</p>
-        <span class="lp-card-go">Open model →</span>
-      </a>
 
       <a class="lp-card" href="pronuclei.html" style="--accent:#0891b2">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/pronuclei.svg);mask-image:url(card-icons/pronuclei.svg)"></span></span>
-        <span class="lp-card-tag">Zygotes with 2 pronuclei</span>
         <h2>Interpronuclei Distance Clock</h2>
-        <p>For each zygote, the minimum distance between the two pronuclei
-           (shortest line between the segments) against its total transcript
-           count — a scatter plot with a regression fit. Switchable between the
-           legacy distance proxy and the calibrated clock.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
       <a class="lp-card" href="extpt.html" style="--accent:#14b8a6">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/extpt.svg);mask-image:url(card-icons/extpt.svg)"></span></span>
-        <span class="lp-card-tag">51 zygote + 55 early + 38 late 2-cell</span>
         <h2>Extended-Time Pronuclei-COM Clock</h2>
-        <p>The pronuclei clock, extended past the first division: zygote → early-
-           2-cell → late-2-cell laid along one pseudotime axis. Zygotes are ordered
-           by the pronuclei-to-COM clock (τ) by default, switchable to the
-           interpronuclei distance. Watch any gene (or gene set) rise and fall
-           across the maternal-to-zygotic transition, with regression, statistics,
-           and gene-ranking tools.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
         </div>
@@ -174,171 +83,83 @@
     <!-- ══════════════════ 2 · SPERM, DIVISION & BODY AXES ══════════════════ -->
     <section class="lp-group" style="--accent:#0d9488">
       <h2 class="lp-group-h">2 · Sperm, division &amp; body axes</h2>
-      <p class="lp-group-note">Where the sperm enters, which plane the embryo divides along, and
-         whether either predicts how the transcriptome is arranged.</p>
 
       <div class="lp-sub">
-        <h3 class="lp-sub-h">2a · Locating &amp; aligning the sperm
-          <span class="lp-sub-count">where it is, and how to line embryos up around it</span></h3>
-        <p class="lp-sub-note">Finding the sperm in each embryo, giving 2-cell embryos a consistent
-           orientation around it, and testing whether its location predicts anything about the
-           transcriptome on its own (before any division-plane geometry is involved).</p>
+        <h3 class="lp-sub-h">2a · Locating &amp; aligning the sperm</h3>
         <div class="lp-grid">
 
       <a class="lp-card" href="sperm-map.html" style="--accent:#e11d48">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/sperm-map.svg);mask-image:url(card-icons/sperm-map.svg)"></span></span>
-        <span class="lp-card-tag">54 sperm-labelled · 42 with GFP frames</span>
         <h2>Sperm Location Browser</h2>
-        <p>Find an embryo by where its sperm ended up. Sort zygotes by distance to
-           the cortex, polar body or either pronucleus; sort 2-cell embryos by
-           distance to the junction between the blastomeres. Every hit opens in 3-D
-           with the GFP frames it was called from.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
       <a class="lp-card" href="alignment.html" style="--accent:#0d9488">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/alignment.svg);mask-image:url(card-icons/alignment.svg)"></span></span>
-        <span class="lp-card-tag">91 two-cell · 21 with a sperm · 322 anchors</span>
         <h2>Sperm Alignment (2-cell)</h2>
-        <p>A 2-cell embryo only tells you its blastomere axis — which blastomere comes
-           first, and which way is up, are your choice. Pick an anchor (any gene, or the
-           polar body), overlay every embryo it can orient, and see where the sperm lands
-           on the average outline. Then ask which anchors agree.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
       <a class="lp-card" href="alphabeta.html" style="--accent:#db2777">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/alphabeta.svg);mask-image:url(card-icons/alphabeta.svg)"></span></span>
-        <span class="lp-card-tag">55 early + 36 late 2-cell</span>
         <h2>2-Cell Blastomere α/β Labelling</h2>
-        <p>Which blastomere is alpha? A method-vs-embryo grid: the sperm-entry
-           blastomere (and higher total transcript, with more methods to come) label
-           one blastomere alpha. Flip rows to align them, read the consensus, and
-           export a CSV.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
       <a class="lp-card" href="sperm-pca.html" style="--accent:#16a34a">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/sperm-pca.svg);mask-image:url(card-icons/sperm-pca.svg)"></span></span>
-        <span class="lp-card-tag">46 sperm-positive embryos</span>
         <h2>Sperm Location Prediction (PCA)</h2>
-        <p>Locate each embryo's sperm, analyze how gene point-clouds align with the
-           sperm axis (PCA &amp; COM), rank genes by consistency, and predict the
-           sperm location from the ranked-gene axis→sperm mapping — with a
-           randomized null control.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
       <a class="lp-card" href="sperm-pseudotime.html" style="--accent:#ff2d95">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/sperm-pseudotime.svg);mask-image:url(card-icons/sperm-pseudotime.svg)"></span></span>
-        <span class="lp-card-tag">25 sperm-labelled zygotes · calibrated τ</span>
         <h2>Sperm Location vs Pseudotime</h2>
-        <p>How far is the sperm from the polar body, the maternal pronucleus, or the
-           paternal pronucleus — and how does that change over developmental time? Each
-           sperm-labelled zygote in 3-D with the distance drawn, plotted against the
-           calibrated pronuclear clock. Maternal/paternal identity from the pronucleus-ID
-           consensus; the sperm sits on the paternal pronucleus and drifts as it migrates.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
         </div>
       </div>
 
       <div class="lp-sub">
-        <h3 class="lp-sub-h">2b · Division-plane geometry
-          <span class="lp-sub-count">candidate planes through the zygote, and whether genes split along them</span></h3>
-        <p class="lp-sub-note">Five ways to define "the" dividing plane — restricted to the polar-body
-           axis, fixed by the sperm, exhaustive over every orientation, purely equatorial, or all
-           four side by side — each tested against a coin-flip / permutation null.</p>
+        <h3 class="lp-sub-h">2b · Division-plane geometry</h3>
         <div class="lp-grid">
 
       <a class="lp-card" href="zygote-planes.html" style="--accent:#f97316">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/zygote-planes.svg);mask-image:url(card-icons/zygote-planes.svg)"></span></span>
-        <span class="lp-card-tag">60 zygotes</span>
         <h2>Division Plane Sweep (18 candidates)</h2>
-        <p>Test whether a single division plane (through the embryo → polar-body
-           axis) describes each gene's spatial distribution. 18 candidate planes,
-           per-gene side counts, a coin-flip null, permutation p-values, and the
-           best planes per embryo.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
       <a class="lp-card" href="sperm-division.html" style="--accent:#0d9488">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/sperm-division.svg);mask-image:url(card-icons/sperm-division.svg)"></span></span>
-        <span class="lp-card-tag">23 sperm-positive zygotes</span>
         <h2>Sperm-Defined Division Plane</h2>
-        <p>The same per-gene analysis as the Division Plane Sweep, but at a single
-           plane fixed by the geometry: through the sperm, the polar-body centre of
-           mass and the cell centre of mass. Per-side counts, a coin-flip null,
-           permutation p-values, and the γ/μ density concordance.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
       <a class="lp-card" href="planes-all.html" style="--accent:#f59e0b">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/planes-all.svg);mask-image:url(card-icons/planes-all.svg)"></span></span>
-        <span class="lp-card-tag">50 zygotes · full-sphere search</span>
         <h2>Division Plane Sweep — every plane</h2>
-        <p>Drop the polar-body-axis restriction: search <b>every</b> plane orientation
-           through the cell centre of mass (~20,000 candidates at ~1°) and report each
-           gene's single globally-best dividing plane, scored against a
-           search-corrected null so a best-of-20,000 split isn't significant by chance.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
       <a class="lp-card" href="equatorial-planes.html" style="--accent:#0ea5e9">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/equatorial-planes.svg);mask-image:url(card-icons/equatorial-planes.svg)"></span></span>
-        <span class="lp-card-tag">50 zygotes</span>
         <h2>Equatorial Division Plane</h2>
-        <p>One plane per zygote: through the cell centre of mass, perpendicular to the
-           animal–vegetal (polar-body) axis. Splits each gene's transcripts into an
-           animal and a vegetal half, with per-side counts, a coin-flip null,
-           permutation p-values and the γ/μ density concordance.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
       <a class="lp-card" href="compare-planes.html" style="--accent:#e11d48">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/compare-planes.svg);mask-image:url(card-icons/compare-planes.svg)"></span></span>
-        <span class="lp-card-tag">50 zygotes · 4 plane pathways</span>
         <h2>Compare Division Planes</h2>
-        <p>Put all four candidate planes side by side per zygote — polar-axis best,
-           exhaustive best, equatorial, and sperm·COM·polar-body — under one
-           concentration asymmetry (cell body only, pronuclei &amp; polar body excluded).
-           See how they agree, compare any two, and rank genes by how alike the
-           pathways place the plane.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
         </div>
       </div>
 
       <div class="lp-sub">
-        <h3 class="lp-sub-h">2c · Sperm-entry &amp; cleavage-axis tests
-          <span class="lp-sub-count">local enrichment at the entry site, and the pre-patterning question</span></h3>
-        <p class="lp-sub-note">Two direct tests of the sperm's influence: does anything concentrate
-           right where it entered, and does its position (with the polar body) actually predict
-           where the embryo goes on to cleave.</p>
+        <h3 class="lp-sub-h">2c · Sperm-entry &amp; cleavage-axis tests</h3>
         <div class="lp-grid">
 
       <a class="lp-card" href="sperm-sphere.html" style="--accent:#db2777">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/sperm-sphere.svg);mask-image:url(card-icons/sperm-sphere.svg)"></span></span>
-        <span class="lp-card-tag">26 sperm-positive zygotes</span>
         <h2>Sperm-Entry-Site Enrichment</h2>
-        <p>For zygotes with a labelled sperm, test whether each gene is concentrated
-           (enriched) or depleted within a configurable radius of the sperm entry site —
-           with include/exclude controls per segment (cytoplasm, pronuclei, polar body),
-           a binomial 95% null, per-gene rankings and a radius sweep.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
       <a class="lp-card" href="axes.html" style="--accent:#e11d48">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/axes.svg);mask-image:url(card-icons/axes.svg)"></span></span>
-        <span class="lp-card-tag">26 zygotes + 19 two-cell · sperm-positive</span>
         <h2>Fertilization Geometry vs First Cleavage</h2>
-        <p>Does the sperm entry position (GFP midpiece) and the polar body (animal
-           pole) predict the first cleavage plane? A shape-controlled, null-tested
-           re-examination of the pre-patterning question — plus whether the
-           transcriptome is asymmetric along that axis.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
         </div>
@@ -348,63 +169,31 @@
     <!-- ══════════════════ 3 · GENE EXPRESSION & SPATIAL PATTERN ══════════════════ -->
     <section class="lp-group" style="--accent:#7c3aed">
       <h2 class="lp-group-h">3 · Gene expression &amp; spatial pattern</h2>
-      <p class="lp-group-note">Where transcripts sit inside the embryo and how they got there —
-         independent of sperm or timing: contact interfaces, spatial clusters, developmental stage,
-         segmentation, and diffusion.</p>
       <div class="lp-grid">
 
       <a class="lp-card" href="contact.html" style="--accent:#7c3aed">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/contact.svg);mask-image:url(card-icons/contact.svg)"></span></span>
-        <span class="lp-card-tag">91 two-cell · 55 early + 36 late</span>
         <h2>Blastomere Contact Enrichment</h2>
-        <p>Does anything pile up where the two blastomeres press together? Each
-           transcript is projected onto the axis running through the interface, and
-           every gene is tested against where that embryo's transcripts generally
-           sit. Sweep the slab thickness; compare early vs late 2-cell.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
       <a class="lp-card" href="clustering.html" style="--accent:#0f766e">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/clustering.svg);mask-image:url(card-icons/clustering.svg)"></span></span>
-        <span class="lp-card-tag">229 genes · 50 zygotes</span>
         <h2>Spatial Gene Clustering</h2>
-        <p>Which genes sit in the same place? Every gene gets a signature of where its
-           transcripts fall — cortex to core, vegetal to animal — measured against each
-           embryo's own transcript distribution, then grouped. Pick a gene to see its
-           cluster darken around it.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
       <a class="lp-card" href="stage-expression.html" style="--accent:#55B3CB">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/stage-expression.svg);mask-image:url(card-icons/stage-expression.svg)"></span></span>
-        <span class="lp-card-tag">60 zygote · 55 early · 38 late 2-cell</span>
         <h2>Stage Expression Explorer</h2>
-        <p>Pick any of 426 genes and see every zygote, early-2-cell and late-2-cell
-           sample that detected it, each rendered in 3-D. The drawer plots per-stage
-           expression as mean bars, box, or violin — with Welch p-values,
-           count / CPM / density normalization, and a click-to-rotate 3-D view of any sample.</p>
-        <span class="lp-card-go">Open explorer →</span>
       </a>
 
       <a class="lp-card" href="segments.html" style="--accent:#7c3aed">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/segments.svg);mask-image:url(card-icons/segments.svg)"></span></span>
-        <span class="lp-card-tag">All embryos · 4 stages</span>
         <h2>Gene Enrichment by Segment</h2>
-        <p>For every embryo (oocyte → late 2-cell), assign transcripts to each
-           segmentation label and rank the genes most enriched in each segment
-           (density fold-change vs the embryo-wide average). One tab per segment.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
       <a class="lp-card" href="diffusion.html" style="--accent:#0284c7">
         <span class="lp-card-fig"><span class="lp-card-fig-icon" style="-webkit-mask-image:url(card-icons/diffusion.svg);mask-image:url(card-icons/diffusion.svg)"></span></span>
-        <span class="lp-card-tag">Zygotes · passive-diffusion null</span>
         <h2>mRNA Diffusion Rates</h2>
-        <p>If a gene's mRNA simply diffused out of the nucleus, how long would it take to reach
-           its observed spread? An animated Brownian null model clocked by each mRNA's size —
-           genes far from the null hint at active transport or anchoring. Per-gene times, an
-           embryo average, and a cross-embryo scatter.</p>
-        <span class="lp-card-go">Open model →</span>
       </a>
 
       </div>
@@ -425,6 +214,9 @@
     // Pull the admin card fragment and drop it in as the first project card. The fragment is
     // server-gated: the edge middleware 404s it for anyone whose session isn't an admin, so
     // simply trying the fetch is the check — no client-readable "am I admin" cookie needed.
+    // It also carries the 4 admin-only project cards (see ADMIN_ONLY_PAGES in
+    // lib/projects.mjs) — those pages are 404'd by the same middleware check for non-admins,
+    // so this fetch is the only place a non-admin's browser would ever see their names.
     fetch("/admin.card.html", { cache: "no-store" })
       .then(function (r) { return r.ok ? r.text() : ""; })
       .then(function (h) {

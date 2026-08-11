@@ -614,6 +614,17 @@
         "The polar body is the exception: it needs no panel, so it orients 42 embryos and 18 of the 21 with a sperm. It is the only anchor here with a biological claim to being a real axis rather than a convention.",
         "<b>Anchor agreement</b> asks which anchors are interchangeable: the mean of cos(Δθ) over the embryos both can orient. Dark means the two produce the same picture. Most pairs are too disjoint to compare at all, which is the honest shape of this dataset.",
       ] },
+    "size": { eyebrow: "Embryo size · the shape of the space", title: "How big is each embryo?",
+      body: [
+        "Two measurements, both taken straight from the segmentation meshes, both in microns, and both defined identically to the figure in the slide deck so the site and the figure cannot drift apart.",
+        "<b>Mean cortex radius — for every embryo, at every stage.</b> The cytoplasm surface is binned into about 650 directions about its own centre of mass, and the radius in each direction is the <b>furthest</b> vertex that way; the reported number is the mean over those directions. Drawn as a wireframe sphere on the embryo.",
+        "<b>Furthest, not nearest, and it matters.</b> The pronuclei are carved out of the cytoplasm label, so that label's mesh also carries interior surfaces. A nearest-vertex rule would frequently return a pronuclear wall and report it as the cell boundary.",
+        "<b>The 2-cell box.</b> The box that just contains both blastomeres, oriented along the axis joining their centres. <b>Length</b> is the extent along that axis, <b>height</b> the extent across it — the minimum height a box needs to hold the pair. Drawn as a wireframe with both dimensions labelled.",
+        "<b>Length is not the sum of the two blastomere diameters</b>, and should not be expected to match it: the median length is about 1.5 times the height rather than 2, because the blastomeres press together and flatten instead of sitting as two free spheres. That is a real property of the embryo, not a measurement error.",
+        "<b>The polar body and the nuclei are excluded throughout.</b> They are separate segments and never enter the cytoplasm or blastomere labels, so the exclusion is structural rather than a filter that could be forgotten.",
+        "<b>Every embryo is included and nothing is filtered.</b> A few cortex surfaces have holes or nicks that drag the nearest radius far below anything a cell can be; those are marked as irregular in the readout, for information only. The mark exists so that an implausible entry near the top of a ranked list can be recognised for what it is — not so it can be hidden.",
+        "A zygote's median radius here is about 40 µm, i.e. an 80 µm diameter, which is what a mouse zygote should measure. That agreement is a useful check on the whole segmentation pipeline.",
+      ] },
     "contact": { eyebrow: "Contact enrichment · the interface", title: "Genes at the blastomere contact",
       body: [
         "A 2-cell embryo has an interface — the flat face where the two blastomeres press together. This asks whether any gene concentrates there.",

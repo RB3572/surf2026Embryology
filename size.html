@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Embryo Size · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="help.css" />
+  <link rel="stylesheet" href="size.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <script src="embryo-probesets.js"></script>
+  <script src="viewer-core.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#b45309;box-shadow:0 0 0 4px color-mix(in srgb,#b45309 18%,transparent)"></span>
+      <span class="brand-name">Embryo&nbsp;Size</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">This embryo</span>
+        <button class="help-btn" data-help="size" style="margin-left:auto"
+                aria-label="What is this?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="sz-toggles">
+          <label class="zt"><input type="checkbox" id="tg-shape" checked /><span class="zt-sw" id="sw-shape"></span>Fitted shape</label>
+          <label class="zt"><input type="checkbox" id="tg-labels" checked /><span class="zt-sw" style="background:#0f172a"></span>Dimension labels</label>
+          <label class="zt"><input type="checkbox" id="tg-mesh" checked /><span class="zt-sw" style="background:#94a3b8"></span>Embryo mesh</label>
+        </div>
+        <div class="sz-readout" id="sz-readout"></div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Pick an embryo from the ranking</div>
+        <div class="ph-sub">Open <b>Size ranking</b> on the right, choose a stage and how to sort,
+          then click an embryo. A zygote gets a sphere at its mean cortex radius; a 2-cell embryo
+          gets the box that just contains both blastomeres.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <!-- bottom drawer -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Size across the cohort <span class="drawer-gene" id="drawer-emb"></span></span>
+      <span class="drawer-hint">where this embryo sits in every distribution</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="xs-graph-tabs" id="sz-tabs" role="tablist" aria-label="Panels">
+        <button type="button" class="xs-gtab active" data-tab="dist" role="tab" aria-selected="true">Distributions</button>
+        <button type="button" class="xs-gtab" data-tab="all" role="tab" aria-selected="false">All on one scale</button>
+      </div>
+      <div class="xs-panels" id="sz-panels">
+
+        <div class="xs-panel" data-tab="dist" role="tabpanel">
+          <div class="sz-head">
+            <div class="mini-title">Size distributions by stage <span class="mini-sub" id="sz-dist-sub"></span></div>
+          </div>
+          <div class="sz-note"><b>Mean cortex radius</b> is measured for every embryo at every stage —
+            the distance from the centre of mass out to the cortex, averaged over ~650 directions,
+            with the polar body and nuclei excluded. For a 2-cell embryo it is measured over both
+            blastomeres taken as one body. 2-cell embryos additionally get the <b>box</b> that just
+            contains both blastomeres, oriented along the axis joining their centres. Every embryo is
+            included; nothing is filtered out. The line marks the embryo you have open.</div>
+          <div class="sz-grid">
+            <div class="xs-resizable"><div id="sz-rad" class="sz-plot"></div></div>
+            <div class="xs-resizable"><div id="sz-e2c" class="sz-plot"></div></div>
+            <div class="xs-resizable"><div id="sz-l2c" class="sz-plot"></div></div>
+          </div>
+        </div>
+
+        <div class="xs-panel" data-tab="all" role="tabpanel" hidden>
+          <div class="sz-head">
+            <div class="mini-title">Every distribution on one axis <span class="mini-sub" id="sz-all-sub"></span></div>
+          </div>
+          <div class="sz-note">The same measurements on one micron scale, so the stages can be compared
+            directly. Zygote diameter (2r) is shown alongside the radius because it is the quantity
+            comparable to a 2-cell box dimension. Note that <b>length is well short of twice the
+            height</b>: the blastomeres press together and flatten rather than sitting as two free
+            spheres.</div>
+          <div class="xs-resizable" style="height:380px"><div id="sz-all" class="sz-plot"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- right drawer: the ranking -->
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Size ranking</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Every embryo by size</div>
+        <div class="rdrawer-desc">Choose a stage, then how to order it. Click any row to open it.</div>
+        <label class="ctl sz-sel"><span class="ctl-label">Stage</span>
+          <select id="stage-sel">
+            <option value="zygote">Zygote</option>
+            <option value="twocell">2-cell (early + late)</option>
+            <option value="early2cell">Early 2-cell only</option>
+            <option value="late2cell">Late 2-cell only</option>
+          </select></label>
+        <label class="ctl sz-sel"><span class="ctl-label">Sort by</span>
+          <select id="sort-sel"></select></label>
+        <div class="sz-dir" id="sz-dir" role="group">
+          <button type="button" data-dir="desc" class="active">Largest first</button>
+          <button type="button" data-dir="asc">Smallest first</button>
+        </div>
+      </div>
+      <div class="best-list" id="sz-list"></div>
+    </div>
+  </aside>
+
+  <script src="size.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

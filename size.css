@@ -1,0 +1,76 @@
+/* Embryo Size — project styling (builds on style.css tokens). */
+
+:root { --sz: #b45309; --sz-box: #0d9488; }
+
+/* ---- the .xs-* drawer chrome is per-project in this codebase ---- */
+.xs-graph-tabs { flex: 0 0 auto; display: flex; gap: 2px; padding: 0 16px; overflow-x: auto;
+  border-bottom: 1px solid var(--line); scrollbar-width: none; }
+.xs-graph-tabs::-webkit-scrollbar { display: none; }
+.xs-gtab { font-family: var(--sans); font-size: 12.5px; font-weight: 600; color: var(--ink-2);
+  padding: 7px 13px; border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+.xs-gtab:hover { color: var(--ink); }
+.xs-gtab.active { color: var(--ink); border-bottom-color: var(--sz); }
+.xs-panels { flex: 1 1 auto; overflow: auto; padding: 10px 16px 14px; min-height: 0; }
+.xs-panel { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+.xs-panel[hidden] { display: none; }
+.xs-resizable { position: relative; width: 100%; max-width: 100%; height: 300px;
+  min-height: 200px; min-width: 240px; resize: both; overflow: hidden; }
+.xs-resizable > .sz-plot { flex: none; width: 100%; height: 100%; min-height: 0; }
+.xs-resizable::after { content: ""; position: absolute; right: 3px; bottom: 3px; width: 11px; height: 11px;
+  pointer-events: none; opacity: .55;
+  background: linear-gradient(135deg, transparent 0 50%, var(--ink-soft) 50% 60%, transparent 60% 72%, var(--ink-soft) 72% 82%, transparent 82%); }
+
+.sz-plot { width: 100%; height: 100%; min-height: 200px; }
+.sz-note { font-size: 11.5px; color: var(--ink-2); line-height: 1.5; margin: 2px 0 8px; }
+.sz-note b { color: var(--ink); }
+.sz-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.sz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.sz-empty { padding: 24px 12px; text-align: center; color: var(--muted);
+  font-size: 12.5px; font-style: italic; }
+
+/* ---- controls window ---- */
+.sz-toggles { display: flex; flex-direction: column; gap: 6px; }
+.zt { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #334155; cursor: pointer; }
+.zt input { accent-color: var(--sz); }
+.zt-sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block; border: 1px solid rgba(0,0,0,.15); }
+.sz-readout { margin-top: 10px; padding-top: 10px; border-top: 1px solid #eef1f5; font-size: 12px; }
+.sz-r-head { font-size: 12.5px; font-weight: 700; color: #0f172a; margin-bottom: 5px; }
+.sz-r-line { display: flex; align-items: center; gap: 6px; color: #334155; padding: 1.5px 0; }
+.sz-r-line .k { color: var(--muted); }
+.sz-r-line .v { margin-left: auto; font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--ink); }
+.sz-r-line.is-key .v { color: var(--sz); font-weight: 700; }
+.sz-r-sep { margin-top: 8px; padding-top: 7px; border-top: 1px solid #eef1f5;
+  font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .5px;
+  color: var(--ink-soft); }
+.sz-warn { margin-top: 8px; padding: 7px 9px; border-radius: 8px; font-size: 11px; line-height: 1.45;
+  color: #7c2d12; background: #fff7ed; border: 1px solid #fed7aa; }
+.sz-warn b { color: #7c2d12; }
+
+/* ---- right drawer ---- */
+.sz-sel { display: block; margin-top: 8px; }
+.sz-sel select { width: 100%; font-size: 12.5px; padding: 5px 8px; border: 1px solid #d5d9e0;
+  border-radius: 8px; background: #fff; }
+.sz-dir { display: inline-flex; border: 1px solid #d5d9e0; border-radius: 8px;
+  overflow: hidden; margin-top: 9px; }
+.sz-dir button { font: 600 11.5px system-ui, sans-serif; color: #475569; background: #fff;
+  border: none; padding: 5px 11px; cursor: pointer; }
+.sz-dir button + button { border-left: 1px solid #d5d9e0; }
+.sz-dir button.active { background: var(--sz); color: #fff; }
+
+.best-list { flex: 1 1 auto; overflow-y: auto; padding: 6px 8px 16px; border-top: 1px solid var(--line); }
+.sz-head-row, .sz-row { display: grid; grid-template-columns: 24px minmax(0,1fr) 56px 12px; gap: 7px; }
+.sz-head-row { padding: 4px 8px; font-family: var(--mono); font-size: 9.5px; text-transform: uppercase;
+  letter-spacing: .4px; color: var(--ink-soft); position: sticky; top: 0;
+  background: var(--surface); border-bottom: 1px solid var(--line-2); }
+.sz-row { align-items: center; padding: 6px 8px; border-radius: 7px; cursor: pointer;
+  border: 1px solid transparent; font-size: 12px; }
+.sz-row:hover { background: var(--line-2); }
+.sz-row.current { border-color: var(--sz); background: color-mix(in srgb, var(--sz) 8%, var(--surface)); }
+.sz-row .n { font-family: var(--mono); font-size: 10.5px; color: var(--ink-soft); text-align: right; }
+.sz-row .e { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sz-row.current .e { color: var(--sz); font-weight: 700; }
+.sz-row .d { font-family: var(--mono); font-size: 11px; text-align: right;
+  font-variant-numeric: tabular-nums; color: #2563eb; }
+/* a stage swatch, so a mixed 2-cell list stays readable at a glance */
+.sz-row .g { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }

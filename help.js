@@ -625,6 +625,18 @@
         "<b>Every embryo is included and nothing is filtered.</b> A few cortex surfaces have holes or nicks that drag the nearest radius far below anything a cell can be; those are marked as irregular in the readout, for information only. The mark exists so that an implausible entry near the top of a ranked list can be recognised for what it is — not so it can be hidden.",
         "A zygote's median radius here is about 40 µm, i.e. an 80 µm diameter, which is what a mouse zygote should measure. That agreement is a useful check on the whole segmentation pipeline.",
       ] },
+    "scheffler": { eyebrow: "Pseudotime training · the workshop", title: "Fit the clock yourself",
+      body: [
+        "A fixed zygote has no timestamp. The clock that gives it one is <b>trained on somebody else's live imaging</b>: 53 untreated mouse zygotes from Scheffler et al. 2021, filmed from pronuclear formation to NEBD, 2,057 frames in all. Every frame records how far each pronucleus sits from the cell centre. This page is that cohort, opened up — and the fitting made touchable.",
+        "<b>The target is normalised time.</b> t_real is hours since pronuclear formation, T_duration is that embryo's own formation→NEBD interval (8.75–11.75 h here), and <b>t = t_real / T_duration</b> runs 0 to 1. Normalising is what makes embryos of different total length comparable. A model's output is written <b>τ</b> — predicted normalised time — never t, so a prediction is never mistaken for a measurement.",
+        "<b>⚠️ The cartoon is a schematic.</b> The workbook publishes <b>distances only</b> — no angles, no cell outline, no cell radius. The two radii you see are real data. Where the pronuclei sit around the circle, and the circle itself, are drawing conventions chosen to make the distances legible. Nothing about the picture's geometry beyond those two lengths is a measurement.",
+        "<b>Hold embryos out by embryo, never by frame.</b> Pick a testing cohort in the bottom drawer, and every frame of those embryos is scored while the rest are fitted. Frames within a trajectory are near-duplicates, so a frame-level split lets a model interpolate inside a curve it has already seen and report a score it has not earned. The cohort is shared across the model tabs so the tabs are directly comparable.",
+        "<b>The winner is a monotone staircase.</b> Isotonic regression on the summed distance ∂ = ∂₁ + ∂₂ assumes only the <i>direction</i> of travel — bigger ∂ means earlier — and nothing about speed. Pooling adjacent violators leaves a step function that follows the data where they agree and flattens where they contradict each other. The knots figure is the fitted model in full; there is nothing else to it.",
+        "<b>Features are identity-free by construction.</b> A fixed zygote gives no reliable way to tell the maternal pronucleus from the paternal, so the two distances are only ever used sorted (nearer/farther) or combined (sum/difference). Nothing keyed to male/female is offered as a feature here.",
+        "<b>The leaky model is shown but cannot be refit.</b> Its features are the published relative volumes, each normalised to that pronucleus's <i>own future endpoint volume</i> — unmeasurable in a snapshot, and inside the training table they encode elapsed time directly. It halves the error and it is not a clock. Those columns are simply absent from this page's data, so the number appears in the published ranking and the model cannot be reproduced as something deployable.",
+        "<b>Two rankings, and they are not interchangeable.</b> <i>Published</i> is the fixed comparison: nested five-fold cross-validation grouped by embryo, scored offline. <i>Your runs</i> is whatever you have fitted on the cohort you defined — one split, not five folds — so compare your runs to each other, not to the published table.",
+        "<b>The bottom panel applies your model to our fixed zygotes.</b> They have no true time, so the horizontal axis is inference, not measurement. 51 of 60 zygote scenes appear: the other nine come from label stacks that resolve only the cytoplasm, so no pronuclear distance exists and no model of any kind can place them.",
+      ] },
     "contact": { eyebrow: "Contact enrichment · the interface", title: "Genes at the blastomere contact",
       body: [
         "A 2-cell embryo has an interface — the flat face where the two blastomeres press together. This asks whether any gene concentrates there.",
@@ -687,7 +699,10 @@
     if (!overlay) build();
     overlay.querySelector("#help-eyebrow").textContent = c.eyebrow || "";
     overlay.querySelector("#help-title").textContent = c.title || "";
-    overlay.querySelector("#help-body").innerHTML = c.html || "";
+    // Two authoring forms: `html` for hand-laid-out entries with figures, `body` for a plain list
+    // of paragraphs. `body` was silently dropped here until now, so those modals opened empty.
+    overlay.querySelector("#help-body").innerHTML = c.html ||
+      (c.body || []).map((p, i) => `<p${i ? "" : ' class="lede"'}>${p}</p>`).join("");
     overlay.querySelector(".help-modal").scrollTop = 0;
     overlay.classList.add("open");
   }

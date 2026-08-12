@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scheffler Pseudotime Model Training · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="help.css" />
+  <link rel="stylesheet" href="scheffler.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <script src="embryo-probesets.js"></script>
+  <script src="viewer-core.js"></script>
+  <script src="pt-models.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#4f46e5;box-shadow:0 0 0 4px color-mix(in srgb,#4f46e5 18%,transparent)"></span>
+      <span class="brand-name">Scheffler&nbsp;Pseudotime&nbsp;Model&nbsp;Training</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Training zygotes"></nav>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">This zygote</span>
+        <button class="help-btn" data-help="scheffler" style="margin-left:auto"
+                aria-label="What is this?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="sf-time">
+          <div class="sf-time-row">
+            <button class="sf-step" id="t-prev" title="Previous frame">◀</button>
+            <input type="range" id="t-slider" min="0" max="0" value="0" step="1" />
+            <button class="sf-step" id="t-next" title="Next frame">▶</button>
+            <button class="sf-play" id="t-play" title="Play the trajectory">▶ play</button>
+          </div>
+          <div class="sf-time-lab" id="t-lab"></div>
+        </div>
+        <div class="sf-readout" id="sf-readout"></div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="sf-stage" id="sf-stage">
+      <div class="sf-cartoon-wrap"><div id="sf-cartoon"></div></div>
+      <div class="sf-track-wrap"><div id="sf-track"></div></div>
+    </div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Pick a training zygote</div>
+        <div class="ph-sub">The 53 live-imaged zygotes of the calibration cohort, indexed as in the
+          source datasheet. Scrub through one to watch its two pronuclei migrate inward.</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- bottom drawer: one tab per model -->
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Fit a model <span class="drawer-gene" id="drawer-model"></span></span>
+      <span class="drawer-hint">hold embryos out · fit · see the model, its accuracy, and what it says about our zygotes</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="xs-graph-tabs" id="sf-tabs" role="tablist" aria-label="Models"></div>
+      <div class="xs-panels">
+        <div class="xs-panel">
+
+          <div class="sf-modelhead">
+            <div class="mini-title" id="sf-model-title"></div>
+            <div class="sf-model-note" id="sf-model-note"></div>
+          </div>
+
+          <div class="sf-cohort">
+            <div class="sf-cohort-head">
+              <span class="sf-cohort-title">Testing cohort</span>
+              <span class="sf-cohort-count" id="sf-cohort-count"></span>
+              <span class="sf-cohort-btns">
+                <button type="button" class="sf-btn" data-pick="10">random 10</button>
+                <button type="button" class="sf-btn" data-pick="fold">published fold 0</button>
+                <button type="button" class="sf-btn" data-pick="invert">invert</button>
+                <button type="button" class="sf-btn" data-pick="none">clear</button>
+              </span>
+            </div>
+            <div class="sf-chips" id="sf-chips"></div>
+            <div class="sf-note">Held-out embryos are scored; the rest are used to fit. Splitting by
+              <b>embryo</b> rather than by frame is essential — frames within one embryo are nearly
+              identical, so a frame-level split would let the model interpolate within a trajectory it
+              had already seen and report a flattering number. The cohort is shared across model tabs
+              so the comparison is like for like.</div>
+            <div class="sf-run">
+              <button type="button" class="sf-go" id="sf-run">Fit this model</button>
+              <button type="button" class="sf-go alt" id="sf-run-all">Fit every model on this cohort</button>
+              <span class="sf-status" id="sf-status"></span>
+            </div>
+          </div>
+
+          <div class="sf-figs">
+            <div>
+              <div class="mini-title">The fitted model <span class="mini-sub" id="sf-fit-sub"></span></div>
+              <div class="xs-resizable"><div id="sf-fit" class="sf-plot"></div></div>
+            </div>
+            <div>
+              <div class="mini-title">Held-out accuracy <span class="mini-sub" id="sf-test-sub"></span></div>
+              <div class="xs-resizable"><div id="sf-test" class="sf-plot"></div></div>
+            </div>
+          </div>
+
+          <div class="sf-ours">
+            <div class="sf-head">
+              <div class="mini-title">This model applied to our fixed zygotes <span class="mini-sub" id="sf-ours-sub"></span></div>
+              <label class="ctl sf-inline"><span class="ctl-label">Vertical axis</span>
+                <select id="sf-yaxis">
+                  <option value="__total__">Total transcripts</option>
+                </select></label>
+            </div>
+            <div class="sf-note">Our zygotes are fixed, so they have no true time — the horizontal
+              axis is what the model you just fitted <b>infers</b> for them. Genes are listed with the
+              number of our zygotes that detected them.</div>
+            <div class="xs-resizable" style="height:340px"><div id="sf-ours" class="sf-plot"></div></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- right drawer: model rankings -->
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Model ranking</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">How the models compare</div>
+        <div class="sf-rtabs" id="sf-rtabs" role="tablist">
+          <button type="button" class="sf-rtab active" data-rtab="pub" role="tab">Published</button>
+          <button type="button" class="sf-rtab" data-rtab="mine" role="tab">Your runs</button>
+        </div>
+      </div>
+      <div class="best-list" id="sf-rank"></div>
+    </div>
+  </aside>
+
+  <script src="scheffler.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

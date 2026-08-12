@@ -23,8 +23,12 @@
   const V = window.VCore;
   const XY = 0.15;
   const C_SPHERE = "#b45309", C_BOX = "#0d9488", C_LABEL = "#0f172a";
-  const STAGE_C = { zygote: "#334155", early2cell: "#c98a3f", late2cell: "#4a7db5" };
+  // The figure 10.1–10.4 palette, used verbatim so a panel here and the exported figure read as
+  // the same picture: green zygote, blue early 2-cell, orange late 2-cell.
+  const STAGE_C = { zygote: "#2f8f6b", early2cell: "#3f76b5", late2cell: "#e5734f" };
   const STAGE_LABEL = { zygote: "zygote", early2cell: "early 2-cell", late2cell: "late 2-cell" };
+  // and the figure's line convention: solid = height / radius, dashed = length / diameter
+  const LS_H = "solid", LS_L = "dash";
 
   const state = {
     data: null, byId: {}, stage: "zygote", sort: "radius_um", dir: "desc",
@@ -250,12 +254,66 @@
   }
 
   // ───────── bottom drawer ─────────
-  const baseLayout = (xt) => ({
-    margin: { l: 46, r: 10, t: 26, b: 40 }, showlegend: false, bargap: 0.04,
-    xaxis: { title: { text: xt, font: { size: 10 } }, zeroline: false, gridcolor: "#eef1f5", tickfont: { size: 9 } },
-    yaxis: { title: { text: "embryos", font: { size: 10 } }, zeroline: false, gridcolor: "#eef1f5", tickfont: { size: 9 } },
+  const baseLayout = (xt, xr) => ({
+    margin: { l: 52, r: 10, t: 26, b: 40 }, showlegend: false,
+    xaxis: { title: { text: xt, font: { size: 10 } }, range: xr, zeroline: false,
+      gridcolor: "#eef1f5", tickfont: { size: 9 } },
+    yaxis: { title: { text: "density (scaled to peak)", font: { size: 10 } }, range: [-0.075, 1.08],
+      zeroline: false, gridcolor: "#eef1f5", tickfont: { size: 9 } },
     paper_bgcolor: "transparent", plot_bgcolor: "transparent",
   });
+  // the figure's axis windows, so a curve occupies the same span of page here as in the export
+  const XLIM_R = [10, 80], XLIM_BOX = [25, 240], XLIM_ALL = [10, 240];
+
+  // ---- density curves, matching figure 10.1-10.4 exactly ----------------------------------
+  // A Gaussian KDE with Scott's rule — scipy's gaussian_kde default, so a curve drawn here and
+  // one drawn by make_index10.py are the same curve rather than two smoothings that merely
+  // resemble each other. h = sd * n^(-1/5) in one dimension.
+  function kde(v, xs) {
+    const n = v.length, mean = v.reduce((s, x) => s + x, 0) / n;
+    const sd = Math.sqrt(v.reduce((s, x) => s + (x - mean) ** 2, 0) / (n - 1));
+    const h = sd * Math.pow(n, -1 / 5) || 1e-6;
+    const k = 1 / (n * h * Math.sqrt(2 * Math.PI));
+    return xs.map((x) => k * v.reduce((s, xi) => s + Math.exp(-0.5 * ((x - xi) / h) ** 2), 0));
+  }
+  const linspace = (a, b, n) => Array.from({ length: n }, (_, i) => a + (b - a) * i / (n - 1));
+
+  /** One labelled distribution: the peak-normalised curve, its mean ± 1 SD band, a mean rule, and
+   *  a rug of the actual values so the smooth curve is never mistaken for the data. */
+  function densityTraces(vRaw, color, label, xlim,
+                         { ls = LS_H, fill = 0.28, rug = true, mean = true } = {}) {
+    const v = vRaw.filter((x) => Number.isFinite(x));
+    if (v.length < 2) return { traces: [], mu: NaN, sd: NaN };
+    const xs = linspace(xlim[0], xlim[1], 600);
+    const y0 = kde(v, xs);
+    const peak = Math.max(...y0) || 1;
+    const y = y0.map((q) => q / peak);                 // peak = 1, so widths stay comparable
+    const n = v.length, mu = v.reduce((s, x) => s + x, 0) / n;
+    const sd = Math.sqrt(v.reduce((s, x) => s + (x - mu) ** 2, 0) / (n - 1));
+    const rgb = hexRgb(color);
+    const band = xs.map((x, i) => (x >= mu - sd && x <= mu + sd ? y[i] : null));
+    const traces = [
+      { type: "scatter", mode: "lines", x: xs, y: band, fill: "tozeroy",
+        fillcolor: `rgba(${rgb},${fill})`, line: { width: 0 }, hoverinfo: "skip",
+        showlegend: false, connectgaps: false },
+      { type: "scatter", mode: "lines", x: xs, y, name: `${label}  (n = ${n})`,
+        line: { color, width: 2, dash: ls },
+        hovertemplate: `${label}<br>%{x:.1f} µm<extra></extra>` },
+    ];
+    if (mean) {
+      traces.push({ type: "scatter", mode: "lines", x: [mu, mu], y: [0, kde(v, [mu])[0] / peak],
+        line: { color, width: 1.2, dash: "dash" }, hoverinfo: "skip", showlegend: false });
+    }
+    if (rug) {
+      traces.push({ type: "scatter", mode: "markers", x: v, y: v.map(() => -0.035),
+        marker: { symbol: "line-ns-open", size: 7, color, opacity: 0.55,
+                  line: { color, width: 1 } },
+        hovertemplate: `%{x:.1f} µm<extra></extra>`, showlegend: false });
+    }
+    return { traces, mu, sd };
+  }
+
+  const hexRgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)).join(",");
 
   const CFG = { displaylogo: false, responsive: true,
                 modeBarButtonsToRemove: ["select2d", "lasso2d", "autoScale2d"],
@@ -275,84 +333,85 @@
     return layout;
   }
 
+  // inside the axes at upper right, as in the exported figures — and it keeps the panel title,
+  // which sits above the plot, from colliding with it
+  const legendIn = { x: 0.99, y: 0.99, xanchor: "right", yanchor: "top", font: { size: 9 },
+                     bgcolor: "rgba(255,255,255,0.72)", borderwidth: 0 };
+
   function renderDist() {
     const host = $("#sz-rad");
     if (!host || !host.offsetParent) return;
     const e = cur();
 
-    // panel 1 — mean cortex radius, EVERY embryo, all three stages
-    const t1 = ["zygote", "early2cell", "late2cell"].map((st) => ({
-      type: "histogram", x: vals(st, "radius_um"), name: STAGE_LABEL[st],
-      marker: { color: STAGE_C[st], line: { color: "#fff", width: .5 } },
-      opacity: 0.72, nbinsx: 18,
-      hovertemplate: `${STAGE_LABEL[st]}<br>%{x:.1f} µm · %{y} embryos<extra></extra>`,
-    }));
-    const l1 = baseLayout("mean cortex radius (µm)");
-    l1.barmode = "overlay"; l1.showlegend = true;
-    l1.legend = { orientation: "h", x: 0, y: 1.02, xanchor: "left", yanchor: "bottom", font: { size: 9 } };
-    l1.margin.t = 34;
+    // panel 1 — mean cortex radius, EVERY embryo, all three stages (figure 10.1)
+    const t1 = [];
+    ["zygote", "early2cell", "late2cell"].forEach((st) => {
+      t1.push(...densityTraces(vals(st, "radius_um"), STAGE_C[st], STAGE_LABEL[st], XLIM_R,
+                               { fill: 0.22 }).traces);
+    });
+    const l1 = baseLayout("mean radius, COM → cortex (µm)", XLIM_R);
+    l1.showlegend = true; l1.legend = legendIn; l1.margin.t = 22;
     if (e) marker(e.radius_um, l1);
     plotInto(host, t1, l1);
 
-    // panels 2 and 3 — the 2-cell box, per stage
+    // panels 2 and 3 — the 2-cell box, per stage (figures 10.2, 10.3)
+    // solid = height, dashed = length, both in that stage's colour — the figure's convention
     [["#sz-e2c", "early2cell", "Early 2-cell"], ["#sz-l2c", "late2cell", "Late 2-cell"]].forEach(
       ([sel, st, ttl]) => {
         const el = $(sel); if (!el) return;
+        const col = STAGE_C[st];
         const H = vals(st, "height_um"), L = vals(st, "length_um");
         const t = [
-          { type: "histogram", x: H, name: "height", marker: { color: "#e5734f", line: { color: "#fff", width: .5 } }, opacity: .75, nbinsx: 16 },
-          { type: "histogram", x: L, name: "length", marker: { color: "#3f76b5", line: { color: "#fff", width: .5 } }, opacity: .75, nbinsx: 16 },
+          ...densityTraces(H, col, "box height", XLIM_BOX, { ls: LS_H, fill: 0.28 }).traces,
+          ...densityTraces(L, col, "box length", XLIM_BOX, { ls: LS_L, fill: 0.14 }).traces,
         ];
-        const lay = baseLayout("box dimension (µm)");
-        lay.barmode = "overlay"; lay.showlegend = true; lay.margin.t = 34;
-        lay.legend = { orientation: "h", x: 0, y: 1.02, xanchor: "left", yanchor: "bottom", font: { size: 9 } };
-        lay.title = { text: `${ttl} · n = ${L.length}`, x: 0, xanchor: "left", font: { size: 10, color: "#64748b" } };
+        const lay = baseLayout("box dimension (µm)", XLIM_BOX);
+        lay.showlegend = true; lay.legend = legendIn; lay.margin.t = 22;
+        lay.title = { text: `${ttl} · n = ${L.length}`, x: 0, xanchor: "left",
+                      font: { size: 10, color: "#64748b" } };
         if (e && e.stage === st) {
           lay.shapes = [
-            { type: "line", x0: e.height_um, x1: e.height_um, yref: "paper", y0: 0, y1: 1, line: { color: "#e5734f", width: 2, dash: "dot" } },
-            { type: "line", x0: e.length_um, x1: e.length_um, yref: "paper", y0: 0, y1: 1, line: { color: "#3f76b5", width: 2, dash: "dot" } },
+            { type: "line", x0: e.height_um, x1: e.height_um, yref: "paper", y0: 0, y1: 1,
+              line: { color: C_LABEL, width: 1.5, dash: "dot" } },
+            { type: "line", x0: e.length_um, x1: e.length_um, yref: "paper", y0: 0, y1: 1,
+              line: { color: C_LABEL, width: 1.5, dash: "dot" } },
           ];
         }
         plotInto(el, t, lay);
       });
   }
 
+  /** Figure 10.4: every distribution on one micron scale, each curve peak-normalised. */
   function renderAll() {
     const host = $("#sz-all");
     if (!host || !host.offsetParent) return;
     const e = cur();
+    const zr = vals("zygote", "radius_um");
     const series = [
-      ["zygote radius", vals("zygote", "radius_um"), STAGE_C.zygote],
-      ["zygote diameter (2r)", vals("zygote", "radius_um").map((v) => 2 * v), "#94a3b8"],
-      ["early 2-cell radius", vals("early2cell", "radius_um"), STAGE_C.early2cell],
-      ["early 2-cell height", vals("early2cell", "height_um"), "#e5734f"],
-      ["early 2-cell length", vals("early2cell", "length_um"), "#3f76b5"],
-      ["late 2-cell radius", vals("late2cell", "radius_um"), STAGE_C.late2cell],
-      ["late 2-cell height", vals("late2cell", "height_um"), "#e5734f"],
-      ["late 2-cell length", vals("late2cell", "length_um"), "#3f76b5"],
+      ["zygote radius", zr, STAGE_C.zygote, LS_H],
+      ["zygote diameter (2r)", zr.map((v) => 2 * v), STAGE_C.zygote, LS_L],
+      ["early 2-cell height", vals("early2cell", "height_um"), STAGE_C.early2cell, LS_H],
+      ["early 2-cell length", vals("early2cell", "length_um"), STAGE_C.early2cell, LS_L],
+      ["late 2-cell height", vals("late2cell", "height_um"), STAGE_C.late2cell, LS_H],
+      ["late 2-cell length", vals("late2cell", "length_um"), STAGE_C.late2cell, LS_L],
     ];
     const traces = [];
-    series.forEach(([name, v, color], i) => {
-      const y = series.length - 1 - i;
-      traces.push({ type: "scatter", mode: "markers", name, x: v,
-        y: v.map(() => y + (Math.random() - 0.5) * 0.28),
-        marker: { size: 6, color, opacity: 0.6, line: { width: 0 } },
-        hovertemplate: `${name}<br>%{x:.1f} µm<extra></extra>` });
-      const med = v.slice().sort((a, b) => a - b)[Math.floor(v.length / 2)];
-      traces.push({ type: "scatter", mode: "lines", x: [med, med], y: [y - 0.34, y + 0.34],
-        line: { color: "#111827", width: 2 }, hoverinfo: "skip", showlegend: false });
+    series.forEach(([name, v, color, ls]) => {
+      // no rug and no mean rule here, exactly as figure 10.4 draws it: six overlapping rugs would
+      // be noise, and a dashed vertical among dashed curves would read as another distribution
+      traces.push(...densityTraces(v, color, name, XLIM_ALL,
+                                   { ls, fill: 0.16, rug: false, mean: false }).traces);
     });
-    const lay = {
-      margin: { l: 150, r: 14, t: 10, b: 42 }, showlegend: false,
-      xaxis: { title: { text: "µm", font: { size: 10 } }, zeroline: false, gridcolor: "#eef1f5", tickfont: { size: 9 } },
-      yaxis: { tickmode: "array", tickvals: series.map((_, i) => series.length - 1 - i),
-               ticktext: series.map((s) => s[0]), zeroline: false, gridcolor: "#f6f8fb", tickfont: { size: 10 } },
-      paper_bgcolor: "transparent", plot_bgcolor: "transparent",
-    };
+    const lay = baseLayout("µm", XLIM_ALL);
+    lay.showlegend = true; lay.margin.t = 10; lay.margin.l = 56;
+    lay.legend = legendIn;
+    lay.yaxis.range = [-0.03, 1.08];
     if (e) lay.shapes = [{ type: "line", x0: e.radius_um, x1: e.radius_um, yref: "paper",
-                           y0: 0, y1: 1, line: { color: "#111827", width: 1.5, dash: "dot" } }];
+                           y0: 0, y1: 1, line: { color: C_LABEL, width: 1.5, dash: "dot" } }];
     plotInto(host, traces, lay);
-    $("#sz-all-sub").textContent = `· ${meta().n} embryos` + (e ? ` · dotted line = this embryo's radius` : "");
+    $("#sz-all-sub").textContent =
+      `· each curve scaled to its own peak · shaded = mean ± 1 SD · solid = height / radius, ` +
+      `dashed = length / diameter` + (e ? ` · dotted line = this embryo's radius` : "");
   }
 
   const RENDER = { dist: renderDist, all: renderAll };

@@ -1,0 +1,131 @@
+/* Animal–Vegetal Enrichment — project styling (builds on style.css tokens). */
+
+:root { --ch: #0284c7; --stage: #0284c7; --ch-up: #b45309; }
+
+.ch-topctl { display: flex; align-items: center; gap: 14px; margin-left: auto; padding-right: 10px; }
+.ch-topctl .ctl { display: flex; align-items: center; gap: 7px; }
+.ch-topctl select { font-size: 12px; padding: 4px 8px; border: 1px solid #d5d9e0;
+  border-radius: 8px; background: #fff; }
+
+/* ---- the .xs-* drawer chrome is per-project in this codebase ---- */
+.xs-graph-tabs { flex: 0 0 auto; display: flex; gap: 2px; padding: 0 16px; overflow-x: auto;
+  border-bottom: 1px solid var(--line); scrollbar-width: none; }
+.xs-graph-tabs::-webkit-scrollbar { display: none; }
+.xs-gtab { font-family: var(--sans); font-size: 12.5px; font-weight: 600; color: var(--ink-2);
+  padding: 7px 13px; border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+.xs-gtab:hover { color: var(--ink); }
+.xs-gtab.active { color: var(--ink); border-bottom-color: var(--ch); }
+.xs-panels { flex: 1 1 auto; overflow: auto; padding: 10px 16px 18px; min-height: 0; }
+.xs-panel { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+.xs-panel[hidden] { display: none; }
+.xs-resizable { position: relative; width: 100%; max-width: 100%; height: 330px;
+  min-height: 210px; min-width: 240px; resize: both; overflow: hidden; }
+.xs-resizable > .ch-plot { flex: none; width: 100%; height: 100%; min-height: 0; }
+.xs-resizable::after { content: ""; position: absolute; right: 3px; bottom: 3px; width: 11px; height: 11px;
+  pointer-events: none; opacity: .55;
+  background: linear-gradient(135deg, transparent 0 50%, var(--ink-soft) 50% 60%, transparent 60% 72%, var(--ink-soft) 72% 82%, transparent 82%); }
+
+.ch-plot { width: 100%; height: 100%; min-height: 200px; }
+.ch-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.ch-note { font-size: 11.5px; color: var(--ink-2); line-height: 1.5; margin: 2px 0 6px; }
+.ch-note b { color: var(--ink); }
+.ch-empty { display: flex; align-items: center; justify-content: center; height: 100%;
+  padding: 22px 12px; text-align: center; color: var(--ink-soft); font-size: 12.5px;
+  font-style: italic; }
+
+/* the volcano owns the whole stage */
+.plot-host { position: absolute; inset: 0; }
+
+/* ---- controls window ---- */
+.ch-readout { font-size: 12px; }
+.ch-gene { font-size: 15px; font-weight: 800; color: var(--ch); margin-bottom: 5px; }
+.ch-hint { font-size: 11.5px; color: var(--ink-soft); font-style: italic; }
+.ch-line { display: flex; align-items: center; gap: 6px; color: #334155; padding: 1.5px 0; }
+.ch-line .k { color: var(--ink-soft); }
+.ch-line .v { margin-left: auto; font-family: var(--mono); font-variant-numeric: tabular-nums;
+  color: var(--ink); }
+.ch-line.is-key .v { color: var(--ch); font-weight: 700; }
+.ch-warn { margin-top: 8px; padding: 7px 9px; border-radius: 8px; font-size: 10.5px;
+  line-height: 1.45; color: #7c2d12; background: #fff7ed; border: 1px solid #fed7aa; }
+.ch-warn b { color: #7c2d12; }
+.ch-toggles { display: flex; flex-direction: column; gap: 5px; margin-top: 10px;
+  padding-top: 9px; border-top: 1px solid #eef1f5; }
+.zt { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #334155;
+  cursor: pointer; }
+.zt input { accent-color: var(--ch); }
+.zt .sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block;
+  border: 1px solid rgba(0,0,0,.15); }
+
+/* ---- right drawer ---- */
+.ch-search { display: block; margin-top: 9px; }
+.ch-search input { width: 100%; font-size: 12px; padding: 5px 9px; border: 1px solid #d5d9e0;
+  border-radius: 8px; background: #fff; }
+.best-list { flex: 1 1 auto; overflow-y: auto; padding: 6px 8px 16px; border-top: 1px solid var(--line); }
+.ch-rank-head, .ch-rank-row { display: grid;
+  grid-template-columns: 26px minmax(64px, 1fr) 44px 50px 24px; gap: 6px; align-items: center; }
+.ch-rank-head { padding: 4px 8px; font-family: var(--mono); font-size: 9px; text-transform: uppercase;
+  letter-spacing: .3px; color: var(--ink-soft); position: sticky; top: 0; background: var(--surface);
+  border-bottom: 1px solid var(--line-2); }
+.ch-rank-head span:nth-child(1), .ch-rank-head span:nth-child(n+3) { text-align: right; }
+.ch-rank-row { padding: 5px 8px; border-radius: 7px; cursor: pointer; border: 1px solid transparent;
+  font-size: 12px; }
+.ch-rank-row:hover { background: var(--line-2); }
+.ch-rank-row.on { border-color: var(--ch); background: color-mix(in srgb, var(--ch) 8%, var(--surface)); }
+.ch-rank-row .e { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ch-rank-row.on .e { color: var(--ch); font-weight: 700; }
+.ch-rank-row .n, .ch-rank-row .r, .ch-rank-row .p, .ch-rank-row .m {
+  font-family: var(--mono); font-size: 10.5px; text-align: right;
+  font-variant-numeric: tabular-nums; color: var(--ink-2); }
+.ch-rank-row .p { color: #2563eb; }
+
+/* ---- the table panel ---- */
+.ch-table-wrap { max-height: 460px; overflow: auto; border: 1px solid var(--line);
+  border-radius: 10px; }
+.ch-tab { width: 100%; border-collapse: collapse; font-size: 12px; }
+.ch-tab thead th { position: sticky; top: 0; background: var(--surface); text-align: right;
+  font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .4px;
+  color: var(--ink-soft); padding: 6px 10px; border-bottom: 1px solid var(--line-2); }
+.ch-tab thead th:nth-child(2) { text-align: left; }
+.ch-tab td { padding: 4px 10px; text-align: right; font-family: var(--mono);
+  font-variant-numeric: tabular-nums; color: var(--ink-2); border-bottom: 1px solid #f6f8fb; }
+.ch-tab td.g { text-align: left; font-family: var(--sans); font-weight: 600; color: var(--ink); }
+.ch-tab tr { cursor: pointer; }
+.ch-tab tr:hover td { background: var(--line-2); }
+.ch-tab tr.on td { background: color-mix(in srgb, var(--ch) 9%, var(--surface)); }
+.ch-tab tr.on td.g { color: var(--ch); }
+
+.rdrawer { --rdrawer-w: 330px; }
+
+/* ---- specific to this project ---- */
+.ch-chance { font-size: 11.5px; color: #7c2d12; background: #fff7ed; border: 1px solid #fed7aa;
+  border-radius: 8px; padding: 5px 10px; max-width: 620px; line-height: 1.4; }
+.ch-chance b { color: #7c2d12; }
+.ch-gene { font-size: 15px; font-weight: 800; color: var(--ch); margin-bottom: 5px; }
+.ch-side { display: inline-block; font: 700 9px var(--mono); text-transform: uppercase;
+  letter-spacing: .5px; color: #fff; padding: 2px 7px; border-radius: 999px; margin-bottom: 6px; }
+.xs-resizable.ch-square { max-width: 400px; height: 480px; }
+.ch-table-wrap { max-height: 460px; overflow: auto; border: 1px solid var(--line); border-radius: 10px; }
+.ch-tab { width: 100%; border-collapse: collapse; font-size: 12px; }
+.ch-tab thead th { position: sticky; top: 0; background: var(--surface); text-align: right;
+  font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .4px;
+  color: var(--ink-soft); padding: 6px 10px; border-bottom: 1px solid var(--line-2); }
+.ch-tab thead th:nth-child(2) { text-align: left; }
+.ch-tab td { padding: 4px 10px; text-align: right; font-family: var(--mono);
+  font-variant-numeric: tabular-nums; color: var(--ink-2); border-bottom: 1px solid #f6f8fb; }
+.ch-tab td.g { text-align: left; font-family: var(--sans); font-weight: 600; color: var(--ink); }
+.ch-tab tr { cursor: pointer; }
+.ch-tab tr:hover td { background: var(--line-2); }
+.ch-tab tr.on td { background: color-mix(in srgb, var(--ch) 9%, var(--surface)); }
+.ch-rank-head, .ch-rank-row { grid-template-columns: 26px minmax(64px, 1fr) 46px 50px 24px !important; }
+.rdrawer { --rdrawer-w: 330px; }
+
+/* the stage toggle in the top bar, and the validation footnote in the right drawer */
+.ch-stage { display:flex; gap:2px; background:#eef1f6; border-radius:8px; padding:2px; }
+.ch-stage button { border:0; background:transparent; font:inherit; font-size:11.5px;
+  padding:4px 11px; border-radius:6px; color:#64748b; cursor:pointer; }
+.ch-stage button.on { background:#fff; color:#0f172a; box-shadow:0 1px 2px rgba(15,23,42,.12); }
+.ch-topctl { display:flex; align-items:center; gap:14px; margin-left:auto; }
+.ch-val { border-top:1px solid #e8ecf2; padding:10px 14px; font-size:10.5px; line-height:1.55;
+  color:#64748b; }
+.ch-val b { color:#334155; }

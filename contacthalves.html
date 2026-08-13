@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Halves · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="help.css" />
+  <link rel="stylesheet" href="contacthalves.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <script src="viewer-core.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#7c3aed;box-shadow:0 0 0 4px color-mix(in srgb,#7c3aed 18%,transparent)"></span>
+      <span class="brand-name">Contact&nbsp;Halves</span>
+      <span class="brand-sub" id="gene-count"></span>
+    </div>
+    <div class="ch-topctl">
+      <div class="ch-stage" id="ch-stage" role="tablist" aria-label="Stage">
+        <button type="button" data-stage="early2cell" class="on" role="tab">Early 2-cell</button>
+        <button type="button" data-stage="late2cell" role="tab">Late 2-cell</button>
+      </div>
+      <div class="ch-chance" id="ch-chance"></div>
+    </div>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls">
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">This gene</span>
+        <button class="help-btn" data-help="contacthalves" style="margin-left:auto"
+                aria-label="What is this?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="ch-readout" id="ch-readout"><div class="ch-hint">Click a point to select a gene.</div></div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+    <div class="plot-host" id="plot"></div>
+  </main>
+
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Along the axis <span class="drawer-gene" id="drawer-gene"></span></span>
+      <span class="drawer-hint">the profile · the density maps · per-embryo values · the table</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="xs-graph-tabs" id="ch-tabs" role="tablist" aria-label="Panels">
+        <button type="button" class="xs-gtab active" data-tab="profile" role="tab" aria-selected="true">The profile</button>
+        <button type="button" class="xs-gtab" data-tab="maps" role="tab" aria-selected="false">Density maps</button>
+        <button type="button" class="xs-gtab" data-tab="per" role="tab" aria-selected="false">Per embryo</button>
+        <button type="button" class="xs-gtab" data-tab="table" role="tab" aria-selected="false">Table</button>
+      </div>
+      <div class="xs-panels" id="ch-panels">
+
+        <div class="xs-panel" data-tab="profile" role="tabpanel">
+          <div class="ch-head"><div class="mini-title">What all transcripts do along the axis
+            <span class="mini-sub" id="ch-profile-sub"></span></div></div>
+          <div class="ch-note">Figure 7.1. <b>Before</b> asking whether any gene leans one way,
+            this asks what <i>every</i> transcript does. x runs from the junction (0) through the
+            equal-volume split (0.5) to the cell edge (1), normalised per blastomere by that cell's
+            own reach so embryo size divides out. A flat line at 0.05 would mean no axial structure
+            at all. <b>The fall-off at both ends is cell shape, not localisation</b> — a bin at the
+            junction and a bin at the far edge each sample less cytoplasm than one in the middle.
+            That shape is exactly what the volcano and the maps then divide out.</div>
+          <div class="xs-resizable"><div id="ch-profile" class="ch-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="maps" role="tabpanel" hidden>
+          <div class="ch-head"><div class="mini-title">Where the leaning sets actually sit
+            <span class="mini-sub" id="ch-maps-sub"></span></div></div>
+          <div class="ch-note">Figure 7.3. The top 15 genes each way, every transcript pooled over
+            all early 2-cell blastomeres into one frame — <b>horizontal</b> is the junction→edge
+            axis (dashed line = the equal-volume split), <b>vertical</b> is distance out from that
+            axis — then divided by the same map built from every gene, so the two-lobed shape both
+            sets share cancels. <b>Illustrative, not a test:</b> these sets were selected by their
+            position on this very axis, so the gradients necessarily run the way they were selected
+            to. It is here to show what a ±0.2 log₂ effect looks like in space, which is: barely
+            anything.</div>
+          <div class="xs-resizable"><div id="ch-maps" class="ch-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="per" role="tabpanel" hidden>
+          <div class="ch-head"><div class="mini-title">One value per embryo
+            <span class="mini-sub" id="ch-per-sub"></span></div></div>
+          <div class="ch-note">The per-embryo log₂(contact ÷ edge) the t-test runs on, after that
+            embryo's own bulk split is subtracted. The halves are equal in volume, so this is a
+            density ratio without needing a volume term. Scatter across embryos is the quantity the
+            P-value is actually about.</div>
+          <div class="xs-resizable"><div id="ch-per" class="ch-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="table" role="tabpanel" hidden>
+          <div class="ch-head"><div class="mini-title">Every tested gene
+            <span class="mini-sub" id="ch-table-sub"></span></div></div>
+          <div class="ch-note">Sorted by P. <b>q</b> is Benjamini–Hochberg within this stage.
+            <span id="ch-table-note"></span></div>
+          <div class="ch-table-wrap"><div id="ch-table"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Gene ranking</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Genes ranked by P</div>
+        <div class="rdrawer-desc" id="ch-rank-desc"></div>
+        <label class="ch-search"><input type="search" id="ch-find" placeholder="find a gene…" /></label>
+      </div>
+      <div class="best-list" id="ch-rank"></div>
+      <div class="ch-val" id="ch-val"></div>
+    </div>
+  </aside>
+
+  <script src="contacthalves.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

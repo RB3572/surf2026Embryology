@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pseudosperm Division Plane · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="help.css" />
+  <link rel="stylesheet" href="pseudosperm.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <script src="embryo-probesets.js"></script>
+  <script src="viewer-core.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#7c3aed;box-shadow:0 0 0 4px color-mix(in srgb,#7c3aed 18%,transparent)"></span>
+      <span class="brand-name">Pseudosperm&nbsp;Division&nbsp;Plane</span>
+      <span class="brand-sub" id="embryo-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Zygotes"></nav>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">This zygote</span>
+        <button class="help-btn" data-help="pseudosperm" style="margin-left:auto"
+                aria-label="What is this?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="ps-plane-head" id="ps-plane-head"></div>
+
+        <div class="ps-row">
+          <label class="ctl" style="flex:1"><span class="ctl-label">Asymmetry</span>
+            <select id="ps-metric" aria-label="Asymmetry measure">
+              <option value="vol">concentration (count ÷ side volume)</option>
+              <option value="cnt">count fraction (no volume)</option>
+            </select></label>
+        </div>
+
+        <div class="ps-toggles">
+          <label class="zt"><input type="checkbox" id="t-plane" checked /><span class="sw" style="background:#7c3aed"></span>Division plane</label>
+          <label class="zt"><input type="checkbox" id="t-axis" checked /><span class="sw" style="background:#0f172a"></span>Polar-body axis</label>
+          <label class="zt"><input type="checkbox" id="t-sperm" checked /><span class="sw" style="background:#16a34a"></span>Sperm / pseudosperm direction</label>
+          <label class="zt"><input type="checkbox" id="t-tx" /><span class="sw" style="background:#b45309"></span>Selected-gene transcripts</label>
+          <label class="zt"><input type="checkbox" id="t-mesh" checked /><span class="sw" style="background:#94a3b8"></span>Embryo mesh</label>
+        </div>
+
+        <div class="ps-readout" id="ps-readout"></div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+
+    <div class="plot-host" id="plot"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Pick a zygote</div>
+        <div class="ph-sub">A <b class="ps-green">green</b> tab has a labelled sperm and gets its
+          real sperm plane. The rest get a <b>pseudosperm</b> plane — the angle that best reproduces
+          the split of the genes you select in the ranking on the right.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden><div class="spinner"></div><span id="loading-text"></span></div>
+  </main>
+
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Division-plane analysis <span class="drawer-gene" id="drawer-emb"></span></span>
+      <span class="drawer-hint">cross-section · asymmetry vs angle · per-side split · does the fit find the real sperm plane?</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="xs-graph-tabs" id="ps-tabs" role="tablist" aria-label="Panels">
+        <button type="button" class="xs-gtab active" data-tab="cross" role="tab" aria-selected="true">Cross-section</button>
+        <button type="button" class="xs-gtab" data-tab="sweep" role="tab" aria-selected="false">Asymmetry vs angle</button>
+        <button type="button" class="xs-gtab" data-tab="bars" role="tab" aria-selected="false">Per-side split</button>
+        <button type="button" class="xs-gtab" data-tab="valid" role="tab" aria-selected="false">Validation</button>
+      </div>
+      <div class="xs-panels" id="ps-panels">
+
+        <div class="xs-panel" data-tab="cross" role="tabpanel">
+          <div class="ps-head"><div class="mini-title">Cross-section at the plane
+            <span class="mini-sub" id="ps-cross-sub"></span></div></div>
+          <div class="ps-note">The cytoplasm outline in the plane's own frame, looking down the
+            polar axis. The cut runs vertically; the selected genes' transcripts are coloured by
+            which side they fall on. Pronuclei and the polar body are separate segments and never
+            appear here, in any count, or in any volume.</div>
+          <div class="xs-resizable ps-square"><div id="ps-cross" class="ps-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="sweep" role="tabpanel" hidden>
+          <div class="ps-head"><div class="mini-title">Asymmetry across every angle
+            <span class="mini-sub" id="ps-sweep-sub"></span></div></div>
+          <div class="ps-note">Every plane containing the polar axis, swept in 1° steps. The peak is
+            the pseudosperm plane. <b>Read the shape, not just the peak</b> — a broad, flat curve
+            means the angle is barely determined, and a bare number would hide that.</div>
+          <div class="xs-resizable"><div id="ps-sweep" class="ps-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="bars" role="tabpanel" hidden>
+          <div class="ps-head"><div class="mini-title">Per-side split at this plane
+            <span class="mini-sub" id="ps-bars-sub"></span></div></div>
+          <div class="ps-note">Each selected gene's transcripts either side of the cut, as raw
+            counts and as concentration (count ÷ that side's cytoplasm volume). <b>p</b> is a
+            two-sided exact binomial test against that cell's own volume split, so a gene counts as
+            asymmetric only if it beats what the geometry alone would give.</div>
+          <div class="xs-resizable"><div id="ps-bars" class="ps-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="valid" role="tabpanel" hidden>
+          <div class="ps-head"><div class="mini-title">Does the fit find the real sperm plane?
+            <span class="mini-sub" id="ps-valid-sub"></span></div></div>
+          <div class="ps-note">The only honest test of this whole idea. For the zygotes that
+            <b>do</b> have a sperm, the fit is run anyway — ignoring the sperm — and the angle it
+            lands on is compared with the true sperm plane. Chance is a flat line: two planes drawn
+            at random differ by 45° on average, so <b>45° is the null</b>, not 0°.</div>
+          <div class="ps-grid">
+            <div class="xs-resizable"><div id="ps-valid" class="ps-plot"></div></div>
+            <div class="xs-resizable"><div id="ps-valid2" class="ps-plot"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Gene ranking</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Asymmetry across the sperm plane</div>
+        <div class="rdrawer-desc" id="ps-rank-desc"></div>
+        <div class="ps-rank-ctl">
+          <label class="ctl"><span class="ctl-label">Sort</span>
+            <select id="ps-sort">
+              <option value="fisher">combined significance (Fisher)</option>
+              <option value="stouffer">same side every time (Stouffer |Z|)</option>
+              <option value="fold">mean |log₂ fold| in concentration</option>
+              <option value="m">zygotes measuring it</option>
+            </select></label>
+          <label class="ctl"><span class="ctl-label">Min zygotes</span>
+            <input type="range" id="ps-minm" min="1" max="20" step="1" value="5" />
+            <span class="ps-minm-val" id="ps-minm-val">5</span></label>
+          <div class="ps-sel-row">
+            <span class="ps-sel-count" id="ps-sel-count">nothing selected</span>
+            <button type="button" class="ps-btn" id="ps-top5">top 5</button>
+            <button type="button" class="ps-btn" id="ps-clear">clear</button>
+          </div>
+        </div>
+      </div>
+      <div class="best-list" id="ps-rank"></div>
+    </div>
+  </aside>
+
+  <script src="pseudosperm.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+/* Pseudosperm Division Plane — project styling (builds on style.css tokens). */
+
+:root { --ps: #7c3aed; --stage: #7c3aed; --ps-pseudo: #0891b2; --ps-sperm: #16a34a; }
+
+/* a zygote that HAS a sperm gets a green tab, so the two cohorts are legible in the nav */
+.tab.ps-has-sperm { border-color: color-mix(in srgb, var(--ps-sperm) 62%, var(--line));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ps-sperm) 28%, transparent); }
+.tab.ps-has-sperm .tab-label { color: color-mix(in srgb, var(--ps-sperm) 72%, var(--ink)); }
+.tab.ps-has-sperm.active { border-color: var(--ps-sperm);
+  background: color-mix(in srgb, var(--ps-sperm) 10%, var(--surface));
+  box-shadow: 0 1px 0 var(--ps-sperm) inset, 0 0 0 1px var(--ps-sperm); }
+.ps-green { color: var(--ps-sperm); }
+
+/* ---- the .xs-* drawer chrome is per-project in this codebase ---- */
+.xs-graph-tabs { flex: 0 0 auto; display: flex; gap: 2px; padding: 0 16px; overflow-x: auto;
+  border-bottom: 1px solid var(--line); scrollbar-width: none; }
+.xs-graph-tabs::-webkit-scrollbar { display: none; }
+.xs-gtab { font-family: var(--sans); font-size: 12.5px; font-weight: 600; color: var(--ink-2);
+  padding: 7px 13px; border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+.xs-gtab:hover { color: var(--ink); }
+.xs-gtab.active { color: var(--ink); border-bottom-color: var(--ps); }
+.xs-panels { flex: 1 1 auto; overflow: auto; padding: 10px 16px 18px; min-height: 0; }
+.xs-panel { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+.xs-panel[hidden] { display: none; }
+.xs-resizable { position: relative; width: 100%; max-width: 100%; height: 330px;
+  min-height: 210px; min-width: 240px; resize: both; overflow: hidden; }
+.xs-resizable > .ps-plot { flex: none; width: 100%; height: 100%; min-height: 0; }
+.xs-resizable::after { content: ""; position: absolute; right: 3px; bottom: 3px; width: 11px; height: 11px;
+  pointer-events: none; opacity: .55;
+  background: linear-gradient(135deg, transparent 0 50%, var(--ink-soft) 50% 60%, transparent 60% 72%, var(--ink-soft) 72% 82%, transparent 82%); }
+
+.ps-plot { width: 100%; height: 100%; min-height: 200px; }
+/* the cross-section is drawn at equal aspect, so a wide box would stretch the axis range
+   far past the cell instead of the picture */
+.xs-resizable.ps-square { max-width: 520px; height: 420px; }
+.ps-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.ps-note { font-size: 11.5px; color: var(--ink-2); line-height: 1.5; margin: 2px 0 6px; }
+.ps-note b { color: var(--ink); }
+.ps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+.ps-empty { display: flex; align-items: center; justify-content: center; height: 100%;
+  padding: 22px 12px; text-align: center; color: var(--ink-soft); font-size: 12.5px;
+  font-style: italic; line-height: 1.5; }
+.ps-empty b { font-style: normal; color: var(--ink-2); }
+
+/* ---- controls window ---- */
+.ps-plane-head { display: flex; flex-direction: column; gap: 5px; }
+.ps-badge { align-self: flex-start; font: 700 9.5px var(--mono); text-transform: uppercase;
+  letter-spacing: .6px; padding: 3px 8px; border-radius: 999px; }
+.ps-badge.sperm { background: color-mix(in srgb, var(--ps) 14%, #fff); color: var(--ps); }
+.ps-badge.pseudo { background: color-mix(in srgb, var(--ps-pseudo) 14%, #fff); color: var(--ps-pseudo); }
+.ps-badge.none { background: var(--line-2); color: var(--ink-soft); }
+.ps-headnote { font-size: 11px; line-height: 1.45; color: var(--ink-2); }
+.ps-headnote b { color: var(--ink); }
+
+.ps-row { display: flex; align-items: center; gap: 10px; }
+.ps-row select { width: 100%; font-size: 12px; padding: 4px 8px; border: 1px solid #d5d9e0;
+  border-radius: 8px; background: #fff; }
+.ps-toggles { display: flex; flex-direction: column; gap: 5px; }
+.zt { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #334155;
+  cursor: pointer; }
+.zt input { accent-color: var(--ps); }
+.zt .sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block;
+  border: 1px solid rgba(0,0,0,.15); }
+
+.ps-readout { margin-top: 4px; padding-top: 9px; border-top: 1px solid #eef1f5; font-size: 12px; }
+.ps-line { display: flex; align-items: center; gap: 6px; color: #334155; padding: 1.5px 0; }
+.ps-line .k { color: var(--ink-soft); }
+.ps-line .v { margin-left: auto; font-family: var(--mono); font-variant-numeric: tabular-nums;
+  color: var(--ink); }
+.ps-line.is-key .v { color: var(--ps); font-weight: 700; }
+.ps-line.is-weak .v { color: #b45309; }
+.ps-line.is-approx .v { color: var(--ink-2); font-style: italic; }
+.ps-sep { margin-top: 8px; padding-top: 7px; border-top: 1px solid #eef1f5;
+  font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .5px;
+  color: var(--ink-soft); }
+.ps-warn { margin-top: 9px; padding: 7px 9px; border-radius: 8px; font-size: 10.5px; line-height: 1.45;
+  color: #7c2d12; background: #fff7ed; border: 1px solid #fed7aa; }
+.ps-warn b { color: #7c2d12; }
+
+/* ---- right drawer ---- */
+.ps-rank-ctl { display: flex; flex-direction: column; gap: 7px; margin-top: 9px; }
+.ps-rank-ctl .ctl { display: flex; align-items: center; gap: 8px; }
+.ps-rank-ctl select { flex: 1 1 auto; font-size: 12px; padding: 4px 8px; border: 1px solid #d5d9e0;
+  border-radius: 8px; background: #fff; min-width: 0; }
+.ps-rank-ctl input[type="range"] { flex: 1 1 auto; min-width: 0; accent-color: var(--ps); }
+.ps-minm-val { font-family: var(--mono); font-size: 11px; color: var(--ink-2); width: 18px;
+  text-align: right; }
+.ps-sel-row { display: flex; align-items: center; gap: 6px; }
+.ps-sel-count { font-size: 11px; color: var(--ink-2); margin-right: auto; }
+.ps-btn { font: 600 11px var(--sans); color: #475569; background: #fff; border: 1px solid #d5d9e0;
+  border-radius: 7px; padding: 3px 9px; cursor: pointer; }
+.ps-btn:hover { border-color: var(--ps); color: var(--ps); }
+
+.best-list { flex: 1 1 auto; overflow-y: auto; padding: 6px 8px 16px; border-top: 1px solid var(--line); }
+.ps-rank-head, .ps-rank-row { display: grid;
+  grid-template-columns: 18px minmax(72px, 1fr) 30px 42px 38px 34px; gap: 5px; align-items: center; }
+.ps-rank-head { padding: 4px 8px; font-family: var(--mono); font-size: 9px; text-transform: uppercase;
+  letter-spacing: .3px; color: var(--ink-soft); position: sticky; top: 0; background: var(--surface);
+  border-bottom: 1px solid var(--line-2); }
+.ps-rank-head span:nth-child(n+3) { text-align: right; }
+.ps-rank-row { padding: 5px 8px; border-radius: 7px; cursor: pointer; border: 1px solid transparent;
+  font-size: 12px; }
+.ps-rank-row:hover { background: var(--line-2); }
+.ps-rank-row.on { border-color: var(--ps);
+  background: color-mix(in srgb, var(--ps) 8%, var(--surface)); }
+.ps-rank-row .c input { pointer-events: none; accent-color: var(--ps); }
+.ps-rank-row .e { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ps-rank-row.on .e { color: var(--ps); font-weight: 700; }
+.ps-rank-row .m, .ps-rank-row .p, .ps-rank-row .f, .ps-rank-row .z {
+  font-family: var(--mono); font-size: 10.5px; text-align: right;
+  font-variant-numeric: tabular-nums; color: var(--ink-2); }
+.ps-rank-row .p { color: #2563eb; }
+.ps-rank-row .f { color: var(--ps-pseudo); }
+
+/* the ranking carries six columns, so this drawer needs more room than the site default */
+.rdrawer { --rdrawer-w: 380px; }

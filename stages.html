@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Across the Stages · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="help.css" />
+  <link rel="stylesheet" href="stages.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <script src="viewer-core.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#5b3fa6;box-shadow:0 0 0 4px color-mix(in srgb,#5b3fa6 18%,transparent)"></span>
+      <span class="brand-name">Across&nbsp;the&nbsp;Stages</span>
+      <span class="brand-sub" id="gene-count"></span>
+    </div>
+    <div class="sg-topctl">
+      <label class="ctl"><span class="ctl-label">Show</span>
+        <select id="sg-filter">
+          <option value="measured">genes measured at some stage</option>
+          <option value="all">every gene on a panel</option>
+          <option value="clustered">the 42 with a trajectory cluster</option>
+          <option value="curated">the 66 with a 2-cell fate</option>
+        </select></label>
+      <label class="zt"><input type="checkbox" id="t-null" checked /><span class="sw" style="background:#94a3b8"></span>Draw the count-matched null</label>
+    </div>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls">
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">This gene</span>
+        <button class="help-btn" data-help="stages" style="margin-left:auto"
+                aria-label="What is this?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="sg-readout" id="sg-readout"><div class="sg-hint">Click a line to select a gene.</div></div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+    <div class="plot-host" id="plot"></div>
+  </main>
+
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Trajectories <span class="drawer-gene" id="drawer-gene"></span></span>
+      <span class="drawer-hint">the three-stage heatmap · early vs late percentile · the three fates · the table</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="xs-graph-tabs" id="sg-tabs" role="tablist" aria-label="Panels">
+        <button type="button" class="xs-gtab active" data-tab="heat" role="tab" aria-selected="true">Trajectory heatmap</button>
+        <button type="button" class="xs-gtab" data-tab="pct" role="tab" aria-selected="false">Early vs late percentile</button>
+        <button type="button" class="xs-gtab" data-tab="fate" role="tab" aria-selected="false">Retained · lost · gained</button>
+        <button type="button" class="xs-gtab" data-tab="table" role="tab" aria-selected="false">Table</button>
+      </div>
+      <div class="xs-panels" id="sg-panels">
+
+        <div class="xs-panel" data-tab="heat" role="tabpanel">
+          <div class="sg-head"><div class="mini-title">Between-half fold change, three stages
+            <span class="mini-sub" id="sg-heat-sub"></span></div></div>
+          <div class="sg-note">Figure 9.1. One row per gene, coloured by the fold change itself.
+            <b>1.0 means the two halves carry equal density</b>, so the matrix is pale by
+            construction — asymmetry at these stages is a small effect and the groups describe
+            movement inside a narrow band. The grouping is <b>imported</b>: it is k-means on the
+            stage-to-stage <i>changes</i>, so it cannot be read off the three fold values.</div>
+          <div class="xs-resizable" style="height:520px"><div id="sg-heat" class="sg-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="pct" role="tabpanel" hidden>
+          <div class="sg-head"><div class="mini-title">Count-matched percentile, early vs late
+            <span class="mini-sub" id="sg-pct-sub"></span></div></div>
+          <div class="sg-note">Figure 9.2. Percentile rather than raw asymmetry, because the
+            asymmetry-to-noise ratio rises with transcript count — an unranked axis would mostly
+            plot abundance. Each gene is ranked against genes within <b>3×</b> its own abundance
+            <b>at the same stage</b>, which is what makes the two axes comparable at all.</div>
+          <div class="xs-resizable ps-square"><div id="sg-pct" class="sg-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="fate" role="tabpanel" hidden>
+          <div class="sg-head"><div class="mini-title">The three fates of a polarized transcript
+            <span class="mini-sub" id="sg-fate-sub"></span></div></div>
+          <div class="sg-note">Figure 8.6. Every gene measurable at both 2-cell stages is drawn in
+            pale grey, so each fate is read against the same background rather than a hand-picked
+            comparison group. <b>Retained</b> and <b>lost</b> are curated calls that survive both
+            count adjustments; <b>gained</b> is derived by the mirror-image rule, so the three are
+            commensurable. Late 2-cell carries only 6–15 embryos per gene — the noisiest quantity
+            here — which is why no significance is claimed for any single line.</div>
+          <div class="xs-resizable"><div id="sg-fate" class="sg-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="table" role="tabpanel" hidden>
+          <div class="sg-head"><div class="mini-title">Every gene
+            <span class="mini-sub" id="sg-table-sub"></span></div></div>
+          <div class="sg-note">Fold is 2<sup>mean |log₂ ratio|</sup> over the embryos at that
+            stage. <b>null</b> is the same arithmetic on pure counting noise — same totals, same
+            volume ratios, redrawn sides — so a fold near its null is not asymmetry, it is
+            arithmetic. <b>n</b> counts every embryo whose panel carries the gene; <b>meas</b>
+            counts only those that actually detected it above the floor.</div>
+          <div class="sg-table-wrap"><div id="sg-table"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Gene list</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Genes by excess over the null</div>
+        <div class="rdrawer-desc" id="sg-rank-desc"></div>
+        <label class="sg-search"><input type="search" id="sg-find" placeholder="find a gene…" /></label>
+      </div>
+      <div class="best-list" id="sg-rank"></div>
+    </div>
+  </aside>
+
+  <script src="stages.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

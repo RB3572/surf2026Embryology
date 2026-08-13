@@ -508,7 +508,22 @@
         <p>The sperm sits right on the <b>paternal</b> pronucleus (~15-20 µm) — as it should, since that pronucleus forms
         from the sperm — and that distance <i>grows</i> with τ as the paternal pronucleus migrates inward, away from the
         fixed cortical entry point. Distance to the maternal pronucleus and the polar body stays roughly flat. Four zygotes
-        have an even-split pronucleus call, so they have no defined maternal/paternal and drop out of those two views.</p>` },
+        have an even-split pronucleus call, so they have no defined maternal/paternal and drop out of those two views.</p>
+        <h3>Maternal vs paternal (figure 4.16)</h3>
+        <p>The drawer's second tab compares the two pronuclei of the <i>same</i> cell against each other — distance to the
+        sperm, enclosed volume, distance to the polar body. Pairing inside one embryo divides out size, orientation and
+        segmentation quality, so a <b>paired Wilcoxon signed-rank</b> on the within-cell differences is the entire
+        analysis.</p>
+        <p><b>Each of those three comparisons is one of the four tests that decided which pronucleus is which</b>, re-asked
+        as a measurement. Left alone, &ldquo;the sperm is closer to the paternal pronucleus&rdquo; would be partly a
+        restatement of the vote that made it paternal. So every comparison is <i>also</i> run on a consensus with that test
+        removed &mdash; both polar-body tests for the polar-body distance, since they read the same landmark &mdash; and the
+        panel <b>defaults to that leave-one-out column</b>. The naive column is one click away, so the size of the
+        circularity is visible rather than argued about.</p>
+        <p>Hand-made calls are not votes: they come from a person looking at the images, so they survive every
+        leave-one-out unchanged, are drawn as diamonds, and are counted separately. A zygote whose remaining tests
+        <b>tie</b> is dropped rather than guessed at, which is why the leave-one-out n is sometimes larger and sometimes
+        smaller than the naive one.</p>` },
     "extpt": { eyebrow: "Extended-Time Pronuclei-COM Clock · the idea", title: "One clock across three stages",
       html: `<p class="lede">The pronuclei give zygotes a ruler for developmental time. This project extends that ruler
         past the first division — laying <b>zygote → early-2-cell → late-2-cell</b> along a single pseudotime axis so you
@@ -604,7 +619,7 @@
         "<b>Colour and brightness are yours.</b> The frames ship greyscale; each channel gets a colour, a brightness (gain) and a black point, applied live in the browser. Retuning costs nothing, the preference is remembered, and anything you download is rendered through the same settings, so the file matches the screen. The ring marking the clicked pixel re-picks its own colour to stay legible against whatever tint you choose.",
         "<b>ZIP this embryo</b> saves its four frames as PNG; <b>ZIP the whole list</b> does the same for every ranked embryo as JPEG, since the same images as PNG run to hundreds of megabytes. Both include a README with the measurements.",
         "Not every embryo has GFP frames: some sperm were located on the MERFISH image without being pointed at in the GFP stack. Those rows have no dot in the ranking."
-      ] },
+] },
     "alignment": { eyebrow: "Sperm alignment · the anchor", title: "Where the sperm sits — once you choose",
       body: [
         "A 2-cell embryo hands you exactly one unambiguous direction: the line joining the two blastomere centres. Which blastomere comes <b>first</b>, and which way is <b>up</b>, are not in the data. So a pile of 2-cell embryos cannot be overlaid until you supply a rule — and that rule is the <b>anchor</b>.",

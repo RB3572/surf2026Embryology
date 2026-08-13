@@ -31,7 +31,10 @@
   const OBJ_COLOR = { polar: PB, maternal: F, paternal: M };
 
   const state = { doc: null, byId: {}, obj: "polar", currentId: null, scene: null,
-                  drawerOpen: false, sceneCache: {}, clock: "tau" };
+                  drawerOpen: false, sceneCache: {}, clock: "tau",
+                  // figure 4.16: the leave-one-out consensus is the default on purpose — see
+                  // renderPair. `pair` stays undefined until first fetched, null if it 404s.
+                  drawerTab: "clock", pair: undefined, pairKey: null, pairVar: "loo" };
   const activeClock = () => (state.doc.clocks || []).find((c) => c.key === state.clock) || (state.doc.clocks || [])[0];
 
   // ---------- boot ----------
@@ -91,7 +94,7 @@
     els.controls.hidden = false; els.placeholder.hidden = true; els.drawer.hidden = false;
     els.loading.hidden = true;
     render3D(); renderReadout();
-    if (!state.drawerOpen) openDrawer(true); else renderScatter();
+    if (!state.drawerOpen) openDrawer(true); else renderDrawerPanel();
   }
 
   // ---------- 3-D ----------
@@ -186,15 +189,34 @@
     state.drawerOpen = open;
     els.drawer.dataset.open = open ? "true" : "false";
     els.drawerHandle.setAttribute("aria-expanded", String(open));
-    if (open) renderScatter();
+    if (open) renderDrawerPanel();
   }
   function wireDrawer() {
     els.drawerHandle.addEventListener("click", () => openDrawer(els.drawer.dataset.open !== "true"));
+    $("#sp-tabs").addEventListener("click", (ev) => {
+      const b = ev.target.closest(".xs-gtab"); if (!b) return;
+      state.drawerTab = b.dataset.tab;
+      $("#sp-tabs").querySelectorAll(".xs-gtab").forEach((x) => {
+        const on = x === b;
+        x.classList.toggle("active", on); x.setAttribute("aria-selected", String(on));
+      });
+      $("#sp-panels").querySelectorAll(".xs-panel").forEach((p) =>
+        (p.hidden = p.dataset.tab !== state.drawerTab));
+      renderDrawerPanel();
+    });
+    $("#sp-pairctl").addEventListener("click", (ev) => {
+      const b = ev.target.closest("[data-cmp]"); if (!b) return;
+      state.pairKey = b.dataset.cmp; renderPair();
+    });
+    $("#sp-varctl").addEventListener("click", (ev) => {
+      const b = ev.target.closest("[data-var]"); if (!b) return;
+      state.pairVar = b.dataset.var; renderPair();
+    });
     const rz = $("#drawer-resize"); let sh = 0, dy = 0, drag = false;
     rz.addEventListener("pointerdown", (ev) => { drag = true; sh = els.drawer.getBoundingClientRect().height; dy = ev.clientY; rz.setPointerCapture(ev.pointerId); ev.preventDefault(); });
     rz.addEventListener("pointermove", (ev) => { if (!drag) return;
       const h = Math.max(220, Math.min(window.innerHeight - 90, sh + (dy - ev.clientY)));
-      els.drawer.style.setProperty("--drawer-h", h + "px"); requestAnimationFrame(() => { try { Plotly.Plots.resize(els.scatter); } catch (_) {} }); });
+      els.drawer.style.setProperty("--drawer-h", h + "px"); requestAnimationFrame(() => { try { Plotly.Plots.resize(state.drawerTab === "pair" ? $("#sp-pair") : els.scatter); } catch (_) {} }); });
     const end = () => { drag = false; }; rz.addEventListener("pointerup", end); rz.addEventListener("pointercancel", end);
   }
 
@@ -271,6 +293,117 @@
         ? `<b>${dropped}</b> zygote${dropped === 1 ? "" : "s"} omitted ` +
           (state.obj === "polar" ? "(no polar body labelled)." : "(pronuclei are an even split, so maternal/paternal is undefined).")
         : "All sperm-labelled zygotes shown.");
+  }
+
+  // ---------- maternal vs paternal, paired within the zygote (figure 4.16) ----------
+  //
+  // The two pronuclei of one cell are compared against each other, so embryo size, orientation
+  // and segmentation quality all divide out and the whole analysis is a paired Wilcoxon.
+  //
+  // ⚠️ EACH COMPARISON IS ONE OF THE FOUR TESTS THAT DECIDED WHICH PRONUCLEUS IS WHICH, re-asked
+  // as a measurement. The build ships each one twice — once on the full consensus, once on a
+  // consensus with that test removed — and this panel DEFAULTS TO THE LEAVE-ONE-OUT column,
+  // because that is the only one that is not partly a restatement of its own labelling.
+  async function loadPairing() {
+    if (state.pair !== undefined) return state.pair;
+    try { state.pair = await (await fetch("data/sperm_pairing.json")).json(); }
+    catch (_) { state.pair = null; }
+    return state.pair;
+  }
+
+  async function renderPair() {
+    const host = $("#sp-pair");
+    const doc = await loadPairing();
+    if (!doc) {
+      host.innerHTML = `<div class="sp-empty">Run <code>python3 build_sperm_pairing.py</code>.</div>`;
+      return;
+    }
+    const keys = Object.keys(doc.comparisons);
+    if (!state.pairKey || !doc.comparisons[state.pairKey]) state.pairKey = keys[0];
+    const ctl = $("#sp-pairctl");
+    if (!ctl.dataset.built) {
+      ctl.innerHTML = keys.map((k) =>
+        `<button type="button" data-cmp="${k}"${k === state.pairKey ? ' class="on"' : ""}>${doc.comparisons[k].label}</button>`).join("");
+      ctl.dataset.built = "1";
+    }
+    ctl.querySelectorAll("[data-cmp]").forEach((b) =>
+      b.classList.toggle("on", b.dataset.cmp === state.pairKey));
+    $("#sp-varctl").querySelectorAll("[data-var]").forEach((b) =>
+      b.classList.toggle("on", b.dataset.var === state.pairVar));
+
+    const C = doc.comparisons[state.pairKey];
+    const v = C.variants[state.pairVar];
+    const rows = v.rows;
+    const naive = C.variants.all, loo = C.variants.loo;
+
+    $("#sp-circ").innerHTML =
+      `<b>${C.circular}</b> On the full consensus it gives ` +
+      `${naive.n_maternal_larger}/${naive.n} and P ${fmtP(naive.p)}; with ` +
+      `${C.drops.join(" and ")} removed, ${loo.n_maternal_larger}/${loo.n} and P ${fmtP(loo.p)}. ` +
+      `${C.expect}`;
+
+    // one line per zygote, maternal on the left and paternal on the right — the paired plot,
+    // because the pairing IS the analysis and a pair of box plots would hide it
+    const traces = [];
+    rows.forEach((r, i) => traces.push({
+      type: "scatter", mode: "lines+markers", x: [0, 1], y: [r.m, r.p],
+      line: { color: r.m > r.p ? "rgba(214,51,108,0.45)" : "rgba(37,99,235,0.45)", width: 1.4 },
+      marker: { size: r.manual ? 11 : 7, symbol: r.manual ? "diamond" : "circle",
+                color: [F, M], line: { color: "#fff", width: 1 } },
+      hovertemplate: `${r.label}<br>maternal %{y:.1f}<extra></extra>`,
+      text: [r.label, r.label], showlegend: false,
+      customdata: [r.id, r.id],
+    }));
+    const med = (a) => { const s = a.slice().sort((x, y) => x - y); const n = s.length;
+      return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : 0; };
+    const mm = med(rows.map((r) => r.m)), mp = med(rows.map((r) => r.p));
+    traces.push({ type: "scatter", mode: "lines+markers", x: [0, 1], y: [mm, mp],
+      line: { color: "#111827", width: 3 }, marker: { size: 13, color: "#111827" },
+      hovertemplate: "median %{y:.1f}<extra></extra>", showlegend: false });
+
+    Plotly.react(host, traces, {
+      margin: { l: 66, r: 12, t: 10, b: 40 }, showlegend: false,
+      paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "#fcfdfe",
+      xaxis: { range: [-0.35, 1.35], tickvals: [0, 1],
+        ticktext: ["maternal ♀", "paternal ♂"], tickfont: { size: 12 },
+        gridcolor: "#f4f6f9", zeroline: false },
+      yaxis: { title: { text: `${C.label} (${C.unit})`, font: { size: 12 } },
+        gridcolor: "#eef1f5", zeroline: false, rangemode: "tozero" },
+    }, { responsive: true, displaylogo: false,
+         modeBarButtonsToRemove: ["select2d", "lasso2d", "autoScale2d"] });
+    host.on("plotly_click", (ev) => {
+      const id = ev.points && ev.points[0] && ev.points[0].customdata;
+      if (id && state.byId[id]) selectEmbryo(id);
+    });
+
+    // "larger" is right for a volume and wrong for a distance, where the reader wants "farther"
+    const more = C.unit === "µm³" ? "larger" : "farther";
+    const dir = v.median_diff > 0 ? `maternal is ${more}` : `paternal is ${more}`;
+    $("#sp-pairnote").innerHTML =
+      `<b>n = ${v.n}</b> zygotes · median maternal − paternal ` +
+      `<b>${v.median_diff > 0 ? "+" : ""}${v.median_diff.toFixed(C.unit === "µm³" ? 0 : 2)} ${C.unit}</b> ` +
+      `(${dir} in ${Math.max(v.n_maternal_larger, v.n_paternal_larger)} of ${v.n}) · ` +
+      `paired Wilcoxon signed-rank ${v.exact ? "(exact)" : "(normal approximation)"} P ${fmtP(v.p)}. ` +
+      `Each thin line is one zygote; the heavy line is the median pair. ` +
+      (v.n_manual ? `Diamonds are the ${v.n_manual} hand-made call${v.n_manual === 1 ? "" : "s"} — ` +
+        `those are not votes, so they survive every leave-one-out unchanged. ` : "") +
+      (v.dropped.length ? `${v.dropped.length} zygote${v.dropped.length === 1 ? "" : "s"} omitted ` +
+        `(${[...new Set(v.dropped.map((d) => d.reason))].join("; ")}).` : "");
+  }
+
+  function renderDrawerPanel() {
+    const title = document.querySelector(".drawer-title"), hint = $("#drawer-hint");
+    if (state.drawerTab === "pair") {
+      if (title) title.innerHTML = 'Maternal vs paternal <span class="drawer-gene">paired</span>';
+      if (hint) hint.textContent = "one line per zygote · the two pronuclei of the same cell, " +
+        "compared against each other";
+      renderPair();
+    } else {
+      if (title) title.innerHTML =
+        'Sperm distance vs pseudotime <span class="drawer-gene" id="drawer-obj"></span>';
+      els.drawerObj = $("#drawer-obj");
+      renderScatter();
+    }
   }
 
   // ---------- export + stats ----------

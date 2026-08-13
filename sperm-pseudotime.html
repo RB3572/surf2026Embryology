@@ -79,12 +79,33 @@
       <span class="drawer-chevron" aria-hidden="true"></span>
     </button>
     <div class="drawer-body" id="drawer-body">
-      <div class="sp-chart-head">
-        <div class="sp-stat" id="sp-stat"></div>
-        <button type="button" class="secondary-button" id="export-csv">Export CSV</button>
+      <div class="xs-graph-tabs" id="sp-tabs" role="tablist" aria-label="Panels">
+        <button type="button" class="xs-gtab active" data-tab="clock" role="tab" aria-selected="true">vs the clock</button>
+        <button type="button" class="xs-gtab" data-tab="pair" role="tab" aria-selected="false">Maternal vs paternal</button>
       </div>
-      <div id="sp-scatter" class="sp-scatter"></div>
-      <div class="sp-note" id="sp-note"></div>
+      <div class="xs-panels" id="sp-panels">
+        <div class="xs-panel" data-tab="clock" role="tabpanel">
+          <div class="sp-chart-head">
+            <div class="sp-stat" id="sp-stat"></div>
+            <button type="button" class="secondary-button" id="export-csv">Export CSV</button>
+          </div>
+          <div id="sp-scatter" class="sp-scatter"></div>
+          <div class="sp-note" id="sp-note"></div>
+        </div>
+
+        <div class="xs-panel" data-tab="pair" role="tabpanel" hidden>
+          <div class="sp-chart-head">
+            <div class="sp-pairctl" id="sp-pairctl" role="group" aria-label="Comparison"></div>
+            <div class="sp-varctl" id="sp-varctl" role="group" aria-label="Which consensus">
+              <button type="button" data-var="loo" class="on">leave-one-out</button>
+              <button type="button" data-var="all">all four tests</button>
+            </div>
+          </div>
+          <div class="sp-note sp-circ" id="sp-circ"></div>
+          <div id="sp-pair" class="sp-scatter"></div>
+          <div class="sp-note" id="sp-pairnote"></div>
+        </div>
+      </div>
     </div>
   </section>
 

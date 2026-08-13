@@ -34,3 +34,27 @@
 .secondary-button:hover { background: var(--line-2); }
 .sp-scatter { width: 100%; height: min(46vh, 420px); }
 .sp-note { font-size: 11.5px; color: var(--ink-soft); margin-top: 6px; line-height: 1.5; }
+
+/* ── drawer panels: the clock scatter, and the paired maternal/paternal panel (figure 4.16) ── */
+.xs-graph-tabs { flex: 0 0 auto; display: flex; gap: 2px; overflow-x: auto;
+  border-bottom: 1px solid var(--line); scrollbar-width: none; margin: -4px 0 8px; }
+.xs-graph-tabs::-webkit-scrollbar { display: none; }
+.xs-gtab { font-family: var(--sans); font-size: 12.5px; font-weight: 600; color: var(--ink-2);
+  padding: 7px 13px; border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+.xs-gtab:hover { color: var(--ink); }
+.xs-gtab.active { color: var(--ink); border-bottom-color: #ff2d95; }
+.xs-panel { display: flex; flex-direction: column; gap: 4px; min-height: 0; }
+.xs-panel[hidden] { display: none; }
+
+.sp-pairctl, .sp-varctl { display: flex; gap: 2px; background: #eef1f6; border-radius: 8px; padding: 2px; }
+.sp-pairctl button, .sp-varctl button { border: 0; background: transparent; font: inherit;
+  font-size: 11.5px; padding: 4px 11px; border-radius: 6px; color: var(--ink-2); cursor: pointer;
+  white-space: nowrap; }
+.sp-pairctl button.on, .sp-varctl button.on { background: #fff; color: var(--ink);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .12); }
+/* the circularity warning is the point of the panel, so it is styled as a warning */
+.sp-circ { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px;
+  padding: 7px 10px; color: #7c2d12; margin: 2px 0 6px; }
+.sp-circ b { color: #7c2d12; }
+.sp-empty { padding: 28px 12px; text-align: center; color: var(--ink-soft); font-size: 12.5px; }

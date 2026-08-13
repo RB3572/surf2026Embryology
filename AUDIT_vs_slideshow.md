@@ -138,6 +138,7 @@ until it has been looked at.
 | **P5** | `contacthalves` — the contact region on the reference's own half definition (7.1, 7.2, 7.3). | exactly the reference's gene family (201/201, 126/126) after recovering its 50-transcript floor; folds r = 0.978 |
 | **4.16** | a second drawer tab on the public `sperm-pseudotime` page. | leave-one-out consensus per comparison; the circularity is shown rather than argued |
 | **P2** | `halves` — 4.14, 4.15, 4.17, 4.18, 4.19 on one page. | orientation by total count; the alignment null is the headline |
+| **P6** | `renders` — every 3-D figure in the deck, redrawn and its printed number recomputed. | 38 panels: 31 reproduce exactly, 4 differ by a molecule or two, 3 print display sub-samples |
 
 ### Deliberately not built
 - **7.5 (GO dot plot)** — needs a gene→term annotation source that is not on this machine. Twelve
@@ -146,7 +147,14 @@ until it has been looked at.
 - **4.15's UMAP** — `umap-learn` is not installed. The PCA the reference also ships is drawn
   instead, and the pairing statistic is computed on the full feature vectors so it does not depend
   on the embedding either way.
-- **P6 (the render gallery)** — still open.
+
+### What the render check found
+31 of 38 panels reproduce exactly. The four that do not are all a molecule or two — a transcript
+sitting on a cutting plane goes one way in one implementation and the other way in another — and
+the page separates those from a real mismatch rather than reporting one count of failures. Three
+of 6.1's panels print counts that are a **drawing device** (sub-sampled to the main panel's counts
+so the four read as one series), as figure 1.7 amplifies sparse panels for print; those are marked
+and left unscored, because checking a measurement against a display trick manufactures a failure.
 
 ### Notes for later
 - `compare-planes` can now be retired in favour of `halves`, which covers the same four plane

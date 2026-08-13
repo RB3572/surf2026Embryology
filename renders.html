@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Render Check · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="help.css" />
+  <link rel="stylesheet" href="renders.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <script src="viewer-core.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#c2410c;box-shadow:0 0 0 4px color-mix(in srgb,#c2410c 18%,transparent)"></span>
+      <span class="brand-name">Render&nbsp;Check</span>
+      <span class="brand-sub" id="panel-count"></span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Render panels"></nav>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls" hidden>
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">This render</span>
+        <button class="help-btn" data-help="renders" style="margin-left:auto"
+                aria-label="What is this?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="rn-readout" id="rn-readout"></div>
+        <div class="ctl-toggles">
+          <label class="ctl-chk"><input type="checkbox" id="show-body" checked><span>cell body</span></label>
+          <label class="ctl-chk"><input type="checkbox" id="show-tx" checked><span>transcripts</span></label>
+          <label class="ctl-chk"><input type="checkbox" id="show-other"><span>every other gene</span></label>
+        </div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+    <div class="plot-host" id="plot-host"></div>
+    <div class="placeholder" id="placeholder">
+      <div class="ph-inner">
+        <div class="ph-title">Pick a render</div>
+        <div class="ph-sub">Each tab is one 3-D figure from the deck, redrawn from this repo's own
+          scene data, with the number printed under it recomputed and checked.</div>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden>
+      <div class="spinner" aria-hidden="true"></div><span id="loading-text">Loading…</span>
+    </div>
+  </main>
+
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Does the caption match the data? <span class="drawer-gene" id="drawer-panel"></span></span>
+      <span class="drawer-hint">every panel's printed number, recomputed</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="rn-summary" id="rn-summary"></div>
+      <div class="rn-table-wrap"><div id="rn-table"></div></div>
+    </div>
+  </section>
+
+  <script src="renders.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

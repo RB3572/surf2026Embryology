@@ -662,6 +662,16 @@
         "<b>Two things here are imported rather than derived, and are labelled so.</b> The trajectory <b>cluster</b> is k-means on the stage-to-stage <i>changes</i>, so it cannot be read off the three fold values; the <b>retained/lost</b> call is curated, survives both count adjustments, and had Zbed3 deliberately dropped for failing that check. The reference states both must travel as columns rather than be re-derived. <b>Gained</b> is derived, by the mirror image of the lost rule, so the three fates stay commensurable.",
         "<b>Late 2-cell is the noisiest column</b> — 6 to 15 embryos per gene — which is why the fate panel names individual genes and claims no significance for any single line.",
       ] },
+    "renders": { eyebrow: "The renders · checked, not admired", title: "Does the caption match the data?",
+      body: [
+        "<b>A render is the figure a reader trusts most and can check least.</b> One embryo, one picture, one number printed underneath. If that number and the picture disagree, nothing about looking at the picture will tell you — so this page names the exact embryo and gene behind every 3-D figure in the deck, redraws it from this repo's own scenes, <b>recomputes the printed number</b>, and gives each one a verdict.",
+        "<b>Counts have to match exactly.</b> They are taken cytoplasm-by-segment-label, never by a containment test, which is what the rest of the site does — so a disagreement here is a real disagreement and not two conventions passing each other.",
+        "<b>Folds are ratios of densities, not of counts.</b> Sister blastomeres are routinely 20% apart in volume; a ratio of raw counts would read that difference as expression. They are checked to 2%, which is the precision they are printed at.",
+        "<b>A miss of one or two molecules is not an error, and the page says so.</b> A transcript sitting exactly on a cutting plane goes one way in one implementation and the other way in another. Those are flagged separately from a real mismatch rather than lumped into a single failure count.",
+        "<b>Some printed numbers are a drawing device, not a measurement.</b> Figure 1.7 duplicates transcripts on sparse panels so the cloud reads at print size; 6.1's top2–top4 are sub-sampled down to the main panel's counts so the four read as one series. Those panels are marked as such and left unscored — checking a measurement against a display trick would manufacture a failure.",
+        "<b>Where a panel's plane is the deck's own, it is used rather than re-derived.</b> Figure 8.2 ships its normals, so what is checked there is the arithmetic either side of the plane and not a plane rule this page would be re-guessing.",
+        "<b>The transcript colouring is each figure's own rule</b> — by blastomere, by plane side, or by segment label — because a single generic colouring would quietly hide what each panel was about.",
+      ] },
     "halves": { eyebrow: "The two halves · four ways of cutting", title: "Which side is which",
       body: [
         "<b>Everything on this page hangs off one decision: after you cut a zygote in two, which half is which.</b> Get it wrong and every gene's fold averages toward zero across embryos, because half the cells are flipped. And the two landmarks you would reach for first are both unusable here.",

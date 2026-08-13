@@ -1,0 +1,41 @@
+/* Render Check — a tab per deck render, its scene on the stage and its verdict in the card. */
+.rn-readout { display: flex; flex-direction: column; gap: 4px; padding: 2px 0 6px; }
+.rn-fig { font-family: var(--mono); font-size: 10.5px; color: var(--ink-soft);
+  letter-spacing: .06em; }
+.rn-title { font-size: 16px; font-weight: 700; color: var(--ink); line-height: 1.25; }
+.rn-emb { font-family: var(--mono); font-size: 10.5px; color: var(--ink-2); word-break: break-all; }
+.rn-badge { align-self: flex-start; font-size: 10px; font-weight: 700; letter-spacing: .05em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 999px; color: #fff; margin: 2px 0 4px; }
+.rn-badge.ok { background: #059669; }
+.rn-badge.bad { background: #b91c1c; }
+.rn-badge.note { background: #64748b; }
+.rn-line { display: flex; justify-content: space-between; gap: 12px; font-size: 12px;
+  padding: 2px 0; border-bottom: 1px solid #f2f5f9; }
+.rn-line .k { color: var(--ink-2); }
+.rn-line .v { font-family: var(--mono); color: var(--ink); font-weight: 600; white-space: nowrap; }
+.rn-checks { margin-top: 6px; display: flex; flex-direction: column; gap: 2px; }
+.rn-check { display: flex; justify-content: space-between; gap: 10px; font-size: 11px;
+  padding: 3px 7px; border-radius: 6px; }
+.rn-check.ok { background: #ecfdf5; color: #065f46; }
+.rn-check.near { background: #fff7ed; color: #7c2d12; }
+.rn-check.bad { background: #fef2f2; color: #991b1b; }
+.rn-check .d { font-family: var(--mono); white-space: nowrap; }
+.rn-note, .rn-caveat { font-size: 11px; line-height: 1.5; border-radius: 8px; padding: 7px 9px;
+  margin-top: 6px; }
+.rn-note { background: #fff7ed; border: 1px solid #fed7aa; color: #7c2d12; }
+.rn-caveat { background: #f6f8fb; border: 1px solid #e8ecf2; color: var(--ink-2); }
+.rn-summary { font-size: 12px; line-height: 1.6; color: var(--ink-2); padding: 4px 2px 10px; }
+.rn-summary b { color: var(--ink); }
+.rn-table-wrap { overflow: auto; }
+.rn-tab { border-collapse: collapse; width: 100%; font-size: 11.5px; }
+.rn-tab th { position: sticky; top: 0; background: var(--surface); text-align: left;
+  font-weight: 600; color: var(--ink-2); padding: 5px 9px; border-bottom: 1px solid var(--line); }
+.rn-tab td { padding: 4px 9px; border-bottom: 1px solid #f2f5f9; vertical-align: top; }
+.rn-tab tr[data-id] { cursor: pointer; }
+.rn-tab tr[data-id]:hover { background: #f6f8fb; }
+.rn-tab tr.on { background: #fff7ed; }
+.rn-tab td.g { font-weight: 600; color: var(--ink); }
+.rn-tab td.e, .rn-tab td.c { font-family: var(--mono); font-size: 10.5px; color: var(--ink-2); }
+/* the tab strip flags a render whose caption does not reproduce, so it is visible before clicking */
+.tabs .tab-warn { box-shadow: inset 0 -2px 0 #b91c1c; }
+.tabs .tab-note { box-shadow: inset 0 -2px 0 #94a3b8; }

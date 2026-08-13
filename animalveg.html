@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animal–Vegetal Enrichment · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="help.css" />
+  <link rel="stylesheet" href="animalveg.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <script src="viewer-core.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#0284c7;box-shadow:0 0 0 4px color-mix(in srgb,#0284c7 18%,transparent)"></span>
+      <span class="brand-name">Animal–Vegetal&nbsp;Enrichment</span>
+      <span class="brand-sub" id="gene-count"></span>
+    </div>
+    <div class="av-topctl"><div class="av-chance" id="av-chance"></div></div>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls">
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">This gene</span>
+        <button class="help-btn" data-help="animalveg" style="margin-left:auto"
+                aria-label="What is this?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="av-readout" id="av-readout"><div class="av-hint">Click a point to select a gene.</div></div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+    <div class="plot-host" id="plot"></div>
+  </main>
+
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Where it sits <span class="drawer-gene" id="drawer-gene"></span></span>
+      <span class="drawer-hint">the density map · per-zygote values · the table</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="xs-graph-tabs" id="av-tabs" role="tablist" aria-label="Panels">
+        <button type="button" class="xs-gtab active" data-tab="map" role="tab" aria-selected="true">Density map</button>
+        <button type="button" class="xs-gtab" data-tab="per" role="tab" aria-selected="false">Per zygote</button>
+        <button type="button" class="xs-gtab" data-tab="table" role="tab" aria-selected="false">Table</button>
+      </div>
+      <div class="xs-panels" id="av-panels">
+
+        <div class="xs-panel" data-tab="map" role="tabpanel">
+          <div class="av-head"><div class="mini-title">Where this gene sits inside the cell
+            <span class="mini-sub" id="av-map-sub"></span></div></div>
+          <div class="av-note">Figure 4.3. Every zygote pooled into one normalised meridional
+            frame: <b>vertical</b> is position along the polar axis (bottom vegetal, top animal),
+            <b>horizontal</b> is distance out from that axis (left centre, right cortex). What is
+            drawn is <b>log₂(this gene ÷ the whole panel)</b> in that frame — so it maps where the
+            gene sits <i>relative to every other gene</i>. A map of raw density would just be a
+            picture of the cell.</div>
+          <div class="xs-resizable av-square"><div id="av-map" class="av-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="per" role="tabpanel" hidden>
+          <div class="av-head"><div class="mini-title">One value per zygote
+            <span class="mini-sub" id="av-per-sub"></span></div></div>
+          <div class="av-note">The per-embryo log₂(animal density ÷ vegetal density) that the
+            t-test is run on. The test is <b>paired by construction</b> — both halves come from the
+            same cell — which is why five embryos can call anything at all. Scatter across zygotes
+            is the quantity the P-value is actually about.</div>
+          <div class="xs-resizable"><div id="av-per" class="av-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="table" role="tabpanel" hidden>
+          <div class="av-head"><div class="mini-title">Every tested gene
+            <span class="mini-sub" id="av-table-sub"></span></div></div>
+          <div class="av-note">Sorted by P. <b>q</b> is Benjamini–Hochberg across the tested
+            family — and nothing here survives it, which is the honest summary of this analysis.</div>
+          <div class="av-table-wrap"><div id="av-table"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Gene ranking</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Genes ranked by P</div>
+        <div class="rdrawer-desc" id="av-rank-desc"></div>
+        <label class="av-search"><input type="search" id="av-find" placeholder="find a gene…" /></label>
+      </div>
+      <div class="best-list" id="av-rank"></div>
+    </div>
+  </aside>
+
+  <script src="animalveg.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

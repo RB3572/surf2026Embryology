@@ -45,7 +45,10 @@
     const rec = e.genes[g]; if (!rec) return null;
     if (key === "polar") { const b = rec.pb; return b ? { n: b.n, vA: b.v[0], vB: b.v[1], nA: b.c[0], nB: b.c[1] } : null; }
     if (key === "exhaustive") { const b = rec.ex; return b ? { n: b.n, vA: b.v[0], vB: b.v[1], nA: b.c[0], nB: b.c[1] } : null; }
-    if (key === "equatorial") { if (!e.eq) return null; const nA = rec.eq; return { n: e.eq.n, vA: e.eq.v[0], vB: e.eq.v[1], nA, nB: rec.nc - nA }; }
+    // the equatorial plane is SHIFTED off the COM to the 50/50 volume split, so it is the
+    // one plane whose origin is not the centroid — drawing it at the COM would draw a
+    // different plane from the one the counts came from
+    if (key === "equatorial") { if (!e.eq) return null; const nA = rec.eq; return { n: e.eq.n, o: e.eq.o_um, vA: e.eq.v[0], vB: e.eq.v[1], nA, nB: rec.nc - nA }; }
     if (key === "sperm") { if (!e.sd || rec.sd == null) return null; const nA = rec.sd; return { n: e.sd.n, vA: e.sd.v[0], vB: e.sd.v[1], nA, nB: rec.nc - nA }; }
     return null;
   }
@@ -114,7 +117,7 @@
     const e = state.byId[id]; $("#loading").hidden = false; $("#loading-text").textContent = `Loading ${e.label}…`;
     try {
       let sc = state.sceneCache[id];
-      if (!sc) { sc = await V.loadGz(`data/planes_all/${id}.json.gz`); state.sceneCache[id] = sc; }
+      if (!sc) { sc = await V.loadGz(`data/segments/${cur().scene}`); state.sceneCache[id] = sc; }
       if (state.currentId !== id) return;
       state.scene = sc; fillGenes(); syncSpermControls();
       if (!state.vcExtras) state.vcExtras = V.addWindowExtras($("#controls-body"), { defaultSize: state.dotSize, onDotSize: (s) => { state.dotSize = s; render3D(); } });
@@ -127,13 +130,17 @@
   }
 
   // ───────── 3-D ─────────
-  const toPlot = (pUm, zs) => [pUm[0] / XY, pUm[1] / XY, pUm[2] * zs];
+  // the segments scenes are ONE isotropic pixel space: um = pixel * 0.15 on all three
+  // axes. (The zygote scenes are not — they use a different z_scale, which is why this
+  // page reads segments and nothing else.)
+  const toPlot = (pUm) => [pUm[0] / XY, pUm[1] / XY, pUm[2] / XY];
   function unitv(n) { const m = norm3(n); return [n[0] / m, n[1] / m, n[2] / m]; }
-  function planeQuad(comUm, n, L, zs, color, op, name, rank) {
+  function planeQuad(originUm, n, L, color, op, name, rank) {
     const nn = unitv(n), ref = Math.abs(nn[2]) < 0.9 ? [0, 0, 1] : [1, 0, 0];
     const cr = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
     const t = unitv(cr(nn, ref)), w = unitv(cr(nn, t));
-    const C = [[1, 1], [1, -1], [-1, -1], [-1, 1]].map(([s1, s2]) => toPlot([comUm[0] + L * (s1 * t[0] + s2 * w[0]), comUm[1] + L * (s1 * t[1] + s2 * w[1]), comUm[2] + L * (s1 * t[2] + s2 * w[2])], zs));
+    const comUm = originUm;
+    const C = [[1, 1], [1, -1], [-1, -1], [-1, 1]].map(([s1, s2]) => toPlot([comUm[0] + L * (s1 * t[0] + s2 * w[0]), comUm[1] + L * (s1 * t[1] + s2 * w[1]), comUm[2] + L * (s1 * t[2] + s2 * w[2])]));
     return { type: "mesh3d", x: C.map((c) => c[0]), y: C.map((c) => c[1]), z: C.map((c) => c[2]), i: [0, 0], j: [1, 2], k: [2, 3], color, opacity: op, name, showlegend: true, legendrank: rank, hoverinfo: "name", flatshading: true };
   }
   function render3D() {
@@ -143,12 +150,13 @@
     const splitRec = planeRec(e, g, state.splitBy);
     if (state.dotsOn && s.transcripts[g]) {
       const t = s.transcripts[g], n = splitRec ? unitv(splitRec.n) : null;
+      const O = (splitRec && splitRec.o) || com;
       const ax = [], ay = [], az = [], bx = [], by = [], bz = [], gx = [], gy = [], gz = [];
       for (let k = 0; k < t.x.length; k++) {
-        const zp = t.gz[k] * zs;
-        if (t.s1 && !t.s1[k]) { gx.push(t.x[k]); gy.push(t.y[k]); gz.push(zp); continue; }
+        const zp = t.gz[k] * zs;   // plot space = the scene's own pixel space
+        if (t.s && t.s[k] !== e.body) { gx.push(t.x[k]); gy.push(t.y[k]); gz.push(zp); continue; }
         if (!n) { bx.push(t.x[k]); by.push(t.y[k]); bz.push(zp); continue; }
-        const side = (t.x[k] * XY - com[0]) * n[0] + (t.y[k] * XY - com[1]) * n[1] + (t.gz[k] * Z_UM - com[2]) * n[2];
+        const side = (t.x[k] * XY - O[0]) * n[0] + (t.y[k] * XY - O[1]) * n[1] + (t.gz[k] * zs * XY - O[2]) * n[2];
         if (side > 0) { ax.push(t.x[k]); ay.push(t.y[k]); az.push(zp); } else { bx.push(t.x[k]); by.push(t.y[k]); bz.push(zp); }
       }
       if (ax.length) traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side A`, x: ax, y: ay, z: az, marker: { size: state.dotSize, color: BLUE, opacity: 0.85, line: { width: 0 } }, hovertemplate: `${g} · A<extra></extra>`, legendrank: 20000 });
@@ -159,11 +167,11 @@
     state.planes.forEach((p, i) => {
       if (!state.planesOn[p.key]) return;
       const r = planeRec(e, g, p.key); if (!r) return;
-      traces.push(planeQuad(com, r.n, e.L_um * 1.4, zs, p.color, 0.28, `${p.label} plane`, 41000 + i));
+      traces.push(planeQuad(r.o || com, r.n, e.L_um * 1.4, p.color, 0.28, `${p.label} plane`, 41000 + i));
     });
     // polar axis line
-    const a = e.axis_um, R = e.L_um; const cp = toPlot(com, zs);
-    const p0 = toPlot([com[0] - R * a[0], com[1] - R * a[1], com[2] - R * a[2]], zs), p1 = toPlot([com[0] + R * a[0], com[1] + R * a[1], com[2] + R * a[2]], zs);
+    const a = e.axis_um, R = e.L_um; const cp = toPlot(com);
+    const p0 = toPlot([com[0] - R * a[0], com[1] - R * a[1], com[2] - R * a[2]]), p1 = toPlot([com[0] + R * a[0], com[1] + R * a[1], com[2] + R * a[2]]);
     traces.push({ type: "scatter3d", mode: "lines", name: "Polar-body axis", x: [p0[0], p1[0]], y: [p0[1], p1[1]], z: [p0[2], p1[2]], line: { color: AXIS_C, width: 5 }, hovertemplate: "polar-body axis<extra></extra>", legendrank: 40000 });
     Plotly.react("plot-host", traces, V.sceneLayout(s.extents, s.id), V.plotConfig);
   }

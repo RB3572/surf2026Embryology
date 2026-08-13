@@ -119,3 +119,38 @@ polar-body **size augmentation**, 8.7's Ltbp1 panel (2–3 transcripts — flagg
 3. **P1** and **P4** — the two largest genuinely-missing analyses.
 4. **P2** — the biggest single piece of work, and the one that would let `compare-planes` be
    retired rather than patched.
+
+---
+
+## What was built (2026-08-13)
+
+Everything below is registered **admin-only** (`ADMIN_ONLY_PAGES` in `lib/projects.mjs` plus a
+card in `admin.card.html`), per the instruction to hold new work back from the public landing page
+until it has been looked at.
+
+| item | what landed | validation |
+|---|---|---|
+| **A** | `build_compare_planes.py` now places the equatorial plane by `ES.equal_volume_plane` instead of through the COM. | split moves 0.4937 → 0.500000; median shift 0.23 µm |
+| **B/C/D/E** | `embryo_stats.py` — the shared helper. Cytoplasm-only by segment label, body by volume, exact half-space clipping with the origin on the plane, median-of-ratios bulk, volume-matched null, BH. | used by every build below |
+| **P1** | `clocktx` — transcriptome vs the clock (4.8, 4.11, 5.4). | 51 zygotes, 426 genes, 41 at P<0.05 |
+| **P4** | `stages` — across the stages (8.3, 8.6, 9.1, 9.2). | reproduces the reference's own 8.3 table to max \|Δ\| 5e-6 on 420 genes |
+| **P3** | `animalveg` — animal–vegetal (4.3, 4.4) on the equal-**cytoplasmic**-volume split. | 378 genes, matching the reference's count exactly; a null result, and the page says so |
+| **P5** | `contacthalves` — the contact region on the reference's own half definition (7.1, 7.2, 7.3). | exactly the reference's gene family (201/201, 126/126) after recovering its 50-transcript floor; folds r = 0.978 |
+| **4.16** | a second drawer tab on the public `sperm-pseudotime` page. | leave-one-out consensus per comparison; the circularity is shown rather than argued |
+| **P2** | `halves` — 4.14, 4.15, 4.17, 4.18, 4.19 on one page. | orientation by total count; the alignment null is the headline |
+
+### Deliberately not built
+- **7.5 (GO dot plot)** — needs a gene→term annotation source that is not on this machine. Twelve
+  imported rows whose k/K/n cannot be re-derived would be a picture of someone else's computation,
+  so the page says it is absent and why.
+- **4.15's UMAP** — `umap-learn` is not installed. The PCA the reference also ships is drawn
+  instead, and the pairing statistic is computed on the full feature vectors so it does not depend
+  on the embedding either way.
+- **P6 (the render gallery)** — still open.
+
+### Notes for later
+- `compare-planes` can now be retired in favour of `halves`, which covers the same four plane
+  definitions with the reference's own statistics. Left in place for now.
+- `contact` (the slab) and `contacthalves` (the equal-volume halves) answer the same question with
+  different instruments. Both are kept on purpose; if one goes, it should be a decision rather than
+  a tidy-up.

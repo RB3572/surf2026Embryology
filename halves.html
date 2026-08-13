@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Halves · SURF 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="help.css" />
+  <link rel="stylesheet" href="halves.css" />
+  <script src="plotly.min.js" charset="utf-8"></script>
+  <script src="viewer-core.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="home-link" href="index.html" title="All projects" aria-label="All projects">‹</a>
+    <div class="brand">
+      <span class="brand-dot" style="background:#059669;box-shadow:0 0 0 4px color-mix(in srgb,#059669 18%,transparent)"></span>
+      <span class="brand-name">Halves</span>
+      <span class="brand-sub" id="gene-count"></span>
+    </div>
+    <div class="hv-topctl">
+      <div class="hv-plane" id="hv-plane" role="tablist" aria-label="Plane"></div>
+      <div class="hv-chance" id="hv-chance"></div>
+    </div>
+  </header>
+
+  <main class="stage">
+    <div class="controls" id="controls">
+      <div class="controls-header" id="controls-header">
+        <span class="controls-grip" aria-hidden="true"></span>
+        <span class="controls-title">This gene</span>
+        <button class="help-btn" data-help="halves" style="margin-left:auto"
+                aria-label="What is this?" onpointerdown="event.stopPropagation()">?</button>
+      </div>
+      <div class="controls-body" id="controls-body">
+        <div class="hv-readout" id="hv-readout"><div class="hv-hint">Click a point to select a gene.</div></div>
+      </div>
+      <div class="rz rz-nw" data-corner="nw"></div>
+      <div class="rz rz-ne" data-corner="ne"></div>
+      <div class="rz rz-sw" data-corner="sw"></div>
+      <div class="rz rz-se" data-corner="se"></div>
+    </div>
+    <div class="plot-host" id="plot"></div>
+  </main>
+
+  <section class="drawer" id="drawer" data-open="false" hidden>
+    <div class="drawer-resize" id="drawer-resize" role="separator" title="Drag to resize height"></div>
+    <button class="drawer-handle" id="drawer-handle" aria-expanded="false">
+      <span class="drawer-title">Behind the volcano <span class="drawer-gene" id="drawer-gene"></span></span>
+      <span class="drawer-hint">the alignment null · which plane · per gene vs a count-matched null · do the halves pair · per embryo</span>
+      <span class="drawer-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="drawer-body" id="drawer-body">
+      <div class="xs-graph-tabs" id="hv-tabs" role="tablist" aria-label="Panels">
+        <button type="button" class="xs-gtab active" data-tab="null" role="tab" aria-selected="true">The alignment null</button>
+        <button type="button" class="xs-gtab" data-tab="plane" role="tab" aria-selected="false">Which plane</button>
+        <button type="button" class="xs-gtab" data-tab="gene" role="tab" aria-selected="false">Per gene vs null</button>
+        <button type="button" class="xs-gtab" data-tab="pair" role="tab" aria-selected="false">Do the halves pair?</button>
+        <button type="button" class="xs-gtab" data-tab="per" role="tab" aria-selected="false">Per embryo</button>
+      </div>
+      <div class="xs-panels" id="hv-panels">
+
+        <div class="xs-panel" data-tab="null" role="tabpanel">
+          <div class="hv-head"><div class="mini-title">Would any labelling of the halves do this?
+            <span class="mini-sub" id="hv-null-sub"></span></div></div>
+          <div class="hv-note">The volcano alone cannot answer this. <b>Any</b> consistent way of
+            naming which half is which produces some calls, so the whole analysis is re-run 200
+            times with each embryo's side assignment <b>flipped at random</b>, and the calls
+            counted. The histogram is that null; the line is the real number. If the real number
+            sits inside the histogram, the volcano is describing the labelling rather than the
+            embryo.</div>
+          <div class="xs-resizable"><div id="hv-null" class="hv-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="plane" role="tabpanel" hidden>
+          <div class="hv-head"><div class="mini-title">Does the plane definition matter?
+            <span class="mini-sub" id="hv-plane-sub"></span></div></div>
+          <div class="hv-note">Figures 4.18 and 4.14. Median fold asymmetry over the genes every
+            definition can test, with a bootstrap interval, plus the per-gene grid underneath.
+            <b>Read the random plane first</b> — it is not at 1.0, because counting noise alone
+            produces a fold, and everything else has to be judged against it.
+            <b>The best meridional plane is selected to be asymmetric</b>, so its lead over random
+            is partly the selection; it is shown next to random for exactly that reason.</div>
+          <div class="xs-resizable"><div id="hv-planeplot" class="hv-plot"></div></div>
+          <div class="hv-heat" id="hv-heat"></div>
+        </div>
+
+        <div class="xs-panel" data-tab="gene" role="tabpanel" hidden>
+          <div class="hv-head"><div class="mini-title">Per gene, against a count-matched null
+            <span class="mini-sub" id="hv-gene-sub"></span></div></div>
+          <div class="hv-note">Figure 4.17. A gene with few transcripts looks asymmetric by
+            sampling alone, so the null draws <b>the same counts from the same half-volumes</b> and
+            what is plotted is the <b>excess over it</b>. A tall bar on a low-count gene is the
+            failure mode this panel exists to prevent.</div>
+          <div class="xs-resizable"><div id="hv-gene" class="hv-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="pair" role="tabpanel" hidden>
+          <div class="hv-head"><div class="mini-title">Do a zygote's two halves sit together?
+            <span class="mini-sub" id="hv-pair-sub"></span></div></div>
+          <div class="hv-note">Figure 4.15. Each zygote contributes <b>two points</b>, joined by a
+            line. One panel per probeset, because the four panels are disjoint gene sets and a
+            single embedding would cluster by which panel was run.
+            <b>The share view has a trap in it:</b> under share features the two halves are exact
+            complements — every feature in B is 1 minus the one in A — so any embedding pushes them
+            apart and the pairing ratio comes out above 1. That is geometry, not biology. The
+            <b>concentration</b> view is the one that answers the question; both are here so the
+            artefact is visible rather than reported as a result.
+            <span id="hv-embed-note"></span></div>
+          <div class="hv-pairctl" id="hv-pairctl" role="group" aria-label="Normalisation">
+            <button type="button" data-norm="conc" class="on">concentration</button>
+            <button type="button" data-norm="ratio">share (the trap)</button>
+          </div>
+          <div class="xs-resizable"><div id="hv-pair" class="hv-plot"></div></div>
+        </div>
+
+        <div class="xs-panel" data-tab="per" role="tabpanel" hidden>
+          <div class="hv-head"><div class="mini-title">One value per embryo
+            <span class="mini-sub" id="hv-per-sub"></span></div></div>
+          <div class="hv-note">The per-embryo bulk-corrected log₂(fuller ÷ emptier concentration)
+            the t-test runs on. Underneath, every embryo's own orientation: which half held more
+            transcripts, and whether the stored side had to be flipped to match.</div>
+          <div class="xs-resizable"><div id="hv-per" class="hv-plot"></div></div>
+          <div class="hv-orient" id="hv-orient"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="rdrawer" id="rdrawer" data-open="false" hidden>
+    <div class="rdrawer-resize" id="rdrawer-resize" role="separator" title="Drag to resize width"></div>
+    <button class="rdrawer-handle" id="rdrawer-handle" aria-expanded="false">
+      <span class="rdrawer-chevron" aria-hidden="true"></span>
+      <span class="rdrawer-handle-label">Gene ranking</span>
+    </button>
+    <div class="rdrawer-body" id="rdrawer-body">
+      <div class="rdrawer-head">
+        <div class="rdrawer-title">Genes ranked by P</div>
+        <div class="rdrawer-desc" id="hv-rank-desc"></div>
+        <label class="hv-search"><input type="search" id="hv-find" placeholder="find a gene…" /></label>
+      </div>
+      <div class="best-list" id="hv-rank"></div>
+      <div class="hv-val" id="hv-val"></div>
+    </div>
+  </aside>
+
+  <script src="halves.js"></script>
+  <script src="help.js"></script>
+  <script src="/analytics.js" defer></script>
+</body>
+</html>

@@ -129,3 +129,8 @@
 .ch-val { border-top:1px solid #e8ecf2; padding:10px 14px; font-size:10.5px; line-height:1.55;
   color:#64748b; }
 .ch-val b { color:#334155; }
+
+/* The right drawer is fixed at z-index 7 and the bottom drawer spans the full width at z-index 6,
+   so an open ranking panel sits ON TOP of the bottom drawer and clips whatever is under it — on
+   this page that was a bar and its value, not just prose. Inset the bottom drawer instead. */
+body:has(#rdrawer[data-open="true"]) .drawer { right: var(--rdrawer-w, 320px); }

@@ -119,3 +119,8 @@
 .av-tab tr.on td { background: color-mix(in srgb, var(--av) 9%, var(--surface)); }
 .av-rank-head, .av-rank-row { grid-template-columns: 26px minmax(64px, 1fr) 46px 50px 24px !important; }
 .rdrawer { --rdrawer-w: 330px; }
+
+/* The right drawer is fixed at z-index 7 and the bottom drawer spans the full width at z-index 6,
+   so an open ranking panel sits ON TOP of the bottom drawer and clips whatever is under it — on
+   this page that was a bar and its value, not just prose. Inset the bottom drawer instead. */
+body:has(#rdrawer[data-open="true"]) .drawer { right: var(--rdrawer-w, 320px); }

@@ -28,7 +28,7 @@ fixed zygotes. So this artifact ships three things.
 3. OUR FIXED ZYGOTES — the cohort a refitted model gets applied to, with their geometry and their
    transcript counts so the page can plot abundance against inferred pseudotime.
 
-   ⚠️ 51 of our 60 zygote scenes carry both pronuclei. The other nine come from label stacks that
+   ⚠️ 51 of our 59 zygote scenes carry both pronuclei. The other eight come from label stacks that
    resolve only the cytoplasm, so no pronuclear distance exists and no pseudotime can be assigned
    to them by any model. They are excluded here and the count is recorded, rather than being
    quietly absorbed into a "60".

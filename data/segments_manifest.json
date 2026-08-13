@@ -53,6 +53,21 @@
    "size_kb": 588
   },
   {
+   "id": "Oocyte__20260425_zygote_p2_3",
+   "stage": "Oocyte",
+   "stage_label": "Oocyte",
+   "eid": "20260425_zygote_p2_3",
+   "label": "O-P3-fov3",
+   "n_segments": 4,
+   "segments": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "size_kb": 659
+  },
+  {
    "id": "Zygote__20251226_sample1_zygote5",
    "stage": "Zygote",
    "stage_label": "Zygote",
@@ -789,21 +804,6 @@
     3
    ],
    "size_kb": 926
-  },
-  {
-   "id": "Zygote__20260425_zygote_p2_3",
-   "stage": "Zygote",
-   "stage_label": "Zygote",
-   "eid": "20260425_zygote_p2_3",
-   "label": "Z-P3-fov3",
-   "n_segments": 4,
-   "segments": [
-    1,
-    2,
-    3,
-    4
-   ],
-   "size_kb": 659
   },
   {
    "id": "Zygote__20260425_zygote_p2_4",

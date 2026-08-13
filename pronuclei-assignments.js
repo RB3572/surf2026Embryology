@@ -23,6 +23,12 @@
   const drawer = $("#drawer"), drawerHandle = $("#drawer-handle");
 
   const state = { points: [], byId: {}, assign: {}, currentId: null, scene: null, rec: null, drawerOpen: false, dotSize: 1.5 };
+  const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  /** "Dec 26" from a leading YYYYMMDD, for an embryo the shared manifest doesn't carry. */
+  function dateOf(id) {
+    const m = String(id).match(/^(\d{4})(\d{2})(\d{2})/);
+    return m ? `${MON[+m[2] - 1]} ${+m[3]}` : "";
+  }
   let vcExtras = null;
 
   (async function init() {
@@ -31,7 +37,12 @@
         (await fetch("data/pronuclei_manifest.json")).json(),
         (await fetch("data/pronuclei_assignments.json")).json(),
       ]);
-      state.points = m.embryos.filter((p) => asg.embryos.some((a) => a.id === p.id));
+      // The ASSIGNMENTS file is this page's source of truth for which zygotes it shows — a
+      // hand-added embryo (one the automatic detector dropped) is in it but not in the shared
+      // pronuclei manifest, and filtering by the manifest would silently hide it again.
+      const byMan = Object.fromEntries(m.embryos.map((p) => [p.id, p]));
+      state.points = asg.embryos.map((a) => byMan[a.id] ||
+        { id: a.id, label: a.label || a.id, date_short: dateOf(a.id) });
       state.points.forEach((p) => (state.byId[p.id] = p));
       asg.embryos.forEach((a) => (state.assign[a.id] = a));
       countEl.textContent = `${state.points.length} zygotes · male/female pronuclei by consensus`;
@@ -111,10 +122,21 @@
     const r = state.rec; if (!r) return;
     const c = r.consensus || {};
     const fem = c.split ? "even split" : `pronucleus ${c.female + 1}`;
+    const man = r.manual;
     paReadout.innerHTML =
-      `<div class="pn-big"><span style="color:${c.split ? "#a855f7" : F}">${fem}</span> <span class="pn-lbl">consensus female</span></div>` +
+      `<div class="pn-big"><span style="color:${c.split ? "#a855f7" : F}">${fem}</span> ` +
+      `<span class="pn-lbl">${man ? "assigned by hand" : "consensus female"}</span></div>` +
       `<div class="pn-resid">pronucleus 1 = seg <b>${r.pron[0].label}</b> (${r.pron[0].volume.toLocaleString()} µm³, larger) · pronucleus 2 = seg <b>${r.pron[1].label}</b> (${r.pron[1].volume.toLocaleString()} µm³)</div>` +
-      `<div class="pn-resid">polar body: ${r.polar ? `seg <b>${r.polar.label}</b>` : "not detected"} · sperm: ${r.sperm_plot ? "located" : "not available"}</div>`;
+      `<div class="pn-resid">polar body: ${r.polar ? `seg <b>${r.polar.label}</b>` : "not detected"} · sperm: ${r.sperm_plot ? "located" : "not available"}</div>` +
+      // a hand-made call must never be able to read as something the tests produced
+      (man ? `<div class="pa-manual"><b>Manual call</b> — M${man.female_label} is maternal (♀),
+                M${man.male_label} is paternal (♂)${man.by ? `, assigned by ${man.by}` : ""}.
+                <span class="pa-manual-why">${man.reason || ""}</span>
+                ${man.caveat ? `<span class="pa-manual-why"><b>Caveat:</b> ${man.caveat}</span>` : ""}
+                <span class="pa-manual-why">${man.auto_agrees
+                    ? "Every automatic test that can run here agrees with it."
+                    : "The automatic tests do NOT all agree — the hand call is what is shown."}</span>
+              </div>` : "");
   }
 
   // ---------- concordance grid ----------
@@ -139,7 +161,11 @@
     else html += cell(c.female === 0) + cell(c.female === 1);
     paGrid.innerHTML = html;
     const votes = TESTS.map((t) => r.tests[t.key]).filter(Boolean).length;
-    paGridNote.innerHTML = c.split
+    paGridNote.innerHTML = r.manual
+      ? `<b>Assigned by hand: pronucleus ${c.female + 1} (seg ${r.manual.female_label}) is female.</b>
+         The bottom row is that call, not a vote — ${Math.max(c.n0, c.n1)} of ${votes} automatic
+         tests happen to land the same way.`
+      : c.split
       ? `<b>Even split</b> — ${c.n0} test(s) call pronucleus 1 female, ${c.n1} call pronucleus 2. No consensus.`
       : `<b>Consensus: pronucleus ${c.female + 1} is female</b> — ${Math.max(c.n0, c.n1)} of ${votes} tests agree.`;
   }

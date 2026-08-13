@@ -191,6 +191,113 @@
    }
   },
   {
+   "id": "20251226_zygote_p1_11",
+   "label": "Z-P1-fov11",
+   "pron": [
+    {
+     "label": 4,
+     "com_plot": [
+      1433.7,
+      860.6,
+      771.5
+     ],
+     "volume": 3470
+    },
+    {
+     "label": 3,
+     "com_plot": [
+      1365.5,
+      1098.4,
+      1059.1
+     ],
+     "volume": 1740
+    }
+   ],
+   "polar": {
+    "label": 2,
+    "com_plot": [
+     1186.2,
+     1020.4,
+     1118.9
+    ],
+    "volume": 11767
+   },
+   "sperm_plot": [
+    1492.0,
+    1022.0,
+    773.4
+   ],
+   "tests": {
+    "pb_com": {
+     "female": 1,
+     "line": [
+      [
+       1365.5,
+       1098.4,
+       1059.1
+      ],
+      [
+       1186.2,
+       1020.4,
+       1118.9
+      ]
+     ]
+    },
+    "pb_shell": {
+     "female": 1,
+     "line": [
+      [
+       1320.0,
+       1083.0,
+       1074.0
+      ],
+      [
+       1267.0,
+       1044.0,
+       1108.0
+      ]
+     ]
+    },
+    "volume": {
+     "female": 1
+    },
+    "sperm": {
+     "female": 1,
+     "male": 0,
+     "line": [
+      [
+       1441.0,
+       924.0,
+       798.0
+      ],
+      [
+       1492.0,
+       1022.0,
+       773.4
+      ]
+     ]
+    }
+   },
+   "consensus": {
+    "female": 1,
+    "split": false,
+    "n0": 0,
+    "n1": 4,
+    "manual": true
+   },
+   "manual": {
+    "female_label": 3,
+    "male_label": 4,
+    "female_index": 1,
+    "male_index": 0,
+    "by": "Rishi Bhargava",
+    "date": "2026-08-12",
+    "reason": "The automatic detector dropped this zygote entirely: M4 protrudes about 12 um out of the cytoplasm (64% of its voxels lie outside segment 1), so it was classified as an external body rather than a pronucleus. It is a pronucleus, and the zygote is a usable datapoint. M3 sits far closer to the polar body (31 um vs 68 um), which makes it maternal; M4 sits far closer to the sperm (26 um vs 48 um), which independently makes it paternal.",
+    "caveat": "M4 is partly outside the segmented cytoplasm, so its volume and centroid are less reliable than a fully interior pronucleus.",
+    "auto_agrees": true
+   }
+  },
+  {
    "id": "20251226_zygote_p1_2_2",
    "label": "Z-P1-fov2_2",
    "pron": [

@@ -174,11 +174,12 @@ def main():
               and abs(e["diff"] - (e["d2"] - e["d1"])) < 1e-3 for e in ours))
 
     section("our fixed zygotes")
-    check("51 of 60 scenes carry pronuclear geometry",
-          m["n_ours"] == 51 and m["n_zygote_scenes"] == 60,
+    # 59, not 60: 20260425_zygote_p2_3 is an oocyte and was re-filed out of the Zygote group
+    check("51 of 59 zygote scenes carry pronuclear geometry",
+          m["n_ours"] == 51 and m["n_zygote_scenes"] == 59,
           f"{m['n_ours']}/{m['n_zygote_scenes']}")
-    check("the 9 excluded are counted, not silently dropped",
-          m["n_ours_excluded"] == m["n_zygote_scenes"] - m["n_ours"] == 9)
+    check("the 8 excluded are counted, not silently dropped",
+          m["n_ours_excluded"] == m["n_zygote_scenes"] - m["n_ours"] == 8)
     check("meta count matches the records", m["n_ours"] == len(ours))
     check("every one has transcript counts", all(e["total_tx"] > 0 for e in ours),
           str([e["id"] for e in ours if e["total_tx"] <= 0][:3]))

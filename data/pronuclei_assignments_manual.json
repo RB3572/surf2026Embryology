@@ -1,0 +1,16 @@
+{
+  "note": "Hand-made pronuclear calls that the automatic pipeline cannot produce. Every entry here overrides build_pronuclei_assignments.py, and the page marks the result as a MANUAL call rather than letting it read as an algorithm's output. Applied by scripts/patch_pronuclei_assignments.py, which is idempotent and re-runnable, and re-applied at the end of build_pronuclei_assignments.py so a full rebuild cannot silently drop these.",
+  "overrides": [
+    {
+      "id": "20251226_zygote_p1_11",
+      "include": true,
+      "pronuclei": [3, 4],
+      "polar_body": 2,
+      "assign": { "3": "female", "4": "male" },
+      "by": "Rishi Bhargava",
+      "date": "2026-08-12",
+      "reason": "The automatic detector dropped this zygote entirely: M4 protrudes about 12 um out of the cytoplasm (64% of its voxels lie outside segment 1), so it was classified as an external body rather than a pronucleus. It is a pronucleus, and the zygote is a usable datapoint. M3 sits far closer to the polar body (31 um vs 68 um), which makes it maternal; M4 sits far closer to the sperm (26 um vs 48 um), which independently makes it paternal.",
+      "caveat": "M4 is partly outside the segmented cytoplasm, so its volume and centroid are less reliable than a fully interior pronucleus."
+    }
+  ]
+}

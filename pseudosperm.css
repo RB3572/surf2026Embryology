@@ -78,40 +78,42 @@
   color: #7c2d12; background: #fff7ed; border: 1px solid #fed7aa; }
 .ps-warn b { color: #7c2d12; }
 
-/* ---- right drawer ---- */
-.ps-rank-ctl { display: flex; flex-direction: column; gap: 7px; margin-top: 9px; }
-.ps-rank-ctl .ctl { display: flex; align-items: center; gap: 8px; }
-.ps-rank-ctl select { flex: 1 1 auto; font-size: 12px; padding: 4px 8px; border: 1px solid #d5d9e0;
-  border-radius: 8px; background: #fff; min-width: 0; }
-.ps-rank-ctl input[type="range"] { flex: 1 1 auto; min-width: 0; accent-color: var(--ps); }
-.ps-minm-val { font-family: var(--mono); font-size: 11px; color: var(--ink-2); width: 18px;
-  text-align: right; }
-.ps-sel-row { display: flex; align-items: center; gap: 6px; }
-.ps-sel-count { font-size: 11px; color: var(--ink-2); margin-right: auto; }
+/* ---- the P cutoff: the one control that defines the template ---- */
+.ps-cut { display: flex; flex-direction: column; gap: 6px; padding: 9px 10px; border-radius: 10px;
+  border: 1px solid var(--line); background: color-mix(in srgb, var(--surface) 70%, var(--bg)); }
+.ps-cut-row { display: flex; align-items: baseline; gap: 8px; }
+.ps-cut-val { margin-left: auto; font-family: var(--mono); font-size: 12.5px; font-weight: 700;
+  color: var(--ps); font-variant-numeric: tabular-nums; }
+.ps-cut input[type="range"] { width: 100%; accent-color: var(--ps); }
+.ps-tmpl-count { font-size: 11px; color: var(--ink-2); }
+.ps-tmpl-count b { color: var(--ps); }
 .ps-btn { font: 600 11px var(--sans); color: #475569; background: #fff; border: 1px solid #d5d9e0;
-  border-radius: 7px; padding: 3px 9px; cursor: pointer; }
+  border-radius: 7px; padding: 3px 9px; cursor: pointer; align-self: flex-start; }
 .ps-btn:hover { border-color: var(--ps); color: var(--ps); }
 
+/* ---- right drawer ---- */
 .best-list { flex: 1 1 auto; overflow-y: auto; padding: 6px 8px 16px; border-top: 1px solid var(--line); }
 .ps-rank-head, .ps-rank-row { display: grid;
-  grid-template-columns: 18px minmax(72px, 1fr) 30px 42px 38px 34px; gap: 5px; align-items: center; }
+  grid-template-columns: 24px minmax(64px, 1fr) 44px 48px 18px 24px; gap: 5px; align-items: center; }
 .ps-rank-head { padding: 4px 8px; font-family: var(--mono); font-size: 9px; text-transform: uppercase;
   letter-spacing: .3px; color: var(--ink-soft); position: sticky; top: 0; background: var(--surface);
   border-bottom: 1px solid var(--line-2); }
+.ps-rank-head span:nth-child(1) { text-align: right; }
 .ps-rank-head span:nth-child(n+3) { text-align: right; }
-.ps-rank-row { padding: 5px 8px; border-radius: 7px; cursor: pointer; border: 1px solid transparent;
-  font-size: 12px; }
-.ps-rank-row:hover { background: var(--line-2); }
+/* a row is IN the template or not — there is nothing to click, the cutoff decides */
+.ps-rank-row { padding: 5px 8px; border-radius: 7px; border: 1px solid transparent;
+  font-size: 12px; opacity: .5; }
+.ps-rank-row.on { opacity: 1; }
 .ps-rank-row.on { border-color: var(--ps);
   background: color-mix(in srgb, var(--ps) 8%, var(--surface)); }
-.ps-rank-row .c input { pointer-events: none; accent-color: var(--ps); }
+
 .ps-rank-row .e { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ps-rank-row.on .e { color: var(--ps); font-weight: 700; }
-.ps-rank-row .m, .ps-rank-row .p, .ps-rank-row .f, .ps-rank-row .z {
+.ps-rank-row .m, .ps-rank-row .p, .ps-rank-row .f, .ps-rank-row .s {
   font-family: var(--mono); font-size: 10.5px; text-align: right;
   font-variant-numeric: tabular-nums; color: var(--ink-2); }
 .ps-rank-row .p { color: #2563eb; }
-.ps-rank-row .f { color: var(--ps-pseudo); }
+.ps-rank-row .s { text-align: center; font-weight: 700; }
 
 /* the ranking carries six columns, so this drawer needs more room than the site default */
 .rdrawer { --rdrawer-w: 380px; }

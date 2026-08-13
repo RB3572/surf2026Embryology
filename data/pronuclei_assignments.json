@@ -1982,10 +1982,22 @@
     "sperm": null
    },
    "consensus": {
-    "female": 1,
+    "female": 0,
     "split": false,
     "n0": 0,
-    "n1": 1
+    "n1": 1,
+    "manual": true
+   },
+   "manual": {
+    "female_label": 3,
+    "male_label": 2,
+    "female_index": 0,
+    "male_index": 1,
+    "by": "Rishi Bhargava",
+    "date": "2026-08-12",
+    "reason": "Called by eye: the larger pronucleus (M3, 7,249 um3) is maternal, the smaller (M2, 6,195 um3) is paternal. No polar body is detected in this zygote and no sperm is labelled, so both polar-body tests and the sperm test are unavailable \u2014 the volume heuristic was the only test running, and this call overrides it.",
+    "caveat": "This call DISAGREES with the volume heuristic, which assumes the smaller pronucleus is maternal. No automatic test supports or contradicts it independently.",
+    "auto_agrees": false
    }
   },
   {
@@ -3179,10 +3191,22 @@
     "sperm": null
    },
    "consensus": {
-    "female": 1,
+    "female": 0,
     "split": false,
     "n0": 0,
-    "n1": 1
+    "n1": 1,
+    "manual": true
+   },
+   "manual": {
+    "female_label": 3,
+    "male_label": 2,
+    "female_index": 0,
+    "male_index": 1,
+    "by": "Rishi Bhargava",
+    "date": "2026-08-12",
+    "reason": "Called by eye: the larger pronucleus (M3, 10,161 um3) is maternal, the smaller (M2, 6,610 um3) is paternal. No polar body is detected in this zygote and no sperm is labelled, so both polar-body tests and the sperm test are unavailable \u2014 the volume heuristic was the only test running, and this call overrides it.",
+    "caveat": "This call DISAGREES with the volume heuristic, which assumes the smaller pronucleus is maternal. No automatic test supports or contradicts it independently.",
+    "auto_agrees": false
    }
   },
   {

@@ -78,6 +78,40 @@ def main():
 
     for ov in manual["overrides"]:
         eid = ov["id"]
+
+        # ---- the common case: the build already produced this embryo ----
+        # Keep its geometry and its tests EXACTLY as the build computed them (from the full-res
+        # voxel masks) and change only the sex call. Recomputing from meshes here would quietly
+        # put one embryo on a different estimator from the other fifty.
+        if eid in by_id and not ov.get("include"):
+            rec = by_id[eid]
+            have = {p["label"] for p in rec["pron"]}
+            if have != set(ov["pronuclei"]):
+                print(f"  !! {eid}: override names pronuclei {ov['pronuclei']} but the artifact "
+                      f"has {sorted(have)} — skipped")
+                continue
+            female_label = next(int(l) for l, s in ov["assign"].items() if s == "female")
+            male_label = next(int(l) for l, s in ov["assign"].items() if s == "male")
+            fi = next(i for i, p in enumerate(rec["pron"]) if p["label"] == female_label)
+            calls = [t["female"] for t in rec["tests"].values() if t]
+            n0, n1 = calls.count(0), calls.count(1)
+            agrees = all(c == fi for c in calls) if calls else False
+            rec["consensus"] = {"female": fi, "split": False, "n0": n0, "n1": n1, "manual": True}
+            rec["manual"] = {
+                "female_label": female_label, "male_label": male_label,
+                "female_index": fi, "male_index": 1 - fi,
+                "by": ov.get("by"), "date": ov.get("date"),
+                "reason": ov.get("reason"), "caveat": ov.get("caveat"),
+                "auto_agrees": agrees,
+            }
+            print(f"  updated {eid} (geometry untouched)")
+            print(f"    manual: M{female_label} female / M{male_label} male  →  female index {fi}")
+            ran = ", ".join(f"{k}=F{v['female']}" for k, v in rec["tests"].items() if v) or "none"
+            print(f"    tests that ran: {ran}  "
+                  f"({'all agree' if agrees else 'THE HAND CALL OVERRIDES THEM'})")
+            continue
+
+        # ---- the build dropped this embryo entirely: rebuild its geometry from the meshes ----
         scene_p = os.path.join(ZY, eid + ".json.gz")
         if not os.path.isfile(scene_p):
             print(f"  !! {eid}: no scene at {scene_p}")

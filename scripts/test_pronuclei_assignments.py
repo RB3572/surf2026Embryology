@@ -94,10 +94,22 @@ def main():
         check(f"{eid}: the consensus follows the manual call",
               e["consensus"]["female"] == man["female_index"])
         check(f"{eid}: the reason is recorded", bool(man.get("reason")) and bool(man.get("by")))
+        # a hand call that contradicts the tests must SAY so — that flag drives the page copy
+        ran = [t["female"] for t in e["tests"].values() if t]
+        check(f"{eid}: auto_agrees reflects the tests that actually ran",
+              man["auto_agrees"] == (bool(ran) and all(c == man["female_index"] for c in ran)),
+              f"auto_agrees={man['auto_agrees']} tests={ran} idx={man['female_index']}")
+        if not man["auto_agrees"]:
+            check(f"{eid}: a contradicting call records a caveat", bool(man.get("caveat")))
         check(f"{eid}: both named segments are the pronuclei",
               {p["label"] for p in e["pron"]} == set(ov["pronuclei"]))
-        check(f"{eid}: the polar body is the segment the override names",
-              e["polar"] and e["polar"]["label"] == ov["polar_body"])
+        # polar_body is null in the override when the detector found none for that zygote
+        if ov.get("polar_body") is None:
+            check(f"{eid}: no polar body, as the override records",
+                  e["polar"] is None, json.dumps(e["polar"]))
+        else:
+            check(f"{eid}: the polar body is the segment the override names",
+                  bool(e["polar"]) and e["polar"]["label"] == ov["polar_body"])
         # the page loads data/pronuclei/<id>.json.gz — an override with no scene is an empty page
         sc = os.path.join(DATA, "pronuclei", eid + ".json.gz")
         check(f"{eid}: a scene exists for the page to draw", os.path.isfile(sc))
@@ -105,8 +117,9 @@ def main():
             s = json.load(gzip.open(sc, "rt"))
             check(f"{eid}: that scene carries both pronuclei meshes",
                   all(str(l) in s["region_meshes"] for l in ov["pronuclei"]))
-            check(f"{eid}: and the polar-body mesh",
-                  str(ov["polar_body"]) in s["region_meshes"])
+            if ov.get("polar_body") is not None:
+                check(f"{eid}: and the polar-body mesh",
+                      str(ov["polar_body"]) in s["region_meshes"])
 
     section("the oocyte is not filed as a zygote")
     # 20260425_zygote_p2_3 is an oocyte with one pronucleus; it must not appear here at all

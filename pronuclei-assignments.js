@@ -161,10 +161,18 @@
     else html += cell(c.female === 0) + cell(c.female === 1);
     paGrid.innerHTML = html;
     const votes = TESTS.map((t) => r.tests[t.key]).filter(Boolean).length;
+    // votes AGREEING with the call shown — not the majority count, which for a hand call that
+    // overrides the tests would report the number that disagree with it
+    const agree = c.female === 0 ? c.n0 : c.n1;
     paGridNote.innerHTML = r.manual
       ? `<b>Assigned by hand: pronucleus ${c.female + 1} (seg ${r.manual.female_label}) is female.</b>
-         The bottom row is that call, not a vote — ${Math.max(c.n0, c.n1)} of ${votes} automatic
-         tests happen to land the same way.`
+         The bottom row is that call, not a vote — ` +
+        (votes === 0
+          ? `no automatic test can run on this zygote.`
+          : agree === votes
+          ? `all ${votes} automatic test${votes > 1 ? "s" : ""} happen to land the same way.`
+          : `<b class="pa-disagree">${votes - agree} of ${votes} automatic test${votes > 1 ? "s" : ""}
+             disagree${votes - agree === 1 ? "s" : ""} with it</b>, and the hand call is what is shown.`)
       : c.split
       ? `<b>Even split</b> — ${c.n0} test(s) call pronucleus 1 female, ${c.n1} call pronucleus 2. No consensus.`
       : `<b>Consensus: pronucleus ${c.female + 1} is female</b> — ${Math.max(c.n0, c.n1)} of ${votes} tests agree.`;

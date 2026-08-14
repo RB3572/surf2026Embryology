@@ -124,9 +124,13 @@ polar-body **size augmentation**, 8.7's Ltbp1 panel (2–3 transcripts — flagg
 
 ## What was built (2026-08-13)
 
-Everything below is registered **admin-only** (`ADMIN_ONLY_PAGES` in `lib/projects.mjs` plus a
-card in `admin.card.html`), per the instruction to hold new work back from the public landing page
-until it has been looked at.
+Everything below was first registered **admin-only**, to hold new work back from the public
+landing page until it had been looked at.
+
+**Reviewed and promoted on 2026-08-14.** `clocktx`, `stages`, `animalveg`, `contacthalves` and
+`halves` are now ordinary public projects in a fourth landing group, **4 · Volcano plots** — in
+the `PROJECTS` array with cards in `index.html`, and restrictable per user like anything else.
+`renders` (Render Check) stays admin-only: it is a check on the deck rather than a result.
 
 | item | what landed | validation |
 |---|---|---|
@@ -162,3 +166,8 @@ and left unscored, because checking a measurement against a display trick manufa
 - `contact` (the slab) and `contacthalves` (the equal-volume halves) answer the same question with
   different instruments. Both are kept on purpose; if one goes, it should be a decision rather than
   a tidy-up.
+- The house rules the audit produced now live in three places rather than one, and all three are
+  imported rather than copied: `embryo_stats.py` (statistics), `embryo_naming.py` (the canonical
+  embryo ID) and the `BODY_OPACITY` / `DOT_SIZE` / `DOT_OPACITY` constants in `viewer-core.js`.
+  Every one of those started as a value guessed independently in each project and drifted.
+  See `handoff.md`.

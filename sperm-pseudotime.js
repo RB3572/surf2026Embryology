@@ -134,7 +134,7 @@
       } else if (lbl === e.polar_label) {
         color = PB; op = 0.4; name = "Polar body"; rank = 13; show = showAll || state.obj === "polar";
       } else {
-        color = "#9aa3b2"; op = 0.06; name = `Segment ${lbl}`; rank = lbl; show = showBody;   // cell body
+        color = "#9aa3b2"; op = V.BODY_OPACITY; name = `Segment ${lbl}`; rank = lbl; show = showBody;   // cell body
       }
       if (!show) continue;
       const t = segMesh(s, lbl, color, op, name, rank); if (t) traces.push(t);

@@ -154,7 +154,7 @@
     const ex = s.extents, R = 0.55 * Math.max(ex.x[1] - ex.x[0], ex.y[1] - ex.y[0], ex.z[1] - ex.z[0]);
     const com = s.com_plot, L = s.landmarks, isZyg = s.stage === "zygote";
     const traces = [];
-    for (const lbl of s.mask_labels) { const t = segMesh(s, lbl, "#9aa3b2", 0.07); if (t) traces.push(t); }
+    for (const lbl of s.mask_labels) { const t = segMesh(s, lbl, "#9aa3b2", V.BODY_OPACITY); if (t) traces.push(t); }
     traces.push(marker(com, C.com, "circle", 5, "Embryo COM"));
 
     if (state.show.av && L.polar_plot) {

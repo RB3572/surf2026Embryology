@@ -289,7 +289,7 @@ window.PTGuided = (() => {
       const pron = lbl === la || lbl === lb;
       // microscopy keeps its own neutral palette — τ colour never tints tissue
       const t = segMesh(sc, lbl, pron ? (lbl === la ? "#2563eb" : "#dc2626") : "#9aa3b2",
-                        pron ? 0.42 : 0.07, pron ? `pronucleus ${lbl}` : `segment ${lbl}`);
+                        pron ? 0.42 : V.BODY_OPACITY, pron ? `pronucleus ${lbl}` : `segment ${lbl}`);
       if (t) traces.push(t);
     }
     const pts = withMeasure ? geomPts(r.id) : null;

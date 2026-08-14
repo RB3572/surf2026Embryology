@@ -94,7 +94,7 @@
     for (const lbl of s.mask_labels) {
       const pi = pl.indexOf(lbl);
       const isPb = r.polar && lbl === r.polar.label;
-      let color = "#9aa3b2", op = 0.07, name = `Segment ${lbl}`;
+      let color = "#9aa3b2", op = V.BODY_OPACITY, name = `Segment ${lbl}`;
       if (pi >= 0) { color = pronColor(pi); op = 0.55; name = `Pronucleus ${pi + 1} · ${paColor.checked ? (((r.consensus || {}).split) ? "split" : ((r.consensus || {}).female === pi ? "♀ female" : "♂ male")) : "seg " + lbl}`; }
       else if (isPb && paPb.checked) { color = PB_C; op = 0.32; name = `Polar body`; }
       else if (isPb) continue;

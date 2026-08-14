@@ -245,7 +245,7 @@
     const traces = [];
     for (const lbl of s.mask_labels) {
       const pron = isZyg && (lbl === la || lbl === lb);
-      const t = segMesh(s, lbl, pron ? pcolor[lbl] : "#9aa3b2", pron ? 0.5 : 0.1,
+      const t = segMesh(s, lbl, pron ? pcolor[lbl] : "#9aa3b2", pron ? 0.5 : V.BODY_OPACITY,
         pron ? `Pronucleus (seg ${lbl})` : `Segment ${lbl}`);
       if (t) traces.push(t);
     }

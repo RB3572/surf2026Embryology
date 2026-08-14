@@ -165,7 +165,7 @@
   function render() {
     const s = state.scene; if (!s) return;
     const traces = [];
-    for (const lbl of s.mask_labels) { const t = segMesh(s, lbl, segColor(lbl), 0.1); if (t) traces.push(t); }
+    for (const lbl of s.mask_labels) { const t = segMesh(s, lbl, segColor(lbl), V.BODY_OPACITY); if (t) traces.push(t); }
     const zs = s.z_scale;
     // each plotted gene's transcript dots, coloured by gene, filtered to the shown segments
     for (const { gene: g, color } of state.genes) {

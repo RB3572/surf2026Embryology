@@ -179,6 +179,12 @@ window.VCore = (function () {
     return out;
   }
 
+  // THE HOUSE CELL-BODY OPACITY. bodyTraces caps region_defaults at this, and the pages that
+  // draw their own body meshes (because they recolour pronuclei or segments themselves) import it
+  // rather than picking a number — every one of them had drifted below it, between 0.06 and 0.10,
+  // which left the cytoplasm barely visible and made each page look like a different site.
+  const BODY_OPACITY = 0.13;
+
   const DARK_CELL = { opacity: 0.10,
     lighting: { ambient: 0.12, diffuse: 0.5, specular: 1.0, roughness: 0.06, fresnel: 2.0 } };
   const DARK_NUC = { opacity: 0.34,
@@ -403,7 +409,7 @@ window.VCore = (function () {
       const st = dc ? (dc.type === "cell" ? DARK_CELL : DARK_NUC) : null;
       out.push({ type: "mesh3d", x, y, z, i: ii, j: jj, k: kk,
         color: dc ? dc.color : def.color,
-        opacity: st ? st.opacity : Math.min(def.opacity, 0.13),
+        opacity: st ? st.opacity : Math.min(def.opacity, BODY_OPACITY),
         name: `body M${lbl}`, showlegend: true,
         flatshading: false, hoverinfo: "skip",
         lighting: st ? st.lighting
@@ -632,6 +638,7 @@ window.VCore = (function () {
   })();
 
   return { isDark, applyDark, classifyDark, DARK_BG, SPERM_COLOR, liftForDark,
+           BODY_OPACITY,
            loadGz, buildTabs, markActiveTab, sceneLayout, plotConfig, bodyTraces,
            wireWindow, XY, umToPlot, plotToUm, atlasLink, addWindowExtras, pronMinDist,
            embryoLabel, idYear, embryoSortKey, cmpEmbryo };

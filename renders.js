@@ -18,6 +18,7 @@
   // geometry is converted in. µm = plot x 0.15 on all three axes.
   const PX = 0.15;
   const HI = "#b01b12", LO = "#14539e", OTHER = "#9aa3b2", GONE = "#cbd5e1";
+  const PLAIN = "#c2410c";      // a panel with no split rule still needs a visible cloud
 
   const state = { doc: null, byId: {}, cur: null, scene: null, cache: {} };
 
@@ -65,21 +66,6 @@
   }
 
   // ───────── the scene ─────────
-  function meshTrace(sc, label, color, opacity, name, rank) {
-    const mesh = sc.region_meshes[String(label)];
-    if (!mesh) return null;
-    const v = mesh.verts, f = mesh.faces, nV = v.length / 3, nF = f.length / 3;
-    const x = new Array(nV), y = new Array(nV), z = new Array(nV);
-    for (let i = 0; i < nV; i++) {
-      x[i] = v[i * 3]; y[i] = v[i * 3 + 1]; z[i] = v[i * 3 + 2];
-    }
-    const ii = new Array(nF), jj = new Array(nF), kk = new Array(nF);
-    for (let i = 0; i < nF; i++) { ii[i] = f[i * 3]; jj[i] = f[i * 3 + 1]; kk[i] = f[i * 3 + 2]; }
-    return { type: "mesh3d", x, y, z, i: ii, j: jj, k: kk, color, opacity, name,
-      showlegend: true, flatshading: false, hoverinfo: "name", legendrank: rank || 50,
-      lighting: { ambient: 0.72, diffuse: 0.5, specular: 0.1, roughness: 0.9 } };
-  }
-
   function txPositions(sc, gene) {
     const t = sc.transcripts[gene];
     if (!t) return null;
@@ -118,20 +104,28 @@
     const h = p.highlight || {};
     const traces = [];
     if (showBody) {
-      const vols = {};
-      (sc.segments || []).forEach((s) => (vols[String(s.label)] = s.volume));
-      const order = Object.keys(vols).sort((a, b) => vols[b] - vols[a]);
-      order.forEach((lbl, i) => {
+      // THE BODIES COME FROM V.bodyTraces, not from a local mesh builder. Rolling one here is
+      // what made this page look unlike every other one: it drew the cytoplasm flat grey at
+      // opacity 0.06, against the house 0.13 and the scene's own per-segment colour, and it
+      // could not follow the dark-render toggle at all. Only the highlighted labels are
+      // recoloured on top, so the panel still says which half is which.
+      for (const t of V.bodyTraces(sc)) {
+        const lbl = String(t.name).replace(/^body M/, "");
         const isHi = h.kind === "blastomeres" && lbl === String(h.hi);
         const isLo = h.kind === "blastomeres" && lbl === String(h.lo);
         const isMark = h.kind === "labels" && (h.labels || []).includes(lbl);
-        const t = meshTrace(sc, lbl,
-          isHi ? HI : isLo ? LO : isMark ? "#7c3aed" : "#9aa3b2",
-          isHi || isLo ? 0.10 : isMark ? 0.35 : 0.06,
-          isHi ? "higher blastomere" : isLo ? "lower blastomere"
-               : isMark ? `region ${lbl} (highlighted)` : `segment ${lbl}`, 40 + i);
-        if (t) traces.push(t);
-      });
+        if (isHi || isLo) {
+          t.color = isHi ? HI : LO;
+          t.opacity = Math.max(t.opacity, 0.15);
+          t.name = isHi ? "higher blastomere" : "lower blastomere";
+        } else if (isMark) {
+          t.color = "#7c3aed";
+          t.opacity = Math.max(t.opacity, 0.34);
+          t.name = `region ${lbl} (highlighted)`;
+        }
+        t.hoverinfo = "name";
+        traces.push(t);
+      }
     }
     if (showTx) {
       const gene = p.genes[0];
@@ -143,12 +137,18 @@
                    : h.kind === "labels" ? ["inside the marked region", "—", "outside it"]
                    : h.kind === "plane" ? ["side a", "side b", "outside the cell"]
                    : [gene, "—", "—"];
-        [[0, HI], [1, LO], [2, GONE]].forEach(([g, col]) => {
+        // With no split rule (1.7 draws one gene, whole embryo) every point lands in group 2,
+        // and painting those "elsewhere" grey left the cloud almost invisible. Grey only means
+        // "outside the region this panel is about", which needs a region to be about.
+        const plain = !h.kind;
+        [[0, plain ? PLAIN : HI], [1, LO], [2, plain ? PLAIN : GONE]].forEach(([g, col]) => {
           if (!groups[g].length) return;
-          traces.push({ type: "scatter3d", mode: "markers", name: `${gene} · ${NAME[g]}`,
+          traces.push({ type: "scatter3d", mode: "markers",
+            name: plain ? `${gene} · ${groups[g].length}` : `${gene} · ${NAME[g]}`,
             x: groups[g].map((i) => T.x[i]), y: groups[g].map((i) => T.y[i]),
             z: groups[g].map((i) => T.z[i]),
-            marker: { size: 2.6, color: col, opacity: g === 2 ? 0.35 : 0.9 },
+            marker: { size: 2.6, color: col,
+                      opacity: (g === 2 && !plain) ? 0.35 : 0.85, line: { width: 0 } },
             hovertemplate: `${gene}<extra></extra>`, legendrank: 10 + g });
         });
       }
@@ -178,10 +178,8 @@
         z: c.map((q) => q[2]), i: [0, 0], j: [1, 2], k: [2, 3], color: "#111827",
         opacity: 0.14, name: "the deck's plane", hoverinfo: "name", legendrank: 5 });
     }
-    Plotly.react($("#plot-host"), traces, V.sceneLayout
-      ? V.sceneLayout(sc.extents, sc.id)
-      : { margin: { l: 0, r: 0, t: 0, b: 0 }, scene: { aspectmode: "data" } },
-      { responsive: true, displaylogo: false });
+    Plotly.react($("#plot-host"), traces, V.sceneLayout(sc.extents, sc.id),
+      V.plotConfig);
   }
   const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2],
                            a[0] * b[1] - a[1] * b[0]];

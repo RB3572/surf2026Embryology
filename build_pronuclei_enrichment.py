@@ -33,6 +33,7 @@ import tifffile
 from scipy.stats import binom
 
 import build_pronuclei as BP
+from embryo_naming import embryo_label
 
 HERE = BP.HERE
 DATA = os.path.join(HERE, "public", "data")
@@ -103,8 +104,6 @@ def process(eid, pron_labels):
 
 def main():
     genes_agg = json.load(gzip.open(os.path.join(DATA, "pronuclei_genes.json.gz"), "rt"))
-    man = json.load(open(os.path.join(DATA, "pronuclei_manifest.json")))
-    labels = {m["id"]: m.get("label", m["id"]) for m in (man.get("embryos") or man.get("points") or man)}
 
     enriched, only_pn, candidates = [], [], []
     n_ok = 0
@@ -122,7 +121,7 @@ def main():
             continue
         rows, p_null, v_pn, v_cell = r
         n_ok += 1
-        lab = labels.get(eid, eid)
+        lab = embryo_label(eid)
         for g, ncell, npn, ncyto in rows:
             fold = (npn / v_pn) / (ncell / v_cell) if npn else 0.0
             p = float(binom.sf(npn - 1, ncell, p_null)) if npn > 0 else 1.0

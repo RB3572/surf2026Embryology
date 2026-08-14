@@ -30,6 +30,8 @@ import os
 import numpy as np
 from scipy.spatial import ConvexHull
 
+from embryo_naming import embryo_label
+
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SEG_DIR = os.path.join(ROOT, "data", "segments")
 GENES = os.path.join(ROOT, "data", "segments_genes.json.gz")
@@ -166,7 +168,7 @@ def main():
                     gene_tx_here[g] = np.round(to01(p2) * 1000).astype(int)  # 0..1000 ints
             n_ok += 1
         samples.append({
-            "id": eid, "label": e["label"],
+            "id": eid, "label": embryo_label(eid),
             "stage": label2stage.get(e["stage"], e["stage"]),
             "hull": (np.round(hull * 1000).astype(int).tolist() if hull is not None else None),
             "vol": round(vol, 1), "total_tx": int(total_tx),

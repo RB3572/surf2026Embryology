@@ -33,6 +33,8 @@ import json
 import math
 import os
 
+from embryo_naming import embryo_label
+
 ROOT = os.path.dirname(os.path.abspath(__file__))
 ASSIGN = os.path.join(ROOT, "data", "pronuclei_assignments.json")
 PT = os.path.join(ROOT, "data", "pronuclei_pseudotime.json")     # only for the τ sanity print
@@ -75,7 +77,7 @@ def main():
         n_mp += 1 if mat_polar is not None else 0
         n_sp += 1 if sperm_pat is not None else 0
         rows.append({
-            "id": r["id"], "label": r.get("label", r["id"]),
+            "id": r["id"], "label": embryo_label(r["id"]),
             "mat_polar": mat_polar, "sperm_pat": sperm_pat,
         })
 

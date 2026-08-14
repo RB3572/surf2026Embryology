@@ -51,6 +51,8 @@ import sys
 import numpy as np
 from scipy import stats
 
+from embryo_naming import embryo_label
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
 SEG = os.path.join(DATA, "segments")
@@ -345,7 +347,7 @@ def main():
             print(f"  -- [{i}/{len(ids)}] {eid}: {why}")
             continue
         m = man.get(eid, {})
-        rec["label"] = m.get("label") or eid
+        rec["label"] = embryo_label(eid)
         rec["date"] = m.get("date_short", "")
         embryos.append(rec)
         tag = "sperm plane" if rec["sperm"] else "pseudosperm"

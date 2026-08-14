@@ -41,6 +41,8 @@ import sys
 
 import numpy as np
 
+from embryo_naming import embryo_label
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
 AXES = os.path.join(DATA, "axes")
@@ -299,7 +301,7 @@ def main():
     for e in man:
         r = measure(e["id"], e.get("stage"), assign)
         if r:
-            r["label"] = e.get("label") or r["label"]
+            r["label"] = embryo_label(e["id"])
             r["stage_label"] = e.get("stage_label") or ""
             embryos.append(r)
 

@@ -27,6 +27,8 @@ import json
 import math
 import os
 
+from embryo_naming import embryo_label
+
 ROOT = os.path.dirname(os.path.abspath(__file__))
 ASSIGN = os.path.join(ROOT, "data", "pronuclei_assignments.json")
 PT = os.path.join(ROOT, "data", "pronuclei_pseudotime.json")
@@ -71,7 +73,7 @@ def main():
         # interpronuclei distance (raw pronuclei surface gap, µm) — the alternate "clock" axis
         gap = e.get("legacy_surface_gap_um")
         out.append({
-            "id": eid, "label": r["label"], "date": e.get("date_short", ""),
+            "id": eid, "label": embryo_label(eid), "date": e.get("date_short", ""),
             "tau": round(float(e["tau"]), 4),
             "tau_lo": round(float(e.get("lo95", e["tau"])), 4),
             "tau_hi": round(float(e.get("hi95", e["tau"])), 4),

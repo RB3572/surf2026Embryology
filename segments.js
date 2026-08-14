@@ -26,7 +26,7 @@
   const geneChips = $("#gene-chips"), segDotToggles = $("#seg-dot-toggles");
 
   const state = { manifest: [], currentId: null, scene: null, userGene: null,
-                  segTab: null, geneMap: null, cutoff: 0, metric: "density", dotSize: 1.5,
+                  segTab: null, geneMap: null, cutoff: 0, metric: "density", dotSize: V.DOT_SIZE,
                   segGenes: null, crossMetric: "density", drawerOpen: false,
                   genes: [], segShow: {}, pnEnr: null };
   const GENE_PALETTE = ["#e11d48", "#2563eb", "#16a34a", "#f97316", "#7c3aed", "#0891b2", "#db2777", "#ca8a04"];
@@ -178,7 +178,7 @@
       }
       if (!xi.length) continue;
       traces.push({ type: "scatter3d", mode: "markers", name: `${g} · ${xi.length}`,
-        x: xi, y: yi, z: zi, marker: { size: state.dotSize, color, opacity: 0.85, line: { width: 0 } },
+        x: xi, y: yi, z: zi, marker: { size: state.dotSize, color, opacity: V.DOT_OPACITY, line: { width: 0 } },
         hovertemplate: `${g}<extra></extra>`, legendrank: 20000 });
     }
     Plotly.react(plotHost, traces, V.sceneLayout(s.extents, s.id), V.plotConfig);

@@ -185,6 +185,12 @@ window.VCore = (function () {
   // which left the cytoplasm barely visible and made each page look like a different site.
   const BODY_OPACITY = 0.13;
 
+  // THE HOUSE TRANSCRIPT DOT. Every page had its own copy of 1.5, which is a speck in a 3-D scene
+  // — at that size a gene's cloud reads as faint noise over the cytoplasm rather than as points
+  // you can follow. The slider still overrides it per page; this is only where it starts.
+  const DOT_SIZE = 2.5;      // on the slider's 0.5 step grid, so the readout matches the marker
+  const DOT_OPACITY = 0.9;      // the FOCUS layer. Context layers stay dimmer on purpose.
+
   const DARK_CELL = { opacity: 0.10,
     lighting: { ambient: 0.12, diffuse: 0.5, specular: 1.0, roughness: 0.06, fresnel: 2.0 } };
   const DARK_NUC = { opacity: 0.34,
@@ -521,7 +527,7 @@ window.VCore = (function () {
   // opts.onDotSize(size) fires on change; returns { size(), setAtlas(id) }.
   function addWindowExtras(body, opts) {
     opts = opts || {};
-    const size = opts.defaultSize == null ? 1.5 : opts.defaultSize;
+    const size = opts.defaultSize == null ? DOT_SIZE : opts.defaultSize;
     const row = document.createElement("div");
     row.className = "controls-row vc-extras";
     row.innerHTML =
@@ -638,7 +644,7 @@ window.VCore = (function () {
   })();
 
   return { isDark, applyDark, classifyDark, DARK_BG, SPERM_COLOR, liftForDark,
-           BODY_OPACITY,
+           BODY_OPACITY, DOT_SIZE, DOT_OPACITY,
            loadGz, buildTabs, markActiveTab, sceneLayout, plotConfig, bodyTraces,
            wireWindow, XY, umToPlot, plotToUm, atlasLink, addWindowExtras, pronMinDist,
            embryoLabel, idYear, embryoSortKey, cmpEmbryo };

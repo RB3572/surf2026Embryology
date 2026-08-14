@@ -18,7 +18,7 @@
 
   const state = {
     data: null, byId: {}, ri: 5, gene: null, currentId: null, scene: null, sceneCache: {},
-    tab: "one", slabOn: true, dotsOn: true, axisOn: false, dotSize: 1.5,
+    tab: "one", slabOn: true, dotsOn: true, axisOn: false, dotSize: V.DOT_SIZE,
     genesStage: "both", genesMin: 300, rankStage: "both", rankDir: "enr", rankMin: 300,
     drawerOpen: false, vcExtras: null,
   };
@@ -161,7 +161,7 @@
         x: ox, y: oy, z: oz, marker: { size: state.dotSize, color: "#94a3b8", opacity: .5, line: { width: 0 } },
         hovertemplate: `${g} · outside the slab<extra></extra>`, legendrank: 20001 });
       if (inx.length) traces.push({ type: "scatter3d", mode: "markers", name: `${g} · at the contact`,
-        x: inx, y: iny, z: inz, marker: { size: state.dotSize + 0.8, color: GENE, opacity: .95, line: { width: 0 } },
+        x: inx, y: iny, z: inz, marker: { size: state.dotSize + 0.8, color: GENE, opacity: V.DOT_OPACITY, line: { width: 0 } },
         hovertemplate: `${g} · in the contact slab<extra></extra>`, legendrank: 20000 });
     }
 

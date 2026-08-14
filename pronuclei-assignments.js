@@ -22,7 +22,7 @@
   const paColor = $("#pa-color"), paPb = $("#pa-pb"), paSperm = $("#pa-sperm"), paLines = $("#pa-lines");
   const drawer = $("#drawer"), drawerHandle = $("#drawer-handle");
 
-  const state = { points: [], byId: {}, assign: {}, currentId: null, scene: null, rec: null, drawerOpen: false, dotSize: 1.5 };
+  const state = { points: [], byId: {}, assign: {}, currentId: null, scene: null, rec: null, drawerOpen: false, dotSize: V.DOT_SIZE };
   const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   /** "Dec 26" from a leading YYYYMMDD, for an embryo the shared manifest doesn't carry. */
   function dateOf(id) {

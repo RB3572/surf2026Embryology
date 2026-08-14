@@ -50,7 +50,7 @@
                   // the published ranking is unchanged until τ is explicitly chosen.
                   rankMetric: "r-distance",
                   currentId: null, scene: null, fit: null, drawerOpen: false, showDots: false,
-                  regType: "linear", dotSize: 1.5, pseudotime: false,
+                  regType: "linear", dotSize: V.DOT_SIZE, pseudotime: false,
                   // x-axis clock. DEFAULT STAYS "legacy" so established analyses are unchanged
                   // until the new calibration has been reviewed. calib/calById are filled in init.
                   clock: "legacy", calib: null, calById: {},
@@ -365,7 +365,7 @@
                              : `${g} · ${tx.x.length} dots · (${sel} not in this zygote)`;
         traces.push({ type: "scatter3d", mode: "markers", name: nm,
           x: tx.x, y: tx.y, z: tx.gz.map((z) => z * zs),
-          marker: { size: state.dotSize, color: DOT_C, opacity: 0.85, line: { width: 0 } },
+          marker: { size: state.dotSize, color: DOT_C, opacity: V.DOT_OPACITY, line: { width: 0 } },
           hovertemplate: `${g}<extra></extra>`, legendrank: 200 });
       }
     }

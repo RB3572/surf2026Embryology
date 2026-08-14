@@ -321,7 +321,7 @@
         }
         [0, 1].forEach((s) => X[s].length && traces.push({
           type: "scatter3d", mode: "markers", x: X[s], y: Y[s], z: Z[s],
-          marker: { size: 1.8, color: s ? C_E : C_F, opacity: 0.6 },
+          marker: { size: V.DOT_SIZE, color: s ? C_E : C_F, opacity: V.DOT_OPACITY },
           name: `${t.g} · ${s ? "B" : "A"}`, hoverinfo: "skip" }));
       }
     }

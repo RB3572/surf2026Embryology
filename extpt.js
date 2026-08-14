@@ -46,7 +46,7 @@
 
   const state = { points: [], byId: {}, genesAgg: null, gaById: {}, geneCorr: [], userGene: null, rankN: 10,
                   currentId: null, scene: null, fit: null, drawerOpen: false, showDots: false,
-                  regType: "linear", dotSize: 1.5, pseudotime: false,
+                  regType: "linear", dotSize: V.DOT_SIZE, pseudotime: false,
                   region: "all", norm: "count", flip: false, segData: null,
                   geneSet: [], setRequireAll: false, graphTab: "gene", subClock: "total",
                   zygClock: "tau", tauById: {} };
@@ -266,7 +266,7 @@
                              : `${g} · ${tx.x.length} dots · (${sel} not in this zygote)`;
         traces.push({ type: "scatter3d", mode: "markers", name: nm,
           x: tx.x, y: tx.y, z: tx.gz.map((z) => z * zs),
-          marker: { size: state.dotSize, color: DOT_C, opacity: 0.85, line: { width: 0 } },
+          marker: { size: state.dotSize, color: DOT_C, opacity: V.DOT_OPACITY, line: { width: 0 } },
           hovertemplate: `${g}<extra></extra>`, legendrank: 200 });
       }
     }

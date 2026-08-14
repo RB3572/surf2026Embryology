@@ -32,7 +32,7 @@
     data: null, genesD: null, meta: null, points: [], byId: {}, currentId: null,
     scene: null, rec: null, ic: "com", metric: "ks", gene: null,
     playing: false, frame: 0, stopFrame: 0, sampleIdx: null, raf: 0, lastT: 0,
-    dotSize: 2.5, drawerOpen: false, drawerTab: "scatter", cellColor: "#c9d3df", cellOpacity: 0.16,
+    dotSize: V.DOT_SIZE, drawerOpen: false, drawerTab: "scatter", cellColor: "#c9d3df", cellOpacity: 0.16,
   };
   let vcExtras = null;
 
@@ -162,7 +162,7 @@
     const pts = r.traj[state.frame], idx = state.sampleIdx;
     const x = idx.map((i) => pts[i][0]), y = idx.map((i) => pts[i][1]), z = idx.map((i) => pts[i][2]);
     return { type: "scatter3d", mode: "markers", name: `${state.gene} · simulated (${idx.length})`,
-      x, y, z, marker: { size: state.dotSize, color: PART_C, opacity: 0.9, line: { width: 0 } },
+      x, y, z, marker: { size: state.dotSize, color: PART_C, opacity: V.DOT_OPACITY, line: { width: 0 } },
       hovertemplate: `${state.gene} diffusing<extra></extra>`, legendrank: 5 };
   }
   function drawFrame() {

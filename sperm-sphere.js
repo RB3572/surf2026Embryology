@@ -30,7 +30,7 @@
   const state = {
     data: null, byId: {}, radii: [], meta: null, segs: [], segMeta: [], segsOn: {},
     currentId: null, scene: null, gene: null, ri: 2, minCount: 10,
-    drawerOpen: false, tab: "curve", rankDir: "enr", dotSize: 2, vcExtras: null, _sceneCache: {},
+    drawerOpen: false, tab: "curve", rankDir: "enr", dotSize: V.DOT_SIZE, vcExtras: null, _sceneCache: {},
   };
   const cur = () => state.byId[state.currentId];
   const geneRec = (g) => { const e = cur(); return e && e.genes[g]; };

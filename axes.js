@@ -40,7 +40,7 @@
   const verdictEl = $("#ax-verdict"), histsEl = $("#ax-hists");
 
   const state = { manifest: null, mol: null, currentId: null, scene: null, userGene: null, drawerOpen: false,
-                  dotSize: 1.5,
+                  dotSize: V.DOT_SIZE,
                   show: { av: true, sperm: true, plane: true, shape: false, dots: false } };
   let vcExtras = null;   // dot-size + atlas-link row (VCore.addWindowExtras)
 
@@ -191,11 +191,11 @@
         traces.push({ type: "scatter3d", mode: "markers", name: `${gene()} · side 0`,
           x: tx.x.filter((_, i) => tx.s[i] === 0), y: tx.y.filter((_, i) => tx.s[i] === 0),
           z: tx.gz.filter((_, i) => tx.s[i] === 0).map((z) => z * zs),
-          marker: { size: state.dotSize, color: C.side0, opacity: 0.8 }, hovertemplate: `${gene()}<extra></extra>` });
+          marker: { size: state.dotSize, color: C.side0, opacity: V.DOT_OPACITY }, hovertemplate: `${gene()}<extra></extra>` });
         traces.push({ type: "scatter3d", mode: "markers", name: `${gene()} · side 1`,
           x: tx.x.filter((_, i) => tx.s[i] === 1), y: tx.y.filter((_, i) => tx.s[i] === 1),
           z: tx.gz.filter((_, i) => tx.s[i] === 1).map((z) => z * zs),
-          marker: { size: state.dotSize, color: C.side1, opacity: 0.8 }, hovertemplate: `${gene()}<extra></extra>` });
+          marker: { size: state.dotSize, color: C.side1, opacity: V.DOT_OPACITY }, hovertemplate: `${gene()}<extra></extra>` });
       }
     }
     Plotly.react(plotHost, traces, V.sceneLayout(s.extents, s.id), V.plotConfig);

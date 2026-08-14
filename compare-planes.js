@@ -18,7 +18,7 @@
     data: null, byId: {}, planes: [], colorOf: {}, labelOf: {},
     currentId: null, scene: null, sceneCache: {},
     gene: null, planesOn: { polar: true, exhaustive: true, equatorial: true, sperm: true },
-    splitBy: "equatorial", dotsOn: true, dotSize: 1.5,
+    splitBy: "equatorial", dotsOn: true, dotSize: V.DOT_SIZE,
     tab: "arrange", pairA: "equatorial", pairB: "polar",
     rankMode: "agree", rankPlanes: { polar: false, exhaustive: true, equatorial: true, sperm: false },
     minCount: 10, drawerOpen: false, rdrawerOpen: false, vcExtras: null, _rankKey: null, _rankRows: null,
@@ -159,8 +159,8 @@
         const side = (t.x[k] * XY - O[0]) * n[0] + (t.y[k] * XY - O[1]) * n[1] + (t.gz[k] * zs * XY - O[2]) * n[2];
         if (side > 0) { ax.push(t.x[k]); ay.push(t.y[k]); az.push(zp); } else { bx.push(t.x[k]); by.push(t.y[k]); bz.push(zp); }
       }
-      if (ax.length) traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side A`, x: ax, y: ay, z: az, marker: { size: state.dotSize, color: BLUE, opacity: 0.85, line: { width: 0 } }, hovertemplate: `${g} · A<extra></extra>`, legendrank: 20000 });
-      if (bx.length) traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side B`, x: bx, y: by, z: bz, marker: { size: state.dotSize, color: RED, opacity: 0.85, line: { width: 0 } }, hovertemplate: `${g} · B<extra></extra>`, legendrank: 20001 });
+      if (ax.length) traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side A`, x: ax, y: ay, z: az, marker: { size: state.dotSize, color: BLUE, opacity: V.DOT_OPACITY, line: { width: 0 } }, hovertemplate: `${g} · A<extra></extra>`, legendrank: 20000 });
+      if (bx.length) traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side B`, x: bx, y: by, z: bz, marker: { size: state.dotSize, color: RED, opacity: V.DOT_OPACITY, line: { width: 0 } }, hovertemplate: `${g} · B<extra></extra>`, legendrank: 20001 });
       if (gx.length) traces.push({ type: "scatter3d", mode: "markers", name: `${g} · not counted`, x: gx, y: gy, z: gz, marker: { size: state.dotSize, color: GREEN, opacity: 0.5, line: { width: 0 } }, hovertemplate: `${g} · pron/polar/other<extra></extra>`, legendrank: 20002 });
     }
     // planes

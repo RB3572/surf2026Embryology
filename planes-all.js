@@ -27,7 +27,7 @@
   const xsTabs = $("#xs-tabs"), xsPanels = $("#xs-panels");
 
   const state = { manifest: [], byId: {}, normals: null, currentId: null, scene: null,
-    gene: null, mode: "vol", drawerOpen: false, tab: "align", sort: "p", dotSize: 1.6,
+    gene: null, mode: "vol", drawerOpen: false, tab: "align", sort: "p", dotSize: V.DOT_SIZE,
     agg: null, _aggP: null, spermData: null, _spermP: null, vcExtras: null, _sceneCache: {} };
 
   const vec = (a) => [a[0], a[1], a[2]];
@@ -130,8 +130,8 @@
         const side = (t.x[k] * XY - com[0]) * n[0] + (t.y[k] * XY - com[1]) * n[1] + (t.gz[k] * 1.0 - com[2]) * n[2];
         if (side > 0) { ax.push(t.x[k]); ay.push(t.y[k]); az.push(zp); } else { bx.push(t.x[k]); by.push(t.y[k]); bz.push(zp); }
       }
-      traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side A`, x: ax, y: ay, z: az, marker: { size: state.dotSize, color: BLUE, opacity: 0.85, line: { width: 0 } }, hovertemplate: `${g} · side A<extra></extra>`, legendrank: 20000 });
-      traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side B`, x: bx, y: by, z: bz, marker: { size: state.dotSize, color: RED, opacity: 0.85, line: { width: 0 } }, hovertemplate: `${g} · side B<extra></extra>`, legendrank: 20001 });
+      traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side A`, x: ax, y: ay, z: az, marker: { size: state.dotSize, color: BLUE, opacity: V.DOT_OPACITY, line: { width: 0 } }, hovertemplate: `${g} · side A<extra></extra>`, legendrank: 20000 });
+      traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side B`, x: bx, y: by, z: bz, marker: { size: state.dotSize, color: RED, opacity: V.DOT_OPACITY, line: { width: 0 } }, hovertemplate: `${g} · side B<extra></extra>`, legendrank: 20001 });
       if (gx.length) traces.push({ type: "scatter3d", mode: "markers", name: `${g} · not counted`, x: gx, y: gy, z: gz, marker: { size: state.dotSize, color: GREEN, opacity: 0.6, line: { width: 0 } }, hovertemplate: `${g} · not counted<extra></extra>`, legendrank: 20002 });
     }
     if (axisShow.checked) {

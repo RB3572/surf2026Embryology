@@ -62,7 +62,7 @@
   const state = {
     manifest: [], currentId: null, scene: null, userGene: null, planeIdx: 0,
     drawerOpen: false, bestTab: "pVol", crossMode: "vol", xsTab: "cross", spermData: null,
-    crossKey: "pVol", agg: null, pronucleusVisible: {}, dotSize: 1.5,
+    crossKey: "pVol", agg: null, pronucleusVisible: {}, dotSize: V.DOT_SIZE,
     gmAnchor: "gene", gmDraw: null, gmDrawKey: null,   // γ/μ grid: real anchor vs random control
     gmDensity: true, spDensity: true,                  // concordance by density (count ÷ side volume)
     concordRank: "frac", _concord: null,               // right-drawer concordance tab
@@ -220,7 +220,7 @@
     if (tx) {
       traces.push({ type: "scatter3d", mode: "markers", name: `${g}`,
         x: tx.x, y: tx.y, z: (tx.gz || []).map((v) => v * s.z_scale),
-        marker: { size: state.dotSize, color: BLUE, opacity: 0.85, line: { width: 0 } },
+        marker: { size: state.dotSize, color: BLUE, opacity: V.DOT_OPACITY, line: { width: 0 } },
         hovertemplate: `${g}<extra></extra>`, legendrank: 20000 });
     }
     if (A && axisShow.checked && A.com_plot && A.axis_plot) {
@@ -293,10 +293,10 @@
 
     const sp = splitCloud(s, g, k);
     traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side A`,
-      x: sp.bx, y: sp.by, z: sp.bz, marker: { size: state.dotSize, color: BLUE, opacity: 0.85, line: { width: 0 } },
+      x: sp.bx, y: sp.by, z: sp.bz, marker: { size: state.dotSize, color: BLUE, opacity: V.DOT_OPACITY, line: { width: 0 } },
       hovertemplate: `${g} · side A (counted)<extra></extra>`, legendrank: 20000 });
     traces.push({ type: "scatter3d", mode: "markers", name: `${g} · side B`,
-      x: sp.rx, y: sp.ry, z: sp.rz, marker: { size: state.dotSize, color: RED, opacity: 0.85, line: { width: 0 } },
+      x: sp.rx, y: sp.ry, z: sp.rz, marker: { size: state.dotSize, color: RED, opacity: V.DOT_OPACITY, line: { width: 0 } },
       hovertemplate: `${g} · side B (counted)<extra></extra>`, legendrank: 20001 });
     traces.push({ type: "scatter3d", mode: "markers", name: `${g} · not counted`,
       x: sp.gx, y: sp.gy, z: sp.gz, marker: { size: state.dotSize, color: GREEN, opacity: 0.7, line: { width: 0 } },

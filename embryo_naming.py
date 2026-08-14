@@ -10,6 +10,28 @@ from pathlib import Path
 _PROBESET_PATH = Path(__file__).resolve().parent / "data" / "probesets.json"
 _PROBESETS: dict[str, str] = json.loads(_PROBESET_PATH.read_text())
 
+# The canonical embryo IDs, generated from CompleteEmbryoDataset.xlsx. Both
+# this site and the MERFISH atlas LOOK THE ID UP here rather than deriving it,
+# so neither can drift from the workbook or from each other -- which is what
+# happened with the three incompatible schemes this replaces.
+#
+#   Z-251226-PL02-PSB1_1-FOV07
+#   stage (verified) - date - plate - probeset - FOV
+#
+# The probeset carries a letter AND its p<n>_<m> name because `p1` in the old
+# filenames is the PLATE, and every plate splits across two probesets.
+_CANONICAL_PATH = Path(__file__).resolve().parent / "data" / "embryo_ids.json"
+try:
+    _CANONICAL: dict[str, dict] = json.loads(
+        _CANONICAL_PATH.read_text()).get("embryos", {})
+except (OSError, ValueError):
+    _CANONICAL = {}
+
+
+def canonical_id(embryo_id: str) -> str | None:
+    """The canonical UID for an embryo, or None if it is not in the lookup."""
+    return (_CANONICAL.get(raw_embryo_id(embryo_id)) or {}).get("uid")
+
 
 _STAGE_PREFIX = {
     "o": "O",
@@ -36,8 +58,16 @@ def probeset_for(embryo_id: str) -> str | None:
 
 
 def embryo_label(embryo_id: str, stage: str | None = None) -> str:
-    """Return TYPE-PROBESET-fovN while preserving multi-object FOV suffixes."""
+    """The canonical UID, e.g. ``Z-251226-PL02-PSB1_1-FOV07``.
+
+    Falls back to the old ``TYPE-PROBESET-fovN`` form only for an embryo that
+    is not in ``data/embryo_ids.json`` -- and, as before, to the raw ID when
+    even the probeset is unknown, which is deliberately conspicuous.
+    """
     raw_id = raw_embryo_id(embryo_id)
+    uid = canonical_id(raw_id)
+    if uid:
+        return uid
     patterns = (
         r"^\d{8}_(?P<stage>oocyte|zygote|e2c|l2c|early2cell|late2cell)_p(?P<probe>\d+)_(?P<fov>.+)$",
         r"^\d{8}_(?P<stage>l2c)_blastomere_p(?P<probe>\d+)_(?P<fov>.+)$",

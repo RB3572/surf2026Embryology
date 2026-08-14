@@ -31,6 +31,11 @@ window.VCore = (function () {
     early2cell: "e2c", l2c: "l2c", late: "l2c", late2cell: "l2c" };
   function embryoLabel(id, stage) {
     const raw = String(id == null ? "" : id).split("__").pop();
+    // The canonical UID, looked up rather than derived (see embryo-uids.js).
+    // Deriving it here is what let three different schemes drift apart.
+    const uid = (window.EMBRYO_UIDS || {})[raw];
+    if (uid) return uid;
+    // Legacy fallback for anything not in the lookup -- visibly the old form.
     const probe = (window.EMBRYO_PROBESETS || {})[raw];
     if (!probe) return id;
     let m, idStage, fov;
@@ -50,8 +55,15 @@ window.VCore = (function () {
     const raw = String((m && m.id) || "").split("__").pop();
     const dateM = raw.match(/^(\d{8})/);
     const date = dateM ? dateM[1] : "99999999";
-    const lm = String((m && m.label) || "").match(/-P(\d+)-fov(\d+)(.*)$/i);
-    const probe = lm ? parseInt(lm[1], 10) : 99;
+    // Accept both the canonical UID (…-PSA1_0-FOV07) and the legacy
+    // (…-P1-fov7) form, so sorting keeps working during the migration.
+    let lm = String((m && m.label) || "").match(/-PS([A-D])\d_\d-FOV(\d+)(.*)$/i);
+    let probe;
+    if (lm) probe = lm[1].toUpperCase().charCodeAt(0) - 64;      // A..D -> 1..4
+    else {
+      lm = String((m && m.label) || "").match(/-P(\d+)-fov(\d+)(.*)$/i);
+      probe = lm ? parseInt(lm[1], 10) : 99;
+    }
     const fov = lm ? parseInt(lm[2], 10) : 999999;
     const suffix = lm ? lm[3] : String((m && m.label) || "");
     return [date, probe, fov, suffix];

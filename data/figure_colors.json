@@ -1,0 +1,2414 @@
+{
+"_doc": "Per-embryo compartment colours for the Figure render style. Not user-editable: maternal/paternal from the live pronuclei_assignments.json, 2-cell nuclei by which blastomere holds more cytoplasmic transcripts (higher = blue), polar body always purple.",
+"_palette": {
+"maternal_or_high": "#287A84",
+"paternal_or_low": "#7E803E",
+"polar_body": "#754D7E"
+},
+"embryos": {
+"20251226_sample1_zygote5": {
+"2": {
+"role": "nucleus",
+"color": "#287A84"
+}
+},
+"20251226_sample1_zygote6": {
+"2": {
+"role": "nucleus",
+"color": "#287A84"
+}
+},
+"20251226_zygote_p1_0": {
+"2": {
+"role": "polar_body",
+"color": "#754D7E"
+}
+},
+"20251226_zygote_p1_1": {
+"2": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "maternal",
+"color": "#287A84"
+},
+"5": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20251226_zygote_p1_2_1": {
+"2": {
+"role": "polar_body",
+"color": "#754D7E"
+}
+},
+"20251226_zygote_p1_2_2": {
+"2": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20251226_zygote_p1_3": {
+"2": {
+"role": "nucleus",
+"color": "#287A84"
+}
+},
+"20251226_zygote_p1_4": {
+"2": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20251226_zygote_p1_7": {
+"2": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "maternal",
+"color": "#287A84"
+},
+"4": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20251226_zygote_p1_8": {
+"2": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "maternal",
+"color": "#287A84"
+},
+"4": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20251226_zygote_p1_9": {
+"2": {
+"role": "nucleus",
+"color": "#287A84"
+}
+},
+"20251226_zygote_p1_10": {
+"2": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "maternal",
+"color": "#287A84"
+},
+"5": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20251226_zygote_p1_11": {
+"2": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "maternal",
+"color": "#287A84"
+},
+"4": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260212_l2c_p2_0_0": {
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 21542
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 23123
+}
+},
+"20260212_l2c_p2_0_1": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 4907
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 5121
+}
+},
+"20260212_l2c_p2_1": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"6": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 7961
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 8732
+}
+},
+"20260212_l2c_p2_2": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 9980
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 8279
+}
+},
+"20260212_l2c_p2_3": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 24388
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 21136
+}
+},
+"20260212_l2c_p2_4": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 17064
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 13671
+}
+},
+"20260212_l2c_p2_5": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 30837
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 23667
+}
+},
+"20260212_l2c_p2_6": {
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 31502
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 29809
+}
+},
+"20260212_l2c_p2_7": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 33114
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 30636
+}
+},
+"20260212_l2c_p2_8": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 2850
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 2563
+}
+},
+"20260212_l2c_p2_9": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 22038
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 20770
+}
+},
+"20260212_l2c_p2_10": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"6": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 26818
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 25999
+}
+},
+"20260212_l2c_p2_11": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 248
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 285
+}
+},
+"20260407_zygote_p1_0_1": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260407_zygote_p1_0_2": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260407_zygote_p1_1": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260407_zygote_p1_2": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260407_zygote_p1_3": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "maternal",
+"color": "#287A84"
+},
+"2": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260407_zygote_p1_4": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "maternal",
+"color": "#287A84"
+},
+"2": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260407_zygote_p1_5": {
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260407_zygote_p1_6_0": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260407_zygote_p1_6_1": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260407_zygote_p1_7_0": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260407_zygote_p1_7_1": {
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260407_zygote_p1_8_0": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260407_zygote_p1_8_1": {
+"3": {
+"role": "maternal",
+"color": "#287A84"
+},
+"2": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260407_zygote_p1_10": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260407_zygote_p1_11": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260407_zygote_p1_12": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260408_e2c_p2_0": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 14974
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 17485
+}
+},
+"20260408_e2c_p2_1": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 19885
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 17560
+}
+},
+"20260408_e2c_p2_2": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 27237
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 25607
+}
+},
+"20260408_e2c_p2_3_0": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 10309
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 11823
+}
+},
+"20260408_e2c_p2_3_1": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 13539
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 11034
+}
+},
+"20260408_e2c_p2_4": {
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 29516
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 29814
+}
+},
+"20260408_e2c_p2_5": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 25345
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 28176
+}
+},
+"20260408_e2c_p2_6": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 12586
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 10455
+}
+},
+"20260408_e2c_p2_7": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 8965
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 3777
+}
+},
+"20260408_e2c_p2_8": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 13941
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 15128
+}
+},
+"20260408_e2c_p2_9": {
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 28608
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 28198
+},
+"5": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 28608
+}
+},
+"20260408_e2c_p2_10": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 6100
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 6030
+}
+},
+"20260408_e2c_p2_11": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 35140
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 33743
+}
+},
+"20260408_e2c_p2_12": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 15818
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 16166
+}
+},
+"20260408_e2c_p2_13": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 11682
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 11529
+}
+},
+"20260408_e2c_p2_14": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 19862
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 17277
+}
+},
+"20260408_e2c_p2_15_0": {
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 12914
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 17763
+}
+},
+"20260408_e2c_p2_15_1": {
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 14887
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 13778
+}
+},
+"20260408_e2c_p2_16": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 4862
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 4871
+}
+},
+"20260408_e2c_p2_17": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 17504
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 16890
+}
+},
+"20260408_e2c_p2_18": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 6098
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 9874
+}
+},
+"20260408_e2c_p2_19": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 24934
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 21455
+}
+},
+"20260408_e2c_p2_20": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 37178
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 34415
+}
+},
+"20260408_e2c_p2_21": {
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 21512
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 20128
+}
+},
+"20260408_e2c_p2_23": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 31958
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 32390
+}
+},
+"20260408_e2c_p2_25": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 20944
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 19766
+}
+},
+"20260409_l2c_blastomere_p2_3": {
+"3": {
+"role": "nucleus",
+"color": "#287A84"
+}
+},
+"20260409_l2c_blastomere_p2_4": {
+"3": {
+"role": "nucleus",
+"color": "#287A84"
+}
+},
+"20260409_l2c_p2_0": {
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 2760
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 3521
+}
+},
+"20260409_l2c_p2_1": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"6": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 9702
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 9122
+}
+},
+"20260409_l2c_p2_2": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 12126
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 9074
+}
+},
+"20260409_l2c_p2_5": {
+"6": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 7515
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 7423
+}
+},
+"20260409_l2c_p2_6": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 7203
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 6744
+}
+},
+"20260409_l2c_p2_7": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 6976
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 7420
+}
+},
+"20260409_l2c_p2_8": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 10054
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 10059
+}
+},
+"20260409_zygote_p2_9": {
+"3": {
+"role": "nucleus",
+"color": "#287A84"
+},
+"2": {
+"role": "nucleus",
+"color": "#287A84"
+}
+},
+"20260420_l2c_p1_0": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 3400
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 3640
+}
+},
+"20260420_l2c_p1_2": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 9217
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 7136
+}
+},
+"20260420_l2c_p1_3_1": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 3691
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 3823
+}
+},
+"20260420_l2c_p1_3_2": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 2684
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 2944
+}
+},
+"20260420_l2c_p1_4": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 3546
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 2617
+}
+},
+"20260420_l2c_p1_5": {
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 9865
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 8327
+}
+},
+"20260420_l2c_p1_6": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 4919
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 3891
+}
+},
+"20260420_l2c_p1_7": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 5759
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 5786
+}
+},
+"20260420_l2c_p1_8": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 11775
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 10659
+}
+},
+"20260420_l2c_p1_9": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 2379
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 1910
+}
+},
+"20260420_l2c_p1_10": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 8673
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 4860
+}
+},
+"20260420_l2c_p1_11": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 4614
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 2159
+}
+},
+"20260420_l2c_p1_12": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 10258
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 10084
+}
+},
+"20260420_l2c_p1_13": {
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 4173
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 3767
+}
+},
+"20260420_l2c_p1_15": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"6": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 7692
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 6657
+}
+},
+"20260420_l2c_p1_16": {
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 9332
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 8279
+}
+},
+"20260424_e2c_p1_0": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 27851
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 23887
+}
+},
+"20260424_e2c_p1_1": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 36500
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 45843
+}
+},
+"20260424_e2c_p1_2": {
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 58588
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 52339
+}
+},
+"20260424_e2c_p1_3_0": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 5280
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 13012
+}
+},
+"20260424_e2c_p1_3_1": {
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 60189
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 57509
+}
+},
+"20260424_e2c_p1_4": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 48920
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 40845
+}
+},
+"20260424_e2c_p1_5": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 56511
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 56896
+}
+},
+"20260424_e2c_p1_6": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"6": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 51136
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 48797
+}
+},
+"20260424_e2c_p1_9_0": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 21967
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 21726
+}
+},
+"20260424_e2c_p1_9_1": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 37433
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 39067
+}
+},
+"20260424_e2c_p1_10": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 46238
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 32719
+}
+},
+"20260424_e2c_p1_11": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 44930
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 38102
+}
+},
+"20260424_e2c_p1_12_0": {
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 27710
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 28609
+}
+},
+"20260424_e2c_p1_12_1": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 25119
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 17928
+}
+},
+"20260424_e2c_p1_13_0": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 7658
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 8983
+}
+},
+"20260424_e2c_p1_13_1": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 33652
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 30295
+}
+},
+"20260424_e2c_p1_13_2": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 41502
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 27586
+}
+},
+"20260424_e2c_p1_13_3": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 59387
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 37179
+}
+},
+"20260424_e2c_p1_14": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 62896
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 59923
+}
+},
+"20260424_e2c_p1_15_0": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 37100
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 33471
+}
+},
+"20260424_e2c_p1_15_1": {
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 62695
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 57787
+}
+},
+"20260424_e2c_p1_16_0": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 29614
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 32646
+}
+},
+"20260424_e2c_p1_16_1": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 11629
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 5216
+}
+},
+"20260424_e2c_p1_17_0": {
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 4362
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 3284
+}
+},
+"20260424_e2c_p1_17_1": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 8483
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 9035
+}
+},
+"20260424_e2c_p1_18": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 5617
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 4046
+}
+},
+"20260424_e2c_p1_19_0": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 4031
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 4062
+}
+},
+"20260424_e2c_p1_19_1": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "1",
+"blastomere_transcripts": 8062
+},
+"4": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "2",
+"blastomere_transcripts": 6074
+}
+},
+"20260424_e2c_p1_19_2": {
+"5": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "nucleus_high",
+"color": "#287A84",
+"blastomere": "2",
+"blastomere_transcripts": 10885
+},
+"3": {
+"role": "nucleus_low",
+"color": "#7E803E",
+"blastomere": "1",
+"blastomere_transcripts": 10331
+}
+},
+"20260425_oocyte_p2_11": {
+"2": {
+"role": "nucleus",
+"color": "#287A84"
+}
+},
+"20260425_oocyte_p2_19_0": {
+"2": {
+"role": "nucleus",
+"color": "#287A84"
+}
+},
+"20260425_oocyte_p2_24": {
+"2": {
+"role": "nucleus",
+"color": "#287A84"
+}
+},
+"20260425_oocyte_p2_25_1": {
+"2": {
+"role": "nucleus",
+"color": "#287A84"
+}
+},
+"20260425_zygote_p2_0": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_1": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_2": {
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_3": {
+"3": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "nucleus",
+"color": "#287A84"
+}
+},
+"20260425_zygote_p2_4": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "maternal",
+"color": "#287A84"
+},
+"2": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_5": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_6": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_7_0": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_7_1": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_8_0": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_8_1": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_9_0": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_9_1": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_10": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_12": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_13": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_14": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_15": {
+"3": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "nucleus",
+"color": "#287A84"
+}
+},
+"20260425_zygote_p2_16": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_17": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_18_0": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_18_1": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_19_1": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_20": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"3": {
+"role": "maternal",
+"color": "#287A84"
+},
+"2": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_21": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_22_0": {
+"3": {
+"role": "maternal",
+"color": "#287A84"
+},
+"2": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_22_1": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_23": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_25_0": {
+"4": {
+"role": "polar_body",
+"color": "#754D7E"
+},
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+},
+"20260425_zygote_p2_26": {
+"2": {
+"role": "maternal",
+"color": "#287A84"
+},
+"3": {
+"role": "paternal",
+"color": "#7E803E"
+}
+}
+}
+}

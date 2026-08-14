@@ -46,6 +46,12 @@ from datetime import datetime, timezone
 
 import numpy as np
 
+# The embryo label is LOOKED UP (data/embryo_ids.json), never carried over from the
+# geometry cache. The cache is only rewritten with --extract, so it still holds the
+# pre-migration labels; reading them through put a legacy name back into the artifact on
+# every ordinary rebuild. Both the extract path and the read path look it up now.
+from embryo_naming import embryo_label
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 MODEL_P = os.path.join(HERE, "data", "pseudotime_calibration", "model.json")
 TRAIN_CSV = os.path.join(HERE, "calibration_data", "scheffler2021",
@@ -81,7 +87,7 @@ def extract_geometry():
     rows, n_bay = [], 0
     for i, e in enumerate(man):
         eid = e["id"]
-        row = {"id": eid, "label": e["label"], "date_short": e.get("date_short", ""),
+        row = {"id": eid, "label": embryo_label(eid), "date_short": e.get("date_short", ""),
                "legacy_surface_gap_um": e["distance"], "extract_error": ""}
         try:
             lab = glob.glob(os.path.join(BP.SRC, eid, "*_label.tif"))
@@ -250,7 +256,7 @@ def main():
 
     rows, n_ok = [], 0
     for g in csv.DictReader(open(GEOM_CSV)):
-        base = {"id": g["id"], "label": g["label"], "date_short": g.get("date_short", ""),
+        base = {"id": g["id"], "label": embryo_label(g["id"]), "date_short": g.get("date_short", ""),
                 "legacy_surface_gap_um": (float(g["legacy_surface_gap_um"])
                                           if g.get("legacy_surface_gap_um") else None),
                 "model_version": model["model_version"], "data_version": model["data_version"],

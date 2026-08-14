@@ -9,7 +9,7 @@
   "model_class": "empirical geometry-to-time calibration",
   "trained_at_utc": "2026-07-23T23:42:05+00:00",
   "seed": 20260723,
-  "applied_at_utc": "2026-08-14T13:00:04+00:00",
+  "applied_at_utc": "2026-08-14T14:21:56+00:00",
   "halfwidth_95": 0.242,
   "nested_outer_test": {
    "macro_mae": 0.09088,
@@ -110,7 +110,7 @@
  "embryos": [
   {
    "id": "20251226_zygote_p1_1",
-   "label": "Z-P2-fov1",
+   "label": "Z-251226-PL02-PSB1_1-FOV01",
    "date_short": "Dec 26",
    "legacy_surface_gap_um": 38.98,
    "model_version": "pnpt-3.0.0",
@@ -139,7 +139,7 @@
   },
   {
    "id": "20251226_zygote_p1_10",
-   "label": "Z-P2-fov10",
+   "label": "Z-251226-PL02-PSB1_1-FOV10",
    "date_short": "Dec 26",
    "legacy_surface_gap_um": 3.89,
    "model_version": "pnpt-3.0.0",
@@ -168,7 +168,7 @@
   },
   {
    "id": "20251226_zygote_p1_2_2",
-   "label": "Z-P2-fov2_2",
+   "label": "Z-251226-PL02-PSB1_1-FOV02b-2_2",
    "date_short": "Dec 26",
    "legacy_surface_gap_um": 2.73,
    "model_version": "pnpt-3.0.0",
@@ -197,7 +197,7 @@
   },
   {
    "id": "20251226_zygote_p1_4",
-   "label": "Z-P1-fov4",
+   "label": "Z-251226-PL02-PSA1_0-FOV04",
    "date_short": "Dec 26",
    "legacy_surface_gap_um": 0.3,
    "model_version": "pnpt-3.0.0",
@@ -226,7 +226,7 @@
   },
   {
    "id": "20251226_zygote_p1_7",
-   "label": "Z-P1-fov7",
+   "label": "Z-251226-PL02-PSA1_0-FOV07",
    "date_short": "Dec 26",
    "legacy_surface_gap_um": 17.64,
    "model_version": "pnpt-3.0.0",
@@ -255,7 +255,7 @@
   },
   {
    "id": "20251226_zygote_p1_8",
-   "label": "Z-P1-fov8",
+   "label": "Z-251226-PL02-PSA1_0-FOV08",
    "date_short": "Dec 26",
    "legacy_surface_gap_um": 28.01,
    "model_version": "pnpt-3.0.0",
@@ -284,7 +284,7 @@
   },
   {
    "id": "20260407_zygote_p1_0_1",
-   "label": "Z-P2-fov0_1",
+   "label": "Z-260407-PL04-PSB1_1-FOV00a-0_1",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 2.66,
    "model_version": "pnpt-3.0.0",
@@ -313,7 +313,7 @@
   },
   {
    "id": "20260407_zygote_p1_0_2",
-   "label": "Z-P2-fov0_2",
+   "label": "Z-260407-PL04-PSB1_1-FOV00b-0_2",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 6.62,
    "model_version": "pnpt-3.0.0",
@@ -342,7 +342,7 @@
   },
   {
    "id": "20260407_zygote_p1_1",
-   "label": "Z-P2-fov1",
+   "label": "Z-260407-PL04-PSB1_1-FOV01",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 3.86,
    "model_version": "pnpt-3.0.0",
@@ -371,7 +371,7 @@
   },
   {
    "id": "20260407_zygote_p1_10",
-   "label": "Z-P1-fov10",
+   "label": "Z-260407-PL04-PSA1_0-FOV10",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 1.24,
    "model_version": "pnpt-3.0.0",
@@ -400,7 +400,7 @@
   },
   {
    "id": "20260407_zygote_p1_11",
-   "label": "Z-P1-fov11",
+   "label": "Z-260407-PL04-PSA1_0-FOV11",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 0.3,
    "model_version": "pnpt-3.0.0",
@@ -429,7 +429,7 @@
   },
   {
    "id": "20260407_zygote_p1_12",
-   "label": "Z-P1-fov12",
+   "label": "Z-260407-PL04-PSA1_0-FOV12",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 1.35,
    "model_version": "pnpt-3.0.0",
@@ -458,7 +458,7 @@
   },
   {
    "id": "20260407_zygote_p1_2",
-   "label": "Z-P2-fov2",
+   "label": "Z-260407-PL04-PSB1_1-FOV02",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 12.25,
    "model_version": "pnpt-3.0.0",
@@ -487,7 +487,7 @@
   },
   {
    "id": "20260407_zygote_p1_3",
-   "label": "Z-P1-fov3",
+   "label": "Z-260407-PL04-PSA1_0-FOV03",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 9.14,
    "model_version": "pnpt-3.0.0",
@@ -516,7 +516,7 @@
   },
   {
    "id": "20260407_zygote_p1_4",
-   "label": "Z-P1-fov4",
+   "label": "Z-260407-PL04-PSA1_0-FOV04",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 0.42,
    "model_version": "pnpt-3.0.0",
@@ -545,7 +545,7 @@
   },
   {
    "id": "20260407_zygote_p1_5",
-   "label": "Z-P1-fov5",
+   "label": "Z-260407-PL04-PSA1_0-FOV05",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 5.48,
    "model_version": "pnpt-3.0.0",
@@ -574,7 +574,7 @@
   },
   {
    "id": "20260407_zygote_p1_6_0",
-   "label": "Z-P2-fov6_0",
+   "label": "Z-260407-PL04-PSB1_1-FOV06a-6_0",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 1.59,
    "model_version": "pnpt-3.0.0",
@@ -603,7 +603,7 @@
   },
   {
    "id": "20260407_zygote_p1_6_1",
-   "label": "Z-P2-fov6_1",
+   "label": "Z-260407-PL04-PSB1_1-FOV06b-6_1",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 1.08,
    "model_version": "pnpt-3.0.0",
@@ -632,7 +632,7 @@
   },
   {
    "id": "20260407_zygote_p1_7_0",
-   "label": "Z-P1-fov7_0",
+   "label": "Z-260407-PL04-PSA1_0-FOV07a-7_0",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 1.9,
    "model_version": "pnpt-3.0.0",
@@ -661,7 +661,7 @@
   },
   {
    "id": "20260407_zygote_p1_7_1",
-   "label": "Z-P2-fov7_1",
+   "label": "Z-260407-PL04-PSB1_1-FOV07b-7_1",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 0.3,
    "model_version": "pnpt-3.0.0",
@@ -690,7 +690,7 @@
   },
   {
    "id": "20260407_zygote_p1_8_0",
-   "label": "Z-P1-fov8_0",
+   "label": "Z-260407-PL04-PSA1_0-FOV08a-8_0",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 0.3,
    "model_version": "pnpt-3.0.0",
@@ -719,7 +719,7 @@
   },
   {
    "id": "20260407_zygote_p1_8_1",
-   "label": "Z-P1-fov8_1",
+   "label": "Z-260407-PL04-PSA1_0-FOV08b-8_1",
    "date_short": "Apr 7",
    "legacy_surface_gap_um": 0.3,
    "model_version": "pnpt-3.0.0",
@@ -748,7 +748,7 @@
   },
   {
    "id": "20260409_zygote_p2_9",
-   "label": "Z-P3-fov9",
+   "label": "Z-260409-PL08-PSC2_0-FOV09",
    "date_short": "Apr 9",
    "legacy_surface_gap_um": 2.32,
    "model_version": "pnpt-3.0.0",
@@ -777,7 +777,7 @@
   },
   {
    "id": "20260425_zygote_p2_0",
-   "label": "Z-P4-fov0",
+   "label": "Z-260425-PL12-PSD2_1-FOV00",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 27.89,
    "model_version": "pnpt-3.0.0",
@@ -806,7 +806,7 @@
   },
   {
    "id": "20260425_zygote_p2_1",
-   "label": "Z-P3-fov1",
+   "label": "Z-260425-PL12-PSC2_0-FOV01",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 22.4,
    "model_version": "pnpt-3.0.0",
@@ -835,7 +835,7 @@
   },
   {
    "id": "20260425_zygote_p2_10",
-   "label": "Z-P3-fov10",
+   "label": "Z-260425-PL12-PSC2_0-FOV10",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 0.3,
    "model_version": "pnpt-3.0.0",
@@ -864,7 +864,7 @@
   },
   {
    "id": "20260425_zygote_p2_12",
-   "label": "Z-P4-fov12",
+   "label": "Z-260425-PL12-PSD2_1-FOV12",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 19.76,
    "model_version": "pnpt-3.0.0",
@@ -893,7 +893,7 @@
   },
   {
    "id": "20260425_zygote_p2_13",
-   "label": "Z-P4-fov13",
+   "label": "Z-260425-PL12-PSD2_1-FOV13",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 25.05,
    "model_version": "pnpt-3.0.0",
@@ -922,7 +922,7 @@
   },
   {
    "id": "20260425_zygote_p2_14",
-   "label": "Z-P3-fov14",
+   "label": "Z-260425-PL12-PSC2_0-FOV14",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 2.06,
    "model_version": "pnpt-3.0.0",
@@ -951,7 +951,7 @@
   },
   {
    "id": "20260425_zygote_p2_16",
-   "label": "Z-P4-fov16",
+   "label": "Z-260425-PL12-PSD2_1-FOV16",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 22.99,
    "model_version": "pnpt-3.0.0",
@@ -980,7 +980,7 @@
   },
   {
    "id": "20260425_zygote_p2_17",
-   "label": "Z-P3-fov17",
+   "label": "Z-260425-PL12-PSC2_0-FOV17",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 31.31,
    "model_version": "pnpt-3.0.0",
@@ -1009,7 +1009,7 @@
   },
   {
    "id": "20260425_zygote_p2_18_0",
-   "label": "Z-P4-fov18_0",
+   "label": "Z-260425-PL12-PSD2_1-FOV18a-18_0",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 46.59,
    "model_version": "pnpt-3.0.0",
@@ -1038,7 +1038,7 @@
   },
   {
    "id": "20260425_zygote_p2_18_1",
-   "label": "Z-P3-fov18_1",
+   "label": "Z-260425-PL12-PSC2_0-FOV18b-18_1",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 16.77,
    "model_version": "pnpt-3.0.0",
@@ -1067,7 +1067,7 @@
   },
   {
    "id": "20260425_zygote_p2_19_1",
-   "label": "Z-P3-fov19_1",
+   "label": "Z-260425-PL12-PSC2_0-FOV19",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 32.7,
    "model_version": "pnpt-3.0.0",
@@ -1096,7 +1096,7 @@
   },
   {
    "id": "20260425_zygote_p2_2",
-   "label": "Z-P3-fov2",
+   "label": "Z-260425-PL12-PSC2_0-FOV02",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 2.1,
    "model_version": "pnpt-3.0.0",
@@ -1125,7 +1125,7 @@
   },
   {
    "id": "20260425_zygote_p2_20",
-   "label": "Z-P3-fov20",
+   "label": "Z-260425-PL12-PSC2_0-FOV20",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 0.3,
    "model_version": "pnpt-3.0.0",
@@ -1154,7 +1154,7 @@
   },
   {
    "id": "20260425_zygote_p2_21",
-   "label": "Z-P3-fov21",
+   "label": "Z-260425-PL12-PSC2_0-FOV21",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 2.41,
    "model_version": "pnpt-3.0.0",
@@ -1183,7 +1183,7 @@
   },
   {
    "id": "20260425_zygote_p2_22_0",
-   "label": "Z-P4-fov22_0",
+   "label": "Z-260425-PL12-PSD2_1-FOV22a-22_0",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 0.67,
    "model_version": "pnpt-3.0.0",
@@ -1212,7 +1212,7 @@
   },
   {
    "id": "20260425_zygote_p2_22_1",
-   "label": "Z-P4-fov22_1",
+   "label": "Z-260425-PL12-PSD2_1-FOV22b-22_1",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 27.75,
    "model_version": "pnpt-3.0.0",
@@ -1241,7 +1241,7 @@
   },
   {
    "id": "20260425_zygote_p2_23",
-   "label": "Z-P3-fov23",
+   "label": "Z-260425-PL12-PSC2_0-FOV23",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 10.98,
    "model_version": "pnpt-3.0.0",
@@ -1270,7 +1270,7 @@
   },
   {
    "id": "20260425_zygote_p2_25_0",
-   "label": "Z-P3-fov25_0",
+   "label": "Z-260425-PL12-PSC2_0-FOV25",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 0.3,
    "model_version": "pnpt-3.0.0",
@@ -1299,7 +1299,7 @@
   },
   {
    "id": "20260425_zygote_p2_26",
-   "label": "Z-P4-fov26",
+   "label": "Z-260425-PL12-PSD2_1-FOV26",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 0.3,
    "model_version": "pnpt-3.0.0",
@@ -1328,7 +1328,7 @@
   },
   {
    "id": "20260425_zygote_p2_4",
-   "label": "Z-P3-fov4",
+   "label": "Z-260425-PL12-PSC2_0-FOV04",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 1.34,
    "model_version": "pnpt-3.0.0",
@@ -1357,7 +1357,7 @@
   },
   {
    "id": "20260425_zygote_p2_5",
-   "label": "Z-P3-fov5",
+   "label": "Z-260425-PL12-PSC2_0-FOV05",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 3.35,
    "model_version": "pnpt-3.0.0",
@@ -1386,7 +1386,7 @@
   },
   {
    "id": "20260425_zygote_p2_6",
-   "label": "Z-P3-fov6",
+   "label": "Z-260425-PL12-PSC2_0-FOV06",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 18.14,
    "model_version": "pnpt-3.0.0",
@@ -1415,7 +1415,7 @@
   },
   {
    "id": "20260425_zygote_p2_7_0",
-   "label": "Z-P3-fov7_0",
+   "label": "Z-260425-PL12-PSC2_0-FOV07a-7_0",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 10.78,
    "model_version": "pnpt-3.0.0",
@@ -1444,7 +1444,7 @@
   },
   {
    "id": "20260425_zygote_p2_7_1",
-   "label": "Z-P3-fov7_1",
+   "label": "Z-260425-PL12-PSC2_0-FOV07b-7_1",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 7.51,
    "model_version": "pnpt-3.0.0",
@@ -1473,7 +1473,7 @@
   },
   {
    "id": "20260425_zygote_p2_8_0",
-   "label": "Z-P4-fov8_0",
+   "label": "Z-260425-PL12-PSD2_1-FOV08a-8_0",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 5.24,
    "model_version": "pnpt-3.0.0",
@@ -1502,7 +1502,7 @@
   },
   {
    "id": "20260425_zygote_p2_8_1",
-   "label": "Z-P3-fov8_1",
+   "label": "Z-260425-PL12-PSC2_0-FOV08b-8_1",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 25.63,
    "model_version": "pnpt-3.0.0",
@@ -1531,7 +1531,7 @@
   },
   {
    "id": "20260425_zygote_p2_9_0",
-   "label": "Z-P4-fov9_0",
+   "label": "Z-260425-PL12-PSD2_1-FOV09a-9_0",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 24.82,
    "model_version": "pnpt-3.0.0",
@@ -1560,7 +1560,7 @@
   },
   {
    "id": "20260425_zygote_p2_9_1",
-   "label": "Z-P4-fov9_1",
+   "label": "Z-260425-PL12-PSD2_1-FOV09b-9_1",
    "date_short": "Apr 25",
    "legacy_surface_gap_um": 27.3,
    "model_version": "pnpt-3.0.0",

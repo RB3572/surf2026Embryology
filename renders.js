@@ -34,8 +34,8 @@
     $("#panel-count").textContent =
       `${m.n_panels} renders · ${m.n_agree} agree · ${m.n_disagree} disagree`;
     V.buildTabs($("#tabs"), state.doc.panels, select, (p) => ({
-      label: `${p.fig} ${p.title}`, sub: p.embryo.replace(/^\d+_/, ""),
-      title: `${p.fig} · ${p.title} · ${p.embryo} · ${p.verdict}`,
+      label: `${p.fig} ${p.title}`, sub: p.label || p.embryo,
+      title: `${p.fig} · ${p.title} · ${p.label || p.embryo} · ${p.verdict}`,
       cls: p.verdict === "disagrees" ? "tab-warn"
          : p.verdict === "display sub-sample" ? "tab-note" : "",
     }));
@@ -49,7 +49,7 @@
     V.markActiveTab($("#tabs"), id);
     const p = state.byId[id];
     $("#loading").hidden = false;
-    $("#loading-text").textContent = `Loading ${p.embryo}…`;
+    $("#loading-text").textContent = `Loading ${p.label || p.embryo}…`;
     let sc = state.cache[p.scene];
     try {
       if (!sc) { sc = await V.loadGz(`data/segments/${p.scene}`); state.cache[p.scene] = sc; }
@@ -197,7 +197,7 @@
   function renderReadout() {
     const p = state.byId[state.cur];
     const L = [`<div class="rn-fig">${p.fig}</div><div class="rn-title">${p.title}</div>`,
-      `<div class="rn-emb">${p.embryo}</div>`, badge(p.verdict)];
+      `<div class="rn-emb">${p.label || p.embryo}</div>`, badge(p.verdict)];
     p.readout.forEach((r) =>
       L.push(`<div class="rn-line"><span class="k">${r.k}</span><span class="v">${r.v}</span></div>`));
     if (p.checks.length) {
@@ -236,7 +236,7 @@
       `<table class="rn-tab"><thead><tr><th>fig</th><th>panel</th><th>embryo</th><th>gene</th>
         <th>verdict</th><th>what was checked</th></tr></thead><tbody>` +
       rows.map((p) => `<tr data-id="${p.id}" class="${p.id === state.cur ? "on" : ""}">
-        <td>${p.fig}</td><td class="g">${p.title}</td><td class="e">${p.embryo}</td>
+        <td>${p.fig}</td><td class="g">${p.title}</td><td class="e">${p.label || p.embryo}</td>
         <td>${p.genes.join(", ")}</td><td>${badge(p.verdict)}</td>
         <td class="c">${p.checks.length
           ? p.checks.map((c) => `${c.name}: ${c.ok ? "✓" : `<b>${c.deck} vs ${c.ours}</b>`}`).join(" · ")

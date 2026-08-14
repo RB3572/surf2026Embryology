@@ -44,6 +44,10 @@ import sys
 import numpy as np
 
 import embryo_stats as ES
+# The embryo label is LOOKED UP (data/embryo_ids.json via embryo_naming), never derived and
+# never read off a manifest — rebuilding an artifact must not quietly reintroduce a legacy
+# name. embryo_label() falls back conspicuously when an embryo is missing from the lookup.
+from embryo_naming import embryo_label
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
@@ -131,7 +135,7 @@ def family_1_7(panels):
         checks = [chk("transcripts of this gene", deck, n, n == deck)]
         out.append({
             "fig": "1.7", "panel": r["panel"], "title": f"{r['gene']} · {r['stage']}",
-            "stage": st, "embryo": r["embryo"], "genes": [r["gene"]],
+            "stage": st, "embryo": r["embryo"], "label": embryo_label(r["embryo"]), "genes": [r["gene"]],
             "scene": f"{st}__{r['embryo']}.json.gz",
             "readout": [{"k": "transcripts", "v": f"{n:,}" if n is not None else "–"}],
             "checks": checks, "verdict": verdict(checks),
@@ -169,7 +173,7 @@ def family_5_1(panels):
             ro.append({"k": "maternal ♀", "v": f"{by.get(pron[fem], 0):,}"})
             ro.append({"k": "paternal ♂", "v": f"{by.get(pron[1 - fem], 0):,}"})
         out.append({"fig": "5.1", "panel": r["panel"], "title": f"{r['gene']} · zygote",
-                    "stage": st, "embryo": r["embryo"], "genes": [r["gene"]],
+                    "stage": st, "embryo": r["embryo"], "label": embryo_label(r["embryo"]), "genes": [r["gene"]],
                     "scene": f"{st}__{r['embryo']}.json.gz",
                     "highlight": {"kind": "labels", "labels": pron},
                     "readout": ro, "checks": checks, "verdict": verdict(checks)})
@@ -217,7 +221,7 @@ def family_blastomeres(fig, panels, title_of):
                                   abs(fold - d) / max(d, 1e-9) < TOL_FOLD))
         out.append({
             "fig": fig, "panel": r["panel"], "title": title_of(r),
-            "stage": st, "embryo": r["embryo"], "genes": [r["gene"]],
+            "stage": st, "embryo": r["embryo"], "label": embryo_label(r["embryo"]), "genes": [r["gene"]],
             "scene": f"{st}__{r['embryo']}.json.gz",
             "highlight": {"kind": "blastomeres", "hi": hi, "lo": lo},
             "readout": [
@@ -274,7 +278,7 @@ def family_7_4(panels):
                       n_excl == int(r["n_excluded"]))]
         out.append({
             "fig": "7.4", "panel": r["panel"], "title": f"{r['gene']} · early 2-cell",
-            "stage": st, "embryo": r["embryo"], "genes": [r["gene"]],
+            "stage": st, "embryo": r["embryo"], "label": embryo_label(r["embryo"]), "genes": [r["gene"]],
             "scene": f"{st}__{r['embryo']}.json.gz",
             "highlight": {"kind": "contact"},
             "readout": [{"k": "contact half", "v": f"{n_cont:,}"},
@@ -329,7 +333,7 @@ def family_8_2(panels):
                       chk("count on side b", int(r["n_b"]), n_b, n_b == int(r["n_b"]))]
             out.append({
                 "fig": "8.2", "panel": r["panel"], "title": f"{r['gene']} · {r['side']}",
-                "stage": st, "embryo": r["embryo"], "genes": [r["gene"]],
+                "stage": st, "embryo": r["embryo"], "label": embryo_label(r["embryo"]), "genes": [r["gene"]],
                 "scene": f"{st}__{r['embryo']}.json.gz",
                 "highlight": {"kind": "blastomeres", "hi": str(bodies[0]), "lo": str(bodies[1])},
                 "readout": [{"k": "side a", "v": f"{n_a:,}"}, {"k": "side b", "v": f"{n_b:,}"},
@@ -348,7 +352,7 @@ def family_8_2(panels):
                   chk("count on side b", int(r["n_b"]), n_b, n_b == int(r["n_b"]))]
         out.append({
             "fig": "8.2", "panel": r["panel"], "title": f"{r['gene']} · {r['side']}",
-            "stage": st, "embryo": r["embryo"], "genes": [r["gene"]],
+            "stage": st, "embryo": r["embryo"], "label": embryo_label(r["embryo"]), "genes": [r["gene"]],
             "scene": f"{st}__{r['embryo']}.json.gz",
             "highlight": {"kind": "plane", "normal": [round(float(x), 6) for x in nrm],
                           "origin": [round(float(x), 4) for x in com]},

@@ -44,6 +44,11 @@ import os
 
 from scipy import stats
 
+# The embryo label is LOOKED UP (data/embryo_ids.json via embryo_naming), never derived and
+# never read off a manifest — rebuilding an artifact must not quietly reintroduce a legacy
+# name. embryo_label() falls back conspicuously when an embryo is missing from the lookup.
+from embryo_naming import embryo_label
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
 ASSIGN = os.path.join(DATA, "pronuclei_assignments.json")
@@ -182,7 +187,7 @@ def main():
                 if mp is None:
                     dropped.append({"id": rec["id"], "reason": f"no {spec['needs'] or key} geometry"})
                     continue
-                rows.append({"id": rec["id"], "label": rec.get("label") or rec["id"],
+                rows.append({"id": rec["id"], "label": embryo_label(rec["id"]),
                              "m": round(mp[0], 4), "p": round(mp[1], 4),
                              "call": why, "manual": rec["id"] in manual})
             rows.sort(key=lambda r: r["m"] - r["p"])

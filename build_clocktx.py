@@ -47,6 +47,10 @@ import numpy as np
 from scipy import stats
 
 import embryo_stats as ES
+# The embryo label is LOOKED UP (data/embryo_ids.json via embryo_naming), never derived and
+# never read off a manifest — rebuilding an artifact must not quietly reintroduce a legacy
+# name. embryo_label() falls back conspicuously when an embryo is missing from the lookup.
+from embryo_naming import embryo_label
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
@@ -154,7 +158,7 @@ def main():
             per.append({"id": eid, "gene": g, "total": int(np.isin(s, list(keep)).sum())})
             per_polar.append({"id": eid, "gene": g,
                               "total": int(np.isin(s, list(keep_polar)).sum())})
-        emb_meta.append({"id": eid, "label": man.get(eid, {}).get("label") or eid,
+        emb_meta.append({"id": eid, "label": embryo_label(eid),
                          "tau": round(float(pt[eid]["tau"]), 5),
                          "qc": pt[eid].get("qc"),
                          "probeset": probeset.get(eid, "?"),

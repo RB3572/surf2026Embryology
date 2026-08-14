@@ -62,6 +62,10 @@ import numpy as np
 from scipy import stats
 
 import embryo_stats as ES
+# The embryo label is LOOKED UP (data/embryo_ids.json via embryo_naming), never derived and
+# never read off a manifest — rebuilding an artifact must not quietly reintroduce a legacy
+# name. embryo_label() falls back conspicuously when an embryo is missing from the lookup.
+from embryo_naming import embryo_label
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
@@ -103,11 +107,6 @@ def blastomere_frame(sc, a, b):
 
 
 def main():
-    man_p = os.path.join(DATA, "zygote_manifest.json")
-    label_of = {}
-    if os.path.isfile(man_p):
-        label_of = {m["id"]: m.get("label") or m["id"]
-                    for m in json.load(open(man_p))["embryos"]}
     probeset = ES.probesets()
 
     per = collections.defaultdict(list)        # stage -> [{id, gene, cont, edge, lfc}]
@@ -197,7 +196,7 @@ def main():
                 prof.append({"id": eid, "stage": key, "n": int(n_prof),
                              "f": [round(float(v), 6) for v in prof_hist / n_prof]})
             emb_meta[key].append({
-                "id": eid, "label": label_of.get(eid, eid), "probeset": probeset.get(eid, "?"),
+                "id": eid, "label": embryo_label(eid), "probeset": probeset.get(eid, "?"),
                 "n_tx": int(sum(cont.values()) + sum(edge.values())),
                 "vIn": round(float(vIn), 1), "vOut": round(float(vOut), 1),
                 "bulk": round(float(bulk), 4)})

@@ -85,6 +85,10 @@ from scipy import stats
 
 import build_pseudosperm as PS
 import embryo_stats as ES
+# The embryo label is LOOKED UP (data/embryo_ids.json via embryo_naming), never derived and
+# never read off a manifest — rebuilding an artifact must not quietly reintroduce a legacy
+# name. embryo_label() falls back conspicuously when an embryo is missing from the lookup.
+from embryo_naming import embryo_label
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
@@ -385,7 +389,7 @@ def main():
                                "share": {g: c[0] / (c[0] + c[1])
                                          for g, c in cnt.items() if c[0] + c[1] > 0},
                                "cnt": {g: [c[0], c[1]] for g, c in cnt.items() if c[0] + c[1] > 0}}
-        emb_meta.append({"id": eid, "label": man.get(eid, {}).get("label") or eid,
+        emb_meta.append({"id": eid, "label": embryo_label(eid),
                          "probeset": probeset.get(eid, "?"), "planes": got,
                          "has_sperm": "sperm" in H,
                          "polar18_deg": H.get("polar18", {}).get("angle_deg"),
